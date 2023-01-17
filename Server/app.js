@@ -4,7 +4,10 @@ const http = require('http');
 
 const path = require('path');
 const fs = require('fs');
-const {TwitterApi} = require('twitter-api-v2')
+
+var Twitter = require('twitter')
+var config = require('./twitter_config.js')
+var T = new Twitter(config)
 
 const {port} = require('./config');
 
@@ -32,6 +35,39 @@ app.get('/weather', (req, res) => {
                     if (data.hourly.rain[i + 1] > 0) {
                         console.log("Il pleut")
                     }
+                        console.log("Il pleut pas")
+                        var params = {
+                            q: '#nodejs',
+                            count: 10,
+                            result_type: 'recent',
+                            lang: 'en'
+                        }
+
+                        T.get('search/tweets', params, function(err, data, response) {
+                            if (!err) {
+                                console.log('test')
+                                for(let i = 0; i < data.statuses.length; i++){
+                                    // Get the tweet Id from the returned data
+                                    let id = { id: data.statuses[i].id_str }
+                                    // Try to Favorite the selected Tweet
+                                    T.post('favorites/create', id, function(err, response){
+                                      // If the favorite fails, log the error message
+                                      if(err){
+                                        console.log(err[0].message);
+                                      }
+                                      // If the favorite is successful, log the url of the tweet
+                                      else{
+                                        let username = response.user.screen_name;
+                                        let tweetId = response.id_str;
+                                        console.log('Favorited: ', `https://twitter.com/${username}/status/${tweetId}`)
+                                      }
+                                    });
+                                  }
+                            } else {
+                                console.log(err)
+                            }
+                        })
+                          
                     break;
                 }
             }
