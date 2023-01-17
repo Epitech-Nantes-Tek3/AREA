@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, Text, SafeAreaView, Image, Platform, Dimensions, TextInput, View, TouchableOpacity, ScaledSize } from "react-native";
 import Separator from "../Components/Separator";
 import { Globals } from "../Common/Globals";
-import { AppleButton } from '@invertase/react-native-apple-authentication';
-
+import { AppleButton } from '../modules/react-native-apple-authentication';
 
 export default function ConnexionScreen() {
     // Sets different sizes to be good on both web and mobile
@@ -103,10 +102,10 @@ const styles = StyleSheet.create({
     },
     image: {
         alignSelf: "center",
-        marginTop: 75
+        marginTop: 41
     },
     inputContainer: {
-        marginTop: 50,
+        marginTop: 70,
         alignSelf: "center"
     },
     inputBorderStyle: {
