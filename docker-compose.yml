@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  client_web:
+    ports:
+      - "8081:5000"
+    depends_on:
+      - server
+      - client_mobile
+  server:
+    ports:
+      - "8080:5000"
+  client_mobile:
+    build: .
