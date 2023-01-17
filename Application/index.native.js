@@ -1,5 +1,25 @@
-import {AppRegistry} from 'react-native';
-import App from './src/App';
-import {name as appName} from './src/app.json';
+import { Navigation } from "react-native-navigation";
+import ConnexionScreen from "./src/Screens/ConnexionScreen";
 
-AppRegistry.registerComponent(appName, () => App);
+Navigation.registerComponent('ConnexionScreen', () => ConnexionScreen);
+Navigation.events().registerAppLaunchedListener(() => {
+   Navigation.setRoot({
+    root: {
+      stack: {
+        id: 'mainStack',
+        children: [
+          {
+            component: {
+              name: 'ConnexionScreen',
+              options: {
+                topBar: {
+                  visible: false
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  });
+});
