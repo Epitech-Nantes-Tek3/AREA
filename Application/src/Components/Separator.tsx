@@ -42,6 +42,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         alignSelf: "center",
-        marginTop: 15
+        marginVertical: 15
     },
 })

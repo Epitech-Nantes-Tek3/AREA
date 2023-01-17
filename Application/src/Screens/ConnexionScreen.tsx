@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, Text, SafeAreaView, Image, Platform, Dimensions, TextInput, View, TouchableOpacity, ScaledSize } from "react-native";
 import Separator from "../Components/Separator";
 import { Globals } from "../Common/Globals";
+import { AppleButton } from '@invertase/react-native-apple-authentication';
 
 
 export default function ConnexionScreen() {
@@ -26,8 +27,23 @@ export default function ConnexionScreen() {
         console.log("Connect user")
     }
 
+    function onAppleButtonPress() {
+        console.log("Connect with Apple")
+    }
+
     function SocialButtons() {
-        
+        return (
+            <View style={styles.socialContainer}>
+                {(Platform.OS === "ios" || Platform.OS === "macos") &&
+                    <AppleButton
+                        buttonStyle={AppleButton.Style.BLACK}
+                        buttonType={AppleButton.Type.CONTINUE}
+                        style={[styles.socialButtons, {width: percentageWidthInputs}]}
+                        onPress={onAppleButtonPress}
+                    />
+                }
+            </View>
+        )
     }
 
     return (
@@ -67,6 +83,7 @@ export default function ConnexionScreen() {
                 </TouchableOpacity>
             </View>
             <Separator width={percentageWidthSeparator} text="ou"/>
+            <SocialButtons/>
         </SafeAreaView>
     )
 }
@@ -109,12 +126,11 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center"
     },
-    separatorContainer: {
-        flexDirection: "row",
-        height: 20,
-        alignItems: "center",
-        justifyContent: "center",
-        alignSelf: "center",
-        marginTop: 15
+    socialContainer: {
+        alignItems: "center"
     },
+    socialButtons: {
+        height: 50,
+        marginBottom: 16,
+    }
 })
