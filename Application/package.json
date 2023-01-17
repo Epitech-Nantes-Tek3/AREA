@@ -11,9 +11,11 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
+    "@invertase/react-native-apple-authentication": "^2.2.2",
     "react": "18.1.0",
     "react-dom": "^18.2.0",
     "react-native": "0.70.6",
+    "react-native-navigation": "^7.31.0",
     "react-native-web": "^0.18.10"
   },
   "devDependencies": {
