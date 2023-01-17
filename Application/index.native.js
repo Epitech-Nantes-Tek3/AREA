@@ -10,7 +10,7 @@ Navigation.events().registerAppLaunchedListener(() => {
         children: [
           {
             component: {
-              name: 'ConnexionScreen',
+              name: 'HomeScreen',
               options: {
                 topBar: {
                   visible: false
