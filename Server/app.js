@@ -12,6 +12,16 @@ app.get('/', (req, res) => {
 
 app.get('/about', (req, res) => {
     
+    var ojb = [{
+        name: '',
+        actions: [],
+        reactions: []
+    }]
+
+    ojb[0].name = "Weather"
+    ojb[0].actions.push({name: "get_forecast", description: "Get the rain forecast for the next 24 hours"})
+    ojb[0].reactions.push({name: "like_message", description: "Like a message"})
+
     const about = JSON.stringify(
         {
             "client": {
@@ -19,17 +29,7 @@ app.get('/about', (req, res) => {
             },
             "server": {
                 "current_time": Date.now(),
-                "services": [{
-                    "name": "Weather",
-                    "actions": [{
-                        "name": "get_forecast",
-                        "description": "Get the rain forecast for the next 24 hours"
-                    }],
-                    "reactions": [{
-                        "name": "like_message",
-                        "description": "Like a message"
-                    }]
-                }]
+                "services": ojb
             }
         }
     )
