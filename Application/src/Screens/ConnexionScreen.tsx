@@ -45,8 +45,20 @@ export default function ConnexionScreen() {
         )
     }
 
+    function Circles() {
+        return (
+            <View>
+                <View style={{width: 406, height: 406, borderRadius: 500, backgroundColor: Globals.Colors.main, position: "absolute", top: -244, left: -55, opacity: 0.4}}/>
+                <View style={{width: 342, height: 342, borderRadius: 500, backgroundColor: Globals.Colors.main, position: "absolute", top: -203, left: 179, opacity: 0.4}}/>
+            </View>
+        )
+    }
+
     return (
         <SafeAreaView style={styles.container}>
+            {(Platform.OS === "ios" || Platform.OS == "android") &&
+                <Circles/>
+            }
             <Image
                 source={require("../assets/logo.png")}
                 style={
