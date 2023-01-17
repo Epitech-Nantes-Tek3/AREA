@@ -11,16 +11,29 @@ app.get('/', (req, res) => {
 })
 
 app.get('/about', (req, res) => {
-    
-    var ojb = [{
-        name: '',
-        actions: [],
-        reactions: []
-    }]
 
-    ojb[0].name = "Weather"
-    ojb[0].actions.push({name: "get_forecast", description: "Get the rain forecast for the next 24 hours"})
-    ojb[0].reactions.push({name: "like_message", description: "Like a message"})
+    var obj = new Array();
+    const dir_path = 'Services'
+    
+    var services_file = fs.readdirSync(dir_path, function(err, items) {
+        if (err) {
+            console.log(err);
+            return;
+        }
+    })
+
+    for (var i = 0; i < services_file.length; i++) {
+        if (services_file[i] == "template.json") {
+            continue;
+        }
+        const data = fs.readFileSync(dir_path + '/' + services_file[i], 'utf8', function(err, data) {
+            if (err) {
+                console.log(err);
+                return;
+            }
+        })
+        obj[i] = JSON.parse(data);
+    }
 
     const about = JSON.stringify(
         {
@@ -29,7 +42,7 @@ app.get('/about', (req, res) => {
             },
             "server": {
                 "current_time": Date.now(),
-                "services": ojb
+                "services": obj
             }
         }
     )
