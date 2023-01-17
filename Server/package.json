@@ -1,8 +1,9 @@
 {
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "dotenv": "^16.0.3"
   },
   "scripts": {
-    "dev" : "pwd"
+    "dev" : "npm install && node app.js"
   }
 }
