@@ -11,17 +11,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/about', (req, res) => {
-    var options = {
-        root: path.join(__dirname)
-    }
-    //res.sendFile('about.json', options);
-
-    const content = fs.readFileSync('services.json', 'utf8', (err, data) => {
-        if (err) {
-            console.error(err);
-            return;
-        }
-    })
+    
     const about = JSON.stringify(
         {
             "client": {
