@@ -67,6 +67,10 @@ export default function ConnexionScreen() {
                     placeholder={"Email"}
                     keyboardType="email-address"
                     textContentType="emailAddress"
+                    autoComplete="email"
+                    autoCorrect={false}
+                    returnKeyType="next"
+
                 />
                 <TextInput
                     style={[styles.inputBorderStyle, styles.inputInside]}
@@ -74,6 +78,9 @@ export default function ConnexionScreen() {
                     value={userPass}
                     placeholder="Mot de passe"
                     secureTextEntry={true}
+                    autoComplete="password"
+                    autoCorrect={false}
+                    returnKeyType="done"
                 />
                 <Text style={styles.forgottenText} onPress={forgotPassword}>Un oubli ?</Text>
                 <TouchableOpacity
@@ -96,10 +103,10 @@ const styles = StyleSheet.create({
     },
     image: {
         alignSelf: "center",
-        marginTop: 40
+        marginTop: 75
     },
     inputContainer: {
-        marginTop: 90,
+        marginTop: 50,
         alignSelf: "center"
     },
     inputBorderStyle: {
