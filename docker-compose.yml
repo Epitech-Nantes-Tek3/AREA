@@ -1,13 +1,32 @@
-version: "3.9"
+version: "2.2"
 services:
-  client_web:
-    ports:
-      - "8081:5000"
-    depends_on:
-      - server
-      - client_mobile
-  server:
+  web:
+    build:
+      context: ./Server
+    command: npm run dev
+    volumes:
+      - .:/tmp
     ports:
       - "8080:5000"
-  client_mobile:
-    build: .
+# services:
+#   client_web:
+#     ports:
+#       - "8081:5000"
+#     volumes:
+#       - #same as client_mobile
+#     depends_on:
+#       server:
+#         condition: service_healthy
+#       client_mobile:
+#         condition: service_healthy
+#   server:
+#     ports:
+#       - "8080:5000"
+#     healthcheck:
+#       #TO DO
+#   client_mobile:
+#     build: .
+#     volumes:
+#       - #same as client_web
+#     healthcheck:
+#       #TO DO
