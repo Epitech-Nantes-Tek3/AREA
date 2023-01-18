@@ -5,6 +5,8 @@ import { Globals } from "../Common/Globals";
 import FacebookSocialButton from "../Components/SocialButtons/FacebookButton";
 import GoogleSocialButton from "../Components/SocialButtons/GoogleSocialButton";
 import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
+import { Options } from "react-native-navigation";
+import { NavigatorPop, NavigatorPush } from "../Navigator";
 
 
 export default function SignInScreen() {
@@ -40,7 +42,7 @@ export default function SignInScreen() {
     }
 
     function navigateToConnexion() {
-        console.log("Navigate to connexion")
+        NavigatorPop("mainStack")
     }
 
     function SocialButtons() {

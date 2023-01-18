@@ -5,6 +5,8 @@ import { Globals } from "../Common/Globals";
 import FacebookSocialButton from "../Components/SocialButtons/FacebookButton";
 import GoogleSocialButton from "../Components/SocialButtons/GoogleSocialButton";
 import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
+import { NavigatorPush } from "../Navigator";
+import { Options } from "react-native-navigation";
 
 
 export default function ConnexionScreen() {
@@ -42,7 +44,13 @@ export default function ConnexionScreen() {
     }
 
     function navigateToSubscribe() {
-        console.log("Navigate to subscribe")
+        const options: Options = {
+            topBar: {
+                visible: false
+            },
+            popGesture: false
+        }
+        NavigatorPush("SignInScreen", options, {}, "mainStack")
     }
 
     function SocialButtons() {
