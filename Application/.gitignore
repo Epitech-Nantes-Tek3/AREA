@@ -23,11 +23,7 @@ project.xcworkspace
 **/.xcode.env.local
 
 # Gradle
-<<<<<<< HEAD
 android/app/build/
-=======
-android/app/build
->>>>>>> 11-create-blank-server
 /build/
 /packages/react-native-gradle-plugin/build/
 /packages/rn-tester/build
