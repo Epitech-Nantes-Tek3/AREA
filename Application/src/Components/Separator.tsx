@@ -7,6 +7,7 @@ interface LineProps {
     width: number | string,
     borderWidth: number,
     borderColor: ColorValue
+    style?: any
 }
 
 interface SeparatorProps {
@@ -16,12 +17,12 @@ interface SeparatorProps {
 
 export function Line(props: LineProps) {
     return (
-        <View style={{
+        <View style={[{
             height: props.height,
             width: props.width,
             borderWidth: props.borderWidth,
-            borderColor: props.borderColor
-        }}/>
+            borderColor: props.borderColor,
+        }, props.style]}/>
     )
 }
 
