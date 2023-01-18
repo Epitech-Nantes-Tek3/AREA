@@ -69,7 +69,7 @@ export default function ConnexionScreen() {
         }
         return(
             <View style={signStyles.mobileContainer}>
-                <Line height={1} width={"60%"} borderWidth={0.5} borderColor={Globals.Colors.main} />
+                <Line height={0.5} width={"60%"} borderWidth={0.5} borderColor={Globals.Colors.main} />
                 <View style={signStyles.textContainer}>
                     <Text style={signStyles.mobileNoAccountText}>Pas encore de compte ? </Text>
                     <TouchableOpacity onPress={navigateToSubscribe}>
@@ -222,7 +222,7 @@ const signStyles = StyleSheet.create({
     textContainer: {
         alignSelf: "center",
         flexDirection: "row",
-        marginTop: 25,
+        marginTop: "2%",
         alignItems: "center",
         width: "100%",
         justifyContent: "center"
