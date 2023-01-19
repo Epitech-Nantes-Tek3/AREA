@@ -1,12 +1,13 @@
 const googleService = require('./googleService');
 const http = require('http');
+const configOpenMeteo = require ('./../configOpenMeteo')
 
 module.exports = {
     WeatherRainingOrNot: function(res) {
-        var request = http.get('http://api.open-meteo.com/v1/forecast?latitude=47.22&longitude=-1.55&hourly=rain', function (response) {
+        var request = http.get(`http://api.open-meteo.com/v1/forecast?latitude=${configOpenMeteo.latitude}&longitude=${configOpenMeteo.longitude}&hourly=rain`, function (response) {
             var buffer = ""
             var data;
-
+{}
             response.on("data", function (chunk) {
                 buffer += chunk;
             }); 
