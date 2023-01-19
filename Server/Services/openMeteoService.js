@@ -29,7 +29,7 @@ let comparaisons = [
     { name: "Averses de pluie violentes", result: 82},
     { name: "Averses de neige légères", result: 85},
     { name: "Averses de neige fortes", result: 86},
-    //Les prévisions d'orages avec grêle ne sont disponibles qu'en Europe centrale.
+    //Thunderstorm forecast with hail is only available in Central Europe
     { name: "Orage", result: 95},
     { name: "Orage avec grêle légère", result: 96},
     { name: "Orage avec grêle forte", result: 99}
