@@ -1,7 +1,7 @@
 const googleService = require('./googleService');
 const http = require('http');
-const configOpenMeteo = require ('./../configOpenMeteo')
 
+const dbRealTime = require('./../RealTimeDB');
 
 let comparaisons = [
     { name: "Ciel clair", result: 0},
@@ -36,8 +36,12 @@ let comparaisons = [
 ]
 
 module.exports = {
-    WeatherRainingOrNot: function(res) {
-        var request = http.get(`http://api.open-meteo.com/v1/forecast?latitude=${configOpenMeteo.latitude}&longitude=${configOpenMeteo.longitude}&hourly=weathercode`, function (response) {
+    WeatherRainingOrNot: function(res, uid) {
+        dbRealTime.getDataFromFireBase(uid, 'OpenMeteoService')
+        .then(data => {
+            console.log('latitude:', data.latitude)
+            console.log('longitude:', data.longitude)
+            var request = http.get(`http://api.open-meteo.com/v1/forecast?latitude=${data.latitude}&longitude=${data.longitude}&hourly=weathercode`, function (response) {
             var buffer = ""
             var data;
             response.on("data", function (chunk) {
@@ -67,5 +71,9 @@ module.exports = {
             })
         })
         res.send('Weather info')
+        })
+        .catch(error => {
+            console.log(error);
+        });
     }
 }

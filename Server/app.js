@@ -10,7 +10,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/weather', (req, res) => {
-    openMeteoService.WeatherRainingOrNot(res)
+    openMeteoService.WeatherRainingOrNot(res, '57xAZfpYTrOThjmGaJO8DiNmCF32')
 })
 
 app.get('/firebase', (req, res) => {
