@@ -14,9 +14,16 @@ app.get('/weather', (req, res) => {
 })
 
 app.get('/firebase', (req, res) => {
-    dbRealTime.getDataFromFireBase('57xAZfpYTrOThjmGaJO8DiNmCF32', 'GoogleService', 'user')
-    res.send('firebase info')
-})
+    dbRealTime.getDataFromFireBase('57xAZfpYTrOThjmGaJO8DiNmCF32', 'GoogleService')
+        .then(data => {
+            console.log(data.user)
+            res.send("firebase");
+        })
+        .catch(error => {
+            console.log(error);
+            res.send(error);
+        });
+});
 
 app.listen(port, () => {
     console.log(`AREA app server listening on port ${port}!`)
