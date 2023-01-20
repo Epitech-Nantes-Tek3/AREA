@@ -6,6 +6,8 @@ const fs = require('fs');
 
 const {port} = require('./config');
 
+const openMeteoService = require('./Services/openMeteoService');
+
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
@@ -13,7 +15,7 @@ app.get('/', (req, res) => {
 app.get('/about.json', (req, res) => {
 
     var obj = new Array();
-    const dir_path = 'Services'
+    const dir_path = 'Services/description'
     
     var services_file = fs.readdirSync(dir_path, function(err, items) {
         if (err) {
@@ -47,7 +49,10 @@ app.get('/about.json', (req, res) => {
         }
     )
     res.send(about)
+})
     
+app.get('/weather', (req, res) => {
+    openMeteoService.WeatherRainingOrNot(res)
 })
 
 app.listen(port, () => {
