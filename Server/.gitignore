@@ -1,7 +1,4 @@
 node_modules
 package-lock.json
 .env
-
-# Service
-configGmail.js
-configOpenMeteo.js
+firebaseconfig.js
