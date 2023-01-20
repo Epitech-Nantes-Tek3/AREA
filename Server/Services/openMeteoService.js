@@ -62,7 +62,7 @@ module.exports = {
                         comparaisons.forEach((comparaison) => {
                             if (comparaison.result === weatherCode) {
                                 console.log(`Le temps est : ${comparaison.name} le ${date} à ${hour} heures`)
-                                googleService.send_mail(`Le temps est : ${comparaison.name} le ${date} à ${hour} heures`)
+                                googleService.send_mail(`Le temps est : ${comparaison.name} le ${date} à ${hour} heures`, uid)
                                 return;
                             }
                         });
