@@ -5,7 +5,7 @@ const dbRealTime = require('./../RealTimeDB')
 
 //receive a text. Sends it with the user mail ID of the configGmail.js to recipient of the configGmail.js .
 module.exports = {
-    send_mail: function(mail_content, uid) {
+    send_mail: function(mail_content, subject, userName, uid) {
         //read in DB
         dbRealTime.getDataFromFireBase(uid, 'GoogleService')
         .then(data => {
@@ -30,9 +30,9 @@ module.exports = {
 
             //content of the mail
             const mail_options = {
-                from: `AREA BOT <${data.user}>`,
+                from: `${userName} <${data.user}>`,
                 to: data.recipient,
-                subject: 'AREA poc test',
+                subject: subject,
                 text: get_html_message(mail_content)
             }
             //send with nodemailer
