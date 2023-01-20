@@ -40,6 +40,7 @@ module.exports = {
                 if (error) {
                     console.log('Error: ', error)
                 }
+                console.log('mail correctly sent')
                 transport.close()
             })
         })
