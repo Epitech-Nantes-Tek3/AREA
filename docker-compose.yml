@@ -8,25 +8,39 @@ services:
       - .:/tmp
     ports:
       - "8080:8080"
-# services:
-#   client_web:
-#     ports:
-#       - "8081:5000"
-#     volumes:
-#       - #same as client_mobile
-#     depends_on:
-#       server:
-#         condition: service_healthy
-#       client_mobile:
-#         condition: service_healthy
-#   server:
-#     ports:
-#       - "8080:5000"
-#     healthcheck:
-#       #TO DO
-#   client_mobile:
-#     build: .
-#     volumes:
-#       - #same as client_web
-#     healthcheck:
-#       #TO DO
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+  client_web:
+    depends_on:
+      server:
+        condition: service_healthy
+      client_mobile:
+        condition: service_healthy
+    build:
+      context: ./Application
+      dockerfile: web.Dockerfile
+    command: react-scripts start
+    ports:
+      - "8081:3000"
+    volumes:
+      - ./Application:/tmp
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+  client_mobile:
+    build:
+      context: ./Application
+      dockerfile: mobile2.Dockerfile
+    volumes:
+      - ./Application:/tmp
+    command: npm start
+    healthcheck:
+      test: ["CMD", "uname"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
