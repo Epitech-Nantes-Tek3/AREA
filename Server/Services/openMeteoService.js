@@ -1,7 +1,7 @@
 const googleService = require('./googleService');
 const http = require('http');
 
-const dbRealTime = require('./../RealTimeDB');
+const firebaseFunctions = require('../firebaseFunctions');
 
 let comparaisons = [
     { name: "Ciel clair", result: 0},
@@ -37,7 +37,7 @@ let comparaisons = [
 
 module.exports = {
     WeatherRainingOrNot: function(res, uid) {
-        dbRealTime.getDataFromFireBase(uid, 'OpenMeteoService')
+        firebaseFunctions.getDataFromFireBase(uid, 'OpenMeteoService')
         .then(data => {
             var request = http.get(`http://api.open-meteo.com/v1/forecast?latitude=${data.latitude}&longitude=${data.longitude}&hourly=weathercode`, function (response) {
             var buffer = ""
