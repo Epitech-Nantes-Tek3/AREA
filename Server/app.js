@@ -5,6 +5,7 @@ var bodyParser = require('body-parser')
 const fs = require('fs');
 
 const openMeteoService = require('./Services/openMeteoService');
+const dbRealTime = require('./RealTimeDB');
 
 const port = config.port;
 
@@ -85,7 +86,7 @@ app.get('/about.json', (req, res) => {
 })
     
 app.get('/weather', (req, res) => {
-    openMeteoService.WeatherRainingOrNot(res)
+    openMeteoService.WeatherRainingOrNot(res, '57xAZfpYTrOThjmGaJO8DiNmCF32')
 })
 
 app.listen(port, () => {

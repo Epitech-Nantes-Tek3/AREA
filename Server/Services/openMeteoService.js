@@ -1,7 +1,7 @@
 const googleService = require('./googleService');
 const http = require('http');
-const configOpenMeteo = require ('./../configOpenMeteo')
 
+const dbRealTime = require('./../RealTimeDB');
 
 let comparaisons = [
     { name: "Ciel clair", result: 0},
@@ -36,8 +36,10 @@ let comparaisons = [
 ]
 
 module.exports = {
-    WeatherRainingOrNot: function(res) {
-        var request = http.get(`http://api.open-meteo.com/v1/forecast?latitude=${configOpenMeteo.latitude}&longitude=${configOpenMeteo.longitude}&hourly=weathercode`, function (response) {
+    WeatherRainingOrNot: function(res, uid) {
+        dbRealTime.getDataFromFireBase(uid, 'OpenMeteoService')
+        .then(data => {
+            var request = http.get(`http://api.open-meteo.com/v1/forecast?latitude=${data.latitude}&longitude=${data.longitude}&hourly=weathercode`, function (response) {
             var buffer = ""
             var data;
             response.on("data", function (chunk) {
@@ -48,17 +50,17 @@ module.exports = {
                 // get date and time info
                 var date = new Date().toISOString().slice(0, 10);
                 var hour = new Date().getHours();
-                console.log(date, 'à', hour, 'heures')
                 // Search for data corresponding to the current date
                 data.hourly.time.forEach(function(time, i) {
                     // Compare date and time
                     if (time.slice(0, 10) == date && time.slice(11, 13) == hour) {
-                        // check the weather
+                        // obtaining the weather code to get the time
                         var weatherCode = data.hourly.weathercode[i];
                         comparaisons.forEach((comparaison) => {
-                            if (comparaison.result === weatherCode) {
-                                console.log(`Le temps est : ${comparaison.name} le ${date} à ${hour} heures`)
-                                googleService.send_mail(`Le temps est : ${comparaison.name} le ${date} à ${hour} heures`)
+                            // comparison of the weathercode to all our weathercodes
+                            if (comparaison.result == weatherCode) {
+                                console.log('success, send an email')
+                                googleService.send_mail(`Le temps est : ${comparaison.name} le ${date} à ${hour} heures`, `météo a ${hour} heures`, 'AREA METEO', uid)
                                 return;
                             }
                         });
@@ -67,5 +69,9 @@ module.exports = {
             })
         })
         res.send('Weather info')
+        })
+        .catch(error => {
+            console.log(error);
+        });
     }
 }
