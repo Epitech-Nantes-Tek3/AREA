@@ -1,4 +1,10 @@
 node_modules
 package-lock.json
 .env
-firebaseconfig.js
+# Config
+firebaseConfig.js
+
+# Service
+configGmail.js
+configOpenMeteo.js
+
