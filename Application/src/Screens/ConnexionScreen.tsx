@@ -10,18 +10,12 @@ import { Options } from "react-native-navigation";
 
 
 export default function ConnexionScreen() {
-    // Sets different sizes to be good on both web and mobile
-    const percentageWidthLogo: number = Platform.OS === "web" ? 10 : 30
-    const percentageWidthInputs: string = Platform.OS === "web" ? "30%" : "80%"
-    const percentageWidthSeparator: string = Platform.OS === "web" ? "40%" : "90%"
-
     // Gets the size of the current window
     const window: ScaledSize = Dimensions.get("window")
 
     // Hooks allowing use to get/set user infos
     const [userMail, setUserMail] = useState("")
     const [userPass, setUserPass] = useState("")
-
 
     function forgotPassword() {
         console.log("Act on forgot password")
@@ -56,25 +50,15 @@ export default function ConnexionScreen() {
     function SocialButtons() {
         return (
             <View style={styles.socialContainer}>
-                <FacebookSocialButton onPress={connectWithFacebook} buttonViewStyle={[styles.socialButtons, {width: percentageWidthInputs}]} buttonText="Se connecter avec Facebook" />
-                <GoogleSocialButton onPress={connectWithGoogle} buttonViewStyle={[styles.socialButtons, {width: percentageWidthInputs}]} buttonText="Se connecter avec Google" />
+                <FacebookSocialButton onPress={connectWithFacebook} buttonViewStyle={[styles.socialButtons, {width: "80%"}]} buttonText="Se connecter avec Facebook" />
+                <GoogleSocialButton onPress={connectWithGoogle} buttonViewStyle={[styles.socialButtons, {width: "80%"}]} buttonText="Se connecter avec Google" />
                 {Platform.OS === "ios" &&
-                <AppleSocialButton onPress={connectWithApple} buttonViewStyle={[styles.socialButtons, {width: percentageWidthInputs}]}  buttonText="Se connecter avec Apple" />}
+                <AppleSocialButton onPress={connectWithApple} buttonViewStyle={[styles.socialButtons, {width: "80%"}]}  buttonText="Se connecter avec Apple" />}
             </View>
         )
     }
 
     function SignUp() {
-        if (Platform.OS === "web") {
-            return (
-                <View style={signStyles.webContainer}>
-                    <Text style={signStyles.webNoAccountText}>Pas encore de compte ? </Text>
-                    <TouchableOpacity onPress={navigateToSubscribe} style={[styles.inputBorderStyle, styles.connectInside, {width: percentageWidthInputs}]}>
-                        <Text style={styles.connectText}>S'inscrire</Text>
-                    </TouchableOpacity>
-                </View>
-            )
-        }
         return(
             <View style={signStyles.mobileContainer}>
                 <Line height={0.5} width={"60%"} borderWidth={0.5} borderColor={Globals.Colors.main} />
@@ -99,9 +83,7 @@ export default function ConnexionScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
-            {(Platform.OS === "ios" || Platform.OS == "android") &&
-                <Circles/>
-            }
+            <Circles/>
             <View style={{flex: 10}}>
                 <Image
                     source={require("../assets/logo.png")}
@@ -109,12 +91,12 @@ export default function ConnexionScreen() {
                         [
                             styles.image,
                             {
-                                width: window.width / 100 * percentageWidthLogo,
-                                height: window.width / 100 * percentageWidthLogo
+                                width: window.width / 100 * 30,
+                                height: window.width / 100 * 30
                             }
                         ]
                 }/>
-                <View style={[styles.inputContainer, {width: percentageWidthInputs}]}>
+                <View style={[styles.inputContainer, {width: "80%"}]}>
                     <TextInput
                         style={[styles.inputBorderStyle, styles.inputInside]}
                         onChangeText={(text) => setUserMail(text)}
@@ -146,7 +128,7 @@ export default function ConnexionScreen() {
                         <Text style={styles.connectText}>Se connecter</Text>
                     </TouchableOpacity>
                 </View>
-                <Separator width={percentageWidthSeparator} text="ou"/>
+                <Separator width={"90%"} text="ou"/>
                 <SocialButtons/>
             </View>
             <SignUp/>
