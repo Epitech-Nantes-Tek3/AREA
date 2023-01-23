@@ -1,5 +1,6 @@
 version: "2.2"
 services:
+  # SERVER PART
   server:
     build:
       context: ./Server
@@ -13,6 +14,8 @@ services:
       interval: 10s
       timeout: 10s
       retries: 3
+
+  # CLIENT WEB PART
   client_web:
     depends_on:
       server:
@@ -26,21 +29,25 @@ services:
     ports:
       - "8081:3000"
     volumes:
-      - ./Application:/tmp
+      - area:/release
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000"]
       interval: 10s
       timeout: 10s
       retries: 3
+
+  # MOBILE CLIENT PART
   client_mobile:
     build:
       context: ./Application
-      dockerfile: mobile2.Dockerfile
+      dockerfile: mobile.Dockerfile
     volumes:
-      - ./Application:/tmp
-    command: npm start
+      - area:/release
     healthcheck:
       test: ["CMD", "uname"]
       interval: 10s
       timeout: 10s
       retries: 3
+
+volumes:
+  area:
