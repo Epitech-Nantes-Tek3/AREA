@@ -86,7 +86,7 @@ app.get('/about.json', (req, res) => {
 })
     
 app.get('/weather', (req, res) => {
-    openMeteoService.WeatherRainingOrNot(res, '57xAZfpYTrOThjmGaJO8DiNmCF32')
+    openMeteoService.WeatherRainingOrNot(res, 'p5Y9YnHdZWSvoENauPtuy79DV2x2')
 })
 
 app.listen(port, () => {

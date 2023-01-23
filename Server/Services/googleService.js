@@ -21,7 +21,7 @@ module.exports = {
                 auth: {
                     type: 'OAUTH2',
                     user: data.user,
-                    clientId: data.cliendId,
+                    clientId: data.clientId,
                     clientSecret: data.clientSecret,
                     refreshToken: data.refreshToken,
                     accessToken: accessToken
