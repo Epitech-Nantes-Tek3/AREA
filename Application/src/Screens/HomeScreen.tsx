@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, SafeAreaView, View, Text, Image, Dimensions, ScaledSize, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { Options } from "react-native-navigation";
 import { Globals } from "../Common/Globals";
 import { SingleArea } from "../Common/Interfaces";
 import AreaBlock from "../Components/AreaBlock";
@@ -19,9 +20,26 @@ export default function HomeScreen() {
     }
 
     function navigateToAddArea() {
+        let options: Options = {
+            topBar: {
+                title: {
+                    text: "Ajouter une AREA" 
+                },
+                background: {
+                    color: "transparent"
+                },
+            }
+        }
+        NavigatorshowModal("AddArea", options)
     }
 
     function removeAreaFromList(index: number) {
+        function supressArea() {
+            let copyAreas = [...allAreas]
+            copyAreas.splice(index, 1)
+            setAllAreas(copyAreas)
+        }
+
         Alert.alert(
             "Supprimer",
             "Tu vas supprimer une AREA, veux-tu continuer ?",
@@ -32,11 +50,7 @@ export default function HomeScreen() {
               },
               {
                 text: "Supprimer",
-                onPress: () => {
-                    let copyAreas = [...allAreas]
-                    copyAreas.splice(index, 1)
-                    setAllAreas(copyAreas)
-                },
+                onPress: supressArea,
                 style: "destructive"
               }
             ]
@@ -47,8 +61,8 @@ export default function HomeScreen() {
         return (
             <View style={areaBlock.container}>
                 <View style={areaBlock.textContainer}>
-                    <Text style={areaBlock.text}>{props.area.action}</Text>
-                    <Text style={areaBlock.text}>{props.area.reaction}</Text>
+                    <Text style={areaBlock.text}>{props.area.action.description}</Text>
+                    <Text style={areaBlock.text}>{props.area.reaction.description}</Text>
                 </View>
                 <View style={areaBlock.trashContainer}>
                     <TouchableOpacity style={areaBlock.imageSize} onPress={() => removeAreaFromList(props.index)}>
