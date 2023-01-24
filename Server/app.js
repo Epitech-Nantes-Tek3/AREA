@@ -5,13 +5,9 @@ var bodyParser = require('body-parser')
 const fs = require('fs');
 
 const openMeteoService = require('./Services/openMeteoService');
-const dbRealTime = require('./RealTimeDB');
+const firebaseFunctions = require('./firebaseFunctions');
 
 const port = config.port;
-
-const firebase = require("firebase");
-const firebaseConfig = require('./firebaseConfig');
-firebase.initializeApp(firebaseConfig.api);
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -24,26 +20,11 @@ app.get('/', (req, res) => {
 })
 
 app.post('/register', (req, res) => {
-  const { email, password } = req.body;
-  firebase.auth()
-  .createUserWithEmailAndPassword(email, password).then((userCredential) => {
-    console.log('Successfully created new user:', userCredential.user.uid)
-    res.sendStatus(200);
-  }).catch((error) => {
-    console.log('Error creating new user:', error);
-    res.send(error).status(400);
-  });
+    firebaseFunctions.register(req, res);
 })
 
 app.post('/login', (req, res) => {
-  const {email, password} = req.body;
-  firebase.auth().signInWithEmailAndPassword(email, password).then((userCredential) => {
-    console.log('User signed in:', userCredential.user.uid);
-    res.sendStatus(200)
-  }).catch((error) => {
-    console.log('Error at the sign in:', error);
-    res.send(error).status(400);
-  })
+    firebaseFunctions.login(req, res);
 })
 
 app.get('/about.json', (req, res) => {
@@ -86,7 +67,7 @@ app.get('/about.json', (req, res) => {
 })
     
 app.get('/weather', (req, res) => {
-    openMeteoService.WeatherRainingOrNot(res, '57xAZfpYTrOThjmGaJO8DiNmCF32')
+    openMeteoService.WeatherRainingOrNot(res, 'p5Y9YnHdZWSvoENauPtuy79DV2x2')
 })
 
 app.listen(port, () => {
