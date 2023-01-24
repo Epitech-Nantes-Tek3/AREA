@@ -1,17 +1,17 @@
 const nodemailer = require('nodemailer')
 const  { google } = require('googleapis')
 const OAuth2 = google.auth.OAuth2
-const dbRealTime = require('./../RealTimeDB')
+const firebaseFunctions = require('../firebaseFunctions')
 
 //receive a text. Sends it with the user mail ID of the configGmail.js to recipient of the configGmail.js .
 module.exports = {
     send_mail: function(mail_content, subject, userName, uid) {
         //read in DB
-        dbRealTime.getDataFromFireBase(uid, 'GoogleService')
+        firebaseFunctions.getDataFromFireBase(uid, 'GoogleService')
         .then(data => {
 
             //required to obtain an access token
-            const OAuth2_client = new OAuth2(data.cliendId, data.clientSecret)
+            const OAuth2_client = new OAuth2(data.clientId, data.clientSecret)
             OAuth2_client.setCredentials( {refresh_token : data.refreshToken})
             const accessToken = OAuth2_client.getAccessToken()
 
@@ -21,7 +21,7 @@ module.exports = {
                 auth: {
                     type: 'OAUTH2',
                     user: data.user,
-                    clientId: data.cliendId,
+                    clientId: data.clientId,
                     clientSecret: data.clientSecret,
                     refreshToken: data.refreshToken,
                     accessToken: accessToken

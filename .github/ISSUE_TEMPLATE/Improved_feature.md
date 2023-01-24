@@ -1,5 +1,5 @@
 ---
-name: New feature
+name: Improved feature
 about: Suggest an idea for this project
 title: ''
 labels: 'Feature'
