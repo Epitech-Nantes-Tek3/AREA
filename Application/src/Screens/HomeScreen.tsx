@@ -83,7 +83,7 @@ export default function HomeScreen() {
                             width: window.width / 100 * 10,
                             height: window.width / 100 * 10
                         }}>
-                        <Image source={require("../assets/add.png")} style={styles.fillContainer}/> 
+                        <Image source={require("../assets/add.png")} style={[styles.fillContainer, styles.addImage]}/> 
                     </TouchableOpacity>
                 </View>
             </View>
@@ -129,7 +129,8 @@ const styles = StyleSheet.create({
     },
     titlePage: {
         fontFamily: "Poppins-Bold",
-        fontSize: 35
+        fontSize: 35,
+        color: "black"
     },
     avatarIcon: {
         borderRadius: 50
@@ -143,11 +144,15 @@ const styles = StyleSheet.create({
     },
     subtitleText: {
         fontFamily: "Poppins-Medium",
-        fontSize: 20
+        fontSize: 20,
+        color: "black"
     },
     fillContainer: {
         width: "100%",
         height: "100%"
+    },
+    addImage: {
+        tintColor: "black"
     }
 })
 
