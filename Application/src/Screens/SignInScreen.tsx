@@ -5,8 +5,8 @@ import { Globals } from "../Common/Globals";
 import FacebookSocialButton from "../Components/SocialButtons/FacebookButton";
 import GoogleSocialButton from "../Components/SocialButtons/GoogleSocialButton";
 import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
-import { Options } from "react-native-navigation";
-import { NavigatorPop, NavigatorPush } from "../Navigator";
+import { NavigatorPop } from "../Navigator";
+import Circles from "../Components/Circles";
 
 
 export default function SignInScreen() {
@@ -61,15 +61,6 @@ export default function SignInScreen() {
                         <Text style={signStyles.mobileSignInText}>Se connecter</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
-        )
-    }
-
-    function Circles() {
-        return (
-            <View>
-                <View style={circles.bigCircle}/>
-                <View style={circles.smallCircle}/>
             </View>
         )
     }
@@ -230,28 +221,5 @@ const signStyles = StyleSheet.create({
         color: "#95B8D1",
         fontFamily: "Poppins-Bold",
         fontSize: 18
-    }
-})
-
-const circles = StyleSheet.create({
-    bigCircle: {
-        width: 406,
-        height: 406,
-        borderRadius: 500,
-        backgroundColor: Globals.Colors.main,
-        position: "absolute",
-        top: -244,
-        left: -55,
-        opacity: 0.4
-    },
-    smallCircle: {
-        width: 342,
-        height: 342,
-        borderRadius: 500,
-        backgroundColor: Globals.Colors.main,
-        position: "absolute",
-        top: -203,
-        left: 179,
-        opacity: 0.4
     }
 })
