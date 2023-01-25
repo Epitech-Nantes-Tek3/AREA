@@ -15,6 +15,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Existing files
+        id: existing-files
         run: |
           nbTests=4
           nbSuccess=0
@@ -29,6 +30,18 @@ jobs:
             echo "$nbSuccess/$nbTests are found. Check previous line on stdout to know which file is missing."
           fi
           exit $(($nbTests-nbSuccess))
+
+      - uses: peter-evans/create-or-update-comment@v2
+        if: failure()
+        with:
+          issue-number: 34
+          body: "Some files for docker-compose doesn't exist. Check ${{ github.run_id }} to get more details."
+
+      - uses: peter-evans/create-or-update-comment@v2
+        if: success()
+        with:
+          issue-number: 34
+          body: "All is good !"
 
   mirroring:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
