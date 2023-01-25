@@ -33,7 +33,7 @@ jobs:
 
       - name: Replace comment on failure
         uses: peter-evans/create-or-update-comment@v2
-        id: comment
+        id: comment-1
         if: vars.COMMENT_ID != 0
         with:
           comment-id: vars.COMMENT_ID
@@ -42,7 +42,7 @@ jobs:
 
       - name: Replace comment on success
         uses: peter-evans/create-or-update-comment@v2
-        id: comment
+        id: comment-2
         if: vars.COMMENT_ID != 0
         with:
           comment-id: vars.COMMENT_ID
@@ -51,24 +51,16 @@ jobs:
 
       - name: Create comment on failure
         uses: peter-evans/create-or-update-comment@v2
-        id: comment
+        id: comment-3
         if: steps.existing-files.outcome != 0 && vars.COMMENT_ID == 0
         with:
           issue-number: 34
           body: "Some files for docker-compose doesn't exist. Check https://github.com/Epitech-Nantes-Tek3/AREA/actions/runs/${{ github.run_id }} to get more details."
 
-      - name: Create comment on success
-        uses: peter-evans/create-or-update-comment@v2
-        id: comment
-        if: steps.existing-files.outcome == 0 && vars.COMMENT_ID == 0
-        with:
-          issue-number: 34
-          body: "All is good !"
-
       - name: Create github comment variable
         if: vars.COMMENT_ID == 0
         run: |
-          vars.COMMENT_ID=${{ steps.comment.outputs.comment-id }}
+          vars.COMMENT_ID=${{ steps.comment-3.outputs.comment-id }}
 
   mirroring:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
