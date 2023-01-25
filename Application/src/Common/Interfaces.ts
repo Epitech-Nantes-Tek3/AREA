@@ -8,6 +8,11 @@ export interface AreaList {
 }
 
 export interface InfoArea {
-    service: "spotify" | "google" | "twitter" | "twitch" | "iss" | "météo" | "nasa"
+    service: Service
     description: string
+}
+
+export interface Service {
+    name: "spotify" | "google" | "twitter" | "twitch" | "iss" | "météo" | "nasa" | "strava"
+    needsConnexion: boolean
 }

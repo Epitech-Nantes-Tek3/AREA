@@ -5,7 +5,7 @@ import { Globals } from "../Common/Globals";
 import { SingleArea } from "../Common/Interfaces";
 import AreaBlock from "../Components/AreaBlock";
 import Circles from "../Components/Circles";
-import { NavigatorshowModal } from "../Navigator";
+import { NavigatorPush, NavigatorshowModal } from "../Navigator";
 
 interface AreaBlockProps {
     index: number
@@ -17,6 +17,17 @@ export default function HomeScreen() {
     const [allAreas, setAllAreas] = useState<Array<SingleArea>>([])
 
     function navigateToProfile() {
+        let options: Options = {
+            topBar: {
+                title: {
+                    text: "Profil" 
+                },
+                background: {
+                    color: "transparent"
+                },
+            }
+        }
+        NavigatorPush("SettingsScreen", "mainStack", options)
     }
 
     function navigateToAddArea() {

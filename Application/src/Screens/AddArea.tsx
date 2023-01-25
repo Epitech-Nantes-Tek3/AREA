@@ -4,6 +4,7 @@ import { Globals } from "../Common/Globals";
 import { InfoArea, SingleArea } from "../Common/Interfaces";
 import { ACTIONS, REACTIONS } from "../Common/Areas";
 import { Navigation } from "react-native-navigation";
+import { NavigatorshowModal } from "../Navigator";
 
 interface InfoBlockProps {
     area: InfoArea
@@ -29,7 +30,8 @@ export default function AddArea() {
         "twitter": require("../assets/logo/twitter.png"),
         "google": require("../assets/logo/google.png"),
         "météo": require("../assets/logo/meteo.png"),
-        "twitch": require("../assets/logo/twitch.png")
+        "twitch": require("../assets/logo/twitch.png"),
+        "strava": require("../assets/logo/strava.png")
     }
 
     function sendArea() {
@@ -52,11 +54,11 @@ export default function AddArea() {
             <TouchableOpacity style={{height: "75%", width: 200, backgroundColor: color, borderRadius: 20, marginRight: 16}} onPress={pressBlock}>
                 <View style={{flex: 1, justifyContent: "center", flexDirection: "row", marginTop: 8}}>
                     <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
-                        <Image source={logo[props.area.service]} style={{width: 40, height: 40}}/>
+                        <Image source={logo[props.area.service.name]} style={{width: 40, height: 40}}/>
                     </View>
                     <View style={{flex: 2, alignItems: "center", justifyContent: "center"}}>
                         <Text style={{textTransform: "capitalize", fontFamily: "Poppins-Medium", fontSize: 25, color: "white"}}>
-                            {props.area.service}
+                            {props.area.service.name}
                         </Text>
                     </View>
                 </View>
