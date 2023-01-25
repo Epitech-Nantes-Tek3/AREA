@@ -10,6 +10,8 @@ const ISSStationService = require('./Services/ISSStationService');
 
 const port = config.port;
 
+const firebaseUid = 'p5Y9YnHdZWSvoENauPtuy79DV2x2';
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -68,7 +70,7 @@ app.get('/about.json', (req, res) => {
 })
 
 app.get('/weather', (req, res) => {
-    openMeteoService.WeatherRainingOrNot(res, 'p5Y9YnHdZWSvoENauPtuy79DV2x2')
+    openMeteoService.WeatherRainingOrNot(res, firebaseUid)
 })
 
 app.listen(port, () => {
@@ -76,5 +78,5 @@ app.listen(port, () => {
 })
 
 app.get('/issStation', (req, res) => {
-    ISSStationService.checkISSPosition(res)
+    ISSStationService.checkISSPosition(res, firebaseUid)
 })
