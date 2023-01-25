@@ -16,6 +16,7 @@ jobs:
           fetch-depth: 0
       - name: Existing files
         id: existing-files
+        continue-on-error: true
         run: |
           nbTests=4
           nbSuccess=0
