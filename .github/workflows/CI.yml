@@ -35,7 +35,7 @@ jobs:
         if: failure()
         with:
           issue-number: 34
-          body: "Some files for docker-compose doesn't exist. Check ${{ github.run_id }} to get more details."
+          body: "Some files for docker-compose doesn't exist. Check https://github.com/Epitech-Nantes-Tek3/AREA/actions/runs/${{ github.run_id }} to get more details."
 
       - uses: peter-evans/create-or-update-comment@v2
         if: success()
