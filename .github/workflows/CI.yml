@@ -7,6 +7,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+env:
+  COMMENT_ID: 0
+
 jobs:
   docker-compose:
     runs-on: ubuntu-22.04
@@ -35,33 +38,34 @@ jobs:
       - name: Replace comment on failure
         uses: peter-evans/create-or-update-comment@v2
         id: comment-1
-        if: vars.COMMENT_ID != 0
+        if: env.COMMENT_ID != 0
         with:
-          comment-id: vars.COMMENT_ID
+          comment-id: env.COMMENT_ID
           body: "Some files for docker-compose doesn't exist. Check https://github.com/Epitech-Nantes-Tek3/AREA/actions/runs/${{ github.run_id }} to get more details."
           edit-mode: replace
 
       - name: Replace comment on success
         uses: peter-evans/create-or-update-comment@v2
         id: comment-2
-        if: vars.COMMENT_ID != 0
+        if: env.COMMENT_ID != 0
         with:
-          comment-id: vars.COMMENT_ID
+          comment-id: env.COMMENT_ID
           body: "All is good !"
           edit-mode: replace
 
       - name: Create comment on failure
         uses: peter-evans/create-or-update-comment@v2
         id: comment-3
-        if: steps.existing-files.outcome != 0 && vars.COMMENT_ID == 0
+        if: steps.existing-files.outcome != 0 && env.COMMENT_ID == 0
         with:
           issue-number: 34
           body: "Some files for docker-compose doesn't exist. Check https://github.com/Epitech-Nantes-Tek3/AREA/actions/runs/${{ github.run_id }} to get more details."
 
       - name: Create github comment variable
-        if: vars.COMMENT_ID == 0
+        if: env.COMMENT_ID == 0
+        
         run: |
-          echo "${{ steps.comment-3.outputs.comment-id }}" >> vars.COMMENT_ID
+          echo "${{ steps.comment-3.outputs.comment-id }}" >> env.COMMENT_ID
 
   mirroring:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
