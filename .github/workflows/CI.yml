@@ -18,9 +18,16 @@ jobs:
         run: |
           nbTests=4
           nbSuccess=0
-          find docker-compose.yml; let nbSuccess++ || echo "docker-compose.yml not found" >&2
-          find Server/Dockerfile || echo "Server/Dockerfile" not found" >&2
-          let nbSuccess++
+          find docker-compose.yml && let nbSuccess++ || echo "docker-compose.yml not found" >&2
+          find Server/Dockerfile && let nbSuccess++ || echo "Server/Dockerfile not found" >&2
+          find Web/Dockerfile && let nbSuccess++ || echo "Web/Dockerfile not found" >&2
+          find Client/Dockerfile && let nbSuccess++ || echo "Client/Dockerfile not found" >&2
+          if (($nbSuccess == nbTests))
+          then
+            echo "All file ($nbTests) are found!"
+          else
+            echo "$nbSuccess/$nbTests are found. Check previous line on stdout to know which file is missing."
+          fi
 
   mirroring:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
