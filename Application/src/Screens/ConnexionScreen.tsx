@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import { StyleSheet, Text, SafeAreaView, Image, Platform, Dimensions, TextInput, View, TouchableOpacity, ScaledSize } from "react-native";
 import Separator, { Line } from "../Components/Separator";
 import { Globals } from "../Common/Globals";
@@ -8,11 +8,28 @@ import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
 import { NavigatorPush } from "../Navigator";
 import { Options } from "react-native-navigation";
 import Circles from "../Components/Circles";
+import { environment } from "../../env";
+
+import auth from '@react-native-firebase/auth';
+import firebase from '@react-native-firebase/app'
+import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
 
 
 export default function ConnexionScreen() {
     // Gets the size of the current window
     const window: ScaledSize = Dimensions.get("window")
+
+    useEffect(() => {
+        const firebaseConfig = {
+            apiKey: environment.APIKEY,
+            authDomain: environment.AUTHDOMAIN,
+            databaseURL: environment.DATABASEURL,
+            projectId: environment.PROJECTID,
+            storageBucket: environment.STORAGEBUCKET,
+            messagingSenderId: environment.MESSAGINGSENDERID,
+            appId: environment.APPID
+        }
+    firebase.initializeApp(firebaseConfig)})
 
     // Hooks allowing use to get/set user infos
     const [userMail, setUserMail] = useState("")
@@ -34,8 +51,25 @@ export default function ConnexionScreen() {
         console.log("Connect with Google")
     }
 
-    function connectWithFacebook() {
-        console.log("Connect with Facebook")
+    async function connectWithFacebook() {
+        const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+
+        if (result.isCancelled) {
+            throw 'user cancelled the login process';
+        }
+        const data = await AccessToken.getCurrentAccessToken();
+
+        if (!data) {
+            throw 'Something went wrong obtaining access token';
+        }
+
+        // Create a Firebase credential with the AccessToken
+        console.log(data.accessToken)
+        const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+
+        // Sign-in the user with the credential
+        return auth().signInWithCredential(facebookCredential);
+
     }
 
     function navigateToSubscribe() {
