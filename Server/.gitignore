@@ -4,13 +4,6 @@ package-lock.json
 # Config
 firebaseConfig.js
 
-# Config
-firebaseConfig.js
-
 # Service
 configGmail.js
 configOpenMeteo.js
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
