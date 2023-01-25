@@ -31,11 +31,15 @@ jobs:
             echo "$nbSuccess/$nbTests are found. Check previous line on stdout to know which file is missing."
           fi
           exit $(($nbTests-nbSuccess))
+
       - name: Run docker-compose build
+        if: ${{ steps.existing-files.outcome == 0}}
         id: docker-compose-build
+          # echo "${{ secrets.FIREBASE_CONFIG }}" > Server/firebaseConfig.js
         run: |
-          echo "${{ secrets.FIREBASE_CONFIG }}" > firebaseConfig.js
-          docker-compose build
+          docker-compose build server
+          docker-compose build client_mobile
+          docker-compose build client_web
 
   mirroring:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
