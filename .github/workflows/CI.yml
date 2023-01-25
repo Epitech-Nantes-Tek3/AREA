@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Existing files
+      - name: Check existing files
         id: existing-files
         continue-on-error: true
         run: |
@@ -23,7 +23,7 @@ jobs:
           find docker-compose.yml && let nbSuccess++ || echo "docker-compose.yml not found" >&2
           find Server/Dockerfile && let nbSuccess++ || echo "Server/Dockerfile not found" >&2
           find Web/Dockerfile && let nbSuccess++ || echo "Web/Dockerfile not found" >&2
-          find Client/Dockerfile && let nbSuccess++ || echo "Client/Dockerfile not found" >&2
+          find Application/Dockerfile && let nbSuccess++ || echo "Application/Dockerfile not found" >&2
           if (($nbSuccess == nbTests))
           then
             echo "All file ($nbTests) are found!"
@@ -31,6 +31,11 @@ jobs:
             echo "$nbSuccess/$nbTests are found. Check previous line on stdout to know which file is missing."
           fi
           exit $(($nbTests-nbSuccess))
+      - name: Run docker-compose build
+        id: docker-compose-build
+        run: |
+          echo "${{ secrets.FIREBASE_CONFIG }}" > firebaseConfig.js
+          docker-compose build
 
   mirroring:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
