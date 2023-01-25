@@ -16,7 +16,6 @@ jobs:
           fetch-depth: 0
       - name: Check existing files
         id: existing-files
-        continue-on-error: true
         run: |
           nbTests=4
           nbSuccess=0
@@ -33,7 +32,6 @@ jobs:
           exit $(($nbTests-nbSuccess))
 
       - name: Run docker-compose build
-        if: ${{ steps.existing-files.outcome == 0}}
         id: docker-compose-build
           # echo "${{ secrets.FIREBASE_CONFIG }}" > Server/firebaseConfig.js
         run: |
