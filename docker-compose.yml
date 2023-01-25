@@ -21,11 +21,11 @@ services:
       server:
         condition: service_healthy
       client_mobile:
-        condition: service_healthy
+        condition: service_started
     build:
-      context: ./Application
-      dockerfile: web.Dockerfile
-    command: react-scripts start
+      context: ./Web
+      dockerfile: Dockerfile
+    command: npm start
     ports:
       - "8081:3000"
     volumes:
@@ -40,15 +40,14 @@ services:
   client_mobile:
     build:
       context: ./Application
-      dockerfile: mobile.Dockerfile
+      dockerfile: Dockerfile
     volumes:
       - area:/release
-    command: npm start
-    healthcheck:
-      test: ["CMD", "uname"]
-      interval: 10s
-      timeout: 10s
-      retries: 3
+    # healthcheck:
+    #   test: ["CMD", "uname"]
+    #   interval: 10s
+    #   timeout: 10s
+    #   retries: 3
 
 volumes:
   area:
