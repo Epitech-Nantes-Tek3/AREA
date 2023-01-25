@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:1
 FROM node:latest
 COPY . /usr/app
 WORKDIR /usr/app

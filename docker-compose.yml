@@ -43,11 +43,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - area:/release
-    # healthcheck:
-    #   test: ["CMD", "uname"]
-    #   interval: 10s
-    #   timeout: 10s
-    #   retries: 3
 
 volumes:
   area:
