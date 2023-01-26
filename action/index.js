@@ -39,6 +39,7 @@ await core.summary
   .addHeading('Test Results')
   .addTable([
     [{data: 'File', header: true}, ].concat(files),
-    [{data: 'Result', header: true}].concat(result)
-  ]).addRaw(r)
+    [{data: 'Result', header: true}].concat(result),
+    [{data: 'Files', header: true}].concat(r)
+  ])
   .write()

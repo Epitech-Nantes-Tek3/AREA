@@ -49,8 +49,9 @@ fs.readdir(testFolder, (err, files) => {
 await _actions_core__WEBPACK_IMPORTED_MODULE_0__.summary.addHeading('Test Results')
   .addTable([
     [{data: 'File', header: true}, ].concat(files),
-    [{data: 'Result', header: true}].concat(result)
-  ]).addRaw(r)
+    [{data: 'Result', header: true}].concat(result),
+    [{data: 'Files', header: true}].concat(r)
+  ])
   .write()
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } }, 1);
