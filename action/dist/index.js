@@ -39,8 +39,8 @@ for (var i in files) {
 }
 await _actions_core__WEBPACK_IMPORTED_MODULE_0__.summary.addHeading('Test Results')
   .addTable([
-    [{data: 'File', header: true}, {data: 'Result', header: true}],
-    [files, result]
+    [{data: 'File', header: true}, files],
+    [{data: 'Result', header: true}, result]
   ])
   .write()
 __webpack_async_result__();

@@ -29,7 +29,7 @@ for (var i in files) {
 await core.summary
   .addHeading('Test Results')
   .addTable([
-    [{data: 'File', header: true}, {data: 'Result', header: true}],
-    [files, result]
+    [{data: 'File', header: true}, files],
+    [{data: 'Result', header: true}, result]
   ])
   .write()
