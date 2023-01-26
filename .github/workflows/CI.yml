@@ -25,6 +25,7 @@ jobs:
           find Server/Dockerfile && let nbSuccess++ && echo "| Server/Dockerfile | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| Server/Dockerfile | FAIL |" >> $GITHUB_STEP_SUMMARY
           find Web/Dockerfile && let nbSuccess++ && echo "| Web/Dockerfile | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| Web/Dockerfile | FAIL |" >> $GITHUB_STEP_SUMMARY
           find Application/Dockerfile && let nbSuccess++ && echo "| Application/Dockerfile | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| Application/Dockerfile | FAIL |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           if (($nbSuccess == nbTests))
           then
             echo "All file ($nbTests) are found!" >> $GITHUB_STEP_SUMMARY
