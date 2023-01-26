@@ -31,14 +31,6 @@ jobs:
           fi
           exit $(($nbTests-nbSuccess))
 
-      - name: Run docker-compose build
-        id: docker-compose-build
-          # echo "${{ secrets.FIREBASE_CONFIG }}" > Server/firebaseConfig.js
-        run: |
-          docker-compose build server
-          docker-compose build client_mobile
-          docker-compose build client_web
-
   mirroring:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
