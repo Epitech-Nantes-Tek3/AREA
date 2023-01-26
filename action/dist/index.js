@@ -29,7 +29,7 @@ try {
 const files = ["./docker-compose.yml", "./Server/Dockerfile", "./Application/Dockerfile", "./Web/Dockerfile"]
 const result = []
 
-for (i in files) {
+for (var i in files) {
     var file = new File(i)
     if (file.exists()) {
         result.push("PASS")
