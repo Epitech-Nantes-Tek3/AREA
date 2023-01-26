@@ -27,14 +27,12 @@ try {
 }
 
 await _actions_core__WEBPACK_IMPORTED_MODULE_0__.summary.addHeading('Test Results')
-  .addCodeBlock(generateTestResults(), "js")
   .addTable([
     [{data: 'File', header: true}, {data: 'Result', header: true}],
     ['foo.js', 'Pass '],
     ['bar.js', 'Fail '],
     ['test.js', 'Pass ']
   ])
-  .addLink('View staging deployment!', 'https://github.com')
   .write()
 __webpack_async_result__();
 } catch(e) { __webpack_async_result__(e); } }, 1);
