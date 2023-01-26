@@ -12,26 +12,26 @@ __nccwpck_require__.r(__webpack_exports__);
 
 // const core = require('@actions/core');
 const github = __nccwpck_require__(16);
+const fs = __nccwpck_require__(7147)
 
-try {
-  // `who-to-greet` input defined in action metadata file
-  const nameToGreet = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('who-to-greet');
-  console.log(`Hello ${nameToGreet}!`);
-  const time = (new Date()).toTimeString();
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.setOutput("time", time);
-  // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
-} catch (error) {
-  _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(error.message);
-}
+// try {
+//   // `who-to-greet` input defined in action metadata file
+//   const nameToGreet = core.getInput('who-to-greet');
+//   console.log(`Hello ${nameToGreet}!`);
+//   const time = (new Date()).toTimeString();
+//   core.setOutput("time", time);
+//   // Get the JSON webhook payload for the event that triggered the workflow
+//   const payload = JSON.stringify(github.context.payload, undefined, 2)
+//   console.log(`The event payload: ${payload}`);
+// } catch (error) {
+//   core.setFailed(error.message);
+// }
 
 const files = ["./docker-compose.yml", "./Server/Dockerfile", "./Application/Dockerfile", "./Web/Dockerfile"]
 const result = []
 
 for (var i in files) {
-    var file = new File(i)
-    if (file.exists()) {
+    if (fs.existsSync(i)) {
         result.push("PASS")
     } else {
         result.push("FAIL")
