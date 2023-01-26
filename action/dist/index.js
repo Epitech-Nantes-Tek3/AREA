@@ -26,12 +26,21 @@ try {
   _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(error.message);
 }
 
+const files = ["./docker-compose.yml", "./Server/Dockerfile", "./Application/Dockerfile", "./Web/Dockerfile"]
+const result = []
+
+for (i in files) {
+    var file = new File(i)
+    if (file.exists()) {
+        result.push("PASS")
+    } else {
+        result.push("FAIL")
+    }
+}
 await _actions_core__WEBPACK_IMPORTED_MODULE_0__.summary.addHeading('Test Results')
   .addTable([
     [{data: 'File', header: true}, {data: 'Result', header: true}],
-    ['foo.js', 'Pass '],
-    ['bar.js', 'Fail '],
-    ['test.js', 'Pass ']
+    files, result
   ])
   .write()
 __webpack_async_result__();
