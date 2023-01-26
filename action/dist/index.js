@@ -31,7 +31,7 @@ const files = ["./docker-compose.yml", "./Server/Dockerfile", "./Application/Doc
 const result = []
 
 for (var i in files) {
-    if (fs.existsSync(i)) {
+    if (fs.existsSync(i) == true) {
         result.push("PASS")
     } else {
         result.push("FAIL")
