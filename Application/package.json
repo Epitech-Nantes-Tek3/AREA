@@ -12,10 +12,8 @@
   },
   "dependencies": {
     "react": "18.1.0",
-    "react-dom": "^18.2.0",
     "react-native": "0.70.6",
     "react-native-navigation": "^7.31.0",
-    "react-native-web": "^0.18.10"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
@@ -47,16 +45,4 @@
       "node"
     ]
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  }
 }
