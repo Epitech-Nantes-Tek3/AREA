@@ -21,7 +21,7 @@ jobs:
           nbSuccess=0
           echo "| Files | Résults |" >> $GITHUB_STEP_SUMMARY
           echo "|-------|---------|" >> $GITHUB_STEP_SUMMARY
-          find ./docker-compose.yml && let nbSuccess++ && echo "| docker-compose.yml | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| docker-compose.yml | FAIL |" >> $GITHUB_STEP_SUMMARY
+          find ./docker-compose.yml || let nbSuccess++ && echo "| docker-compose.yml | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| docker-compose.yml | FAIL |" >> $GITHUB_STEP_SUMMARY
           find Server/Dockerfile && let nbSuccess++ && echo "| Server/Dockerfile | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| Server/Dockerfile | FAIL |" >> $GITHUB_STEP_SUMMARY
           find Web/Dockerfile && let nbSuccess++ && echo "| Web/Dockerfile | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| Web/Dockerfile | FAIL |" >> $GITHUB_STEP_SUMMARY
           find Application/Dockerfile && let nbSuccess++ && echo "| Application/Dockerfile | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| Application/Dockerfile | FAIL |" >> $GITHUB_STEP_SUMMARY
