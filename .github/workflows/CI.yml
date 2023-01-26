@@ -19,27 +19,19 @@ jobs:
         run: |
           nbTests=4
           nbSuccess=0
-          find docker-compose.yml && let nbSuccess++ || echo "docker-compose.yml not found" 2>> $GITHUB_STEP_SUMMARY >&2
-          find Server/Dockerfile && let nbSuccess++ || echo "Server/Dockerfile not found" 2>> $GITHUB_STEP_SUMMARY >&2
-          find Web/Dockerfile && let nbSuccess++ || echo "Web/Dockerfile not found" 2>> $GITHUB_STEP_SUMMARY >&2
-          find Application/Dockerfile && let nbSuccess++ || echo "Application/Dockerfile not found" 2>> $GITHUB_STEP_SUMMARY >&2
+          echo "| Files | Résults |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|---------|" >> $GITHUB_STEP_SUMMARY
+          find docker-compose.yml && let nbSuccess++ && echo "| docker-compose.yml | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| docker-compose.yml | FAIL |" >> $GITHUB_STEP_SUMMARY
+          find Server/Dockerfile && let nbSuccess++ && echo "| Server/Dockerfile | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| Server/Dockerfile | FAIL |" >> $GITHUB_STEP_SUMMARY
+          find Web/Dockerfile && let nbSuccess++ echo "| Web/Dockerfile | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| Web/Dockerfile | FAIL |" >> $GITHUB_STEP_SUMMARY
+          find Application/Dockerfile && let nbSuccess++ echo "| Application/Dockerfile | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| Application/Dockerfile | FAIL |" >> $GITHUB_STEP_SUMMARY
           if (($nbSuccess == nbTests))
           then
             echo "All file ($nbTests) are found!"
           else
-            echo "$nbSuccess/$nbTests are found. Check previous line on stdout to know which file is missing." 2>> $GITHUB_STEP_SUMMARY >&2
+            echo "$nbSuccess/$nbTests are found. Check previous line on stdout to know which file is missing." >> $GITHUB_STEP_SUMMARY
           fi
           exit $(($nbTests-nbSuccess))
-
-  testing-jobs:
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: ./action
-        with:
-          who-to-greet: 'Thomas'
 
   mirroring:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
