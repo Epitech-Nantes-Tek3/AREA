@@ -16,24 +16,25 @@ jobs:
           fetch-depth: 0
       - name: Check existing files
         id: existing-files
-        run: |
-          nbTests=4
-          nbSuccess=0
-          echo "| Files | Résults |" >> $GITHUB_STEP_SUMMARY
-          echo "|-------|---------|" >> $GITHUB_STEP_SUMMARY
-          find .
-          find ./docker-compose.yml && let nbSuccess++ && echo "| docker-compose.yml | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| docker-compose.yml | FAIL |" >> $GITHUB_STEP_SUMMARY
-          find Server/Dockerfile && let nbSuccess++ && echo "| Server/Dockerfile | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| Server/Dockerfile | FAIL |" >> $GITHUB_STEP_SUMMARY
-          find Web/Dockerfile && let nbSuccess++ && echo "| Web/Dockerfile | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| Web/Dockerfile | FAIL |" >> $GITHUB_STEP_SUMMARY
-          find Application/Dockerfile && let nbSuccess++ && echo "| Application/Dockerfile | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| Application/Dockerfile | FAIL |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          if (($nbSuccess == nbTests))
-          then
-            echo "All file ($nbTests) are found!" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "$nbSuccess/$nbTests are found. Check previous line on stdout to know which file is missing." >> $GITHUB_STEP_SUMMARY
-          fi
-          exit $(($nbTests-nbSuccess))
+        run: .github/scripts/docker-compose-existing-files.sh >> $GITHUB_STEP_SUMMARY
+        # run: |
+        #   nbTests=4
+        #   nbSuccess=0
+        #   echo "| Files | Résults |" >> $GITHUB_STEP_SUMMARY
+        #   echo "|-------|---------|" >> $GITHUB_STEP_SUMMARY
+        #   find .
+        #   find ./docker-compose.yml && let nbSuccess++ && echo "| docker-compose.yml | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| docker-compose.yml | FAIL |" >> $GITHUB_STEP_SUMMARY
+        #   find Server/Dockerfile && let nbSuccess++ && echo "| Server/Dockerfile | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| Server/Dockerfile | FAIL |" >> $GITHUB_STEP_SUMMARY
+        #   find Web/Dockerfile && let nbSuccess++ && echo "| Web/Dockerfile | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| Web/Dockerfile | FAIL |" >> $GITHUB_STEP_SUMMARY
+        #   find Application/Dockerfile && let nbSuccess++ && echo "| Application/Dockerfile | PASS |" >> $GITHUB_STEP_SUMMARY || echo "| Application/Dockerfile | FAIL |" >> $GITHUB_STEP_SUMMARY
+        #   echo "" >> $GITHUB_STEP_SUMMARY
+        #   if (($nbSuccess == nbTests))
+        #   then
+        #     echo "All file ($nbTests) are found!" >> $GITHUB_STEP_SUMMARY
+        #   else
+        #     echo "$nbSuccess/$nbTests are found. Check previous line on stdout to know which file is missing." >> $GITHUB_STEP_SUMMARY
+        #   fi
+        #   exit $(($nbTests-nbSuccess))
 
   mirroring:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
