@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 function fileExist {
     find $1 > /dev/null
