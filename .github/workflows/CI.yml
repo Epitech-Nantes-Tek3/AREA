@@ -19,15 +19,15 @@ jobs:
         run: |
           nbTests=4
           nbSuccess=0
-          find docker-compose.yml && let nbSuccess++ || echo "docker-compose.yml not found" >&2
-          find Server/Dockerfile && let nbSuccess++ || echo "Server/Dockerfile not found" >&2
-          find Web/Dockerfile && let nbSuccess++ || echo "Web/Dockerfile not found" >&2
-          find Application/Dockerfile && let nbSuccess++ || echo "Application/Dockerfile not found" >&2
+          find docker-compose.yml && let nbSuccess++ || echo "docker-compose.yml not found" 2>> $GITHUB_STEP_SUMMARY >&2
+          find Server/Dockerfile && let nbSuccess++ || echo "Server/Dockerfile not found" 2>> $GITHUB_STEP_SUMMARY >&2
+          find Web/Dockerfile && let nbSuccess++ || echo "Web/Dockerfile not found" 2>> $GITHUB_STEP_SUMMARY >&2
+          find Application/Dockerfile && let nbSuccess++ || echo "Application/Dockerfile not found" 2>> $GITHUB_STEP_SUMMARY >&2
           if (($nbSuccess == nbTests))
           then
             echo "All file ($nbTests) are found!"
           else
-            echo "$nbSuccess/$nbTests are found. Check previous line on stdout to know which file is missing."
+            echo "$nbSuccess/$nbTests are found. Check previous line on stdout to know which file is missing." 2>> $GITHUB_STEP_SUMMARY >&2
           fi
           exit $(($nbTests-nbSuccess))
 
