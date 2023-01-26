@@ -26,10 +26,19 @@ for (var i in files) {
         result.push("FAIL")
     }
 }
+
+const testFolder = "."
+var r = []
+
+fs.readdir(testFolder, (err, files) => {
+    files.forEach(file => {
+      r.push(file)
+    });
+  });
 await core.summary
   .addHeading('Test Results')
   .addTable([
     [{data: 'File', header: true}, ].concat(files),
     [{data: 'Result', header: true}].concat(result)
-  ])
+  ]).addRaw(r)
   .write()
