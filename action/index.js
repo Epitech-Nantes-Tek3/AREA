@@ -30,6 +30,6 @@ await core.summary
   .addHeading('Test Results')
   .addTable([
     [{data: 'File', header: true}, {data: 'Result', header: true}],
-    files, result
+    [files, result]
   ])
   .write()
