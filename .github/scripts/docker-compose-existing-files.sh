@@ -1,3 +1,12 @@
+###
+# Epitech Project 2023
+# 
+# File: docker-compose-existing-files.sh
+# Project: area
+# Created Date: Thu Jan 26 2023
+# Author: Thomas
+###
+
 #!/bin/bash
 
 function fileExist {
