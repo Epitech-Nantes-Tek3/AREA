@@ -8,7 +8,7 @@
 ###
 
 function lineExists {
-    echo "$file" | grep $1 > /dev/null
+    grep $1 docker-compose.yml > /dev/null
     if (( $? != 0 ))
     then
         echo "| $1 | NOT FOUND |"
@@ -19,8 +19,7 @@ function lineExists {
     fi
 }
 
-file=`cat docker-compose.yml`
-nbTests=5
+nbTests=0
 nbSuccess=0
 
 echo "| Files | Results |"
@@ -28,14 +27,19 @@ echo "|-------|---------|"
 
 lineExists "services:"
 nbSuccess=$(( $nbSuccess + $?))
+nbTests=$(( $nbTests + 1 ))
 lineExists "server:"
 nbSuccess=$(( $nbSuccess + $?))
+nbTests=$(( $nbTests + 1 ))
 lineExists "client_web:"
 nbSuccess=$(( $nbSuccess + $?))
+nbTests=$(( $nbTests + 1 ))
 lineExists "client_mobile:"
 nbSuccess=$(( $nbSuccess + $?))
+nbTests=$(( $nbTests + 1 ))
 lineExists "depends_on:"
 nbSuccess=$(( $nbSuccess + $?))
+nbTests=$(( $nbTests + 1 ))
 
 echo ""
 
