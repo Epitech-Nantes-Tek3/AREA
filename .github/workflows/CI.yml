@@ -2,15 +2,22 @@ name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
   workflow_dispatch:
 
-env:
-  BUILD_TYPE: Release
-
 jobs:
+  docker-compose:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Check existing files
+        id: existing-files
+        run: .github/scripts/docker-compose-existing-files.sh >> $GITHUB_STEP_SUMMARY
+
   mirroring:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
