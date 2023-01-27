@@ -20,16 +20,30 @@ function lineExists {
 }
 
 file=`cat docker-compose.yml`
-
-echo "$file"
+nbTests=5
+nbSuccess=0
 
 echo "| Files | Results |"
 echo "|-------|---------|"
 
 lineExists "services:"
+nbSuccess=$(( $nbSuccess + $?))
 lineExists "server:"
+nbSuccess=$(( $nbSuccess + $?))
 lineExists "client_web:"
+nbSuccess=$(( $nbSuccess + $?))
 lineExists "client_mobile:"
+nbSuccess=$(( $nbSuccess + $?))
 lineExists "depends_on:"
-lineExists "
-volumes:"
+nbSuccess=$(( $nbSuccess + $?))
+
+echo ""
+
+if (( $nbSuccess == $nbTests ))
+then
+    echo "All files are found ($nbTests)."
+    exit 0
+else
+    echo "Some files are missing ($(( $nbTests - $nbSuccess )))"
+    exit 1
+fi
