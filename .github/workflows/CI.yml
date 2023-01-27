@@ -17,6 +17,8 @@ jobs:
       - name: Check existing files
         id: existing-files
         run: .github/scripts/docker-compose-existing-files.sh >> $GITHUB_STEP_SUMMARY
+      - name: Check docker-file consistancy
+        run: .github/scripts/docker-compose-consistancy.sh >> $GITHUB_STEP_SUMMARY
 
   run-docker-compose:
     needs: ["docker-compose-validity"]
