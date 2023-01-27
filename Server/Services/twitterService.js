@@ -2,56 +2,37 @@ const firebaseFunctions = require('../firebaseFunctions')
 const LoginWithTwitter = require('login-with-twitter');
 const { TwitterApi } = require('twitter-api-v2')
 
-
-//Get app token & user token, use twitter-api-v2 to send message
-async function tweet(req, res, appKey, appSecret, message) {
+async function carryOutAnAction(req, res, appKey, appSecret, bearer, hashtagOrMessage, action) {
     const client = new TwitterApi ({
         appKey: appKey,
         appSecret: appSecret,
         accessToken: req.session.user.userToken,
         accessSecret: req.session.user.userTokenSecret
     })
-
-    const twClient = client.readWrite;
-    try {
-        await twClient.v2.tweet(message)
-    } catch (e) {
-        console.log(e)
+    if (action == 'tweet') {
+        const twClient = client.readWrite;
+        try {
+            await twClient.v2.tweet(hashtagOrMessage);
+        } catch (e) {
+            console.log(e)
+            res.redirect('/twitter')
+        }
     }
-    res.redirect('/twitter/dash')
-}
-
-//Get app token & user token,and used bearer to search for the last tweet concerning the hashtag passed in argument. The tweet will then be retweeted
-async function retweet(req, res, appKey, appSecret, bearer, hashtag) {
-    const client = new TwitterApi ({
-        appKey: appKey,
-        appSecret: appSecret,
-        accessToken: req.session.user.userToken,
-        accessSecret: req.session.user.userTokenSecret
-    })
-    const TwBearer = new TwitterApi(bearer);
-    const twitterBearer = TwBearer.readOnly;
-    const whereTakenTweets = await twitterBearer.v2.search(hashtag);
-    const tweetID = whereTakenTweets.data.meta.newest_id;
-    await client.v2.retweet(req.session.user.userId , tweetID);
-    res.redirect('/twitter/dash')
-}
-
-
-//Get app token & user token,and used bearer to search for the last tweet concerning the hashtag passed in argument. The tweet will then be liked
-async function like(req, res, appKey, appSecret, bearer, hashtag) {
-    const client = new TwitterApi ({
-        appKey: appKey,
-        appSecret: appSecret,
-        accessToken: req.session.user.userToken,
-        accessSecret: req.session.user.userTokenSecret
-    })
-    const TwBearer = new TwitterApi(bearer);
-    const twitterBearer = TwBearer.readOnly;
-    const whereTakenTweets = await twitterBearer.v2.search(hashtag);
-    const tweetID = whereTakenTweets.data.meta.newest_id;
-    await client.v2.like(req.session.user.userId , tweetID);
-    res.redirect('/twitter/dash')
+    else {
+        const TwBearer = new TwitterApi(bearer);
+        const twitterBearer = TwBearer.readOnly;
+        try {
+            const whereTakenTweets = await twitterBearer.v2.search(hashtagOrMessage);
+            if (action == 'like')
+                await client.v2.like(req.session.user.userId , whereTakenTweets.data.meta.newest_id);
+            else
+                await client.v2.retweet(req.session.user.userId , whereTakenTweets.data.meta.newest_id);
+        } catch (e) {
+            console.log(e)
+            res.redirect('/twitter')
+        }
+    }
+    res.redirect('/twitter')
 }
 
 module.exports = {
@@ -108,48 +89,42 @@ module.exports = {
         });
     },
     sendTweet: function(req, res) {
-        firebaseFunctions.getDataFromFireBase('twitter', '')
-        .then(data => {
-            const tw = new LoginWithTwitter({
-                consumerKey: data.appKey,
-                consumerSecret: data.appSecret,
-                callbackUrl: 'http://localhost:8080/twitter/sign'
-            
+        if (req.session.user) {
+            firebaseFunctions.getDataFromFireBase('twitter', '')
+            .then(data => {
+                carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, 'hi !', 'tweet');
             })
-            tweet(req, res, data.appKey, data.appSecret, 'hi !');
-        })
-        .catch(error => {
-            console.log(error);
-        });
+            .catch(error => {
+                console.log(error);
+            });
+        } else {
+            res.redirect('/twitter')
+        }
     },
     putlike: function(req, res) {
-        firebaseFunctions.getDataFromFireBase('twitter', '')
-        .then(data => {
-            const tw = new LoginWithTwitter({
-                consumerKey: data.appKey,
-                consumerSecret: data.appSecret,
-                callbackUrl: 'http://localhost:8080/twitter/sign'
-            
+        if (req.session.user) {
+            firebaseFunctions.getDataFromFireBase('twitter', '')
+            .then(data => {
+                carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, '#zywoo', 'like');
             })
-            like(req, res, data.appKey, data.appSecret, data.bearer, '#zywoo');
-        })
-        .catch(error => {
-            console.log(error);
-        });
+            .catch(error => {
+                console.log(error);
+            });
+        } else {
+            res.redirect('/twitter')
+        }
     },
     putRetweet: function(req, res) {
-        firebaseFunctions.getDataFromFireBase('twitter', '')
-        .then(data => {
-            const tw = new LoginWithTwitter({
-                consumerKey: data.appKey,
-                consumerSecret: data.appSecret,
-                callbackUrl: 'http://localhost:8080/twitter/sign'
-            
+        if (req.session.user) {
+            firebaseFunctions.getDataFromFireBase('twitter', '')
+            .then(data => {
+                carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, '#zywoo', 'retweet');
             })
-            retweet(req, res, data.appKey, data.appSecret, data.bearer, '#zywoo');
-        })
-        .catch(error => {
-            console.log(error);
-        });
+            .catch(error => {
+                console.log(error);
+            });
+        } else {
+            res.redirect('/twitter')
+        }
     }
 }
