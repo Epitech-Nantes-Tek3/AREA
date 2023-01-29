@@ -6,6 +6,7 @@ const fs = require('fs');
 
 const openMeteoService = require('./Services/openMeteoService');
 const firebaseFunctions = require('./firebaseFunctions');
+const googleService = require('./Services/googleService');
 
 const port = config.port;
 
@@ -31,7 +32,7 @@ app.get('/about.json', (req, res) => {
 
     var obj = new Array();
     const dir_path = 'Services/description'
-    
+
     var services_file = fs.readdirSync(dir_path, function(err, items) {
         if (err) {
             console.log(err);
@@ -65,9 +66,13 @@ app.get('/about.json', (req, res) => {
     )
     res.send(about)
 })
-    
+
 app.get('/weather', (req, res) => {
     openMeteoService.WeatherRainingOrNot(res, 'p5Y9YnHdZWSvoENauPtuy79DV2x2')
+})
+
+app.get('/calendar', (req, res) => {
+    googleService.add_event('p5Y9YnHdZWSvoENauPtuy79DV2x2')
 })
 
 app.listen(port, () => {
