@@ -1,12 +1,40 @@
-import React from "react";
-import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSourcePropType, GestureResponderEvent } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSourcePropType, GestureResponderEvent, ScrollView } from "react-native";
 import { SERVICES } from "../Common/Areas";
 import { Globals } from "../Common/Globals";
 import { Service } from "../Common/Interfaces";
+import Geolocation from 'react-native-geolocation-service';
 
-export default function SettingsScreen() {
+interface SettingsProps {
+    hasAuthorization: boolean
+}
+
+interface Location {
+    latitude: number
+    longitude: number
+    city: string
+}
+
+export default function SettingsScreen(props: SettingsProps) {
     let email = "hugo.perez@gmail.com"
-    let localisation = "Nantes"
+    const [location, setLocation] = useState<Location>({latitude: 47.218371, longitude: -1.553621, city: "Nantes"})
+
+    function getLocalization() {
+        if (props.hasAuthorization) {
+            Geolocation.getCurrentPosition(
+                (position) => {
+                    console.log(position)
+                    // Add reverse geocoding
+                    setLocation({latitude: position.coords.latitude, longitude: position.coords.longitude, city: "Nantes"})
+                },
+                (error) => {
+                  // See error code charts below.
+                  console.error(error.code, error.message);
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+            )
+        }
+    }
 
     function ProfileInfo() {
         return (
@@ -33,23 +61,35 @@ export default function SettingsScreen() {
         )
     }
 
+    function SingleConnexionBlock(props: SingleBlockProps) {
+        return (
+            <TouchableOpacity style={[styles.connexionContainer, styles.shadows]} onPress={props.onPress}>
+                <Image source={props.leftImage} style={{width: 32, height: 32, position: "absolute", left: 0}}/>
+                <Text style={{fontFamily: "Poppins-Medium", fontSize: 18, marginLeft: 16}}>{props.text}</Text>
+                <Image source={props.rightImage} style={{width: 7, height: 12, position: "absolute", right: 0}}/>
+            </TouchableOpacity>
+        )
+    }
+
     function ConnexionBlocks() {
         return (
-            <View style={{width: "100%", alignItems: "center", marginTop: 10}}>
-                <SingleBlock leftImage={require("../assets/logo/google.png")} text={"Connexion à Google"} onPress={() => console.log("Google")} />
-                <SingleBlock leftImage={require("../assets/logo/spotify.png")} text={"Connexion à Spotify"} onPress={() => console.log("Spotify")} />
-                <SingleBlock leftImage={require("../assets/logo/twitter.png")} text={"Connexion à Twitter"} onPress={() => console.log("Twitter")} />
-                <SingleBlock leftImage={require("../assets/logo/strava.png")} text={"Connexion à Strava"} onPress={() => console.log("Strava")} />
-                <SingleBlock leftImage={require("../assets/logo/twitch.png")} text={"Connexion à Twitch"} onPress={() => console.log("Twitch")} />
+            <View style={{width: "90%", alignItems: "center", marginTop: 10, backgroundColor: "white", borderRadius: 10,}}>
+                <SingleConnexionBlock leftImage={require("../assets/logo/google.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Google"} onPress={() => console.log("Google")} />
+                <SingleConnexionBlock leftImage={require("../assets/logo/spotify.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Spotify"} onPress={() => console.log("Spotify")} />
+                <SingleConnexionBlock leftImage={require("../assets/logo/twitter.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Twitter"} onPress={() => console.log("Twitter")} />
+                <SingleConnexionBlock leftImage={require("../assets/logo/strava.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Strava"} onPress={() => console.log("Strava")} />
+                <SingleConnexionBlock leftImage={require("../assets/logo/twitch.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Twitch"} onPress={() => console.log("Twitch")} />
             </View>
         )
     }
 
     return (
         <SafeAreaView style={styles.container}>
-            <ProfileInfo />
-            <SingleBlock leftImage={require("../assets/locate.png")} text={"Localisation : " + localisation} onPress={() => console.log("Localisation")} />
-            <ConnexionBlocks/>
+            <ScrollView style={{width: "100%"}} contentContainerStyle={{flexDirection: "column", alignItems: "center"}}>
+                <ProfileInfo />
+                <SingleBlock leftImage={require("../assets/locate.png")} text={"Localisation : " + location.city} onPress={getLocalization} />
+                <ConnexionBlocks/>
+            </ScrollView>
         </SafeAreaView>
     )
 }
@@ -88,5 +128,14 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         position: "relative",
         marginTop: 8
+    },
+    connexionContainer: {
+        width: "90%",
+        height: 50,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative",
+        marginTop: 4
     }
 })
