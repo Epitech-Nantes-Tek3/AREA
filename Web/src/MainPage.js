@@ -8,7 +8,7 @@ import './App.css';
 function MainPage() {
     return (
         <div className="App">
-      <header className="App-header">
+        <header className="App-header">
         <b> Welcome </b>
         <img src={logo} className="App-logo" alt="logo" />
         <p>
