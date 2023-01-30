@@ -3,12 +3,23 @@ const app = express();
 const config = require('./config');
 var bodyParser = require('body-parser')
 const fs = require('fs');
-
 const openMeteoService = require('./Services/openMeteoService');
+const twitterService = require('./Services/twitterService');
 const firebaseFunctions = require('./firebaseFunctions');
 const googleService = require('./Services/googleService');
 
 const port = config.port;
+
+const session = require('express-session')
+
+app.use(session({
+    secret:'tmp',
+    cookie:{}
+}))
+app.use(express.urlencoded())
+//temporaire
+const ejs = require('ejs')
+app.set('view engine', 'ejs');
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -17,8 +28,10 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
+    res.send('Hello world !')
 })
+
+//FIREBASE FUNCTIONS
 
 app.post('/register', (req, res) => {
     firebaseFunctions.register(req, res);
@@ -27,6 +40,8 @@ app.post('/register', (req, res) => {
 app.post('/login', (req, res) => {
     firebaseFunctions.login(req, res);
 })
+
+//ABOUT
 
 app.get('/about.json', (req, res) => {
 
@@ -75,6 +90,35 @@ app.get('/calendar', (req, res) => {
     googleService.add_event(res, 'p5Y9YnHdZWSvoENauPtuy79DV2x2')
 })
 
+app.get('/twitter', (req, res) => {
+    res.render('index')
+})
+
+app.get('/twitter/login', (req, res) => {
+    twitterService.loginTwitter(req, res)
+})
+
+app.get('/twitter/sign', (req, res) => {
+    twitterService.signTwitter(req, res)
+})
+
+app.get('/twitter/dash', (req, res) => {
+    twitterService.dashTwitter(req, res)
+})
+
+app.post("/twitter/postTweet", (req, res) => {
+    twitterService.sendTweet(req, res)
+})
+
+app.post("/twitter/like", (req, res) => {
+    twitterService.putlike(req, res)
+})
+
+app.post("/twitter/retweet", (req, res) => {
+    twitterService.putRetweet(req, res)
+})
+
 app.listen(port, () => {
     console.log(`AREA app server listening on port ${port}!`)
 })
+
