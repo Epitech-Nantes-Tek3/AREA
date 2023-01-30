@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSourcePropType, GestureResponderEvent, ScrollView } from "react-native";
-import { SERVICES } from "../Common/Areas";
 import { Globals } from "../Common/Globals";
-import { Service } from "../Common/Interfaces";
 import Geolocation from 'react-native-geolocation-service';
+
+
 
 interface SettingsProps {
     hasAuthorization: boolean
@@ -17,18 +17,29 @@ interface Location {
 
 export default function SettingsScreen(props: SettingsProps) {
     let email = "hugo.perez@gmail.com"
-    const [location, setLocation] = useState<Location>({latitude: 47.218371, longitude: -1.553621, city: "Nantes"})
+    const [location, setLocation] = useState<Location>({latitude: 0, longitude: 0, city: ""})
 
-    function getLocalization() {
+    // Get the city of the user with Reverse Geocoding from Google
+    async function getAddressFromCoordinates(lat: number, long: number) {
+        fetch("https://api-adresse.data.gouv.fr/reverse/?lon=" + long + "&lat=" + lat)
+            .then((res) => {
+                res.json()
+                    .then((jsonRes) => {
+                        setLocation({latitude: location.latitude, longitude: location.longitude, city: jsonRes.features[0].properties.city});
+                    })
+            })
+            .catch((err) => console.warn(err)
+        ).catch((err) => console.warn(err))
+    }
+
+    // Get the coordinates of the user
+    async function getLocalization() {
         if (props.hasAuthorization) {
             Geolocation.getCurrentPosition(
-                (position) => {
-                    console.log(position)
-                    // Add reverse geocoding
-                    setLocation({latitude: position.coords.latitude, longitude: position.coords.longitude, city: "Nantes"})
+                async (position) => {
+                    await getAddressFromCoordinates(position.coords.latitude, position.coords.longitude)
                 },
                 (error) => {
-                  // See error code charts below.
                   console.error(error.code, error.message);
                 },
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
@@ -39,8 +50,8 @@ export default function SettingsScreen(props: SettingsProps) {
     function ProfileInfo() {
         return (
             <View style={[styles.profileContainer, styles.shadows]}>
-                <Image source={require("../assets/avatar.png")} style={{width: 65, height: 65, borderRadius: 50, borderColor: "white", borderWidth: 1, marginHorizontal: 20}}/>
-                <Text style={{fontFamily: "Poppins-Bold", fontSize: 16, color: "white"}}>{email}</Text>
+                <Image source={require("../assets/avatar.png")} style={styles.avatarIcon}/>
+                <Text style={styles.emailText}>{email}</Text>
             </View>
         )
     }
@@ -55,8 +66,8 @@ export default function SettingsScreen(props: SettingsProps) {
     function SingleBlock(props: SingleBlockProps) {
         return (
             <TouchableOpacity style={[styles.localisationContainer, styles.shadows]} onPress={props.onPress}>
-                <Image source={props.leftImage} style={{width: 36, height: 36, position: "absolute", left: 16}}/>
-                <Text style={{fontFamily: "Poppins-Medium", fontSize: 18, marginLeft: 16}}>{props.text}</Text>
+                <Image source={props.leftImage} style={[styles.logoList, { left: 16 }]}/>
+                <Text style={styles.textList}>{props.text}</Text>
             </TouchableOpacity>
         )
     }
@@ -64,16 +75,16 @@ export default function SettingsScreen(props: SettingsProps) {
     function SingleConnexionBlock(props: SingleBlockProps) {
         return (
             <TouchableOpacity style={[styles.connexionContainer, styles.shadows]} onPress={props.onPress}>
-                <Image source={props.leftImage} style={{width: 32, height: 32, position: "absolute", left: 0}}/>
-                <Text style={{fontFamily: "Poppins-Medium", fontSize: 18, marginLeft: 16}}>{props.text}</Text>
-                <Image source={props.rightImage} style={{width: 7, height: 12, position: "absolute", right: 0}}/>
+                <Image source={props.leftImage} style={styles.logoList}/>
+                <Text style={styles.textList}>{props.text}</Text>
+                <Image source={props.rightImage} style={styles.rightArrow}/>
             </TouchableOpacity>
         )
     }
 
     function ConnexionBlocks() {
         return (
-            <View style={{width: "90%", alignItems: "center", marginTop: 10, backgroundColor: "white", borderRadius: 10,}}>
+            <View style={styles.mainConnexion}>
                 <SingleConnexionBlock leftImage={require("../assets/logo/google.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Google"} onPress={() => console.log("Google")} />
                 <SingleConnexionBlock leftImage={require("../assets/logo/spotify.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Spotify"} onPress={() => console.log("Spotify")} />
                 <SingleConnexionBlock leftImage={require("../assets/logo/twitter.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Twitter"} onPress={() => console.log("Twitter")} />
@@ -85,9 +96,9 @@ export default function SettingsScreen(props: SettingsProps) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <ScrollView style={{width: "100%"}} contentContainerStyle={{flexDirection: "column", alignItems: "center"}}>
+            <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentScrollview}>
                 <ProfileInfo />
-                <SingleBlock leftImage={require("../assets/locate.png")} text={"Localisation : " + location.city} onPress={getLocalization} />
+                <SingleBlock leftImage={require("../assets/locate.png")} text={"Localisation : " + (location.city === "" ? "Unknown" : location.city)} onPress={getLocalization} />
                 <ConnexionBlocks/>
             </ScrollView>
         </SafeAreaView>
@@ -137,5 +148,49 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         position: "relative",
         marginTop: 4
+    },
+    contentScrollview: {
+        flexDirection: "column",
+        alignItems: "center"
+    },
+    scrollView: {
+        width: "100%"
+    },
+    mainConnexion: {
+        width: "90%",
+        alignItems: "center",
+        marginTop: 10,
+        backgroundColor: "white",
+        borderRadius: 10
+    },
+    logoList: {
+        width: 32,
+        height: 32,
+        position: "absolute",
+        left: 0
+    },
+    textList: {
+        fontFamily: "Poppins-Medium",
+        fontSize: 18,
+        marginLeft: 16
+    },
+    rightArrow: {
+        width: 7,
+        height: 12,
+        position: "absolute",
+        right: 0
+    },
+    avatarIcon: {
+        width: 65,
+        height: 65,
+        borderRadius: 50,
+        borderColor: "white",
+        borderWidth: 1,
+        marginHorizontal: 20
+    },
+    emailText: {
+        fontFamily: "Poppins-Bold",
+        fontSize: 16,
+        color: "white"
     }
 })
