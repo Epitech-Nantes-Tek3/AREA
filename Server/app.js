@@ -72,7 +72,7 @@ app.get('/weather', (req, res) => {
 })
 
 app.get('/calendar', (req, res) => {
-    googleService.add_event('p5Y9YnHdZWSvoENauPtuy79DV2x2')
+    googleService.add_event(res, 'p5Y9YnHdZWSvoENauPtuy79DV2x2')
 })
 
 app.listen(port, () => {

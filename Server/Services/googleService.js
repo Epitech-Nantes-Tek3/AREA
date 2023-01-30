@@ -48,7 +48,7 @@ module.exports = {
             console.log(error);
         });
     },
-    add_event: function(uid) {
+    add_event: function(res, uid) {
       firebaseFunctions.getDataFromFireBase(uid, 'GoogleService')
         .then(data => {
 
@@ -92,7 +92,6 @@ module.exports = {
 
           calendar.events.insert(
             {
-              auth: auth,
               calendarId: 'primary',
               resource: event
             },
