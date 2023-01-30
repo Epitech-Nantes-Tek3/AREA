@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import { StyleSheet, SafeAreaView, View, Text, Image, Dimensions, ScaledSize, TouchableOpacity, Alert, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, SafeAreaView, View, Text, Image, Dimensions, ScaledSize, TouchableOpacity, Alert, ScrollView, Platform, PermissionsAndroid, PermissionStatus } from "react-native";
+import { Options } from "react-native-navigation";
 import { Globals } from "../Common/Globals";
 import { SingleArea } from "../Common/Interfaces";
 import AreaBlock from "../Components/AreaBlock";
 import Circles from "../Components/Circles";
-import { NavigatorshowModal } from "../Navigator";
+import { NavigatorPush, NavigatorshowModal } from "../Navigator";
+import Geolocation from 'react-native-geolocation-service';
 
 interface AreaBlockProps {
     index: number
@@ -14,14 +16,68 @@ interface AreaBlockProps {
 export default function HomeScreen() {
     const window: ScaledSize = Dimensions.get("window")
     const [allAreas, setAllAreas] = useState<Array<SingleArea>>([])
+    const [hasAcceptedLocalization, setHasAcceptedLocalization] = useState(false)
+
+    useEffect(() => {
+        if (Platform.OS === "ios") {
+            if (hasAcceptedLocalization === false) {
+                Geolocation.requestAuthorization("whenInUse")
+                    .then((res: Geolocation.AuthorizationResult) => {
+                        setHasAcceptedLocalization(res === "granted")
+                    })
+                    .catch((err) => {
+                        console.error(err)
+                    })
+            }
+        }
+        if (Platform.OS === 'android') {
+            PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            ).then((res: PermissionStatus) => {
+                setHasAcceptedLocalization(res === PermissionsAndroid.RESULTS.GRANTED)
+            })
+          }
+    })
 
     function navigateToProfile() {
+        let options: Options = {
+            topBar: {
+                title: {
+                    text: "Profil" 
+                },
+                background: {
+                    color: "transparent"
+                },
+            }
+        }
+        NavigatorPush("SettingsScreen", "mainStack", options,
+            {
+                hasAuthorization: hasAcceptedLocalization
+            }
+        )
     }
 
     function navigateToAddArea() {
+        let options: Options = {
+            topBar: {
+                title: {
+                    text: "Ajouter une AREA" 
+                },
+                background: {
+                    color: "transparent"
+                },
+            }
+        }
+        NavigatorshowModal("AddArea", options)
     }
 
     function removeAreaFromList(index: number) {
+        function supressArea() {
+            let copyAreas = [...allAreas]
+            copyAreas.splice(index, 1)
+            setAllAreas(copyAreas)
+        }
+
         Alert.alert(
             "Supprimer",
             "Tu vas supprimer une AREA, veux-tu continuer ?",
@@ -32,11 +88,7 @@ export default function HomeScreen() {
               },
               {
                 text: "Supprimer",
-                onPress: () => {
-                    let copyAreas = [...allAreas]
-                    copyAreas.splice(index, 1)
-                    setAllAreas(copyAreas)
-                },
+                onPress: supressArea,
                 style: "destructive"
               }
             ]
@@ -47,8 +99,8 @@ export default function HomeScreen() {
         return (
             <View style={areaBlock.container}>
                 <View style={areaBlock.textContainer}>
-                    <Text style={areaBlock.text}>{props.area.action}</Text>
-                    <Text style={areaBlock.text}>{props.area.reaction}</Text>
+                    <Text style={areaBlock.text}>{props.area.action.description}</Text>
+                    <Text style={areaBlock.text}>{props.area.reaction.description}</Text>
                 </View>
                 <View style={areaBlock.trashContainer}>
                     <TouchableOpacity style={areaBlock.imageSize} onPress={() => removeAreaFromList(props.index)}>
