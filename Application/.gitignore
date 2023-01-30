@@ -62,10 +62,8 @@ buck-out
 
 # Android
 .idea
-.gradle
 local.properties
 *.iml
-/android/gradle/*
 /android/build/*
 !/android/README.md
 
