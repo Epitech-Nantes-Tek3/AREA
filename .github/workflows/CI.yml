@@ -52,7 +52,7 @@ jobs:
         id: run-docker-compose-build-client-mobile
         run: docker-compose build client_mobile
       - name: Re-request review
-        if: failure
+        if: failure()
         uses: andrewmusgrave/automatic-pull-request-review@0.0.5
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
