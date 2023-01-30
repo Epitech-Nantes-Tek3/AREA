@@ -177,7 +177,8 @@ const infoBlockStyle = StyleSheet.create({
     descriptionContainer: {
         flex: 2,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        paddingHorizontal: 8
     },
     descriptionStyle: {
         fontFamily: "Poppins-Medium",
