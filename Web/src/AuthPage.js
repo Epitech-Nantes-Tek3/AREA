@@ -15,9 +15,9 @@ export default function AuthPage(props) {
               <div className="Auth-form-content">
                 <h3 className="Auth-form-title">Sign In</h3>
                 <div className="text-center">
-                  Not registered yet?{" "}
+                  Not registered yet ?  {"  "}
                   <span className="link-primary" onClick={changeAuthMode}>
-                    Sign Up
+                Sign Up
                   </span>
                 </div>
                 <div className="form-group mt-3">
@@ -37,7 +37,7 @@ export default function AuthPage(props) {
                   />
                 </div>
                 <div className="d-grid gap-2 mt-3">
-                  <button type="submit" className="btn btn-primary">
+                  <button type="submit" className="button-center">
                     Submit
                   </button>
                 </div>
@@ -61,32 +61,36 @@ export default function AuthPage(props) {
                   Sign In
                 </span>
               </div>
-              <div className="form-group mt-3">
-                <label>Full Name</label>
+              <div className="form-group">
+                <label>Full Name </label>
+                <br></br>
                 <input
                   type="email"
-                  className="form-control mt-1"
+                  className="form-control"
                   placeholder="e.g Jane Doe"
                 />
               </div>
-              <div className="form-group mt-3">
-                <label>Email address</label>
+              <div className="form-group">
+                <label>Email address </label>
+                <br></br>
                 <input
                   type="email"
                   className="form-control mt-1"
                   placeholder="Email Address"
                 />
               </div>
-              <div className="form-group mt-3">
+              <div className="form-group">
                 <label>Password</label>
+                <br></br>
                 <input
                   type="password"
                   className="form-control mt-1"
                   placeholder="Password"
                 />
               </div>
-              <div className="d-grid gap-2 mt-3">
-                <button type="submit" className="btn btn-primary">
+              <br></br>
+              <div className="form-group">
+                <button type="submit" className="button-center">
                   Submit
                 </button>
               </div>
