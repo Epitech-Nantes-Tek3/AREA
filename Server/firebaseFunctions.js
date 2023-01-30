@@ -34,8 +34,12 @@ module.exports = {
         const { email, password } = req.body;
         firebase.auth()
         .createUserWithEmailAndPassword(email, password).then((userCredential) => {
+          const db = firebase.database().ref(userCredential.user.uid + "/");
+          db.set({
+            empty: ''
+          })
           console.log('Successfully created new user:', userCredential.user.uid)
-          res.sendStatus(200);
+          res.json({userUid: userCredential.user.uid});
         }).catch((error) => {
           console.log('Error creating new user:', error);
           res.send(error).status(400);

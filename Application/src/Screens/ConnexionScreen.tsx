@@ -22,8 +22,24 @@ export default function ConnexionScreen() {
         console.log("Act on forgot password")
     }
 
-    function connectionAction() {
+    async function connectionAction() {
         console.log("Connect user", userMail, userPass)
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({email: userMail, password: userPass})
+        }
+
+        try {
+            await fetch("http://10.29.125.146:8080/register", requestOptions).then(response => {
+                response.json().then(data => {
+                    console.log(data);
+                })
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     function connectWithApple() {
