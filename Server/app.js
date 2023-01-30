@@ -83,7 +83,7 @@ app.get('/about.json', (req, res) => {
 //Service
     
 app.get('/weather', (req, res) => {
-    openMeteoService.WeatherRainingOrNot(res, 'p5Y9YnHdZWSvoENauPtuy79DV2x2')
+    openMeteoService.WeatherRainingOrNot(res, 'leMgZPp8sfe2l06b6TU330bahJz2')
 })
 
 app.get('/twitter', (req, res) => {

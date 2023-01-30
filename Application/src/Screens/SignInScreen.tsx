@@ -18,10 +18,27 @@ export default function SignInScreen() {
     const [userPass, setUserPass] = useState("")
     const [userValidPass, setUserValidPass] = useState("")
 
-    function connectionAction() {
+    async function connectionAction() {
         if (userPass !== userValidPass)
             Alert.alert("Not the same")
         console.log("Subscribe user", userMail, userPass, userValidPass)
+        console.log("Connect user", userMail, userPass)
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({email: userMail, password: userPass})
+        }
+
+        try {
+            await fetch("http://10.29.125.228:8080/register", requestOptions).then(response => {
+                response.json().then(data => {
+                    console.log(data);
+                })
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     function connectWithApple() {

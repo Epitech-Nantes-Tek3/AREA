@@ -32,7 +32,7 @@ export default function ConnexionScreen() {
         }
 
         try {
-            await fetch("http://10.29.125.146:8080/register", requestOptions).then(response => {
+            await fetch("http://10.29.125.228:8080/login", requestOptions).then(response => {
                 response.json().then(data => {
                     console.log(data);
                 })

@@ -9,7 +9,6 @@ module.exports = {
         //read in DB
         firebaseFunctions.getDataFromFireBase(uid, 'GoogleService')
         .then(data => {
-
             //required to obtain an access token
             const OAuth2_client = new OAuth2(data.clientId, data.clientSecret)
             OAuth2_client.setCredentials( {refresh_token : data.refreshToken})
