@@ -33,7 +33,7 @@ jobs:
         id: run-docker-compose-build-server
         run: docker-compose build server
       - name: Re-request review
-        if: steps.run-docker-compose-build-server.outputs != 0
+        if: failure()
         uses: andrewmusgrave/automatic-pull-request-review@0.0.5
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
@@ -52,7 +52,7 @@ jobs:
         id: run-docker-compose-build-client-mobile
         run: docker-compose build client_mobile
       - name: Re-request review
-        if: steps.run-docker-compose-build-client-mobile.outputs != 0
+        if: failure
         uses: andrewmusgrave/automatic-pull-request-review@0.0.5
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
@@ -71,7 +71,7 @@ jobs:
         id: run-docker-compose-build-client-web
         run: docker-compose build client_web
       - name: Re-request review
-        if: steps.run-docker-compose-build-client-web.outputs != 0
+        if: failure()
         uses: andrewmusgrave/automatic-pull-request-review@0.0.5
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
