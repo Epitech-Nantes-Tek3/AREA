@@ -6,8 +6,14 @@ const gap = 1000.0
 const heartRadius = 6374
 
 module.exports = {
+    /**
+     * @brief Check the ISS position, and compute the distance between the user and the ISS
+     *
+     * @param {*} res the request
+     * @param {*} uid needed to connect to the firebase to get user position
+     */
     checkISSPosition: function(res, uid) {
-        firebaseFunctions.getDataFromFireBase(uid, 'OpenMeteoService')
+        firebaseFunctions.getDataFromFireBase(uid, 'IssStation')
         .then(data => {
             var InfoISS = ""
             http.get(url, function (response) {
@@ -19,14 +25,13 @@ module.exports = {
 
                 response.on("end", function (err) {
                     var dataISS = JSON.parse(buffer)
-                    var longitudeISS = dataISS.iss_position.longitude //B2
-                    var latitudeISS = dataISS.iss_position.latitude //C2
-                    var longitudeUser = data.longitude //B3
-                    var latitudeUser = data.latitude //
+                    var longitudeISS = dataISS.iss_position.longitude
+                    var latitudeISS = dataISS.iss_position.latitude
+                    var longitudeUser = data.longitude
+                    var latitudeUser = data.latitude
 
                     console.log(longitudeISS, latitudeISS, longitudeUser, latitudeUser)
 
-                    /// https://www.01net.com/actualites/calculer-la-distance-entre-2-points-sur-terre-522697.html#:~:text=La%20formule%20(%C3%A0%20saisir%20par,C3)))*6371.
                     var distance = Math.acos(Math.sin(Radiant(longitudeISS)) * Math.sin(Radiant(longitudeUser)) +
                         Math.cos(Radiant(longitudeISS)) * Math.cos(Radiant(longitudeUser)) * Math.cos(Radiant(latitudeISS - latitudeUser))) * heartRadius
 
@@ -51,8 +56,13 @@ module.exports = {
     }
 }
 
-/// Convert a degree value in radiant
-// - degrees : value to be converted
+/**
+ * @brief Convert a degree value in radiant
+ *
+ * @param1 degrees to be converted in radiant
+ *
+ * @return the converted value
+ * */
 function Radiant(degrees)
 {
   var pi = Math.PI;
