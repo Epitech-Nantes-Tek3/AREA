@@ -61,7 +61,7 @@ export default function ConnexionScreen() {
             },
             popGesture: false
         }
-        NavigatorPush("SignInScreen", options, {}, "mainStack")
+        NavigatorPush("SignInScreen", "mainStack", options)
     }
 
     function SocialButtons() {
@@ -82,7 +82,7 @@ export default function ConnexionScreen() {
                 <View style={signStyles.textContainer}>
                     <Text style={signStyles.mobileNoAccountText}>Pas encore de compte ? </Text>
                     <TouchableOpacity onPress={navigateToSubscribe}>
-                        <Text style={signStyles.mobileSignInText}>S'inscrire</Text>
+                        <Text style={signStyles.mobileSignInText} testID='inscription-redirect'>S'inscrire</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -116,7 +116,7 @@ export default function ConnexionScreen() {
                         autoComplete="email"
                         autoCorrect={false}
                         returnKeyType="next"
-
+                        testID="emailAddress"
                     />
                     <TextInput
                         style={[styles.inputBorderStyle, styles.inputInside]}
@@ -128,6 +128,7 @@ export default function ConnexionScreen() {
                         autoComplete="password"
                         autoCorrect={false}
                         returnKeyType="done"
+                        testID="pwdpassword"
                     />
                     <Text style={styles.forgottenText} onPress={forgotPassword}>Un oubli ?</Text>
                     <TouchableOpacity

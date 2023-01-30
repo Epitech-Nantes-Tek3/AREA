@@ -6,12 +6,14 @@ const fs = require('fs');
 const openMeteoService = require('./Services/openMeteoService');
 const twitterService = require('./Services/twitterService');
 const firebaseFunctions = require('./firebaseFunctions');
+const ISSStationService = require('./Services/ISSStationService');
+const firebaseUid = 'leMgZPp8sfe2l06b6TU330bahJz2';
 const port = config.port;
 
 const session = require('express-session')
 
 app.use(session({
-    secret:'tmp', 
+    secret:'tmp',
     cookie:{}
 }))
 app.use(express.urlencoded())
@@ -45,7 +47,7 @@ app.get('/about.json', (req, res) => {
 
     var obj = new Array();
     const dir_path = 'Services/description'
-    
+
     var services_file = fs.readdirSync(dir_path, function(err, items) {
         if (err) {
             console.log(err);
@@ -80,11 +82,8 @@ app.get('/about.json', (req, res) => {
     res.send(about)
 })
 
-//Service
-    
 app.get('/weather', (req, res) => {
-    openMeteoService.WeatherRainingOrNot(res, 'leMgZPp8sfe2l06b6TU330bahJz2')
-})
+    openMeteoService.WeatherRainingOrNot(res, firebaseUid)
 
 app.get('/twitter', (req, res) => {
     res.render('index')
@@ -118,3 +117,6 @@ app.listen(port, () => {
     console.log(`AREA app server listening on port ${port}!`)
 })
 
+app.get('/issStation', (req, res) => {
+    ISSStationService.checkISSPosition(res, firebaseUid)
+})
