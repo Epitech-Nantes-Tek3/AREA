@@ -32,13 +32,6 @@ jobs:
       - name: Run docker-compose build server
         id: run-docker-compose-build-server
         run: docker-compose build server
-      - name: Re-request review
-        if: failure()
-        uses: andrewmusgrave/automatic-pull-request-review@0.0.5
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          event: REQUEST_CHANGES
-          body: "Run docker-compose build server failed."
 
   run-docker-compose-client-mobile:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request_review'
@@ -51,13 +44,6 @@ jobs:
       - name: Run docker-compose build client_mobile
         id: run-docker-compose-build-client-mobile
         run: docker-compose build client_mobile
-      - name: Re-request review
-        if: failure()
-        uses: andrewmusgrave/automatic-pull-request-review@0.0.5
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          event: REQUEST_CHANGES
-          body: "Run docker-compose build client-web failed."
 
   run-docker-compose-client-web:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request_review'
@@ -70,13 +56,6 @@ jobs:
       - name: Run docker-compose build client_web
         id: run-docker-compose-build-client-web
         run: docker-compose build client_web
-      - name: Re-request review
-        if: failure()
-        uses: andrewmusgrave/automatic-pull-request-review@0.0.5
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          event: REQUEST_CHANGES
-          body: "Run docker-compose build client-web failed."
 
   mirroring:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
