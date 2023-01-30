@@ -22,9 +22,9 @@ export function NavigatorshowModal(
 
 export function NavigatorPush(
   name: string,
+  componentId: string,
   options: Options = {},
-  props: any = {},
-  componentId: string
+  props: any = {}
 ) {
   Navigation.push(componentId, {
     component: {

@@ -45,7 +45,7 @@ export default function ConnexionScreen() {
             },
             popGesture: false
         }
-        NavigatorPush("SignInScreen", options, {}, "mainStack")
+        NavigatorPush("SignInScreen", "mainStack", options)
     }
 
     function SocialButtons() {
