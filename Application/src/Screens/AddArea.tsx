@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { StyleSheet, SafeAreaView, View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { Globals } from "../Common/Globals";
-import { InfoArea, SingleArea } from "../Common/Interfaces";
+import { AddAreaProps, InfoArea, SingleArea } from "../Common/Interfaces";
 import { ACTIONS, REACTIONS } from "../Common/Areas";
 import { Navigation } from "react-native-navigation";
-import { NavigatorshowModal } from "../Navigator";
 
 interface InfoBlockProps {
     area: InfoArea
@@ -20,7 +19,7 @@ interface SelectionBlockProps {
     selectedIndex: number
 }
 
-export default function AddArea() {
+export default function AddArea(props: AddAreaProps) {
     const [selectedActionIndex, setSelectedActionIndex] = useState<number>(0)
     const [selectedReactionIndex, setSelectedReactionIndex] = useState<number>(0)
     let logo = {
@@ -39,7 +38,7 @@ export default function AddArea() {
             action: ACTIONS[selectedActionIndex],
             reaction: REACTIONS[selectedReactionIndex]
         }
-        console.log(area)
+        props.setAllAreas([area, ...props.allAreas])
         Navigation.dismissAllModals()
     }
 
@@ -51,19 +50,19 @@ export default function AddArea() {
         }
 
         return (
-            <TouchableOpacity style={{height: "75%", width: 200, backgroundColor: color, borderRadius: 20, marginRight: 16}} onPress={pressBlock}>
-                <View style={{flex: 1, justifyContent: "center", flexDirection: "row", marginTop: 8}}>
-                    <View style={{flex: 1, alignItems: "center", justifyContent: "center"}}>
-                        <Image source={logo[props.area.service.name]} style={{width: 40, height: 40}}/>
+            <TouchableOpacity style={[infoBlockStyle.container, { backgroundColor: color }]} onPress={pressBlock}>
+                <View style={infoBlockStyle.titleContainer}>
+                    <View style={infoBlockStyle.imageContainer}>
+                        <Image source={logo[props.area.service.name]} style={infoBlockStyle.imageSize}/>
                     </View>
-                    <View style={{flex: 2, alignItems: "center", justifyContent: "center"}}>
-                        <Text style={{textTransform: "capitalize", fontFamily: "Poppins-Medium", fontSize: 25, color: "white"}}>
+                    <View style={infoBlockStyle.textContainer}>
+                        <Text style={infoBlockStyle.textStyle}>
                             {props.area.service.name}
                         </Text>
                     </View>
                 </View>
-                <View style={{flex: 2, alignItems: "center", justifyContent: "center"}}>
-                    <Text style={{fontFamily: "Poppins-Medium", fontSize: 16, color: "white", textAlign: "center"}}>{props.area.description}</Text>
+                <View style={infoBlockStyle.descriptionContainer}>
+                    <Text style={infoBlockStyle.descriptionStyle}>{props.area.description}</Text>
                 </View>
             </TouchableOpacity>
         )
@@ -71,9 +70,9 @@ export default function AddArea() {
 
     function SelectionBlock(props: SelectionBlockProps) {
         return (
-            <View style={{flex: 1}}>
-                <Text style={{fontSize: 25, fontFamily: "Poppins-Medium", marginLeft: 16, marginBottom: 16}}>{props.title}</Text>
-                <ScrollView horizontal={true} contentContainerStyle={{marginHorizontal: 16}} showsHorizontalScrollIndicator={false}>
+            <View style={selectionBlockStyle.container}>
+                <Text style={selectionBlockStyle.title}>{props.title}</Text>
+                <ScrollView horizontal={true} contentContainerStyle={selectionBlockStyle.scrollviewContainer} showsHorizontalScrollIndicator={false}>
                     {
                         props.list.flatMap((item, index) => {
                             return (
@@ -88,17 +87,17 @@ export default function AddArea() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={{flex: 3, marginTop: 40}}>
+            <View style={styles.topContainer}>
                 <SelectionBlock title={"Actions"} list={ACTIONS} selectedIndex={selectedActionIndex} setSelected={setSelectedActionIndex} />
                 <SelectionBlock title={"Réactions"} list={REACTIONS} selectedIndex={selectedReactionIndex} setSelected={setSelectedReactionIndex} />
             </View>
-            <View style={{flex: 1, flexDirection: "row", alignItems: "center"}}>
-                <Text style={{fontFamily: "Poppins-Light", fontSize: 18, flex: 2, marginHorizontal: 40, textAlign: "center"}}>
+            <View style={styles.bottomContainer}>
+                <Text style={styles.areaTextSummary}>
                     {ACTIONS[selectedActionIndex].description + ". " + REACTIONS[selectedReactionIndex].description + "."}
                 </Text>
-                <View style={{flex: 1}}>
-                    <TouchableOpacity style={{borderRadius: 50, width: 60, height: 60}} onPress={sendArea}>
-                        <Image source={require("../assets/checkCircle.png")} style={{width: 60, height: 60}}/>
+                <View style={styles.validationButtonContainer}>
+                    <TouchableOpacity style={styles.validationButtonStyle} onPress={sendArea}>
+                        <Image source={require("../assets/checkCircle.png")} style={styles.validationImage}/>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -113,73 +112,49 @@ const styles = StyleSheet.create({
         backgroundColor: Globals.Colors.lightBackground,
     },
     topContainer: {
-        flex: 1,
-        flexDirection: "column",
-        alignItems: "center",
+        flex: 3,
+        marginTop: 40
     },
     bottomContainer: {
-        flex: 5
-    },
-    bottomContainerContent: {
-        alignItems: "center"
-    },
-    headerContainer: {
-        flex: 2,
-        flexDirection: "row",
-        justifyContent: 'space-between',
-        width: "100%",
-        paddingHorizontal: 35,
-        alignItems: "center"
-    },
-    titlePage: {
-        fontFamily: "Poppins-Bold",
-        fontSize: 35,
-        color: "black"
-    },
-    avatarIcon: {
-        borderRadius: 50
-    },
-    subtitleContainer: {
         flex: 1,
         flexDirection: "row",
-        justifyContent: 'space-between',
-        width: "100%",
-        paddingHorizontal: 50
+        alignItems: "center"
     },
-    subtitleText: {
-        fontFamily: "Poppins-Medium",
-        fontSize: 20,
-        color: "black"
+    areaTextSummary: {
+        fontFamily: "Poppins-Light",
+        fontSize: 18,
+        flex: 2,
+        marginHorizontal: 40,
+        textAlign: "center"
     },
-    fillContainer: {
-        width: "100%",
-        height: "100%"
+    validationButtonContainer: {
+        flex: 1
     },
-    addImage: {
-        tintColor: "black"
+    validationButtonStyle: {
+        borderRadius: 50,
+        width: 60,
+        height: 60
+    },
+    validationImage: {
+        width: 60,
+        height: 60
     }
 })
 
-const areaBlock = StyleSheet.create({
+const infoBlockStyle = StyleSheet.create({
     container: {
-        width: "90%",
-        height: 100,
+        height: "75%",
+        width: 200,
         borderRadius: 20,
-        backgroundColor: Globals.Colors.main,
-        marginTop: 24,
-        flexDirection: "row"
+        marginRight: 16
     },
-    textContainer: {
-        flex: 5,
-        justifyContent: "space-around",
-        paddingVertical: 12
+    titleContainer: {
+        flex: 1,
+        justifyContent: "center",
+        flexDirection: "row",
+        marginTop: 8
     },
-    text: {
-        marginLeft: 20,
-        fontSize: 15,
-        fontFamily: "Poppins-Regular"
-    },
-    trashContainer: {
+    imageContainer: {
         flex: 1,
         alignItems: "center",
         justifyContent: "center"
@@ -187,5 +162,42 @@ const areaBlock = StyleSheet.create({
     imageSize: {
         width: 40,
         height: 40
+    },
+    textContainer: {
+        flex: 2,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    textStyle: {
+        textTransform: "capitalize",
+        fontFamily: "Poppins-Medium",
+        fontSize: 25,
+        color: "white"
+    },
+    descriptionContainer: {
+        flex: 2,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    descriptionStyle: {
+        fontFamily: "Poppins-Medium",
+        fontSize: 16,
+        color: "white",
+        textAlign: "center"
+    }
+})
+
+const selectionBlockStyle = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    title: {
+        fontSize: 25,
+        fontFamily: "Poppins-Medium",
+        marginLeft: 16,
+        marginBottom: 16
+    },
+    scrollviewContainer: {
+        marginHorizontal: 16
     }
 })

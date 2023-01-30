@@ -1,3 +1,5 @@
+import { Dispatch } from "react"
+
 export interface SingleArea {
     action: InfoArea
     reaction: InfoArea
@@ -21,6 +23,12 @@ export interface HomeScreenProps {
     userMail: string
 }
 
+export interface SettingsProps {
+    userInfo: UserInfo
+    setUserInfo: Dispatch<React.SetStateAction<UserInfo>>
+    hasAuthorization: boolean
+}
+
 interface Location {
     latitude: number
     longitude: number
@@ -31,3 +39,10 @@ export interface UserInfo {
     mail: string
     coord: Location
 }
+
+export interface AddAreaProps {
+    allAreas: Array<SingleArea>
+    setAllAreas: Dispatch<React.SetStateAction<Array<SingleArea>>>
+    userInfo: UserInfo
+    setUserInfo: Dispatch<React.SetStateAction<UserInfo>>
+}    

@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { Dispatch, useEffect, useState } from "react";
 import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSourcePropType, GestureResponderEvent, ScrollView } from "react-native";
 import { Globals } from "../Common/Globals";
 import Geolocation from 'react-native-geolocation-service';
+import { UserInfo } from "../Common/Interfaces";
 
 
 
 interface SettingsProps {
+    userInfo: UserInfo
+    setUserInfo: Dispatch<React.SetStateAction<UserInfo>>
     hasAuthorization: boolean
 }
 
@@ -16,8 +19,18 @@ interface Location {
 }
 
 export default function SettingsScreen(props: SettingsProps) {
-    let email = "hugo.perez@gmail.com"
-    const [location, setLocation] = useState<Location>({latitude: 0, longitude: 0, city: ""})
+    const [location, setLocation] = useState<Location>({latitude: props.userInfo.coord.latitude, longitude: props.userInfo.coord.longitude, city: props.userInfo.coord.city})
+
+    useEffect(() => {
+        props.setUserInfo({
+            mail: props.userInfo.mail,
+            coord: {
+                latitude: location.latitude,
+                longitude: location.longitude,
+                city: location.city
+            }
+        })
+    }, [location])
 
     // Get the city of the user with Reverse Geocoding from Google
     async function getAddressFromCoordinates(lat: number, long: number) {
@@ -25,7 +38,7 @@ export default function SettingsScreen(props: SettingsProps) {
             .then((res) => {
                 res.json()
                     .then((jsonRes) => {
-                        setLocation({latitude: location.latitude, longitude: location.longitude, city: jsonRes.features[0].properties.city});
+                        setLocation({latitude: lat, longitude: long, city: jsonRes.features[0].properties.city});
                     })
             })
             .catch((err) => console.warn(err)
@@ -51,7 +64,7 @@ export default function SettingsScreen(props: SettingsProps) {
         return (
             <View style={[styles.profileContainer, styles.shadows]}>
                 <Image source={require("../assets/avatar.png")} style={styles.avatarIcon}/>
-                <Text style={styles.emailText}>{email}</Text>
+                <Text style={styles.emailText}>{props.userInfo.mail}</Text>
             </View>
         )
     }
