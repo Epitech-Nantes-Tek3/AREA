@@ -1,0 +1,48 @@
+version: "2.2"
+services:
+  # SERVER PART
+  server:
+    build:
+      context: ./Server
+    command: npm run dev
+    volumes:
+      - .:/tmp
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+
+  # CLIENT WEB PART
+  client_web:
+    depends_on:
+      server:
+        condition: service_healthy
+      client_mobile:
+        condition: service_started
+    build:
+      context: ./Web
+      dockerfile: Dockerfile
+    command: npm start
+    ports:
+      - "8081:3000"
+    volumes:
+      - area:/release
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
+
+  # MOBILE CLIENT PART
+  client_mobile:
+    build:
+      context: ./Application
+      dockerfile: Dockerfile
+    volumes:
+      - area:/release
+
+volumes:
+  area:
