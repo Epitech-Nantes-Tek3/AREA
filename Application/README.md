@@ -11,12 +11,10 @@ You can write more test in file : `Application/e2e/starter.test.js`. Write your 
 
 ### Pre-requirement
 ___
-Use a connected device or an emulator.
+- Use a connected device or an emulator.
+- Build the application: `npx react-native run-android`
 
 ### Test
 ___
-Run npm: `npm start`
-
-Build the application: `npx react-native run-android`
-
-Run tests: `npx detox test --configuration android.emu.debug`
+- Run npm: `npm start`
+- Run tests: `npx detox test --configuration android.emu.debug`
