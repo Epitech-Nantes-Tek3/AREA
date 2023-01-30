@@ -3,7 +3,7 @@ const http  = require('http');
 const firebaseFunctions = require('../firebaseFunctions');
 const url = 'http://api.open-notify.org/iss-now.json';
 const gap = 1000.0
-const heartRadius = 6374
+const EarthRadius = 6374
 
 module.exports = {
     /**
@@ -33,7 +33,7 @@ module.exports = {
                     console.log(longitudeISS, latitudeISS, longitudeUser, latitudeUser)
 
                     var distance = Math.acos(Math.sin(Radiant(longitudeISS)) * Math.sin(Radiant(longitudeUser)) +
-                        Math.cos(Radiant(longitudeISS)) * Math.cos(Radiant(longitudeUser)) * Math.cos(Radiant(latitudeISS - latitudeUser))) * heartRadius
+                        Math.cos(Radiant(longitudeISS)) * Math.cos(Radiant(longitudeUser)) * Math.cos(Radiant(latitudeISS - latitudeUser))) * EarthRadius
 
                     console.log(distance)
 
