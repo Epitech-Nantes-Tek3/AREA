@@ -8,6 +8,7 @@ import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
 import { NavigatorPush } from "../Navigator";
 import { Options } from "react-native-navigation";
 import Circles from "../Components/Circles";
+import { HomeScreenProps } from "../Common/Interfaces";
 
 
 export default function ConnexionScreen() {
@@ -18,34 +19,52 @@ export default function ConnexionScreen() {
     const [userMail, setUserMail] = useState("")
     const [userPass, setUserPass] = useState("")
 
+    // Options to push the next screen
+    const options: Options = {
+        popGesture: false,
+        topBar: {
+            visible: false
+        }
+    }
+
     function forgotPassword() {
         console.log("Act on forgot password")
     }
 
     function connectionAction() {
+        const props: HomeScreenProps = {
+            userMail: userMail
+        }
         console.log("Connect user", userMail, userPass)
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     function connectWithApple() {
         console.log("Connect with Apple")
+        const props: HomeScreenProps = {
+            userMail: userMail
+        }
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     function connectWithGoogle() {
         console.log("Connect with Google")
+        const props: HomeScreenProps = {
+            userMail: userMail
+        }
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     function connectWithFacebook() {
         console.log("Connect with Facebook")
+        const props: HomeScreenProps = {
+            userMail: userMail
+        }
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     function navigateToSubscribe() {
-        const options: Options = {
-            topBar: {
-                visible: false
-            },
-            popGesture: false
-        }
-        NavigatorPush("SignInScreen", "mainStack", options)
+        NavigatorPush("HomeScreen", "mainStack", options, {})
     }
 
     function SocialButtons() {

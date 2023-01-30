@@ -5,8 +5,10 @@ import { Globals } from "../Common/Globals";
 import FacebookSocialButton from "../Components/SocialButtons/FacebookButton";
 import GoogleSocialButton from "../Components/SocialButtons/GoogleSocialButton";
 import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
-import { NavigatorPop } from "../Navigator";
+import { NavigatorPop, NavigatorPush } from "../Navigator";
 import Circles from "../Components/Circles";
+import { HomeScreenProps } from "../Common/Interfaces";
+import { Options } from "react-native-navigation";
 
 
 export default function SignInScreen() {
@@ -18,22 +20,48 @@ export default function SignInScreen() {
     const [userPass, setUserPass] = useState("")
     const [userValidPass, setUserValidPass] = useState("")
 
+    // Options to push the next screen
+    const options: Options = {
+        popGesture: false,
+        topBar: {
+            visible: false
+        }
+    }
+
     function connectionAction() {
         if (userPass !== userValidPass)
             Alert.alert("Not the same")
-        console.log("Subscribe user", userMail, userPass, userValidPass)
+        else {
+            console.log("Subscribe user", userMail, userPass, userValidPass)
+            const props: HomeScreenProps = {
+                userMail: userMail
+            }
+            NavigatorPush("HomeScreen", options, props, "mainStack")
+        }
     }
 
     function connectWithApple() {
         console.log("Subscribe with Apple")
+        const props: HomeScreenProps = {
+            userMail: userMail
+        }
+        NavigatorPush("HomeScreen", options, props, "mainStack")
     }
 
     function connectWithGoogle() {
         console.log("Subscribe with Google")
+        const props: HomeScreenProps = {
+            userMail: userMail
+        }
+        NavigatorPush("HomeScreen", options, props, "mainStack")
     }
 
     function connectWithFacebook() {
         console.log("Subscribe with Facebook")
+        const props: HomeScreenProps = {
+            userMail: userMail
+        }
+        NavigatorPush("HomeScreen", options, props, "mainStack")
     }
 
     function navigateToConnexion() {
