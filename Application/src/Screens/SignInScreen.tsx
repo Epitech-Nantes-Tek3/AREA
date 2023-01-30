@@ -36,7 +36,7 @@ export default function SignInScreen() {
             const props: HomeScreenProps = {
                 userMail: userMail
             }
-            NavigatorPush("HomeScreen", options, props, "mainStack")
+            NavigatorPush("HomeScreen", "mainStack", options, props)
         }
     }
 
@@ -45,7 +45,7 @@ export default function SignInScreen() {
         const props: HomeScreenProps = {
             userMail: userMail
         }
-        NavigatorPush("HomeScreen", options, props, "mainStack")
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     function connectWithGoogle() {
@@ -53,7 +53,7 @@ export default function SignInScreen() {
         const props: HomeScreenProps = {
             userMail: userMail
         }
-        NavigatorPush("HomeScreen", options, props, "mainStack")
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     function connectWithFacebook() {
@@ -61,7 +61,7 @@ export default function SignInScreen() {
         const props: HomeScreenProps = {
             userMail: userMail
         }
-        NavigatorPush("HomeScreen", options, props, "mainStack")
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     function navigateToConnexion() {
