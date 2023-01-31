@@ -2,7 +2,12 @@ import React, {useState} from "react"
 import "./App.css"
 import FacebookLogin from 'react-facebook-login';
 
-export default function AuthPage(props) {
+/**
+ * @brief It creates the Sign up and Sign In Pages for the AREA
+ * It has a login with facebook on Sign In page
+ * @returns the page corresponding to the current authMode
+ */
+export default function AuthPage() {
 
     let [authMode, setAuthMode] = useState("signin")
 

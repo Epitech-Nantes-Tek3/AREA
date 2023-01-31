@@ -3,7 +3,7 @@ import './App.css';
 
 /**
  * @brief Return the home page for AREA
- * TO UPDATE
+ * This page will be updated soon 
  */
 function MainPage() {
     return (
