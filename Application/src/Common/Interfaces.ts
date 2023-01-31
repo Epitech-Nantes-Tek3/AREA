@@ -36,10 +36,19 @@ interface Location {
     city: string
 }
 
+interface ServicesInfo {
+    spotifyId: string
+    googleId: string
+    twitterId: string
+    twitchId: string
+    stravaId: string
+}
+
 export interface UserInfo {
     mail: string
     coord: Location
     id: string
+    services: ServicesInfo
 }
 
 export interface AddAreaProps {

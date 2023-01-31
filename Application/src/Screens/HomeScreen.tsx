@@ -23,7 +23,14 @@ export default function HomeScreen(props: HomeScreenProps) {
             longitude: 0,
             city: ""
         },
-        id: props.userId
+        id: props.userId,
+        services: {
+            spotifyId: "",
+            googleId: "",
+            twitterId: "",
+            twitchId: "",
+            stravaId: ""
+        }
     })
 
     useEffect(() => {
