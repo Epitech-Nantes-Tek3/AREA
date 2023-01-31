@@ -25,28 +25,28 @@ export default function AuthPage() {
               <div className="Form-content">
                 <img src={AreaLogo} className="logo" alt="logo" />
                 <div className="text-center">
-                  Not registered yet ?  {"  "}
+                  Pas encore de compte ?  {"  "}
                   <span className="link-primary" onClick={changeAuthMode}>
-                Sign Up
+                    S'inscrire
                   </span>
                 </div>
                 <div className="form-group">
                   <input
                     type="email"
                     className="form-control mt-1"
-                    placeholder="Enter email"
+                    placeholder="Adresse email"
                   />
                 </div>
                 <div className="form-group">
                   <input
                     type="password"
                     className="form-control mt-1"
-                    placeholder="Enter password"
+                    placeholder="Mot de passe"
                   />
                 </div>
                 <div className="form-group">
                   <button className="button-center">
-                    Submit
+                    Se connecter
                   </button>
                 </div>
                 <div className="form-group">
@@ -57,9 +57,6 @@ export default function AuthPage() {
                   cssClass="facebook"
                   icon="fa-facebook" />
                 </div>
-                <p className="text-center mt-2">
-                  Forgot <a href="#">password?</a>
-                </p>
               </div>
             </form>
           </div>
@@ -70,37 +67,39 @@ export default function AuthPage() {
         <div className="Form-container">
           <form className="Form">
             <div className="Form-content">
-              <h3 className="Title">Sign Up</h3>
+              <h3 className="Title">S'inscrire</h3>
               <div className="text-center">
-                Already registered?{" "}
+                Déjà un compte ?{" "}
                 <span className="link-primary" onClick={changeAuthMode}>
-                  Sign In
+                  Se connecter
                 </span>
               </div>
               <div className="form-group">
-                <br></br>
                 <input
                   type="email"
                   className="form-control mt-1"
-                  placeholder="Email Address"
+                  placeholder="Adresse email"
                 />
               </div>
               <div className="form-group">
-                <br></br>
                 <input
                   type="password"
                   className="form-control mt-1"
-                  placeholder="Password"
+                  placeholder="Mot de passe"
+                />
+              </div>
+              <div className="form-group">
+                <input
+                  type="password"
+                  className="form-control mt-2"
+                  placeholder="Valider le mot de passe"
                 />
               </div>
               <div className="form-group">
                 <button className="button-center">
-                  Submit
+                  S'inscrire
                 </button>
               </div>
-              <p className="text-center mt-2">
-                Forgot <a href="#">password?</a>
-              </p>
             </div>
           </form>
         </div>

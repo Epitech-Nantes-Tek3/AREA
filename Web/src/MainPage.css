@@ -1,6 +1,5 @@
 .App {
     text-align: center;
-    background-color: white;
   }
 
   .App-logo {
@@ -36,4 +35,44 @@
     .App-logo {
       animation: App-logo-spin infinite 20s linear;
     }
+  }
+
+  .Box-AREA {
+    height: 75%;
+    width: 200;
+    border-radius: 20;
+    margin-right: 16;
+    flex-direction: "row";
+    border-radius: 10;
+  }
+
+  .Top-Box-Area {
+    justify-content: center;
+    flex-direction: row;
+    margin-top: 8;
+    flex : 1;
+  }
+
+  .Logo-Area {
+    width : 40;
+    height: 40;
+  }
+
+  .Area-Center {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .Action-Name {
+    text-transform: capitalize;
+    font-size: 25;
+    color : white;
+    text-align: center;
+  }
+
+  .Action-Desc {
+    text-transform: capitalize;
+    font-size: 16;
+    color : white;
+    text-align: center;
   }
