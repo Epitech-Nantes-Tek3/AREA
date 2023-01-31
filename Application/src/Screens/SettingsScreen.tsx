@@ -310,7 +310,8 @@ const styles = StyleSheet.create({
     textList: {
         fontFamily: "Poppins-Medium",
         fontSize: 18,
-        marginLeft: 16
+        marginLeft: 16,
+        color: "black"
     },
     rightArrow: {
         width: 7,
