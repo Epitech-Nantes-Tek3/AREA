@@ -23,39 +23,45 @@ export default function AuthPage() {
           <div className="Form-container">
             <form className="Form">
               <div className="Form-content">
-                <img src={AreaLogo} className="logo" alt="logo" />
-                <div className="text-center">
-                  Pas encore de compte ?  {"  "}
-                  <span className="link-primary" onClick={changeAuthMode}>
-                    S'inscrire
-                  </span>
-                </div>
+                <img src={AreaLogo} style={{width: 150, height: 150, display: "block", margin: "auto"}} alt="logo" />
+                <h3 className="Title">Se connecter</h3>
                 <div className="form-group">
                   <input
                     type="email"
                     className="form-control mt-1"
+                    style={{width: "60%", display: "block", margin: "auto"}}
                     placeholder="Adresse email"
                   />
                 </div>
                 <div className="form-group">
                   <input
                     type="password"
+                    style={{width: "60%", display: "block", margin: "auto"}}
                     className="form-control mt-1"
                     placeholder="Mot de passe"
                   />
                 </div>
                 <div className="form-group">
-                  <button className="button-center">
+                  <button className="button-center"
+                    style={{width: "60%", display: "block", margin: "auto"}}
+                  >
                     Se connecter
                   </button>
                 </div>
-                <div className="form-group">
-                <FacebookLogin
-                  appId="1088597931155576"
-                  autoLoad={true}
-                  fields="name,email"
-                  cssClass="facebook"
-                  icon="fa-facebook" />
+                <div className="form-group" style={{width: "55%", display: "block", margin: "auto", alignItems: "center"}}>
+                  <FacebookLogin
+                    appId="1088597931155576"
+                    autoLoad={true}
+                    fields="email"
+                    icon="fa-facebook"
+                    size="medium"
+                    />
+                  </div>
+                <div className="text-center" style={{marginTop: 20}}>
+                  Pas encore de compte ?  {"  "}
+                  <span className="link-primary" onClick={changeAuthMode}>
+                    S'inscrire
+                  </span>
                 </div>
               </div>
             </form>
@@ -67,16 +73,12 @@ export default function AuthPage() {
         <div className="Form-container">
           <form className="Form">
             <div className="Form-content">
+              <img src={AreaLogo} style={{width: 150, height: 150, display: "block", margin: "auto"}} alt="logo" />
               <h3 className="Title">S'inscrire</h3>
-              <div className="text-center">
-                Déjà un compte ?{" "}
-                <span className="link-primary" onClick={changeAuthMode}>
-                  Se connecter
-                </span>
-              </div>
               <div className="form-group">
                 <input
                   type="email"
+                  style={{width: "60%", display: "block", margin: "auto"}}
                   className="form-control mt-1"
                   placeholder="Adresse email"
                 />
@@ -84,6 +86,7 @@ export default function AuthPage() {
               <div className="form-group">
                 <input
                   type="password"
+                  style={{width: "60%", display: "block", margin: "auto"}}
                   className="form-control mt-1"
                   placeholder="Mot de passe"
                 />
@@ -91,14 +94,22 @@ export default function AuthPage() {
               <div className="form-group">
                 <input
                   type="password"
+                  style={{width: "60%", display: "block", margin: "auto"}}
                   className="form-control mt-2"
                   placeholder="Valider le mot de passe"
                 />
               </div>
               <div className="form-group">
-                <button className="button-center">
+                <button className="button-center"
+                  style={{width: "60%", display: "block", margin: "auto"}}>
                   S'inscrire
                 </button>
+              </div>
+              <div className="text-center">
+                Déjà un compte ?{" "}
+                <span className="link-primary" onClick={changeAuthMode}>
+                  Se connecter
+                </span>
               </div>
             </div>
           </form>
