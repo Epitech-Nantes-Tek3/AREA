@@ -7,6 +7,7 @@ const openMeteoService = require('./Services/openMeteoService');
 const twitterService = require('./Services/twitterService');
 const firebaseFunctions = require('./firebaseFunctions');
 const ISSStationService = require('./Services/ISSStationService');
+const areasFunctions = require('./Services/areasFunctions');
 const firebaseUid = 'leMgZPp8sfe2l06b6TU330bahJz2';
 const port = config.port;
 
