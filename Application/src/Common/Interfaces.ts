@@ -38,6 +38,7 @@ interface Location {
 export interface UserInfo {
     mail: string
     coord: Location
+    id: string
 }
 
 export interface AddAreaProps {

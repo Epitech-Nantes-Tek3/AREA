@@ -22,7 +22,8 @@ export default function HomeScreen(props: HomeScreenProps) {
             latitude: 0,
             longitude: 0,
             city: ""
-        }
+        },
+        id: ""
     })
 
     useEffect(() => {

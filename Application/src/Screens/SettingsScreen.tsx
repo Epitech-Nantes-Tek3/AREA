@@ -28,7 +28,8 @@ export default function SettingsScreen(props: SettingsProps) {
                 latitude: location.latitude,
                 longitude: location.longitude,
                 city: location.city
-            }
+            },
+            id: props.userInfo.id
         })
     }, [location])
 
