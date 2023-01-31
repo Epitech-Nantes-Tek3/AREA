@@ -2,7 +2,6 @@ const { cp } = require('fs');
 const http  = require('http');
 const firebaseFunctions = require('../firebaseFunctions');
 const url = 'http://api.open-notify.org/iss-now.json';
-const gap = 1000.0
 const EarthRadius = 6374
 
 module.exports = {
@@ -12,7 +11,7 @@ module.exports = {
      * @param {*} res the request
      * @param {*} uid needed to connect to the firebase to get user position
      */
-    checkISSPosition: function(res, uid) {
+    checkISSPosition: function(res, uid, gap) {
         firebaseFunctions.getDataFromFireBase(uid, 'IssStation')
         .then(data => {
             var InfoISS = ""
@@ -37,11 +36,13 @@ module.exports = {
 
                     console.log(distance)
 
-                    if (distance <= gap)
-                        InfoISS = "THE ISS IS NEAR US BEWARE"
-                    else
-                        InfoISS =  "THE ISS IS FAR IT'S FINE"
-                    res.send(InfoISS)
+                    if (distance <= gap) {
+                        console.log("inf")
+                        return true;
+                    } else {
+                        console.log("sup")
+                        return false;
+                    }
                 });
 
                 response.on('error', function (err) {

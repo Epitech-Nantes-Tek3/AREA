@@ -119,5 +119,9 @@ app.listen(port, () => {
 })
 
 app.get('/issStation', (req, res) => {
-    ISSStationService.checkISSPosition(res, firebaseUid)
+    if (ISSStationService.checkISSPosition(res, firebaseUid, 1000.0) === true)
+        console.log('true');
+    else
+        console.log('false')
+    res.redirect('/')
 })
