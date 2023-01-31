@@ -20,7 +20,7 @@ export default function AuthPage(props) {
                 Sign Up
                   </span>
                 </div>
-                <div className="form-group mt-3">
+                <div className="form-group">
                   <label>Email address</label>
                   <input
                     type="email"
@@ -28,7 +28,7 @@ export default function AuthPage(props) {
                     placeholder="Enter email"
                   />
                 </div>
-                <div className="form-group mt-3">
+                <div className="form-group">
                   <label>Password</label>
                   <input
                     type="password"
@@ -36,8 +36,8 @@ export default function AuthPage(props) {
                     placeholder="Enter password"
                   />
                 </div>
-                <div className="d-grid gap-2 mt-3">
-                  <button type="submit" className="button-center">
+                <div className="form-group">
+                  <button className="button-center">
                     Submit
                   </button>
                 </div>
@@ -88,9 +88,8 @@ export default function AuthPage(props) {
                   placeholder="Password"
                 />
               </div>
-              <br></br>
               <div className="form-group">
-                <button type="submit" className="button-center">
+                <button className="button-center">
                   Submit
                 </button>
               </div>
