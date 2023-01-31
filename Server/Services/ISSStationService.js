@@ -6,10 +6,12 @@ const EarthRadius = 6374
 
 module.exports = {
     /**
-     * @brief Check the ISS position, and compute the distance between the user and the ISS
+     * @brief Check the ISS position, compute the distance between the user and the 
+     * ISS and return true if iss is close
      *
      * @param {*} res the request
      * @param {*} uid needed to connect to the firebase to get user position
+     * @param {*} gap gap between position and Iss
      */
     checkISSPosition: function(res, uid, gap) {
         firebaseFunctions.getDataFromFireBase(uid, 'IssStation')
