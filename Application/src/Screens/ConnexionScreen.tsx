@@ -68,7 +68,7 @@ export default function ConnexionScreen() {
     }
 
     function navigateToSubscribe() {
-        NavigatorPush("HomeScreen", "mainStack", options, {})
+        NavigatorPush("SignInScreen", "mainStack", options, {})
     }
 
     function SocialButtons() {
