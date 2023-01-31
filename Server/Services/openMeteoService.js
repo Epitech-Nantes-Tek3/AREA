@@ -60,10 +60,10 @@ module.exports = {
                             comparaisons.forEach((comparaison) => {
                                 // comparison of the weathercode to all our weathercodes
                                 if (comparaison.result == weatherCode) {
-                                    if (weatherCode < O || weatherCode > 3)
-                                        return false;
-                                    else
+                                    if (weatherCode > O || weatherCode < 4)
                                         return true;
+                                    else
+                                        return false;
                                 }
                             });
                         }
