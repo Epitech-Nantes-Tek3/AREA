@@ -8,7 +8,7 @@ import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
 import { NavigatorPush } from "../Navigator";
 import { Options } from "react-native-navigation";
 import Circles from "../Components/Circles";
-
+import { ip} from "../../env";
 
 export default function ConnexionScreen() {
     // Gets the size of the current window
@@ -32,7 +32,7 @@ export default function ConnexionScreen() {
         }
 
         try {
-            await fetch("http://10.29.125.228:8080/login", requestOptions).then(response => {
+            await fetch(ip + "register", requestOptions).then(response => {
                 response.json().then(data => {
                     console.log(data);
                 })
