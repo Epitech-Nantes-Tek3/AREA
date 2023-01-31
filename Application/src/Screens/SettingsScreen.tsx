@@ -1,5 +1,5 @@
 import React, { Dispatch, useEffect, useState } from "react";
-import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSourcePropType, GestureResponderEvent, ScrollView } from "react-native";
+import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSourcePropType, GestureResponderEvent, ScrollView, Alert } from "react-native";
 import { Globals } from "../Common/Globals";
 import Geolocation from 'react-native-geolocation-service';
 import { UserInfo } from "../Common/Interfaces";
@@ -46,7 +46,20 @@ export default function SettingsScreen(props: SettingsProps) {
             .then((res) => {
                 res.json()
                     .then((jsonRes) => {
-                        setLocation({latitude: lat, longitude: long, city: jsonRes.features[0].properties.city});
+                        if (jsonRes && jsonRes.features && jsonRes.features[0] && jsonRes.features[0].properties)
+                            setLocation({latitude: lat, longitude: long, city: jsonRes.features[0].properties.city});
+                        else {
+                            setLocation({latitude: lat, longitude: long, city: location.city});
+                            Alert.alert("Erreur",
+                                "Une erreur a été rencontrée en essayant de trouver votre ville à partir de votre localisation. Vos données ont tout de même été mises à jour.",
+                                [
+                                    {
+                                      text: "Ok",
+                                      style: "default"
+                                    },
+                                ]
+                            )
+                        }
                     })
             })
             .catch((err) => console.warn(err)
@@ -223,7 +236,7 @@ export default function SettingsScreen(props: SettingsProps) {
         <SafeAreaView style={styles.container}>
             <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentScrollview}>
                 <ProfileInfo />
-                <SingleBlock leftImage={require("../assets/locate.png")} text={"Localisation : " + (location.city === "" ? "Unknown" : location.city)} onPress={getLocalization} />
+                <SingleBlock leftImage={require("../assets/locate.png")} text={"Localisation : " + (location.city === "" ? "Inconnue" : location.city)} onPress={getLocalization} />
                 <ConnexionBlocks/>
             </ScrollView>
         </SafeAreaView>
