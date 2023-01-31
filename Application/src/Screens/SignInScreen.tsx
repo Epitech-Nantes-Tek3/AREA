@@ -34,7 +34,8 @@ export default function SignInScreen() {
         else {
             console.log("Subscribe user", userMail, userPass, userValidPass)
             const props: HomeScreenProps = {
-                userMail: userMail
+                userMail: userMail,
+                userId: "idTest"
             }
             NavigatorPush("HomeScreen", "mainStack", options, props)
         }
@@ -43,7 +44,8 @@ export default function SignInScreen() {
     function connectWithApple() {
         console.log("Subscribe with Apple")
         const props: HomeScreenProps = {
-            userMail: userMail
+            userMail: userMail,
+            userId: "idTest"
         }
         NavigatorPush("HomeScreen", "mainStack", options, props)
     }
@@ -51,7 +53,8 @@ export default function SignInScreen() {
     function connectWithGoogle() {
         console.log("Subscribe with Google")
         const props: HomeScreenProps = {
-            userMail: userMail
+            userMail: userMail,
+            userId: "idTest"
         }
         NavigatorPush("HomeScreen", "mainStack", options, props)
     }
@@ -59,7 +62,8 @@ export default function SignInScreen() {
     function connectWithFacebook() {
         console.log("Subscribe with Facebook")
         const props: HomeScreenProps = {
-            userMail: userMail
+            userMail: userMail,
+            userId: "idTest"
         }
         NavigatorPush("HomeScreen", "mainStack", options, props)
     }

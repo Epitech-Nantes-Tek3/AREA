@@ -33,7 +33,8 @@ export default function ConnexionScreen() {
 
     function connectionAction() {
         const props: HomeScreenProps = {
-            userMail: userMail
+            userMail: userMail,
+            userId: "idTest"
         }
         console.log("Connect user", userMail, userPass)
         NavigatorPush("HomeScreen", "mainStack", options, props)
@@ -42,7 +43,8 @@ export default function ConnexionScreen() {
     function connectWithApple() {
         console.log("Connect with Apple")
         const props: HomeScreenProps = {
-            userMail: userMail
+            userMail: userMail,
+            userId: "idTest"
         }
         NavigatorPush("HomeScreen", "mainStack", options, props)
     }
@@ -50,7 +52,8 @@ export default function ConnexionScreen() {
     function connectWithGoogle() {
         console.log("Connect with Google")
         const props: HomeScreenProps = {
-            userMail: userMail
+            userMail: userMail,
+            userId: "idTest"
         }
         NavigatorPush("HomeScreen", "mainStack", options, props)
     }
@@ -58,7 +61,8 @@ export default function ConnexionScreen() {
     function connectWithFacebook() {
         console.log("Connect with Facebook")
         const props: HomeScreenProps = {
-            userMail: userMail
+            userMail: userMail,
+            userId: "idTest"
         }
         NavigatorPush("HomeScreen", "mainStack", options, props)
     }

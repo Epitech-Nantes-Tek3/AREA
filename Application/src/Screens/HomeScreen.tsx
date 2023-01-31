@@ -23,7 +23,7 @@ export default function HomeScreen(props: HomeScreenProps) {
             longitude: 0,
             city: ""
         },
-        id: ""
+        id: props.userId
     })
 
     useEffect(() => {

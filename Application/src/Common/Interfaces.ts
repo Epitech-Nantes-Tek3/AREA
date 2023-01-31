@@ -21,6 +21,7 @@ export interface Service {
 
 export interface HomeScreenProps {
     userMail: string
+    userId: string
 }
 
 export interface SettingsProps {
