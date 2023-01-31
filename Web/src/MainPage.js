@@ -24,66 +24,82 @@ export default function MainPage() {
     "météo": LogoMeteo,
     "twitch": LogoTwitch,
     "strava": LogoStrava
-    }
+  }
+  const [index, setIndex] = useState(-1);
 
   let areas = [
     {
       "service":
       {
-        "name": "twitter",
+        "name": "spotify",
       },
       "description": "Play a song on Spotify",
-    }
+    },
+    {
+      "service":
+      {
+        "name": "nasa",
+      },
+      "description": "See NASA",
+    },
+    {
+      "service":
+      {
+        "name": "twitter",
+      },
+      "description": "Retweet Elon Musk",
+    },
   ]
     function InfoBlock(props) {
-      const [color, setColor] = useState("#7D7D7D");
+      let color = props.index === index ?  "#392D37" : "#D7D7FF";
 
-      function changeColor() {
-        if (color == "#7D7D7D") {
-          setColor("#392D37");
-        }
-        else {
-          setColor("#7D7D7D");
-        }
+      function selectIndex() {
+        setIndex(props.index);
       }
 
       return (
-        <div className='Box-Area' style={{backgroundColor: color}} onClick={changeColor}>
-          <div className='Top-Box-Area' style={{}}>
+        <div style={{
+            backgroundColor: color, height: "75%",
+            width: 200,
+            borderRadius: 20,
+            marginRight: 16,
+            padding: 10,
+            display: "flex",
+            flexDirection: "column",}}
+          onClick={selectIndex}>
+          <div style={{display : "flex"}}>
             <div className='Area-Center' style={{flex : 1}}>
-              <img src={logo[props.area.service.name]} alt={props.area.service.name} className="Logo-Area"/>
+              <img src={logo[props.area.service.name]} alt={props.area.service.name} style={{width: 50, height: 50}} className="Logo-Area"/>
             </div>
             <div className='Area-Center' style={{flex : 1}}>
               <label className='Action-Name'> {props.area.service.name} </label>
             </div>
           </div>
-          <div className='Area-Center' style={{flex : 1}}>
-            <label className='Action-Desc'> {props.area.description}</label>
+          <div style={{
+            flex : 1,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center"
+          }}>
+            <label className='Action-Desc'> {props.area.description} </label>
           </div>
         </div>
       )
     }
 
     return (
-        <div className="App">
+        <div style={{
+          display: "flex",
+          flexDirection: "row",
+        }}>
+          {
+            areas.map((area, index) => {
+              return (
+                <InfoBlock area={area} index={index}/>
+              )
+            })
+          }
         <InfoBlock area={areas[0]}/>
     </div>
     );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  areaBox: {
-    height: 75%;
-    width: 200;
-    border-radius: 20;
-    margin-right: 16;
-    flex-direction: "row";
-    border-radius: 10;
-  }
-});
