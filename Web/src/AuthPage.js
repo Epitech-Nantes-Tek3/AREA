@@ -1,4 +1,8 @@
 import React, {useState} from "react"
+import FacebookLogin from 'react-facebook-login'
+
+import AreaLogo from './assets/logo.png'
+import "./AuthPage.css"
 import "./App.css"
 
 /**
@@ -16,10 +20,10 @@ export default function AuthPage() {
 
     if (authMode === "signin") {
         return (
-          <div className="Auth-form-container">
-            <form className="Auth-form">
-              <div className="Auth-form-content">
-                <h3 className="Auth-form-title">Sign In</h3>
+          <div className="Form-container">
+            <form className="Form">
+              <div className="Form-content">
+                <img src={AreaLogo} className="logo" alt="logo" />
                 <div className="text-center">
                   Not registered yet ?  {"  "}
                   <span className="link-primary" onClick={changeAuthMode}>
@@ -27,7 +31,6 @@ export default function AuthPage() {
                   </span>
                 </div>
                 <div className="form-group">
-                  <label>Email address</label>
                   <input
                     type="email"
                     className="form-control mt-1"
@@ -35,7 +38,6 @@ export default function AuthPage() {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Password</label>
                   <input
                     type="password"
                     className="form-control mt-1"
@@ -48,7 +50,12 @@ export default function AuthPage() {
                   </button>
                 </div>
                 <div className="form-group">
-                  
+                <FacebookLogin
+                  appId="1088597931155576"
+                  autoLoad={true}
+                  fields="name,email"
+                  cssClass="facebook"
+                  icon="fa-facebook" />
                 </div>
                 <p className="text-center mt-2">
                   Forgot <a href="#">password?</a>
@@ -60,10 +67,10 @@ export default function AuthPage() {
       }
 
       return (
-        <div className="Auth-form-container">
-          <form className="Auth-form">
-            <div className="Auth-form-content">
-              <h3 className="Auth-form-title">Sign Up</h3>
+        <div className="Form-container">
+          <form className="Form">
+            <div className="Form-content">
+              <h3 className="Title">Sign Up</h3>
               <div className="text-center">
                 Already registered?{" "}
                 <span className="link-primary" onClick={changeAuthMode}>
@@ -71,16 +78,6 @@ export default function AuthPage() {
                 </span>
               </div>
               <div className="form-group">
-                <label>Full Name </label>
-                <br></br>
-                <input
-                  type="email"
-                  className="form-control"
-                  placeholder="e.g Jane Doe"
-                />
-              </div>
-              <div className="form-group">
-                <label>Email address </label>
                 <br></br>
                 <input
                   type="email"
@@ -89,7 +86,6 @@ export default function AuthPage() {
                 />
               </div>
               <div className="form-group">
-                <label>Password</label>
                 <br></br>
                 <input
                   type="password"

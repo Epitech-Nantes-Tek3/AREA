@@ -1,9 +1,9 @@
 import logo from './logo.svg';
-import './App.css';
+import './MainPage.css';
 
 /**
  * @brief Return the home page for AREA
- * This page will be updated soon 
+ * This page will be updated soon
  */
 function MainPage() {
     return (
