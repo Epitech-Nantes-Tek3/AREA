@@ -89,25 +89,37 @@ label {
 }
 
 .button-center {
-  display: grid;
-}
-.center {
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-}
-
-button {
   position: relative;
   display: block;
   width: 180px;
-  height: 32px;
+  height: 28px;
   border-radius: 18px;
-  background-color: #1c89ff;
+  background-color:#1c89ff;
   border: solid 1px transparent;
   font-size: 18px;
   font-weight: 300;
   cursor: pointer;
   transition: all .1s ease-in-out;
   color : white;
+  display: grid;
+}
+
+.center {
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.facebook {
+    position: relative;
+    width: 180px;
+    height: 32px;
+    border-radius: 18px;
+    background-color :#3b5998;
+    border: solid 1px transparent;
+    font-size: 15px;
+    font-weight: 250;
+    cursor: pointer;
+    transition: all .1s ease-in-out;
+    color : white;
 }

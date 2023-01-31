@@ -1,5 +1,7 @@
 import React, {useState} from "react"
 import "./App.css"
+import FacebookLogin from 'react-facebook-login';
+
 export default function AuthPage(props) {
 
     let [authMode, setAuthMode] = useState("signin")
@@ -40,6 +42,14 @@ export default function AuthPage(props) {
                   <button className="button-center">
                     Submit
                   </button>
+                </div>
+                <div className="form-group">
+                <FacebookLogin
+                  appId="1088597931155576"
+                  autoLoad={true}
+                  fields="name,email"
+                  cssClass="facebook"
+                  icon="fa-facebook" />
                 </div>
                 <p className="text-center mt-2">
                   Forgot <a href="#">password?</a>
