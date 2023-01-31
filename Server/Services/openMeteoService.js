@@ -37,41 +37,42 @@ let comparaisons = [
 
 module.exports = {
     WeatherRainingOrNot: function(res, uid) {
+        res.send('Weather info')
         firebaseFunctions.getDataFromFireBase(uid, 'OpenMeteoService')
         .then(data => {
             var request = http.get(`http://api.open-meteo.com/v1/forecast?latitude=${data.latitude}&longitude=${data.longitude}&hourly=weathercode`, function (response) {
-            var buffer = ""
-            var data;
-            response.on("data", function (chunk) {
-                buffer += chunk;
-            }); 
-            response.on("end", function (err) {
-                data = JSON.parse(buffer);
-                // get date and time info
-                var date = new Date().toISOString().slice(0, 10);
-                var hour = new Date().getHours();
-                // Search for data corresponding to the current date
-                data.hourly.time.forEach(function(time, i) {
-                    // Compare date and time
-                    if (time.slice(0, 10) == date && time.slice(11, 13) == hour) {
-                        // obtaining the weather code to get the time
-                        var weatherCode = data.hourly.weathercode[i];
-                        comparaisons.forEach((comparaison) => {
-                            // comparison of the weathercode to all our weathercodes
-                            if (comparaison.result == weatherCode) {
-                                console.log('success, send an email')
-                                googleService.send_mail(`Le temps est : ${comparaison.name} le ${date} à ${hour} heures`, `météo a ${hour} heures`, 'AREA METEO', uid)
-                                return;
-                            }
-                        });
-                    }
-                });
+                var buffer = ""
+                var data;
+                response.on("data", function (chunk) {
+                    buffer += chunk;
+                }); 
+                response.on("end", function (err) {
+                    data = JSON.parse(buffer);
+                    // get date and time info
+                    var date = new Date().toISOString().slice(0, 10);
+                    var hour = new Date().getHours();
+                    // Search for data corresponding to the current date
+                    data.hourly.time.forEach(function(time, i) {
+                        // Compare date and time
+                        if (time.slice(0, 10) == date && time.slice(11, 13) == hour) {
+                            // obtaining the weather code to get the time
+                            var weatherCode = data.hourly.weathercode[i];
+                            comparaisons.forEach((comparaison) => {
+                                // comparison of the weathercode to all our weathercodes
+                                if (comparaison.result == weatherCode) {
+                                    if (weatherCode < O || weatherCode > 3)
+                                        return false;
+                                    else
+                                        return true;
+                                }
+                            });
+                        }
+                    });
+                })
             })
         })
-        res.send('Weather info')
-        })
         .catch(error => {
-            console.log(error);
+        console.log(error);
         });
     }
 }
