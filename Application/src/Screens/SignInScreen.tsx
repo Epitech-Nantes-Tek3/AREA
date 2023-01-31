@@ -7,6 +7,7 @@ import GoogleSocialButton from "../Components/SocialButtons/GoogleSocialButton";
 import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
 import { NavigatorPop } from "../Navigator";
 import Circles from "../Components/Circles";
+import { ip} from "../../env";
 
 
 export default function SignInScreen() {
@@ -31,7 +32,7 @@ export default function SignInScreen() {
         }
 
         try {
-            await fetch("http://10.29.125.228:8080/register", requestOptions).then(response => {
+            await fetch(ip + "register", requestOptions).then(response => {
                 response.json().then(data => {
                     console.log(data);
                 })

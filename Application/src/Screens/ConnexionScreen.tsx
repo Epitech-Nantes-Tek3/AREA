@@ -32,7 +32,7 @@ export default function ConnexionScreen() {
         }
 
         try {
-            await fetch(ip + "register", requestOptions).then(response => {
+            await fetch(ip + "login", requestOptions).then(response => {
                 response.json().then(data => {
                     console.log(data);
                 })
