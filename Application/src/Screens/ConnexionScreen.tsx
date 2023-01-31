@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, SafeAreaView, Image, Platform, Dimensions, TextInput, View, TouchableOpacity, ScaledSize } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, SafeAreaView, Image, Platform, Dimensions, TextInput, View, TouchableOpacity, ScaledSize, Alert } from "react-native";
 import Separator, { Line } from "../Components/Separator";
 import { Globals } from "../Common/Globals";
 import FacebookSocialButton from "../Components/SocialButtons/FacebookButton";
@@ -9,6 +9,7 @@ import { NavigatorPush } from "../Navigator";
 import { Options } from "react-native-navigation";
 import Circles from "../Components/Circles";
 import { HomeScreenProps } from "../Common/Interfaces";
+import NetInfo from "@react-native-community/netinfo";
 
 
 export default function ConnexionScreen() {
@@ -26,6 +27,31 @@ export default function ConnexionScreen() {
             visible: false
         }
     }
+
+    function checkConnexion() {
+        NetInfo.fetch().then((result) => {
+            if (!result.isInternetReachable) {
+                Alert.alert("Pas internet",
+                "Essaye de te connecter à Internet pour utiliser l'app :)",
+                [
+                    {
+                        text: "Annuler",
+                        style: "cancel"
+                    },
+                    {
+                        text: "Réessayer",
+                        onPress: checkConnexion,
+                        style: "default"
+                    }
+                ]
+                )
+            }
+        });
+    }
+
+    useEffect(() => {
+        checkConnexion()
+    })
 
     function forgotPassword() {
         console.log("Act on forgot password")
