@@ -84,6 +84,7 @@ app.get('/about.json', (req, res) => {
 
 app.get('/weather', (req, res) => {
     openMeteoService.WeatherRainingOrNot(res, firebaseUid)
+})
 
 app.get('/twitter', (req, res) => {
     res.render('index')
