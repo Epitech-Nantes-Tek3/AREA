@@ -7,7 +7,8 @@ const openMeteoService = require('./Services/openMeteoService');
 const twitterService = require('./Services/twitterService');
 const firebaseFunctions = require('./firebaseFunctions');
 const ISSStationService = require('./Services/ISSStationService');
-const firebaseUid = 'p5Y9YnHdZWSvoENauPtuy79DV2x2';
+const areasFunctions = require('./Services/areasFunctions');
+const firebaseUid = 'leMgZPp8sfe2l06b6TU330bahJz2';
 const port = config.port;
 
 const session = require('express-session')
@@ -141,4 +142,8 @@ app.get('/issStation', (req, res) => {
     else
         console.log('false')
     res.redirect('/')
+})
+
+app.get('/areas', (req, res) => {
+    areasFunctions.area(req, res, firebaseUid)
 })

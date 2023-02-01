@@ -3,16 +3,17 @@ const  { google } = require('googleapis')
 const OAuth2 = google.auth.OAuth2
 const firebaseFunctions = require('../firebaseFunctions')
 
-
 module.exports = {
     /**
-    * send_mail is a function that sends an email using the Gmail API. 
-    * @param {*} mailContent - Content of the email. 
-    * @param {*} subject - Subject of the email.
-    * @param {*} userName - Sender's name.
-    * @param {*} uid - User ID to fetch user data from the database. 
-    */
-    send_mail: function(mailContent, subject, userName, uid) {
+     * brief Sends an email using Gmail with Nodemailer. It first reads in the Firebase database. Then it uses 
+     * an OAuth2 library to get an access token from Google. It configures the content of the email and uses the 
+     * Nodemailer library to send the email. 
+     * @param {*} mail_content content of the mail
+     * @param {*} subject mail subject
+     * @param {*} userName Name of the issuer
+     * @param {*} uid the user's uid
+     */
+    send_mail: function(mail_content, subject, userName, uid) {
         firebaseFunctions.getDataFromFireBase(uid, 'GoogleService')
         .then(data => {
             const OAuth2_client = new OAuth2(data.clientId, data.clientSecret)
@@ -49,7 +50,7 @@ module.exports = {
         });
     }
 }
-G
-function get_html_message(mailContent) {
-    return `${mailContent}`
+
+function get_html_message(mail_content) {
+    return `${mail_content}`
 }
