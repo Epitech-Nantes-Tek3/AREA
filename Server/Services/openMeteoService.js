@@ -36,43 +36,56 @@ let comparaisons = [
 ]
 
 module.exports = {
-    WeatherRainingOrNot: function(res, uid) {
-        res.send('Weather info')
-        firebaseFunctions.getDataFromFireBase(uid, 'OpenMeteoService')
-        .then(data => {
-            var request = http.get(`http://api.open-meteo.com/v1/forecast?latitude=${data.latitude}&longitude=${data.longitude}&hourly=weathercode`, function (response) {
+    /**
+    * @brief Check if it is weather is fine or not based on the current date and 
+    * time and the weather code provided by the API.
+    * @param latitude Latitude of the location to check the weather for.
+    * @param longitude Longitude of the location to check the weather for.
+    * @returns {Promise} A promise that resolves to a boolean indicating whether it is 
+    * weather is fine or not.
+    */
+    WeatherisFineOrNot: function(latitude, longitude) {
+        return new Promise((resolve, reject) => {
+            http.get(`http://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=weathercode`, function (response) {
                 var buffer = ""
-                var data;
+                var dataJson;
                 response.on("data", function (chunk) {
                     buffer += chunk;
                 }); 
                 response.on("end", function (err) {
-                    data = JSON.parse(buffer);
-                    // get date and time info
+                    dataJson = JSON.parse(buffer);
                     var date = new Date().toISOString().slice(0, 10);
                     var hour = new Date().getHours();
-                    // Search for data corresponding to the current date
-                    data.hourly.time.forEach(function(time, i) {
-                        // Compare date and time
+                    dataJson.hourly.time.forEach(function(time, i) {
                         if (time.slice(0, 10) == date && time.slice(11, 13) == hour) {
-                            // obtaining the weather code to get the time
-                            var weatherCode = data.hourly.weathercode[i];
-                            comparaisons.forEach((comparaison) => {
-                                // comparison of the weathercode to all our weathercodes
-                                if (comparaison.result == weatherCode) {
-                                    if (weatherCode > O || weatherCode < 4)
-                                        return true;
-                                    else
-                                        return false;
-                                }
-                            });
+                            var weatherCode = dataJson.hourly.weathercode[i];
+                            console.log('weather code :', weatherCode)
+                            if (weatherCode > 0 || weatherCode < 4)
+                                resolve(true);
+                            else
+                                resolve(false);
                         }
                     });
                 })
             })
-        })
-        .catch(error => {
-        console.log(error);
+        });
+    },
+
+    /**
+    * @brief GetLocation function retrieves the location data from Firebase for the specified user ID.
+    * @param uid (string) user ID
+    * @returns Promise that resolves with location data if successful or rejects with an error if unsuccessful
+    */
+    GetLocation: function(uid) {
+        return new Promise((resolve, reject) => {
+            firebaseFunctions.getDataFromFireBase(uid, 'OpenMeteoService')
+            .then(data => {
+                resolve(data);
+            })
+            .catch(error => {
+                console.log(error);
+                reject(error);
+            });
         });
     }
 }
