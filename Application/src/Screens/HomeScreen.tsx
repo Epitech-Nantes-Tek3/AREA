@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, SafeAreaView, View, Text, Image, Dimensions, ScaledSize, TouchableOpacity, Alert, ScrollView, Platform, PermissionsAndroid, PermissionStatus } from "react-native";
 import { Options } from "react-native-navigation";
 import { Globals } from "../Common/Globals";
-import { SingleArea } from "../Common/Interfaces";
-import AreaBlock from "../Components/AreaBlock";
+import { AddAreaProps, HomeScreenProps, SettingsProps, SingleArea, UserInfo } from "../Common/Interfaces";
 import Circles from "../Components/Circles";
 import { NavigatorPush, NavigatorshowModal } from "../Navigator";
 import Geolocation from 'react-native-geolocation-service';
@@ -13,10 +12,26 @@ interface AreaBlockProps {
     area: SingleArea
 }
 
-export default function HomeScreen() {
+export default function HomeScreen(props: HomeScreenProps) {
     const window: ScaledSize = Dimensions.get("window")
     const [allAreas, setAllAreas] = useState<Array<SingleArea>>([])
     const [hasAcceptedLocalization, setHasAcceptedLocalization] = useState(false)
+    const [userInformation, setUserInformation] = useState<UserInfo>({
+        mail: props.userMail,
+        coord: {
+            latitude: 0,
+            longitude: 0,
+            city: ""
+        },
+        id: props.userId,
+        services: {
+            spotifyId: "",
+            googleId: "",
+            twitterId: "",
+            twitchId: "",
+            stravaId: ""
+        }
+    })
 
     useEffect(() => {
         if (Platform.OS === "ios") {
@@ -36,7 +51,7 @@ export default function HomeScreen() {
             ).then((res: PermissionStatus) => {
                 setHasAcceptedLocalization(res === PermissionsAndroid.RESULTS.GRANTED)
             })
-          }
+        }
     })
 
     function navigateToProfile() {
@@ -50,11 +65,12 @@ export default function HomeScreen() {
                 },
             }
         }
-        NavigatorPush("SettingsScreen", "mainStack", options,
-            {
-                hasAuthorization: hasAcceptedLocalization
-            }
-        )
+        let propsSending: SettingsProps = {
+            hasAuthorization: hasAcceptedLocalization,
+            userInfo: userInformation,
+            setUserInfo: setUserInformation
+        }
+        NavigatorPush("SettingsScreen", "mainStack", options, propsSending)
     }
 
     function navigateToAddArea() {
@@ -68,7 +84,13 @@ export default function HomeScreen() {
                 },
             }
         }
-        NavigatorshowModal("AddArea", options)
+        let propsSending: AddAreaProps = {
+            userInfo: userInformation,
+            setUserInfo: setUserInformation,
+            allAreas: allAreas,
+            setAllAreas: setAllAreas
+        }
+        NavigatorshowModal("AddArea", options, propsSending)
     }
 
     function removeAreaFromList(index: number) {
