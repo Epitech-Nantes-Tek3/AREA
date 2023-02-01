@@ -46,7 +46,6 @@
     cursor: pointer;
     transition: all .1s ease-in-out;
     color : white;
-    display: grid;
 }
 
 .center {
@@ -56,17 +55,36 @@
 }
 
 .facebook {
+    display: flex;
     position: relative;
     width: 180px;
     height: 32px;
     border-radius: 18px;
     background-color :#3b5998;
     border: solid 1px transparent;
-    font-size: 15px;
-    font-weight: 250;
     cursor: pointer;
     transition: all .1s ease-in-out;
     color : white;
+    flex-direction: row;
+    align-items: center;
+}
+
+.icon-Style {
+    padding: 10;
+    margin-left: 15;
+    height: 80%;
+    width: 15%;
+    align-self: "center";
+    position: absolute;
+}
+
+.fb-text {
+    display: block;
+    color: "#fff";
+    font-size: 18px;
+    font-weight: 250;
+    text-align: center;
+    margin : auto;
 }
 
 .form-group {

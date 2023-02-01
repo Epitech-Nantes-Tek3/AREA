@@ -1,7 +1,6 @@
 import React, {useState} from "react"
-import FacebookLogin from 'react-facebook-login'
-
 import AreaLogo from './assets/logo.png'
+import FacebookLogo from './assets/facebook.png'
 import "./AuthPage.css"
 import "./App.css"
 
@@ -50,12 +49,10 @@ export default function AuthPage() {
                   </button>
                 </div>
                 <div className="form-group">
-                <FacebookLogin
-                  appId="1088597931155576"
-                  autoLoad={true}
-                  fields="name,email"
-                  cssClass="facebook"
-                  icon="fa-facebook" />
+                  <button className="facebook">
+                    <img src={FacebookLogo} alt="Facebook" className="icon-Style"/>
+                    <label className="fb-text">Connexion</label>
+                  </button>
                 </div>
                 <p className="text-center mt-2">
                   Forgot <a href="#">password?</a>
