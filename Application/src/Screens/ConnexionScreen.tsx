@@ -8,6 +8,7 @@ import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
 import { NavigatorPush } from "../Navigator";
 import { Options } from "react-native-navigation";
 import Circles from "../Components/Circles";
+import { ip} from "../../env";
 import { HomeScreenProps } from "../Common/Interfaces";
 import NetInfo from "@react-native-community/netinfo";
 
@@ -57,13 +58,30 @@ export default function ConnexionScreen() {
         console.log("Act on forgot password")
     }
 
-    function connectionAction() {
-        const props: HomeScreenProps = {
-            userMail: userMail,
-            userId: "idTest"
-        }
+    async function connectionAction() {
         console.log("Connect user", userMail, userPass)
-        NavigatorPush("HomeScreen", "mainStack", options, props)
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({email: userMail, password: userPass})
+        }
+
+        try {
+            await fetch(ip + "login", requestOptions).then(response => {
+                response.json().then(data => {
+                    console.log(data);
+                    const props: HomeScreenProps = {
+                        userMail: userMail,
+                        userId: data.userUid
+                    }
+                    console.log("Connect user", userMail, userPass)
+                    NavigatorPush("HomeScreen", "mainStack", options, props)
+                })
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     function connectWithApple() {

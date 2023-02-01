@@ -66,7 +66,7 @@ module.exports = {
                 consumerKey: data.appKey,
                 consumerSecret: data.appSecret,
                 callbackUrl: 'http://localhost:8080/twitter/sign'
-            
+
             })
             req.session.tw = tw
             tw.login((err, tokenSecret, url) => {
