@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const config = require('./config');
+const cors = require('cors');
 var bodyParser = require('body-parser')
 const fs = require('fs');
 const openMeteoService = require('./Services/openMeteoService');
@@ -11,6 +12,8 @@ const firebaseUid = 'p5Y9YnHdZWSvoENauPtuy79DV2x2';
 const port = config.port;
 
 const session = require('express-session')
+
+app.use(cors());
 
 app.use(session({
     secret:'tmp',

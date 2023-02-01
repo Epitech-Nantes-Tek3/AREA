@@ -14,14 +14,51 @@ export default function AuthPage() {
 
     let [authMode, setAuthMode] = useState("signin")
 
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
     const changeAuthMode = () => {
         setAuthMode(authMode === "signin" ? "signup" : "signin")
     }
 
+    const handleChange = (event) => {
+      if (event.target.type === "email") {
+        setEmail(event.target.value);
+      } else {
+        setPassword(event.target.value);
+      }
+    };
+
+    const onSubmit = (event) => {
+      console.log('submit');
+      const requestOptions = {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'  
+      },
+        body: JSON.stringify({email: email, password: password})
+      }
+
+      console.log(email, password)
+
+      try {
+          fetch("http://10.29.125.146:8080/register", requestOptions).then(response => {
+              response.json().then(data => {
+                  console.log(data);
+              })
+          });
+      } catch (error) {
+          console.log(error);
+      }
+      
+    };
+
     if (authMode === "signin") {
         return (
           <div className="Form-container">
-            <form className="Form">
+            
+            <form className="Form" onSubmit={onSubmit}>
               <div className="Form-content">
                 <img src={AreaLogo} className="logo" alt="logo" />
                 <div className="text-center">
@@ -35,6 +72,7 @@ export default function AuthPage() {
                     type="email"
                     className="form-control mt-1"
                     placeholder="Enter email"
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="form-group">
@@ -42,20 +80,13 @@ export default function AuthPage() {
                     type="password"
                     className="form-control mt-1"
                     placeholder="Enter password"
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="form-group">
                   <button className="button-center">
                     Submit
                   </button>
-                </div>
-                <div className="form-group">
-                <FacebookLogin
-                  appId="1088597931155576"
-                  autoLoad={true}
-                  fields="name,email"
-                  cssClass="facebook"
-                  icon="fa-facebook" />
                 </div>
                 <p className="text-center mt-2">
                   Forgot <a href="#">password?</a>

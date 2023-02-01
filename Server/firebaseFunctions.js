@@ -23,7 +23,7 @@ module.exports = {
         const {email, password} = req.body;
         firebase.auth().signInWithEmailAndPassword(email, password).then((userCredential) => {
           console.log('User signed in:', userCredential.user.uid);
-          res.sendStatus(200)
+          res.json({userUid: userCredential.user.uid})
         }).catch((error) => {
           console.log('Error at the sign in:', error);
           res.send(error).status(400);
@@ -32,10 +32,11 @@ module.exports = {
 
     register: function(req, res) {
         const { email, password } = req.body;
+        console.log(email, password);
         firebase.auth()
         .createUserWithEmailAndPassword(email, password).then((userCredential) => {
           console.log('Successfully created new user:', userCredential.user.uid)
-          res.sendStatus(200);
+          res.json({userUid: userCredential.user.uid})
         }).catch((error) => {
           console.log('Error creating new user:', error);
           res.send(error).status(400);
