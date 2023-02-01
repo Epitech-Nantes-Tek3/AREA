@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, SafeAreaView, Image, Platform, Dimensions, TextInput, View, TouchableOpacity, ScaledSize } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, SafeAreaView, Image, Platform, Dimensions, TextInput, View, TouchableOpacity, ScaledSize, Alert } from "react-native";
 import Separator, { Line } from "../Components/Separator";
 import { Globals } from "../Common/Globals";
 import FacebookSocialButton from "../Components/SocialButtons/FacebookButton";
@@ -9,6 +9,9 @@ import { NavigatorPush } from "../Navigator";
 import { Options } from "react-native-navigation";
 import Circles from "../Components/Circles";
 import { ip} from "../../env";
+import { HomeScreenProps } from "../Common/Interfaces";
+import NetInfo from "@react-native-community/netinfo";
+
 
 export default function ConnexionScreen() {
     // Gets the size of the current window
@@ -17,6 +20,39 @@ export default function ConnexionScreen() {
     // Hooks allowing use to get/set user infos
     const [userMail, setUserMail] = useState("")
     const [userPass, setUserPass] = useState("")
+
+    // Options to push the next screen
+    const options: Options = {
+        popGesture: false,
+        topBar: {
+            visible: false
+        }
+    }
+
+    function checkConnexion() {
+        NetInfo.fetch().then((result) => {
+            if (!result.isInternetReachable) {
+                Alert.alert("Pas internet",
+                "Essaye de te connecter à Internet pour utiliser l'app :)",
+                [
+                    {
+                        text: "Annuler",
+                        style: "cancel"
+                    },
+                    {
+                        text: "Réessayer",
+                        onPress: checkConnexion,
+                        style: "default"
+                    }
+                ]
+                )
+            }
+        });
+    }
+
+    useEffect(() => {
+        checkConnexion()
+    })
 
     function forgotPassword() {
         console.log("Act on forgot password")
@@ -35,6 +71,12 @@ export default function ConnexionScreen() {
             await fetch(ip + "login", requestOptions).then(response => {
                 response.json().then(data => {
                     console.log(data);
+                    const props: HomeScreenProps = {
+                        userMail: userMail,
+                        userId: data.userUid
+                    }
+                    console.log("Connect user", userMail, userPass)
+                    NavigatorPush("HomeScreen", "mainStack", options, props)
                 })
             });
         } catch (error) {
@@ -44,24 +86,33 @@ export default function ConnexionScreen() {
 
     function connectWithApple() {
         console.log("Connect with Apple")
+        const props: HomeScreenProps = {
+            userMail: userMail,
+            userId: "idTest"
+        }
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     function connectWithGoogle() {
         console.log("Connect with Google")
+        const props: HomeScreenProps = {
+            userMail: userMail,
+            userId: "idTest"
+        }
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     function connectWithFacebook() {
         console.log("Connect with Facebook")
+        const props: HomeScreenProps = {
+            userMail: userMail,
+            userId: "idTest"
+        }
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     function navigateToSubscribe() {
-        const options: Options = {
-            topBar: {
-                visible: false
-            },
-            popGesture: false
-        }
-        NavigatorPush("SignInScreen", "mainStack", options)
+        NavigatorPush("SignInScreen", "mainStack", options, {})
     }
 
     function SocialButtons() {

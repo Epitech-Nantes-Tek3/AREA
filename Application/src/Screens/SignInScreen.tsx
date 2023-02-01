@@ -5,9 +5,11 @@ import { Globals } from "../Common/Globals";
 import FacebookSocialButton from "../Components/SocialButtons/FacebookButton";
 import GoogleSocialButton from "../Components/SocialButtons/GoogleSocialButton";
 import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
-import { NavigatorPop } from "../Navigator";
+import { NavigatorPop, NavigatorPush } from "../Navigator";
 import Circles from "../Components/Circles";
 import { ip} from "../../env";
+import { HomeScreenProps } from "../Common/Interfaces";
+import { Options } from "react-native-navigation";
 
 
 export default function SignInScreen() {
@@ -19,6 +21,13 @@ export default function SignInScreen() {
     const [userPass, setUserPass] = useState("")
     const [userValidPass, setUserValidPass] = useState("")
 
+    // Options to push the next screen
+    const options: Options = {
+        popGesture: false,
+        topBar: {
+            visible: false
+        }
+    }
     async function connectionAction() {
         if (userPass !== userValidPass)
             Alert.alert("Not the same")
@@ -30,11 +39,15 @@ export default function SignInScreen() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({email: userMail, password: userPass})
         }
-
         try {
             await fetch(ip + "register", requestOptions).then(response => {
                 response.json().then(data => {
                     console.log(data);
+                    const props: HomeScreenProps = {
+                        userMail: userMail,
+                        userId: data.userUid
+                    }
+                    NavigatorPush("HomeScreen", "mainStack", options, props)
                 })
             });
         } catch (error) {
@@ -44,14 +57,29 @@ export default function SignInScreen() {
 
     function connectWithApple() {
         console.log("Subscribe with Apple")
+        const props: HomeScreenProps = {
+            userMail: userMail,
+            userId: "idTest"
+        }
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     function connectWithGoogle() {
         console.log("Subscribe with Google")
+        const props: HomeScreenProps = {
+            userMail: userMail,
+            userId: "idTest"
+        }
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     function connectWithFacebook() {
         console.log("Subscribe with Facebook")
+        const props: HomeScreenProps = {
+            userMail: userMail,
+            userId: "idTest"
+        }
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     function navigateToConnexion() {
