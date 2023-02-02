@@ -84,7 +84,24 @@ app.get('/about.json', (req, res) => {
 })
 
 app.get('/weather', (req, res) => {
-    openMeteoService.WeatherRainingOrNot(res, firebaseUid)
+    openMeteoService.GetLocation(firebaseUid)
+    .then(data => {
+        openMeteoService.WeatherisFineOrNot(data.latitude, data.longitude)
+        .then(weatherIsFine => {
+            if (weatherIsFine === true)
+                console.log('weather is Fine');
+            else {
+                console.log('weather is Bad');
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    })
+    .catch(error => {
+        console.log(error);
+    });
+    res.send('Weather Info')
 })
 
 app.get('/twitter', (req, res) => {
@@ -120,7 +137,11 @@ app.listen(port, () => {
 })
 
 app.get('/issStation', (req, res) => {
-    ISSStationService.checkISSPosition(res, firebaseUid)
+    if (ISSStationService.checkISSPosition(res, firebaseUid, 1000.0) === true)
+        console.log('true');
+    else
+        console.log('false')
+    res.redirect('/')
 })
 
 app.get('/areas', (req, res) => {

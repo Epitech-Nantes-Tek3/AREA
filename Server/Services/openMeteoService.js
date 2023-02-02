@@ -36,42 +36,56 @@ let comparaisons = [
 ]
 
 module.exports = {
-    WeatherRainingOrNot: function(res, uid) {
-        firebaseFunctions.getDataFromFireBase(uid, 'OpenMeteoService')
-        .then(data => {
-            var request = http.get(`http://api.open-meteo.com/v1/forecast?latitude=${data.latitude}&longitude=${data.longitude}&hourly=weathercode`, function (response) {
-            var buffer = ""
-            var data;
-            response.on("data", function (chunk) {
-                buffer += chunk;
-            }); 
-            response.on("end", function (err) {
-                data = JSON.parse(buffer);
-                // get date and time info
-                var date = new Date().toISOString().slice(0, 10);
-                var hour = new Date().getHours();
-                // Search for data corresponding to the current date
-                data.hourly.time.forEach(function(time, i) {
-                    // Compare date and time
-                    if (time.slice(0, 10) == date && time.slice(11, 13) == hour) {
-                        // obtaining the weather code to get the time
-                        var weatherCode = data.hourly.weathercode[i];
-                        comparaisons.forEach((comparaison) => {
-                            // comparison of the weathercode to all our weathercodes
-                            if (comparaison.result == weatherCode) {
-                                console.log('success, send an email')
-                                googleService.send_mail(`Le temps est : ${comparaison.name} le ${date} à ${hour} heures`, `météo a ${hour} heures`, 'AREA METEO', uid)
-                                return;
-                            }
-                        });
-                    }
-                });
+    /**
+    * @brief Check if the wheather is fine or not based on the current date and 
+    * time and the weather code provided by the API.
+    * @param latitude Latitude of the location to check the weather for.
+    * @param longitude Longitude of the location to check the weather for.
+    * @returns {Promise} A promise that resolves to a boolean indicating whether the
+    * weather is fine or not.
+    */
+    WeatherisFineOrNot: function(latitude, longitude) {
+        return new Promise((resolve, reject) => {
+            http.get(`http://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=weathercode`, function (response) {
+                var buffer = ""
+                var dataJson;
+                response.on("data", function (chunk) {
+                    buffer += chunk;
+                }); 
+                response.on("end", function (err) {
+                    dataJson = JSON.parse(buffer);
+                    var date = new Date().toISOString().slice(0, 10);
+                    var hour = new Date().getHours();
+                    dataJson.hourly.time.forEach(function(time, i) {
+                        if (time.slice(0, 10) == date && time.slice(11, 13) == hour) {
+                            var weatherCode = dataJson.hourly.weathercode[i];
+                            console.log('weather code :', weatherCode)
+                            if (weatherCode > 0 || weatherCode < 4)
+                                resolve(true);
+                            else
+                                resolve(false);
+                        }
+                    });
+                })
             })
-        })
-        res.send('Weather info')
-        })
-        .catch(error => {
-            console.log(error);
+        });
+    },
+
+    /**
+    * @brief The GetLocation function gets the location, latitude/longitude from Firebase for the specified uid.
+    * @param uid (string) user ID
+    * @returns Promise, it returns the location if it exists. Otherwise, it sends an error and rejects.
+    */
+    GetLocation: function(uid) {
+        return new Promise((resolve, reject) => {
+            firebaseFunctions.getDataFromFireBase(uid, 'OpenMeteoService')
+            .then(data => {
+                resolve(data);
+            })
+            .catch(error => {
+                console.log(error);
+                reject(error);
+            });
         });
     }
 }
