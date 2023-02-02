@@ -1,5 +1,5 @@
-import React, { Component, useEffect, useState } from "react";
-import { StyleSheet, Text, SafeAreaView, Image, Platform, Dimensions, TextInput, View, TouchableOpacity, ScaledSize } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, SafeAreaView, Image, Platform, Dimensions, TextInput, View, TouchableOpacity, ScaledSize, Alert } from "react-native";
 import Separator, { Line } from "../Components/Separator";
 import { Globals } from "../Common/Globals";
 import FacebookSocialButton from "../Components/SocialButtons/FacebookButton";
@@ -13,6 +13,9 @@ import { environment } from "../../env";
 import auth from '@react-native-firebase/auth';
 import firebase from '@react-native-firebase/app'
 import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
+import { ip} from "../../env";
+import { HomeScreenProps } from "../Common/Interfaces";
+import NetInfo from "@react-native-community/netinfo";
 
 
 export default function ConnexionScreen() {
@@ -29,26 +32,94 @@ export default function ConnexionScreen() {
             messagingSenderId: environment.MESSAGINGSENDERID,
             appId: environment.APPID
         }
-    firebase.initializeApp(firebaseConfig)})
+        firebase.initializeApp(firebaseConfig)
+    })
 
     // Hooks allowing use to get/set user infos
     const [userMail, setUserMail] = useState("")
     const [userPass, setUserPass] = useState("")
 
+    // Options to push the next screen
+    const options: Options = {
+        popGesture: false,
+        topBar: {
+            visible: false
+        }
+    }
+
+    function checkConnexion() {
+        NetInfo.fetch().then((result: any) => {
+            if (!result.isInternetReachable) {
+                Alert.alert("Pas internet",
+                "Essaye de te connecter à Internet pour utiliser l'app :)",
+                [
+                    {
+                        text: "Annuler",
+                        style: "cancel"
+                    },
+                    {
+                        text: "Réessayer",
+                        onPress: checkConnexion,
+                        style: "default"
+                    }
+                ]
+                )
+            }
+        });
+    }
+
+    useEffect(() => {
+        checkConnexion()
+    })
+
     function forgotPassword() {
         console.log("Act on forgot password")
     }
 
-    function connectionAction() {
+    async function connectionAction() {
         console.log("Connect user", userMail, userPass)
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({email: userMail, password: userPass})
+        }
+
+        try {
+            await fetch(ip + "login", requestOptions).then(response => {
+                response.json().then(data => {
+                    console.log(data);
+                    if (data.userUid != 'error') {
+                        const props: HomeScreenProps = {
+                            userMail: userMail,
+                            userId: data.userUid
+                        }
+                        console.log("Connect user", userMail, userPass)
+                        NavigatorPush("HomeScreen", "mainStack", options, props)
+                    }
+                })
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     function connectWithApple() {
         console.log("Connect with Apple")
+        const props: HomeScreenProps = {
+            userMail: userMail,
+            userId: "idTest"
+        }
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     function connectWithGoogle() {
         console.log("Connect with Google")
+        const props: HomeScreenProps = {
+            userMail: userMail,
+            userId: "idTest"
+        }
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     async function connectWithFacebook() {
@@ -68,18 +139,17 @@ export default function ConnexionScreen() {
         const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
 
         // Sign-in the user with the credential
-        return auth().signInWithCredential(facebookCredential);
+        auth().signInWithCredential(facebookCredential);
+        const props: HomeScreenProps = {
+            userMail: userMail,
+            userId: "idTest"
+        }
+        NavigatorPush("HomeScreen", "mainStack", options, props)
 
     }
 
     function navigateToSubscribe() {
-        const options: Options = {
-            topBar: {
-                visible: false
-            },
-            popGesture: false
-        }
-        NavigatorPush("SignInScreen", "mainStack", options)
+        NavigatorPush("SignInScreen", "mainStack", options, {})
     }
 
     function SocialButtons() {
