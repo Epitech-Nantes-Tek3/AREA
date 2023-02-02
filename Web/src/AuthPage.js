@@ -33,6 +33,15 @@ export default function AuthPage() {
       }
     };
 
+    const responseFacebook = (response) => {
+      console.log(response);
+      if (response.accessToken) {
+        navigate('/home');
+      } else {
+        console.log('failed to connect');
+      }
+    }
+
     const requestServer = async (endpoint, requestOptions) => {
       try {
         await fetch("http://192.168.0.71:8080/" + endpoint, requestOptions).then(response => {
@@ -99,6 +108,16 @@ export default function AuthPage() {
                   <button className="button-center">
                     Submit
                   </button>
+                </div>
+                <div className="form-group">
+                  <FacebookLogin
+                    appId="604811154808703"
+                    autoLoad={false}
+                    fields="name,email,picture"
+                    scope="public_profile,user_friends"
+                    callback={responseFacebook}
+                    cssClass="facebook"
+                    icon="fa-facebook" />
                 </div>
                 <p className="text-center mt-2">
                   Forgot <a href="#">password?</a>
