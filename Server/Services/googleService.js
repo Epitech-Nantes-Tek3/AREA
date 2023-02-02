@@ -13,7 +13,7 @@ module.exports = {
      * @param {*} userName Name of the issuer
      * @param {*} uid the user's uid
      */
-    send_mail: function(mailContent, subject, userName, uid) {
+    send_mail: function(mailContent, subject, uid, req, res) {
         firebaseFunctions.getDataFromFireBase(uid, 'GoogleService')
         .then(data => {
             const OAuth2_client = new OAuth2(data.clientId, data.clientSecret)
@@ -32,7 +32,7 @@ module.exports = {
                 }
             })
             const mail_options = {
-                from: `${userName} <${data.user}>`,
+                from: `'AREA BOT' <${data.user}>`,
                 to: data.recipient,
                 subject: subject,
                 text: get_html_message(mailContent)

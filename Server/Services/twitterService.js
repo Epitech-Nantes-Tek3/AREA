@@ -180,5 +180,21 @@ module.exports = {
         } else {
             res.redirect('/twitter')
         }
+    },
+    twitterActions: function(action, hashtagOrMessage, uid, req, res) {
+        if (req.session.user) {
+            firebaseFunctions.getDataFromFireBase('twitter', '')
+            .then(data => {
+                if (action === 'retweet')
+                    carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'retweet');
+                else if (action === 'like')
+                    carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'like');
+                    else if (action === 'tweet')
+                    carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'tweet');
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
     }
 }
