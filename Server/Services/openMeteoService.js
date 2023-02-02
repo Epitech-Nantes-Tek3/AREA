@@ -37,11 +37,11 @@ let comparaisons = [
 
 module.exports = {
     /**
-    * @brief Check if it is weather is fine or not based on the current date and 
+    * @brief Check if the wheather is fine or not based on the current date and 
     * time and the weather code provided by the API.
     * @param latitude Latitude of the location to check the weather for.
     * @param longitude Longitude of the location to check the weather for.
-    * @returns {Promise} A promise that resolves to a boolean indicating whether it is 
+    * @returns {Promise} A promise that resolves to a boolean indicating whether the
     * weather is fine or not.
     */
     WeatherisFineOrNot: function(latitude, longitude) {
@@ -72,9 +72,9 @@ module.exports = {
     },
 
     /**
-    * @brief GetLocation function retrieves the location data from Firebase for the specified user ID.
+    * @brief The GetLocation function gets the location, latitude/longitude from Firebase for the specified uid.
     * @param uid (string) user ID
-    * @returns Promise that resolves with location data if successful or rejects with an error if unsuccessful
+    * @returns Promise, it returns the location if it exists. Otherwise, it sends an error and rejects.
     */
     GetLocation: function(uid) {
         return new Promise((resolve, reject) => {
