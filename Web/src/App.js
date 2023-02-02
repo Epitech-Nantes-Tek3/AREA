@@ -1,4 +1,3 @@
-
 import MainPage from './MainPage';
 import AuthPage from './AuthPage';
 import { BrowserRouter, Routes, Route } from "react-router-dom"
