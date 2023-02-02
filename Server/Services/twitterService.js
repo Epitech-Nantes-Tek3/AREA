@@ -19,19 +19,23 @@ const { TwitterApi } = require('twitter-api-v2')
  * can take the values 'tweet', 'like' or 'retweet'.
  */
 async function carryOutAnAction(req, res, appKey, appSecret, bearer, hashtagOrMessage, action) {
+    console.log('appKey', appKey)
+    console.log('appSecret:', appSecret)
+    console.log('hashtagOrMessage:', hashtagOrMessage)
+    console.log('action:', action)
     const client = new TwitterApi ({
         appKey: appKey,
         appSecret: appSecret,
-        accessToken: req.session.user.userToken,
-        accessSecret: req.session.user.userTokenSecret
+        accessToken: req.Twitteruid.userToken,
+        accessSecret: req.Twitteruid.userTokenSecret
     })
+    console.log('client.userId:', client.userId)
     if (action == 'tweet') {
         const twClient = client.readWrite;
         try {
             await twClient.v2.tweet(hashtagOrMessage);
         } catch (e) {
             console.log(e)
-            res.redirect('/twitter')
         }
     }
     else {
@@ -39,16 +43,41 @@ async function carryOutAnAction(req, res, appKey, appSecret, bearer, hashtagOrMe
         const twitterBearer = TwBearer.readOnly;
         try {
             const whereTakenTweets = await twitterBearer.v2.search(hashtagOrMessage);
+            console.log(whereTakenTweets.data.meta.newest_id)
             if (action == 'like')
-                await client.v2.like(req.session.user.userId , whereTakenTweets.data.meta.newest_id);
+                await client.v2.like(req.Twitteruid.userId , whereTakenTweets.data.meta.newest_id);
             else
-                await client.v2.retweet(req.session.user.userId , whereTakenTweets.data.meta.newest_id);
+                await client.v2.retweet(req.Twitteruid.userId , whereTakenTweets.data.meta.newest_id);
         } catch (e) {
             console.log(e)
-            res.redirect('/twitter')
         }
     }
-    res.redirect('/twitter')
+}
+
+function GetIdTwitter(uid) {
+    return new Promise((resolve, reject) => {
+        firebaseFunctions.getDataFromFireBase(uid, 'TwitterService')
+        .then(data => {
+            resolve(data);
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    });
+}
+function doAct(action, hashtagOrMessage, uid, req, res) {
+    firebaseFunctions.getDataFromFireBaseServer('twitter')
+    .then(data => {
+        if (action === 'retweet')
+            carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'retweet');
+        else if (action === 'like')
+            carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'like');
+            else if (action === 'tweet')
+            carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'tweet');
+    })
+    .catch(error => {
+        console.log(error);
+    });
 }
 
 module.exports = {
@@ -60,8 +89,9 @@ module.exports = {
     * @param {*} res is an object that handles the HTTP response that will be sent to the user.
      */
     loginTwitter: function(req, res) {
-        firebaseFunctions.getDataFromFireBase('twitter', '')
+        firebaseFunctions.getDataFromFireBaseServer('twitter')
         .then(data => {
+            console.log(data)
             const tw = new LoginWithTwitter({
                 consumerKey: data.appKey,
                 consumerSecret: data.appSecret,
@@ -90,6 +120,7 @@ module.exports = {
      */
     dashTwitter: function(req, res) {
         if (req.session.user) {
+            console.log(req.session)
             res.render('dash')
         } else {
             res.redirect('/twitter')
@@ -107,13 +138,12 @@ module.exports = {
             oauth_token: req.query.oauth_token,
             oauth_verifier: req.query.oauth_verifier
         }
-        firebaseFunctions.getDataFromFireBase('twitter', '')
+        firebaseFunctions.getDataFromFireBaseServer('twitter')
         .then(data => {
             const tw = new LoginWithTwitter({
                 consumerKey: data.appKey,
                 consumerSecret: data.appSecret,
                 callbackUrl: 'http://localhost:8080/twitter/sign'
-            
             })
             tw.callback(params, req.session.tokenSecret, (err, user) => {
                 req.session.user = user
@@ -132,7 +162,7 @@ module.exports = {
      */
     sendTweet: function(req, res) {
         if (req.session.user) {
-            firebaseFunctions.getDataFromFireBase('twitter', '')
+            firebaseFunctions.getDataFromFireBaseServer('twitter')
             .then(data => {
                 carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, 'hi !', 'tweet');
             })
@@ -151,9 +181,9 @@ module.exports = {
      */
     putlike: function(req, res) {
         if (req.session.user) {
-            firebaseFunctions.getDataFromFireBase('twitter', '')
+            firebaseFunctions.getDataFromFireBaseServer('twitter')
             .then(data => {
-                carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, '#zywoo', 'like');
+                carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, '#chelsea', 'like');
             })
             .catch(error => {
                 console.log(error);
@@ -170,9 +200,9 @@ module.exports = {
      */
     putRetweet: function(req, res) {
         if (req.session.user) {
-            firebaseFunctions.getDataFromFireBase('twitter', '')
+            firebaseFunctions.getDataFromFireBaseServer('twitter')
             .then(data => {
-                carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, '#zywoo', 'retweet');
+                carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, '#chelsea', 'retweet');
             })
             .catch(error => {
                 console.log(error);
@@ -181,20 +211,14 @@ module.exports = {
             res.redirect('/twitter')
         }
     },
-    twitterActions: function(action, hashtagOrMessage, uid, req, res) {
-        if (req.session.user) {
-            firebaseFunctions.getDataFromFireBase('twitter', '')
-            .then(data => {
-                if (action === 'retweet')
-                    carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'retweet');
-                else if (action === 'like')
-                    carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'like');
-                    else if (action === 'tweet')
-                    carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'tweet');
-            })
-            .catch(error => {
-                console.log(error);
-            });
-        }
+    ActionTw: function(action, hashtagOrMessage, uid, req, res) {
+        GetIdTwitter(uid)
+        .then(data => {
+            req.Twitteruid = data
+            doAct(action, hashtagOrMessage, uid, req, res)
+        })
+        .catch(error => {
+            console.log(error);
+        });
     }
 }
