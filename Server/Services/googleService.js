@@ -3,19 +3,24 @@ const  { google } = require('googleapis')
 const OAuth2 = google.auth.OAuth2
 const firebaseFunctions = require('../firebaseFunctions')
 
-//receive a text. Sends it with the user mail ID of the configGmail.js to recipient of the configGmail.js .
 module.exports = {
+    /**
+     * brief Sends an email using Gmail with Nodemailer. It first reads in the Firebase database. Then it uses 
+     * an OAuth2 library to get an access token from Google. It configures the content of the email and uses the 
+     * Nodemailer library to send the email. 
+     * @param {*} mail_content content of the mail
+     * @param {*} subject mail subject
+     * @param {*} userName Name of the issuer
+     * @param {*} uid the user's uid
+     */
     send_mail: function(mail_content, subject, userName, uid) {
-        //read in DB
         firebaseFunctions.getDataFromFireBase(uid, 'GoogleService')
         .then(data => {
 
-            //required to obtain an access token
             const OAuth2_client = new OAuth2(data.clientId, data.clientSecret)
             OAuth2_client.setCredentials( {refresh_token : data.refreshToken})
             const accessToken = OAuth2_client.getAccessToken()
 
-            // content of configGmail.js required by nodemailer
             const transport = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
@@ -28,14 +33,12 @@ module.exports = {
                 }
             })
 
-            //content of the mail
             const mail_options = {
                 from: `${userName} <${data.user}>`,
                 to: data.recipient,
                 subject: subject,
                 text: get_html_message(mail_content)
             }
-            //send with nodemailer
             transport.sendMail(mail_options, function(error, res) {
                 if (error) {
                     console.log('Error: ', error)
@@ -49,8 +52,6 @@ module.exports = {
         });
     }
 }
-
-// returns the text sent in mail format
 
 function get_html_message(mail_content) {
     return `${mail_content}`
