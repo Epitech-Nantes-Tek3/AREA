@@ -1,6 +1,8 @@
 import React, {useState} from "react"
 import FacebookLogin from 'react-facebook-login'
 
+import { useNavigate } from "react-router-dom"
+
 import AreaLogo from './assets/logo.png'
 import "./AuthPage.css"
 import "./App.css"
@@ -13,6 +15,8 @@ import "./App.css"
 export default function AuthPage() {
 
     let [authMode, setAuthMode] = useState("signin")
+
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -29,8 +33,23 @@ export default function AuthPage() {
       }
     };
 
-    const onSubmit = (event) => {
-      console.log('submit');
+    const requestServer = async (endpoint, requestOptions) => {
+      try {
+        await fetch("http://192.168.0.71:8080/" + endpoint, requestOptions).then(response => {
+            response.json().then(data => {
+                console.log(data);
+                if (data.userUid != 'error') {
+                  navigate('/home');
+                }
+            })
+        });
+      } catch (error) {
+          console.log(error);
+      }
+    }
+
+    const onSubmit = async (event) => {
+      event.preventDefault();
       const requestOptions = {
         method: 'POST',
         mode: 'cors',
@@ -39,17 +58,10 @@ export default function AuthPage() {
       },
         body: JSON.stringify({email: email, password: password})
       }
-
-      console.log(email, password)
-
-      try {
-          fetch("http://10.29.125.146:8080/register", requestOptions).then(response => {
-              response.json().then(data => {
-                  console.log(data);
-              })
-          });
-      } catch (error) {
-          console.log(error);
+      if (authMode === "signup") {
+        await requestServer("register", requestOptions);
+      } else {
+        await requestServer("login", requestOptions);
       }
       
     };
@@ -99,7 +111,7 @@ export default function AuthPage() {
 
       return (
         <div className="Form-container">
-          <form className="Form">
+          <form className="Form" onSubmit={onSubmit}>
             <div className="Form-content">
               <h3 className="Title">Sign Up</h3>
               <div className="text-center">
@@ -114,6 +126,7 @@ export default function AuthPage() {
                   type="email"
                   className="form-control mt-1"
                   placeholder="Email Address"
+                  onChange={handleChange}
                 />
               </div>
               <div className="form-group">
@@ -122,6 +135,7 @@ export default function AuthPage() {
                   type="password"
                   className="form-control mt-1"
                   placeholder="Password"
+                  onChange={handleChange}
                 />
               </div>
               <div className="form-group">

@@ -1,6 +1,7 @@
 
 import MainPage from './MainPage';
 import AuthPage from './AuthPage';
+import HomePage from './HomePage';
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 /**
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/home" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
   );
