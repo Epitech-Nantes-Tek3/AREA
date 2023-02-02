@@ -143,5 +143,5 @@ ios/Podfile.lock
 # Yarn
 yarn.lock
 
-# Env
+#Env
 env.ts
