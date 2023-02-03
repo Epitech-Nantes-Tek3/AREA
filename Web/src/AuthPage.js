@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import FacebookLogin from 'react-facebook-login'
 
 import { useNavigate } from "react-router-dom"
@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom"
 import AreaLogo from './assets/logo.png'
 import "./AuthPage.css"
 import "./App.css"
+
+import {provider, auth} from './firebaseConfig'
 
 /**
  * @brief It creates the Sign up and Sign In Pages for the AREA
@@ -15,7 +17,6 @@ import "./App.css"
 export default function AuthPage() {
 
     let [authMode, setAuthMode] = useState("signin")
-
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
@@ -33,13 +34,14 @@ export default function AuthPage() {
       }
     };
 
-    const responseFacebook = (response) => {
-      console.log(response);
-      if (response.accessToken) {
-        navigate('/home');
-      } else {
-        console.log('failed to connect');
-      }
+    const onLoginFacebook = async (event) => {
+      event.preventDefault();
+      try {
+        await auth.signInWithRedirect(provider);
+      } catch (err) {
+        console.log(err);
+      };
+
     }
 
     const requestServer = async (endpoint, requestOptions) => {
@@ -79,7 +81,7 @@ export default function AuthPage() {
         return (
           <div className="Form-container">
             
-            <form className="Form" onSubmit={onSubmit}>
+            <form className="Form">
               <div className="Form-content">
                 <img src={AreaLogo} className="logo" alt="logo" />
                 <div className="text-center">
@@ -105,19 +107,14 @@ export default function AuthPage() {
                   />
                 </div>
                 <div className="form-group">
-                  <button className="button-center">
+                  <button className="button-center" onClick={onSubmit}>
                     Submit
                   </button>
                 </div>
                 <div className="form-group">
-                  <FacebookLogin
-                    appId="604811154808703"
-                    autoLoad={false}
-                    fields="name,email,picture"
-                    scope="public_profile,user_friends"
-                    callback={responseFacebook}
-                    cssClass="facebook"
-                    icon="fa-facebook" />
+                  <button className="button-center" id="facebook-button" onClick={onLoginFacebook}>
+                    facebook
+                  </button>
                 </div>
                 <p className="text-center mt-2">
                   Forgot <a href="#">password?</a>
