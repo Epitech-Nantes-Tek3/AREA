@@ -55,7 +55,6 @@ function WeatherisFineOrNot(latitude, longitude) {
                 dataJson.hourly.time.forEach(function(time, i) {
                     if (time.slice(0, 10) == date && time.slice(11, 13) == hour) {
                         var weatherCode = dataJson.hourly.weathercode[i];
-                        console.log('weather code :', weatherCode)
                         if (weatherCode > 0 || weatherCode < 4)
                             resolve(true);
                         else

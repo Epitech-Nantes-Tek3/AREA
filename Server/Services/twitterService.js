@@ -19,21 +19,17 @@ const { TwitterApi } = require('twitter-api-v2')
  * can take the values 'tweet', 'like' or 'retweet'.
  */
 async function carryOutAnAction(req, res, appKey, appSecret, bearer, hashtagOrMessage, action) {
-    console.log('appKey', appKey)
-    console.log('appSecret:', appSecret)
-    console.log('hashtagOrMessage:', hashtagOrMessage)
-    console.log('action:', action)
     const client = new TwitterApi ({
         appKey: appKey,
         appSecret: appSecret,
         accessToken: req.Twitteruid.userToken,
         accessSecret: req.Twitteruid.userTokenSecret
     })
-    console.log('client.userId:', client.userId)
     if (action == 'tweet') {
         const twClient = client.readWrite;
         try {
             await twClient.v2.tweet(hashtagOrMessage);
+            console.log('send tweet')
         } catch (e) {
             console.log(e)
         }
