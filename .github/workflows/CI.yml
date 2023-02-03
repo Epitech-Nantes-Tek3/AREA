@@ -33,7 +33,7 @@ jobs:
         id: run-docker-compose-build-server
         run: |
           ls -la
-          echo ${{ secrets.FIREBASE_CONFIG }} >> ./Server/firebaseConfig.js
+          echo "${{ secrets.FIREBASE_CONFIG }}" >> ./Server/firebaseConfig.js
           ls -la
           docker-compose build server
 
