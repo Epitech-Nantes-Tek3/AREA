@@ -31,6 +31,7 @@ module.exports = {
                     accessToken: accessToken
                 }
             })
+
             const mail_options = {
                 from: `${userName} <${data.user}>`,
                 to: data.recipient,
