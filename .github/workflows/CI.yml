@@ -32,9 +32,7 @@ jobs:
       - name: Run docker-compose build server
         id: run-docker-compose-build-server
         run: |
-          ls -la
           echo "${{ secrets.FIREBASE_CONFIG }}" >> ./Server/firebaseConfig.js
-          ls -la
           docker-compose build server
 
   run-docker-compose-client-mobile:
