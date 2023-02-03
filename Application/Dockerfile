@@ -1,8 +1,17 @@
 FROM reactnativecommunity/react-native-android:6.2
 
-COPY . /usr/app
-WORKDIR /usr/app
+# Install dependencies
+RUN mkdir /app/
+WORKDIR /app/
+COPY ./package.json /app/package.json
 RUN yarn
-RUN cd android && ./gradlew assembleDebug
+
+# Copy project
+COPY . /app/
+
+# Create android release
+RUN cd android && ./gradlew assembleRelease
+
+# Move apk file to common volume
 RUN mkdir /release
-RUN cp /usr/app/android/app/build/outputs/apk/debug/app-debug.apk /release/client.apk
+RUN cp /app/android/app/build/outputs/apk/release/app-release.apk /release/client.apk

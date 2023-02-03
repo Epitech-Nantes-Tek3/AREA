@@ -1,4 +1,14 @@
 FROM node:latest
-COPY . /usr/app
-WORKDIR /usr/app
-RUN npm install --quiet -g npm@9.3.0
+
+# Install dependencies
+RUN mkdir /app/
+WORKDIR /app/
+COPY ./package.json /app/package.json
+RUN yarn
+
+# Copy project
+COPY ./Services/ /app/Services/
+COPY ./views/ /app/views/
+COPY ./app.js /app/
+COPY ./config.js /app/
+COPY ./firebaseFunctions.js /app
