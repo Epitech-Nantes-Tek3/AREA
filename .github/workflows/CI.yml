@@ -31,7 +31,9 @@ jobs:
           fetch-depth: 0
       - name: Run docker-compose build server
         id: run-docker-compose-build-server
-        run: docker-compose build server
+        run: |
+          echo ${{ secrets.FIREBASE_CONFIG }} > Server/firebaseConfig.js
+          docker-compose build server
 
   run-docker-compose-client-mobile:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request_review'
