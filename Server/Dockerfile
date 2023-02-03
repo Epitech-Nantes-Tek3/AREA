@@ -11,4 +11,5 @@ COPY ./Services/ /app/Services/
 COPY ./views/ /app/views/
 COPY ./app.js /app/
 COPY ./config.js /app/
-COPY ./firebaseFunctions.js /app
+COPY ./firebaseFunctions.js /app/
+COPY ./firebaseConfig.js /app/
