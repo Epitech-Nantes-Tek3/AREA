@@ -45,7 +45,9 @@ jobs:
           fetch-depth: 0
       - name: Run docker-compose build client_mobile
         id: run-docker-compose-build-client-mobile
-        run: docker-compose build client_mobile
+        run: |
+          echo "ip=192.168.1.12" >> ./Application/env.ts
+          docker-compose build client_mobile
 
   run-docker-compose-client-web:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request_review'
