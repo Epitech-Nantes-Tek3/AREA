@@ -8,6 +8,11 @@ import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
 import { NavigatorPush } from "../Navigator";
 import { Options } from "react-native-navigation";
 import Circles from "../Components/Circles";
+import { environment } from "../../env";
+
+import auth from '@react-native-firebase/auth';
+import firebase from '@react-native-firebase/app'
+import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
 import { ip} from "../../env";
 import { HomeScreenProps } from "../Common/Interfaces";
 import NetInfo from "@react-native-community/netinfo";
@@ -16,6 +21,19 @@ import NetInfo from "@react-native-community/netinfo";
 export default function ConnexionScreen() {
     // Gets the size of the current window
     const window: ScaledSize = Dimensions.get("window")
+
+    useEffect(() => {
+        const firebaseConfig = {
+            apiKey: environment.APIKEY,
+            authDomain: environment.AUTHDOMAIN,
+            databaseURL: environment.DATABASEURL,
+            projectId: environment.PROJECTID,
+            storageBucket: environment.STORAGEBUCKET,
+            messagingSenderId: environment.MESSAGINGSENDERID,
+            appId: environment.APPID
+        }
+        firebase.initializeApp(firebaseConfig)
+    })
 
     // Hooks allowing use to get/set user infos
     const [userMail, setUserMail] = useState("")
@@ -30,7 +48,7 @@ export default function ConnexionScreen() {
     }
 
     function checkConnexion() {
-        NetInfo.fetch().then((result) => {
+        NetInfo.fetch().then((result: any) => {
             if (!result.isInternetReachable) {
                 Alert.alert("Pas internet",
                 "Essaye de te connecter à Internet pour utiliser l'app :)",
@@ -71,12 +89,14 @@ export default function ConnexionScreen() {
             await fetch(ip + "login", requestOptions).then(response => {
                 response.json().then(data => {
                     console.log(data);
-                    const props: HomeScreenProps = {
-                        userMail: userMail,
-                        userId: data.userUid
+                    if (data.userUid != 'error') {
+                        const props: HomeScreenProps = {
+                            userMail: userMail,
+                            userId: data.userUid
+                        }
+                        console.log("Connect user", userMail, userPass)
+                        NavigatorPush("HomeScreen", "mainStack", options, props)
                     }
-                    console.log("Connect user", userMail, userPass)
-                    NavigatorPush("HomeScreen", "mainStack", options, props)
                 })
             });
         } catch (error) {
@@ -102,13 +122,30 @@ export default function ConnexionScreen() {
         NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
-    function connectWithFacebook() {
-        console.log("Connect with Facebook")
+    async function connectWithFacebook() {
+        const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+
+        if (result.isCancelled) {
+            throw 'user cancelled the login process';
+        }
+        const data = await AccessToken.getCurrentAccessToken();
+
+        if (!data) {
+            throw 'Something went wrong obtaining access token';
+        }
+
+        // Create a Firebase credential with the AccessToken
+        console.log(data.accessToken)
+        const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+
+        // Sign-in the user with the credential
+        auth().signInWithCredential(facebookCredential);
         const props: HomeScreenProps = {
             userMail: userMail,
             userId: "idTest"
         }
         NavigatorPush("HomeScreen", "mainStack", options, props)
+
     }
 
     function navigateToSubscribe() {

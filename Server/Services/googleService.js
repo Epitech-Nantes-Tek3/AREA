@@ -31,6 +31,7 @@ module.exports = {
                     accessToken: accessToken
                 }
             })
+
             const mail_options = {
                 from: `'AREA BOT' <${data.user}>`,
                 to: data.recipient,

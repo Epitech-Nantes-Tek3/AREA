@@ -33,12 +33,13 @@ module.exports = {
           res.json({userUid: userCredential.user.uid});
         }).catch((error) => {
           console.log('Error at the sign in:', error);
-          res.send(error).status(400);
+          res.json({userUid: 'error'}).status(400);
         })
     },
 
     register: function(req, res) {
         const { email, password } = req.body;
+        console.log(email, password);
         firebase.auth()
         .createUserWithEmailAndPassword(email, password).then((userCredential) => {
           const db = firebase.database().ref(`USERS/${userCredential.user.uid}/`);
@@ -49,7 +50,7 @@ module.exports = {
           res.json({userUid: userCredential.user.uid});
         }).catch((error) => {
           console.log('Error creating new user:', error);
-          res.send(error).status(400);
+          res.json({userUid: 'error'}).status(400);
         });
     }
 }
