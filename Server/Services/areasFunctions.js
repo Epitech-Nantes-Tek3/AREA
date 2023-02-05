@@ -16,5 +16,13 @@ module.exports = {
             res.send('error')
             console.log(error);
         });
+    },
+    /**
+    * areaRegister - function that stores the provided area data in the firebase database under the specified user id
+    * @param {string} uid - user id
+    * @param {object} aera - area data to be stored
+    */
+    areaRegister: function(uid, aera) {
+        firebaseFunctions.setDataInDb(`USERS/${uid}/AREAS`, aera);
     }
 }

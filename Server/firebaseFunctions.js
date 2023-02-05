@@ -45,5 +45,19 @@ module.exports = {
           console.log('Error creating new user:', error);
           res.json({userUid: 'error'}).status(400);
         });
+    },
+    /**
+     * @brief Function to write data to a specific path in Firebase database
+     * @param {*} path The path in the Firebase database where the data will be written to. 
+     * @param {*} data The data that will be written to the specified path.
+     */
+    setDataInDb: function(path, data) {
+      database.ref(`${path}/`).set(data, function(error) {
+        if (error) {
+          console.error("Error writing data to Firebase: ", error);
+        } else {
+          console.log("Data has been saved to Firebase successfully.");
+        }
+      });
     }
 }
