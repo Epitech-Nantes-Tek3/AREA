@@ -9,6 +9,7 @@ import LogoNasa from './assets/nasa.png'
 import CheckCircle from './assets/checkCircle.png'
 import { useState } from 'react';
 import { ACTIONS, REACTIONS } from "./Common/Areas"
+import { useNavigate } from "react-router-dom"
 
 /**
  * @brief Return the AddArea page for AREA
@@ -17,6 +18,7 @@ import { ACTIONS, REACTIONS } from "./Common/Areas"
 export default function AddAreaPage() {
     const [selectedActionIndex, setSelectedActionIndex] = useState(0)
     const [selectedReactionIndex, setSelectedReactionIndex] = useState(0)
+    const navigate = useNavigate();
     let logo = {
         "spotify": LogoSpotify,
         "iss": LogoIss,
@@ -33,6 +35,7 @@ export default function AddAreaPage() {
             action: ACTIONS[selectedActionIndex],
             reaction: REACTIONS[selectedReactionIndex]
         }
+        navigate('/home', area)
         console.log(area)
     }
 
@@ -57,7 +60,7 @@ export default function AddAreaPage() {
                     flexDirection: "column",
                 }}
                 onClick={selectIndex}>
-                
+
                 <div style={{ display: "flex", alignContent: "center", justifyContent: "center"}}>
                     <div style={{ flex: 1, marginBottom: 16, justifyContent: "center", alignContent: "center" }}>
                         <img
@@ -70,7 +73,7 @@ export default function AddAreaPage() {
                         <label style={{marginTop: 10, color: textColor, textTransform: "capitalize", fontSize: 25, display: "block", textAlign: "center"}}> {props.area.service.name} </label>
                     </div>
                 </div>
-                
+
                 <div style={{
                     flex: 1,
                     display: "flex",

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TrashImage from './assets/trash.png';
 import AddImage from "./assets/add.png";
+import { useNavigate } from "react-router-dom"
 
 /**
  * @brief Return the Home page for AREA
@@ -26,6 +27,8 @@ export default function HomePage() {
         }
     });
     const [location, setLocation] = useState({latitude: userInformation.coord.latitude, longitude: userInformation.coord.longitude, city: userInformation.coord.city})
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (navigator.geolocation) {
@@ -169,24 +172,9 @@ export default function HomePage() {
         )
     }
 
-    function addArea() {
-        const area = {
-            action: {
-                service: {
-                    name: "spotify",
-                    needsConnexion: true,
-                },
-                description: "lololol"
-            },
-            reaction: {
-                service: {
-                    name: "spotify",
-                    needsConnexion: true,
-                },
-                description: "lololol"
-            }
-        }
-        setAllAreas([area, ...allAreas])
+    const addArea = (props) => {
+        if (props.length !== 0)
+            navigate('/addArea', props)
     }
 
     return (
