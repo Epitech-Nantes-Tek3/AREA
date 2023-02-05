@@ -22,7 +22,6 @@ jobs:
         run: .github/scripts/docker-compose-consistancy.sh >> $GITHUB_STEP_SUMMARY
 
   run-docker-compose-server:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request_review'
     needs: ["docker-compose-validity"]
     runs-on: ubuntu-22.04
     steps:
@@ -36,7 +35,6 @@ jobs:
           docker-compose build server
 
   run-docker-compose-client-mobile:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request_review'
     needs: ["docker-compose-validity"]
     runs-on: ubuntu-22.04
     steps:
@@ -50,7 +48,6 @@ jobs:
           docker-compose build client_mobile
 
   run-docker-compose-client-web:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request_review'
     needs: ["docker-compose-validity"]
     runs-on: ubuntu-22.04
     steps:
