@@ -7,6 +7,7 @@ import GoogleSocialButton from "../Components/SocialButtons/GoogleSocialButton";
 import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
 import { NavigatorPop, NavigatorPush } from "../Navigator";
 import Circles from "../Components/Circles";
+import { ip} from "../../env";
 import { HomeScreenProps } from "../Common/Interfaces";
 import { Options } from "react-native-navigation";
 
@@ -27,17 +28,32 @@ export default function SignInScreen() {
             visible: false
         }
     }
-
-    function connectionAction() {
+    async function connectionAction() {
         if (userPass !== userValidPass)
             Alert.alert("Not the same")
-        else {
-            console.log("Subscribe user", userMail, userPass, userValidPass)
-            const props: HomeScreenProps = {
-                userMail: userMail,
-                userId: "idTest"
-            }
-            NavigatorPush("HomeScreen", "mainStack", options, props)
+        console.log("Subscribe user", userMail, userPass, userValidPass)
+        console.log("Connect user", userMail, userPass)
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({email: userMail, password: userPass})
+        }
+        try {
+            await fetch(ip + "register", requestOptions).then(response => {
+                response.json().then(data => {
+                    console.log(data);
+                    if (data.userUid != 'error') {
+                        const props: HomeScreenProps = {
+                            userMail: userMail,
+                            userId: data.userUid
+                        }
+                        NavigatorPush("HomeScreen", "mainStack", options, props)
+                    }
+                })
+            });
+        } catch (error) {
+            console.log(error);
         }
     }
 
