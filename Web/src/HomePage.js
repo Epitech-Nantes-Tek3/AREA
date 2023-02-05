@@ -30,6 +30,8 @@ export default function HomePage({route, navigation}) {
     const [location, setLocation] = useState({latitude: userInformation.coord.latitude, longitude: userInformation.coord.longitude, city: userInformation.coord.city})
 
     const navigate = useNavigate();
+    const paramsLocation = useLocation();
+
 
     useEffect(() => {
         if (navigator.geolocation) {
@@ -150,18 +152,6 @@ export default function HomePage({route, navigation}) {
     }
 
     function DisplayAreas() {
-        const location = useLocation();
-        try {
-            let newArea = location.state.newArea
-            console.log('before')
-            console.log(allAreas)
-            setAllAreas(newArea)
-            console.log('after')
-            console.log(allAreas)
-        } catch {
-            console.log('No Area Currently')
-        }
-
         if (allAreas.length !== 0)
             return (
                 <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
@@ -187,8 +177,22 @@ export default function HomePage({route, navigation}) {
     }
 
     const addArea = () => {
-        navigate('/addArea', {state : {newArea : []}})
+        navigate('/addArea', {state : { newArea : [] }})
     }
+
+    useEffect(() => {
+        try {
+            let newArea = paramsLocation.state.newArea
+            console.log('before')
+            console.log(allAreas)
+            setAllAreas([...allAreas, newArea])
+            console.log('after')
+            console.log(allAreas)
+        } catch {
+            console.log('No Area Currently')
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     return (
         <div style={{
             display: "flex",

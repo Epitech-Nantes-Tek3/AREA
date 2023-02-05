@@ -44,7 +44,7 @@ export default function AddAreaPage() {
             action: ACTIONS[selectedActionIndex],
             reaction: REACTIONS[selectedReactionIndex]
         }
-        areaArray.push(area)
+        areaArray = area
         navigate('/home', {state : { newArea : areaArray}})
     }
 
