@@ -15,6 +15,7 @@ function App() {
         <Route path="/" element={<AuthPage />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/addArea" element={<AddArea />} />
+        <Route path="/home" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
   );

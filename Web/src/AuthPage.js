@@ -114,16 +114,16 @@ export default function AuthPage() {
                     S'inscrire
                   </span>
 
-                <div className="form-group">
-                  <FacebookLogin
-                    appId="604811154808703"
-                    autoLoad={false}
-                    fields="name,email,picture"
-                    scope="public_profile,user_friends"
-                    callback={responseFacebook}
-                    cssClass="facebook"
-                    icon="fa-facebook" />
-                </div>
+                  <div className="form-group">
+                    <FacebookLogin
+                      appId="604811154808703"
+                      autoLoad={false}
+                      fields="name,email,picture"
+                      scope="public_profile,user_friends"
+                      callback={responseFacebook}
+                      cssClass="facebook"
+                      icon="fa-facebook" />
+                  </div>
                 </div>
               </div>
             </form>
