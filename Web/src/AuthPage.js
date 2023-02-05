@@ -47,7 +47,7 @@ export default function AuthPage() {
         await fetch("http://192.168.0.71:8080/" + endpoint, requestOptions).then(response => {
             response.json().then(data => {
                 console.log(data);
-                if (data.userUid != 'error') {
+                if (data.userUid !== 'error') {
                   navigate('/home');
                 }
             })

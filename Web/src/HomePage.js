@@ -8,51 +8,46 @@ import {useLocation} from 'react-router-dom';
  * @brief Return the Home page for AREA
  * This page will be updated soon
  */
-export default function HomePage({route, navigation}) {
-    const [allAreas, setAllAreas] = useState([])
+export default function HomePage(props) {
     const [asked, setAsked] = useState(false)
-    const [userInformation, setUserInformation] = useState({
-        mail: "yoyoyo",
-        coord: {
-            latitude: 0,
-            longitude: 0,
-            city: ""
-        },
-        id: "testWallah",
-        services: {
-            spotifyId: "",
-            googleId: "",
-            twitterId: "",
-            twitchId: "",
-            stravaId: ""
-        }
-    });
-    const [location, setLocation] = useState({latitude: userInformation.coord.latitude, longitude: userInformation.coord.longitude, city: userInformation.coord.city})
+    const [location, setLocation] = useState({latitude: props.userInformation.coord.latitude, longitude: props.userInformation.coord.longitude, city: props.userInformation.coord.city})
 
     const navigate = useNavigate();
     const paramsLocation = useLocation();
 
 
+
+    useEffect(() => {
+        // try {
+        //     console.log('before', props.allAreas)
+        //     setprops.allAreas([...props.allAreas, newArea])
+        //     console.log('after', props.allAreas)
+        // } catch {
+        //     console.log('No Area Currently')
+        // }
+    }, [])
+
+
     useEffect(() => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
-                setUserInformation({
-                    mail: userInformation.mail,
+                props.setUserInformation({
+                    mail: props.userInformation.mail,
                     coord: {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude,
-                        city: userInformation.coord.city
+                        city: props.userInformation.coord.city
                     },
-                    id: userInformation.id,
+                    id: props.userInformation.id,
                     services: {
-                        spotifyId: userInformation.services.spotifyId,
-                        googleId: userInformation.services.googleId,
-                        twitterId: userInformation.services.twitterId,
-                        twitchId: userInformation.services.twitchId,
-                        stravaId: userInformation.services.stravaId
+                        spotifyId: props.userInformation.services.spotifyId,
+                        googleId: props.userInformation.services.googleId,
+                        twitterId: props.userInformation.services.twitterId,
+                        twitchId: props.userInformation.services.twitchId,
+                        stravaId: props.userInformation.services.stravaId
                     }
                 })
-                setLocation({latitude: position.coords.latitude, longitude: position.coords.longitude, city: userInformation.coord.city})
+                setLocation({latitude: position.coords.latitude, longitude: position.coords.longitude, city: props.userInformation.coord.city})
             })
         }
     })
@@ -76,28 +71,28 @@ export default function HomePage({route, navigation}) {
             setAsked(true)
         }
 
-        setUserInformation({
-            mail: userInformation.mail,
+        props.setUserInformation({
+            mail: props.userInformation.mail,
             coord: {
                 latitude: location.latitude,
                 longitude: location.longitude,
                 city: location.city
             },
-            id: userInformation.id,
+            id: props.userInformation.id,
             services: {
-                spotifyId: userInformation.services.spotifyId,
-                googleId: userInformation.services.googleId,
-                twitterId: userInformation.services.twitterId,
-                twitchId: userInformation.services.twitchId,
-                stravaId: userInformation.services.stravaId
+                spotifyId: props.userInformation.services.spotifyId,
+                googleId: props.userInformation.services.googleId,
+                twitterId: props.userInformation.services.twitterId,
+                twitchId: props.userInformation.services.twitchId,
+                stravaId: props.userInformation.services.stravaId
             }
         })
     }, [location])
 
     function removeAreaFromList(index) {
-        let copyItems = [...allAreas];
+        let copyItems = [...props.allAreas];
         copyItems.splice(index, 1);
-        setAllAreas(copyItems);
+        props.setAllAreas(copyItems);
     }
 
     function AreaBlock(props) {
@@ -152,11 +147,11 @@ export default function HomePage({route, navigation}) {
     }
 
     function DisplayAreas() {
-        if (allAreas.length !== 0)
+        if (props.allAreas.length !== 0)
             return (
                 <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
                     {
-                        allAreas.map((item, index) => {
+                        props.allAreas.map((item, index) => {
                             return (
                                 <AreaBlock area={item} index={index}/>
                             )}
@@ -177,22 +172,9 @@ export default function HomePage({route, navigation}) {
     }
 
     const addArea = () => {
-        navigate('/addArea', {state : { newArea : [] }})
+        navigate('/addArea', {state : { areas: props.allAreas }})
     }
 
-    useEffect(() => {
-        try {
-            let newArea = paramsLocation.state.newArea
-            console.log('before')
-            console.log(allAreas)
-            setAllAreas([...allAreas, newArea])
-            console.log('after')
-            console.log(allAreas)
-        } catch {
-            console.log('No Area Currently')
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
     return (
         <div style={{
             display: "flex",

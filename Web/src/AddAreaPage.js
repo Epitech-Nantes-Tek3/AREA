@@ -16,7 +16,7 @@ import {useLocation} from 'react-router-dom';
  * @brief Return the AddArea page for AREA
  * This page will be updated soon
  */
-export default function AddAreaPage() {
+export default function AddAreaPage(props) {
     const [selectedActionIndex, setSelectedActionIndex] = useState(0)
     const [selectedReactionIndex, setSelectedReactionIndex] = useState(0)
     const navigate = useNavigate();
@@ -37,15 +37,12 @@ export default function AddAreaPage() {
     }
 
     const sendArea = () => {
-        console.log(location.state)
-        let areaArray = location.state.newArea
-        console.log(areaArray)
         let area = {
             action: ACTIONS[selectedActionIndex],
             reaction: REACTIONS[selectedReactionIndex]
         }
-        areaArray = area
-        navigate('/home', {state : { newArea : areaArray}})
+        props.setAllAreas([...props.allAreas, area])
+        navigate('/home', {state : { newArea : area}})
     }
 
     function ButtonValidate () {
