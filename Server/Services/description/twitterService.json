@@ -1,0 +1,23 @@
+{
+    "name": "TwitterService",
+    "actions": [
+        {
+            "name": "none",
+            "description": "none"
+        }
+    ],
+    "reactions": [
+        {
+            "name": "Like Tweet",
+            "description": "Like the tweet of a hashtag given in parameter"
+        },
+        {
+            "name": "Retweet Tweet",
+            "description": "Retweet the tweet of a hashtag given in parameter"
+        },
+        {
+            "name": "Tweet un tweet",
+            "description": "Sends a tweet with a text given in parameter"
+        }
+    ]
+}

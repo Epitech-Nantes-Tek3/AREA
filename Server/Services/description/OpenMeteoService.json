@@ -1,5 +1,5 @@
 {
-    "name": "",
+    "name": "OpenMeteoService",
     "actions": [
         {
             "name": "WeatherisFineOrNot",

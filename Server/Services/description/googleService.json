@@ -1,15 +1,15 @@
 {
-    "name": "",
+    "name": "GoogleService",
     "actions": [
         {
-            "name": "",
-            "description": ""
+            "name": "none",
+            "description": "none"
         }
     ],
     "reactions": [
         {
-            "name": "",
-            "description": ""
+            "name": "SendMail",
+            "description": "Sends an email to a given email address. The text is editable."
         }
     ]
 }
