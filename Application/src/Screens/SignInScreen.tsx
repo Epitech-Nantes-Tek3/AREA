@@ -43,11 +43,13 @@ export default function SignInScreen() {
             await fetch(ip + "register", requestOptions).then(response => {
                 response.json().then(data => {
                     console.log(data);
-                    const props: HomeScreenProps = {
-                        userMail: userMail,
-                        userId: data.userUid
+                    if (data.userUid != 'error') {
+                        const props: HomeScreenProps = {
+                            userMail: userMail,
+                            userId: data.userUid
+                        }
+                        NavigatorPush("HomeScreen", "mainStack", options, props)
                     }
-                    NavigatorPush("HomeScreen", "mainStack", options, props)
                 })
             });
         } catch (error) {
