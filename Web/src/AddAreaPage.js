@@ -7,9 +7,10 @@ import LogoGoogle from './assets/google.png';
 import LogoMeteo from './assets/meteo.png';
 import LogoNasa from './assets/nasa.png'
 import CheckCircle from './assets/checkCircle.png'
-import { useState } from 'react';
+import { Component, useState } from 'react';
 import { ACTIONS, REACTIONS } from "./Common/Areas"
 import { useNavigate } from "react-router-dom"
+import {useLocation} from 'react-router-dom';
 
 /**
  * @brief Return the AddArea page for AREA
@@ -19,6 +20,11 @@ export default function AddAreaPage() {
     const [selectedActionIndex, setSelectedActionIndex] = useState(0)
     const [selectedReactionIndex, setSelectedReactionIndex] = useState(0)
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const addArea = null
+    const areaList = null
+
     let logo = {
         "spotify": LogoSpotify,
         "iss": LogoIss,
@@ -30,13 +36,25 @@ export default function AddAreaPage() {
         "strava": LogoStrava
     }
 
-    function sendArea() {
+    const sendArea = () => {
+        console.log(location.state)
+        let areaArray = location.state.newArea
+        console.log(areaArray)
         let area = {
             action: ACTIONS[selectedActionIndex],
             reaction: REACTIONS[selectedReactionIndex]
         }
-        navigate('/home', area)
-        console.log(area)
+        areaArray.push(area)
+        navigate('/home', {state : { newArea : areaArray}})
+    }
+
+    function ButtonValidate () {
+
+        return (
+            <div style={{borderRadius: 50, width: 60, height: 60, justifySelf: "center"}} onClick={sendArea}>
+                <img src={CheckCircle} alt={"Validation check"} style={{width: 60, height: 60}}/>
+            </div>
+        )
     }
 
     function InfoBlock(props) {
@@ -117,9 +135,7 @@ export default function AddAreaPage() {
                 <span style={{width: "50%", fontSize: 25}}>
                     {ACTIONS[selectedActionIndex].description + ". " + REACTIONS[selectedReactionIndex].description + "."}
                 </span>
-                <div style={{borderRadius: 50, width: 60, height: 60, justifySelf: "center"}} onClick={sendArea}>
-                    <img src={CheckCircle} alt={"Validation check"} style={{width: 60, height: 60}}/>
-                </div>
+            <ButtonValidate/>
             </div>
         </div>
     );

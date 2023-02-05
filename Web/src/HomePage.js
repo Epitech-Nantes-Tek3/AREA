@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import TrashImage from './assets/trash.png';
 import AddImage from "./assets/add.png";
 import { useNavigate } from "react-router-dom"
+import {useLocation} from 'react-router-dom';
 
 /**
  * @brief Return the Home page for AREA
  * This page will be updated soon
  */
-export default function HomePage() {
+export default function HomePage({route, navigation}) {
     const [allAreas, setAllAreas] = useState([])
     const [asked, setAsked] = useState(false)
     const [userInformation, setUserInformation] = useState({
@@ -149,6 +150,18 @@ export default function HomePage() {
     }
 
     function DisplayAreas() {
+        const location = useLocation();
+        try {
+            let newArea = location.state.newArea
+            console.log('before')
+            console.log(allAreas)
+            setAllAreas(newArea)
+            console.log('after')
+            console.log(allAreas)
+        } catch {
+            console.log('No Area Currently')
+        }
+
         if (allAreas.length !== 0)
             return (
                 <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
@@ -169,14 +182,13 @@ export default function HomePage() {
             }}>
                 <h3>Tu n'as pas encore créé d'AREA 🥺</h3>
             </div>
+
         )
     }
 
-    const addArea = (props) => {
-        if (props.length !== 0)
-            navigate('/addArea', props)
+    const addArea = () => {
+        navigate('/addArea', {state : {newArea : []}})
     }
-
     return (
         <div style={{
             display: "flex",
