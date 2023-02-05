@@ -1,0 +1,15 @@
+{
+    "name": "",
+    "actions": [
+        {
+            "name": "WeatherisFineOrNot",
+            "description": ""
+        }
+    ],
+    "reactions": [
+        {
+            "name": "none",
+            "description": "none"
+        }
+    ]
+}
