@@ -61,7 +61,10 @@ function WeatherisFineOrNot(latitude, longitude) {
                             resolve(false);
                     }
                 });
-            }
+            })
+        })
+    });
+}
 
 /**
 * @brief GetLocation function retrieves the location data from Firebase for the specified user ID.
