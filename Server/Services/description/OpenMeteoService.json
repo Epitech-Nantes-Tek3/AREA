@@ -3,7 +3,7 @@
     "actions": [
         {
             "name": "WeatherisFineOrNot",
-            "description": ""
+            "description": "Receive weather data for a location defined by latitude/longitude. Returns with a trigger if the weather is good or bad."
         }
     ],
     "reactions": [
