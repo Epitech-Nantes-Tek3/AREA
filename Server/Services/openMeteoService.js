@@ -84,6 +84,11 @@ function GetLocation(uid) {
 }
 
 module.exports = {
+    /**
+    * ActionWeather is a Promise that is used to determine if the weather is fine or not.
+    * @param {string} uid - The unique identifier of a user.
+    * @returns {Promise} A Promise that resolves with a boolean value indicating if the weather is fine or not.
+    */
     ActionWeather: function(uid) {
         return new Promise((resolve, reject) => {
             GetLocation(uid)

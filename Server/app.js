@@ -149,5 +149,5 @@ app.get('/issStation', (req, res) => {
 })
 
 app.get('/areas', (req, res) => {
-    areasFunctions.area(req, res, firebaseUid)
+    areasFunctions.areaLoop(req, res, firebaseUid)
 })

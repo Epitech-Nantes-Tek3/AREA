@@ -49,7 +49,16 @@ async function carryOutAnAction(req, res, appKey, appSecret, bearer, hashtagOrMe
         }
     }
 }
-
+/**
+* @brief allows the user to perform an action (retweet, like or tweet) on Twitter.
+* It first retrieves the Twitter API data from Firebase using "getDataFromFireBaseServer" function.
+* Then, depending on the action passed as a parameter, it calls "carryOutAnAction" function to carry out the specified action.
+* @param {string} action is the action to be performed (retweet, like or tweet)
+* @param {string} hashtagOrMessage is the hashtag or message associated with the action
+* @param {string} uid is the user id
+* @param {*} req is an object that contains information about the HTTP request that called this function
+* @param {*} res is an object that handles the HTTP response that will be sent to the user.
+*/
 function GetIdTwitter(uid) {
     return new Promise((resolve, reject) => {
         firebaseFunctions.getDataFromFireBase(uid, 'TwitterService')
@@ -61,6 +70,17 @@ function GetIdTwitter(uid) {
         });
     });
 }
+/**
+* @brief allows the user to perform an action (retweet, like, or tweet) on Twitter. It retrieves the necessary information
+* from the Twitter API stored on Firebase. Depending on the action passed as a parameter, it calls the
+* "carryOutAnAction" function to perform the action.
+* @param {string} action is the desired action to be performed (retweet, like, or tweet)
+* @param {string} hashtagOrMessage is the hashtag or message to be used for the action
+* @param {string} uid is the unique identifier of the user
+* @param {*} req is an object that contains information about the HTTP request that called this function
+* @param {*} res is an object that handles the HTTP response that will be sent to the user.
+*/
+
 function doAct(action, hashtagOrMessage, uid, req, res) {
     firebaseFunctions.getDataFromFireBaseServer('twitter')
     .then(data => {
@@ -92,7 +112,6 @@ module.exports = {
                 consumerKey: data.appKey,
                 consumerSecret: data.appSecret,
                 callbackUrl: 'http://localhost:8080/twitter/sign'
-
             })
             req.session.tw = tw
             tw.login((err, tokenSecret, url) => {
@@ -207,6 +226,15 @@ module.exports = {
             res.redirect('/twitter')
         }
     },
+    /**
+    * @brief ActionTw function is used to perform a specified action on the user's Twitter account. It first retrieves the Twitter UID
+    * of the user with the "GetIdTwitter" function, then it performs the specified action on the user's account with the "doAct" function.
+    * @param {string} action is a string representing the desired action to be performed (e.g. retweet, like, tweet)
+    * @param {string} hashtagOrMessage is a string representing the hashtag or message for the desired action.
+    * @param {string} uid is the unique identifier for the user on the app.
+    * @param {*} req is an object that contains information about the HTTP request that called this function
+    * @param {*} res is an object that handles the HTTP response that will be sent to the user.
+    */
     ActionTw: function(action, hashtagOrMessage, uid, req, res) {
         GetIdTwitter(uid)
         .then(data => {
