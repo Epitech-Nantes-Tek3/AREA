@@ -117,7 +117,7 @@ app.get('/Register/iss', (req, res) => {
 })
 
 app.get('/Register/google', (req, res) => {
-    googleService.RegistedRequiredGoogle(res, 'XqzKYIVDktVayGtqPifLJQkK9My1', 'tom@mail.fr')
+    googleService.RegistedRequiredGoogle(res, firebaseUid, data)
 })
 
 app.get('/twitter', (req, res) => {
