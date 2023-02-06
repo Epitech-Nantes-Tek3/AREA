@@ -10,7 +10,6 @@ import CheckCircle from './assets/checkCircle.png'
 import { Component, useState } from 'react';
 import { ACTIONS, REACTIONS } from "./Common/Areas"
 import { useNavigate } from "react-router-dom"
-import {useLocation} from 'react-router-dom';
 
 /**
  * @brief Return the AddArea page for AREA
@@ -20,10 +19,6 @@ export default function AddAreaPage(props) {
     const [selectedActionIndex, setSelectedActionIndex] = useState(0)
     const [selectedReactionIndex, setSelectedReactionIndex] = useState(0)
     const navigate = useNavigate();
-    const location = useLocation();
-
-    const addArea = null
-    const areaList = null
 
     let logo = {
         "spotify": LogoSpotify,

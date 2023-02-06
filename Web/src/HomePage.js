@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import TrashImage from './assets/trash.png';
 import AddImage from "./assets/add.png";
 import { useNavigate } from "react-router-dom"
-import {useLocation} from 'react-router-dom';
 
 /**
  * @brief Return the Home page for AREA
@@ -13,19 +12,6 @@ export default function HomePage(props) {
     const [location, setLocation] = useState({latitude: props.userInformation.coord.latitude, longitude: props.userInformation.coord.longitude, city: props.userInformation.coord.city})
 
     const navigate = useNavigate();
-    const paramsLocation = useLocation();
-
-
-
-    useEffect(() => {
-        // try {
-        //     console.log('before', props.allAreas)
-        //     setprops.allAreas([...props.allAreas, newArea])
-        //     console.log('after', props.allAreas)
-        // } catch {
-        //     console.log('No Area Currently')
-        // }
-    }, [])
 
 
     useEffect(() => {
@@ -172,7 +158,7 @@ export default function HomePage(props) {
     }
 
     const addArea = () => {
-        navigate('/addArea', {state : { areas: props.allAreas }})
+        navigate('/addArea')
     }
 
     return (
