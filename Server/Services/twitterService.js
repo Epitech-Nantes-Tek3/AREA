@@ -106,6 +106,7 @@ module.exports = {
     loginTwitter: function(req, res) {
         firebaseFunctions.getDataFromFireBaseServer('twitter')
         .then(data => {
+            console.log(data)
             const tw = new LoginWithTwitter({
                 consumerKey: data.appKey,
                 consumerSecret: data.appSecret,
@@ -133,6 +134,7 @@ module.exports = {
      */
     dashTwitter: function(req, res) {
         if (req.session.user) {
+            console.log(req.session)
             res.render('dash')
         } else {
             res.redirect('/twitter')
