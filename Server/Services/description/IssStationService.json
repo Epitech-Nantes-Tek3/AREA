@@ -2,7 +2,7 @@
     "name": "IssStationService",
     "actions": [
         {
-            "name": "checkISSPosition",
+            "name": "CompareIssPositionWithUserPosition",
             "description": "checks the position of the iss in relation to the user-defined position. Compares whether the ISS is within a (user-defined) **gap** around the user. And returns whether the ISS is close to the position or not."
         }
     ],
