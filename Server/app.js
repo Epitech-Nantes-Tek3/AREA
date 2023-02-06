@@ -111,6 +111,10 @@ app.get('/Register/weather', (req, res) => {
     openMeteoService.RegistedRequiredOpenMeteo(res, firebaseUid, data)
 })
 
+app.get('/Register/iss', (req, res) => {
+    ISSStationService.RegistedRequiredIss(res, firebaseUid, data)
+})
+
 app.get('/twitter', (req, res) => {
     res.render('index')
 })
