@@ -116,7 +116,7 @@ app.get('/twitter/login', (req, res) => {
 })
 
 app.get('/twitter/sign', (req, res) => {
-    twitterService.signTwitter(req, res)
+    twitterService.signTwitter(req, res, firebaseUid)
 })
 
 app.get('/twitter/dash', (req, res) => {
