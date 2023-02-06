@@ -22,7 +22,8 @@ app.use(session({
 }))
 app.use(express.urlencoded())
 //temporaire
-const ejs = require('ejs')
+const ejs = require('ejs');
+const googleService = require('./Services/googleService');
 app.set('view engine', 'ejs');
 
 // parse application/x-www-form-urlencoded
@@ -113,6 +114,10 @@ app.get('/Register/weather', (req, res) => {
 
 app.get('/Register/iss', (req, res) => {
     ISSStationService.RegistedRequiredIss(res, firebaseUid, data)
+})
+
+app.get('/Register/google', (req, res) => {
+    googleService.RegistedRequiredGoogle(res, 'XqzKYIVDktVayGtqPifLJQkK9My1', 'tom@mail.fr')
 })
 
 app.get('/twitter', (req, res) => {

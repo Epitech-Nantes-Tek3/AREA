@@ -49,6 +49,18 @@ module.exports = {
         .catch(error => {
             console.log(error);
         });
+    },
+    RegistedRequiredGoogle: function(res, uid, frontData) {
+        firebaseFunctions.getDataFromFireBaseServer('GoogleService')
+        .then(data => {
+            var information = data
+            information.recipient = frontData
+            firebaseFunctions.setDataInDb(`USERS/${uid}/GoogleService`, information)
+        })
+        .catch(error => {
+            console.log(error);
+        });
+        res.redirect('/')
     }
 }
 
