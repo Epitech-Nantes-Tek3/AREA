@@ -108,7 +108,7 @@ app.get('/weather', (req, res) => {
 })
 
 app.get('/Register/weather', (req, res) => {
-    openMeteoService.RegistedRequiredData(res, firebaseUid, data)
+    openMeteoService.RegistedRequiredOpenMeteo(res, firebaseUid, data)
 })
 
 app.get('/twitter', (req, res) => {
