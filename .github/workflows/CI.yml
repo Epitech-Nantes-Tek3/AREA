@@ -44,7 +44,7 @@ jobs:
       - name: Run docker-compose build client_mobile
         id: run-docker-compose-build-client-mobile
         run: |
-          echo "${{ secrets.MOBILE_APP_ENV_JS }}" >> ./Application/env.ts
+          echo '${{ secrets.MOBILE_APP_ENV_JS }}' > ./Application/env.ts
           docker-compose build client_mobile
 
   run-docker-compose-client-web:
