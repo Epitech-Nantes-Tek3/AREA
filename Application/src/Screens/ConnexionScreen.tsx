@@ -115,11 +115,11 @@ export default function ConnexionScreen() {
 
     function connectWithGoogle() {
         console.log("Connect with Google")
-        const props: HomeScreenProps = {
+        /*const props: HomeScreenProps = {
             userMail: userMail,
             userId: "idTest"
         }
-        NavigatorPush("HomeScreen", "mainStack", options, props)
+        NavigatorPush("HomeScreen", "mainStack", options, props)*/
     }
 
     async function connectWithFacebook() {
