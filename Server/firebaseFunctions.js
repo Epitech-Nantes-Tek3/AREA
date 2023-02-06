@@ -12,8 +12,6 @@ module.exports = {
             database.ref(`USERS/${uid}/${service}`).on('value', (snapshot) => {
                 if (snapshot.val()) {
                     resolve(snapshot.val());
-                } else {
-                    reject(Error("Error fetching data"))
                 }
             });
         });

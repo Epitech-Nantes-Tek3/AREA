@@ -124,6 +124,10 @@ app.get('/twitter', (req, res) => {
     res.render('index')
 })
 
+app.get('/tw', (req, res) => {
+    twitterService.ActionTw('like', 'chelsea', firebaseUid, req, res)
+})
+
 app.get('/twitter/login', (req, res) => {
     twitterService.loginTwitter(req, res)
 })
@@ -161,5 +165,5 @@ app.get('/issStation', (req, res) => {
 })
 
 app.get('/areas', (req, res) => {
-    areasFunctions.area(req, res, firebaseUid)
+    areasFunctions.areaLoop(req, res, firebaseUid)
 })

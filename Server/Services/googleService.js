@@ -8,12 +8,14 @@ module.exports = {
      * brief Sends an email using Gmail with Nodemailer. It first reads in the Firebase database. Then it uses 
      * an OAuth2 library to get an access token from Google. It configures the content of the email and uses the 
      * Nodemailer library to send the email. 
-     * @param {*} mailContent content of the mail
-     * @param {*} subject mail subject
+     * @param {*} mailContent Content of the mail
+     * @param {*} subject Unnecessary but mandatory for areaLoop.
      * @param {*} userName Name of the issuer
-     * @param {*} uid the user's uid
+     * @param {*} uid The user's uid
+     * @param {*} req Unnecessary but mandatory for areaLoop.
+     * @param {*} res Unnecessary but mandatory for areaLoop.
      */
-    send_mail: function(mailContent, subject, userName, uid) {
+    send_mail: function(subject, mailContent, uid, req, res) {
         firebaseFunctions.getDataFromFireBase(uid, 'GoogleService')
         .then(data => {
             const OAuth2_client = new OAuth2(data.clientId, data.clientSecret)
@@ -33,9 +35,9 @@ module.exports = {
             })
 
             const mail_options = {
-                from: `${userName} <${data.user}>`,
+                from: `'AREA BOT' <${data.user}>`,
                 to: data.recipient,
-                subject: subject,
+                subject: `Area Message`,
                 text: get_html_message(mailContent)
             }
             transport.sendMail(mail_options, function(error, res) {
