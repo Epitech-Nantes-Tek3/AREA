@@ -87,5 +87,9 @@ module.exports = {
                 reject(error);
             });
         });
+    },
+    RegistedRequiredData: function(res, uid, data) {
+        firebaseFunctions.setDataInDb(`USERS/${uid}/OpenMeteoService`, data)
+        res.redirect('/')
     }
 }
