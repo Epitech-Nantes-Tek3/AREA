@@ -8,10 +8,7 @@ module.exports = {
     /**
      * @brief Check the ISS position, compute the distance between the user and the 
      * ISS and return true if iss is close
-     *
-     * @param {*} res the request
      * @param {*} uid needed to connect to the firebase to get user position
-     * @param {*} gap gap between position and Iss
      */
     checkISSPosition: function(uid) {
         return firebaseFunctions.getDataFromFireBase(uid, 'IssStation')

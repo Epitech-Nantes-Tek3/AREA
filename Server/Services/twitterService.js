@@ -76,12 +76,11 @@ function GetIdTwitter(uid) {
 * "carryOutAnAction" function to perform the action.
 * @param {string} action is the desired action to be performed (retweet, like, or tweet)
 * @param {string} hashtagOrMessage is the hashtag or message to be used for the action
-* @param {string} uid is the unique identifier of the user
 * @param {*} req is an object that contains information about the HTTP request that called this function
 * @param {*} res is an object that handles the HTTP response that will be sent to the user.
 */
 
-function doAct(action, hashtagOrMessage, uid, req, res) {
+function doAct(action, hashtagOrMessage, req, res) {
     firebaseFunctions.getDataFromFireBaseServer('twitter')
     .then(data => {
         if (action === 'retweet')
