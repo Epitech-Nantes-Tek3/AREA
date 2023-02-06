@@ -16,8 +16,8 @@
             "description": "Retweet the tweet of a hashtag given in parameter"
         },
         {
-            "name": "Tweet un tweet",
-            "description": "Sends a tweet with a text given in parameter"
+            "name": "Tweet a tweet",
+            "description": "Should be Post a tweet with a text given in parameter"
         }
     ]
 }
