@@ -14,4 +14,5 @@ RUN cd android && ./gradlew assembleRelease
 
 # Move apk file to common volume
 RUN mkdir /release
+RUN rm -rf /release/client.apk
 RUN cp /app/android/app/build/outputs/apk/release/app-release.apk /release/client.apk
