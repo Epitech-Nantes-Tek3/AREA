@@ -11,13 +11,13 @@ import { useState } from 'react';
  */
 function App() {
   const [userInformation, setUserInformation] = useState({
-    mail: "yoyoyo",
+    mail: "",
     coord: {
         latitude: 0,
         longitude: 0,
         city: ""
     },
-    id: "testWallah",
+    id: "",
     services: {
         spotifyId: "",
         googleId: "",
