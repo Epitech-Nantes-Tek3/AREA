@@ -57,9 +57,26 @@ module.exports = {
     /**
     * areaRegister - function that stores the provided area data in the firebase database under the specified user id
     * @param {string} uid - user id
-    * @param {object} aera - area data to be stored
+    * @param {object} Action - action data to be stored
+    * @param {object} Reaction - reaction data to be stored
     */
-    areaRegister: function(uid, aera) {
-        firebaseFunctions.setDataInDb(`USERS/${uid}/AREAS`, aera);
+    areaRegister: function(uid, Action, Reaction) {
+        firebaseFunctions.getDataFromFireBase(uid, '')
+        .then(data => {
+            console.log(data.areaNumber)
+            areaname = `AREA${data.areaNumber + 1}`
+            console.log(areaname)
+            var area = {
+                Action,
+                Reaction,
+            }
+            console.log(area)
+            var areaNumber = data.areaNumber + 1
+            firebaseFunctions.setDataInDb(`USERS/${uid}/AREAS/${areaname}`, area);
+            firebaseFunctions.setDataInDb(`USERS/${uid}/areaNumber`, areaNumber);
+        })
+        .catch(error => {
+            console.log(error);
+        });
     }
 }

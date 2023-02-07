@@ -17,28 +17,28 @@ module.exports = {
         });
     },
     getDataFromFireBaseServer: function(service) {
-      return new Promise((resolve, reject) => {
-          database.ref(`SERVER/${service}/`).on('value', (snapshot) => {
-              if (snapshot.val()) {
-                  resolve(snapshot.val());
-              }
-          });
-      });
+        return new Promise((resolve, reject) => {
+            database.ref(`SERVER/${service}/`).on('value', (snapshot) => {
+                if (snapshot.val()) {
+                    resolve(snapshot.val());
+                }
+            });
+        });
     },
 
     login: function(req, res) {
         const {email, password} = req.body;
         firebase.auth().signInWithEmailAndPassword(email, password).then((userCredential) => {
-          console.log('User signed in:', userCredential.user.uid);
-          res.json({userUid: userCredential.user.uid});
+            console.log('User signed in:', userCredential.user.uid);
+            res.json({userUid: userCredential.user.uid});
         }).catch((error) => {
-          console.log('Error at the sign in:', error);
-          res.json({userUid: 'error'}).status(400);
+            console.log('Error at the sign in:', error);
+            res.json({userUid: 'error'}).status(400);
         })
-    },
-
-    register: function(req, res) {
-        const { email, password } = req.body;
+        },
+        
+        register: function(req, res) {
+            const { email, password } = req.body;
         console.log(email, password);
         firebase.auth()
         .createUserWithEmailAndPassword(email, password).then((userCredential) => {

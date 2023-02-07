@@ -176,6 +176,15 @@ app.get('/areas', (req, res) => {
     areasFunctions.areaLoop(req, res, firebaseUid)
 })
 
-app.get('/areas/register', (req, res) => {
-    areasFunctions.areaRegister(firebaseUid, '', '')
+app.post('/register/areas', (req, res) => {
+    var action = {
+        name: 'openMeteo',
+        trigger: true
+    }
+    var reaction = {
+        name: 'twitter',
+        subject: 'tweet',
+        text: 'il fait beau a nantes'  
+    }
+    areasFunctions.areaRegister(firebaseUid, action, reaction)
 })

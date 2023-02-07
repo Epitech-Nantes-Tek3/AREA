@@ -18,12 +18,12 @@ const { TwitterApi } = require('twitter-api-v2')
  * @param {*} action is an argument that determines what action should be performed by the function. It 
  * can take the values 'tweet', 'like' or 'retweet'.
  */
-async function carryOutAnAction(req, res, appKey, appSecret, bearer, hashtagOrMessage, action) {
+async function carryOutAnAction(req, res, appKey, appSecret, bearer, hashtagOrMessage, action, userData) {
     const client = new TwitterApi ({
         appKey: appKey,
         appSecret: appSecret,
-        accessToken: req.Twitteruid.userToken,
-        accessSecret: req.Twitteruid.userTokenSecret
+        accessToken: userData.userToken,
+        accessSecret: userData.userTokenSecret
     })
     if (action == 'tweet') {
         const twClient = client.readWrite;
@@ -80,15 +80,15 @@ function GetIdTwitter(uid) {
 * @param {*} res is an object that handles the HTTP response that will be sent to the user.
 */
 
-function doAct(action, hashtagOrMessage, req, res) {
+function doAct(action, hashtagOrMessage, req, res, userData) {
     firebaseFunctions.getDataFromFireBaseServer('twitter')
     .then(data => {
         if (action === 'retweet')
-            carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'retweet');
+            carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'retweet', userData);
         else if (action === 'like')
-            carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'like');
+            carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'like', userData);
             else if (action === 'tweet')
-            carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'tweet');
+            carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'tweet', userData);
     })
     .catch(error => {
         console.log(error);
@@ -237,8 +237,7 @@ module.exports = {
     ActionTw: function(action, hashtagOrMessage, uid, req, res) {
         GetIdTwitter(uid)
         .then(data => {
-            req.Twitteruid = data
-            doAct(action, hashtagOrMessage, uid, req, res)
+            doAct(action, hashtagOrMessage, uid, req, res, data)
         })
         .catch(error => {
             console.log(error);
