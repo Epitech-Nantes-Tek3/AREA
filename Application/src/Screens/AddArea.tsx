@@ -72,11 +72,11 @@ export default function AddArea(props: AddAreaProps) {
             <TouchableOpacity style={[infoBlockStyle.container, { backgroundColor: color }]} onPress={pressBlock}>
                 <View style={infoBlockStyle.titleContainer}>
                     <View style={infoBlockStyle.imageContainer}>
-                        <Image source={logo[props.area.service.name]} style={infoBlockStyle.imageSize}/>
+                        <Image source={logo[props.area.serviceName]} style={infoBlockStyle.imageSize}/>
                     </View>
                     <View style={infoBlockStyle.textContainer}>
                         <Text style={infoBlockStyle.textStyle}>
-                            {props.area.service.name}
+                            {props.area.serviceName}
                         </Text>
                     </View>
                 </View>
