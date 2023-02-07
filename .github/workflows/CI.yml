@@ -22,7 +22,6 @@ jobs:
         run: .github/scripts/docker-compose-consistancy.sh >> $GITHUB_STEP_SUMMARY
 
   run-docker-compose-server:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request_review'
     needs: ["docker-compose-validity"]
     runs-on: ubuntu-22.04
     steps:
@@ -31,10 +30,11 @@ jobs:
           fetch-depth: 0
       - name: Run docker-compose build server
         id: run-docker-compose-build-server
-        run: docker-compose build server
+        run: |
+          echo "${{ secrets.FIREBASE_CONFIG }}" >> ./Server/firebaseConfig.js
+          docker-compose build server
 
   run-docker-compose-client-mobile:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request_review'
     needs: ["docker-compose-validity"]
     runs-on: ubuntu-22.04
     steps:
@@ -43,10 +43,11 @@ jobs:
           fetch-depth: 0
       - name: Run docker-compose build client_mobile
         id: run-docker-compose-build-client-mobile
-        run: docker-compose build client_mobile
+        run: |
+          echo '${{ secrets.MOBILE_APP_ENV_JS }}' > ./Application/env.ts
+          docker-compose build client_mobile
 
   run-docker-compose-client-web:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request_review'
     needs: ["docker-compose-validity"]
     runs-on: ubuntu-22.04
     steps:

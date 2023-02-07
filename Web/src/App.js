@@ -1,4 +1,3 @@
-
 import AddArea from './AddAreaPage';
 import AuthPage from './AuthPage';
 import HomePage from './HomePage';

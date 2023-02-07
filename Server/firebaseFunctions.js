@@ -12,12 +12,19 @@ module.exports = {
             database.ref(`USERS/${uid}/${service}`).on('value', (snapshot) => {
                 if (snapshot.val()) {
                     resolve(snapshot.val());
-                } else {
-                    reject(Error("Error fetching data"))
                 }
             });
         });
     },
+    getDataFromFireBaseServer: function(service) {
+      return new Promise((resolve, reject) => {
+          database.ref(`${service}/`).on('value', (snapshot) => {
+              if (snapshot.val()) {
+                  resolve(snapshot.val());
+              }
+          });
+      });
+  },
 
     login: function(req, res) {
         const {email, password} = req.body;
