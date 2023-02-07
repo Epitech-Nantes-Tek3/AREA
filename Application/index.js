@@ -4,12 +4,14 @@ import ConnexionScreen from "./src/Screens/ConnexionScreen";
 import HomeScreen from "./src/Screens/HomeScreen";
 import SignInScreen from "./src/Screens/SignInScreen";
 import SettingsScreen from "./src/Screens/SettingsScreen";
+import WebPage from "./src/Screens/WebPage";
 
 Navigation.registerComponent('ConnexionScreen', () => ConnexionScreen);
 Navigation.registerComponent('SignInScreen', () => SignInScreen);
 Navigation.registerComponent('HomeScreen', () => HomeScreen);
 Navigation.registerComponent('AddArea', () => AddArea);
 Navigation.registerComponent('SettingsScreen', () => SettingsScreen);
+Navigation.registerComponent('WebPage', () => WebPage);
 Navigation.events().registerAppLaunchedListener(() => {
    Navigation.setRoot({
     root: {

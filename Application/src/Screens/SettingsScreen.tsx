@@ -1,8 +1,11 @@
 import React, { Dispatch, useEffect, useState } from "react";
-import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSourcePropType, GestureResponderEvent, ScrollView, Alert } from "react-native";
+import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSourcePropType, GestureResponderEvent, ScrollView, Alert, Linking } from "react-native";
 import { Globals } from "../Common/Globals";
 import Geolocation from 'react-native-geolocation-service';
 import { UserInfo } from "../Common/Interfaces";
+import { ip } from "../../env";
+import WebView from "react-native-webview";
+import { NavigatorshowModal } from "../Navigator";
 
 
 
@@ -172,7 +175,16 @@ export default function SettingsScreen(props: SettingsProps) {
             setImageSpotify(require("../assets/checkCircle.png"))
         }
 
-        function twitterConnexion() {
+        async function twitterConnexion() {
+    
+            try {
+                await fetch(ip + "twitter/login").then(response => {
+                    let data = JSON.parse(JSON.stringify(response))
+                    NavigatorshowModal("WebPage", {}, {url: data.url})
+                });
+            } catch (error) {
+                console.error(error);
+            }
             let token = "ImTestingATokenItIsSoFunnyTwitter"
             props.setUserInfo({
                 mail: props.userInfo.mail,
