@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version'
+        required: true
+        type: string
+        default: '0.0.0'
+      body:
+        description: 'Body'
+        required: true
+        type: string
+        default: 'Body'
+
+jobs:
+  release:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        id: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Build the application
+        id: build
+        run: |
+          echo '${{ secrets.MOBILE_APP_ENV_JS }}' > ./Application/env.ts
+          docker-compose build client_mobile
+          docker-compose up client_mobile
+          docker cp area_client_mobile_1:/app/android/app/build/outputs/apk/release/app-release.apk ${{ github.workspace }}/client.apk
+
+      - name: Create artifact
+        id: artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: client
+          path: ${{ github.workspace }}/client.apk
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          body: ${{ github.event.inputs.body }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            ${{ github.workspace }}/client.apk
