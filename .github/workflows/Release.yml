@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  # Trigger manually from github
+  workflow_dispatch:
+    inputs:
+      # Choose a release version
+      version:
+        description: 'Release version'
+        required: true
+        type: string
+        default: '0.0.0'
+      # Describe the release
+      body:
+        description: 'Body'
+        required: true
+        type: string
+        default: 'Body'
+
+jobs:
+  release:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      # Download the repository
+      - name: Checkout repository
+        id: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # Build the application in docker
+      - name: Build the application
+        id: build
+        run: |
+          echo '${{ secrets.MOBILE_APP_ENV_JS }}' > ./Application/env.ts
+          docker-compose build client_mobile
+          docker-compose up client_mobile
+          docker cp area_client_mobile_1:/app/android/app/build/outputs/apk/release/app-release.apk ${{ github.workspace }}/client.apk
+
+      # Create an artifact "client" which contains client.apk
+      - name: Create artifact
+        id: artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: client
+          path: ${{ github.workspace }}/client.apk
+
+      # Create a release on github with a version and a description with the client.apk
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          body: ${{ github.event.inputs.body }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: |
+            ${{ github.workspace }}/client.apk
