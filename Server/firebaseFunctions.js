@@ -12,12 +12,19 @@ module.exports = {
             database.ref(`USERS/${uid}/${service}`).on('value', (snapshot) => {
                 if (snapshot.val()) {
                     resolve(snapshot.val());
-                } else {
-                    reject(Error("Error fetching data"))
                 }
             });
         });
     },
+    getDataFromFireBaseServer: function(service) {
+      return new Promise((resolve, reject) => {
+          database.ref(`${service}/`).on('value', (snapshot) => {
+              if (snapshot.val()) {
+                  resolve(snapshot.val());
+              }
+          });
+      });
+  },
 
     login: function(req, res) {
         const {email, password} = req.body;
@@ -45,5 +52,17 @@ module.exports = {
           console.log('Error creating new user:', error);
           res.json({userUid: 'error'}).status(400);
         });
+    },
+
+    resetPassword: function(req, res) {
+        const { email } = req.body;
+        console.log(email)
+        firebase.auth().sendPasswordResetEmail(email).then(() => {
+            console.log('Email sent to', email, 'for password reset');
+            res.json({emailSent: true});
+        }).catch((error) => {
+            console.log('Error sending email:', error);
+            res.json({emailSent: false});
+        })
     }
 }

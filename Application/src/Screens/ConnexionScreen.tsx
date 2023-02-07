@@ -8,12 +8,10 @@ import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
 import { NavigatorPush } from "../Navigator";
 import { Options } from "react-native-navigation";
 import Circles from "../Components/Circles";
-import { environment } from "../../env";
-
+import { environment, ip } from "../../env";
 import auth from '@react-native-firebase/auth';
 import firebase from '@react-native-firebase/app'
 import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
-import { ip} from "../../env";
 import { HomeScreenProps } from "../Common/Interfaces";
 import NetInfo from "@react-native-community/netinfo";
 
@@ -72,8 +70,21 @@ export default function ConnexionScreen() {
         checkConnexion()
     })
 
-    function forgotPassword() {
+    async function forgotPassword() {
         console.log("Act on forgot password")
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({email: userMail})
+        }
+
+        try {
+            await fetch(ip + "resetPassword", requestOptions).then(response => {
+                console.log(response)
+            })
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     async function connectionAction() {
