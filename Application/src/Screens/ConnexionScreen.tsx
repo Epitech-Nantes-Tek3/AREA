@@ -115,11 +115,6 @@ export default function ConnexionScreen() {
 
     function connectWithGoogle() {
         console.log("Connect with Google")
-        /*const props: HomeScreenProps = {
-            userMail: userMail,
-            userId: "idTest"
-        }
-        NavigatorPush("HomeScreen", "mainStack", options, props)*/
     }
 
     async function connectWithFacebook() {
@@ -134,8 +129,6 @@ export default function ConnexionScreen() {
             throw 'Something went wrong obtaining access token';
         }
 
-        // Create a Firebase credential with the AccessToken
-        console.log(data.accessToken)
         const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
 
         // Sign-in the user with the credential

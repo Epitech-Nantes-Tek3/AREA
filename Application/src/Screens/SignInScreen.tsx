@@ -72,11 +72,6 @@ export default function SignInScreen() {
 
     function connectWithGoogle() {
         console.log("Subscribe with Google")
-        /*const props: HomeScreenProps = {
-            userMail: userMail,
-            userId: "idTest"
-        }
-        NavigatorPush("HomeScreen", "mainStack", options, props)*/
     }
 
     async function connectWithFacebook() {
@@ -90,9 +85,6 @@ export default function SignInScreen() {
         if (!data) {
             throw 'Something went wrong obtaining access token';
         }
-
-        // Create a Firebase credential with the AccessToken
-        console.log(data.accessToken)
 
         const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
 
