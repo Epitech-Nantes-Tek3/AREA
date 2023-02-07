@@ -20,6 +20,14 @@ interface Location {
 
 export default function SettingsScreen(props: SettingsProps) {
     const [location, setLocation] = useState<Location>({latitude: props.userInfo.coord.latitude, longitude: props.userInfo.coord.longitude, city: props.userInfo.coord.city})
+    const [imageTwitter, setImageTwitter] = useState<ImageSourcePropType>(require("../assets/arrowRight.png"))
+    const [imageGoogle, setImageGoogle] = useState<ImageSourcePropType>(require("../assets/arrowRight.png"))
+    const [imageSpotify, setImageSpotify] = useState<ImageSourcePropType>(require("../assets/arrowRight.png"))
+    const [imageTwitch, setImageTwitch] = useState<ImageSourcePropType>(require("../assets/arrowRight.png"))
+    const [imageStrava, setImageStrava] = useState<ImageSourcePropType>(require("../assets/arrowRight.png"))
+
+
+
 
     useEffect(() => {
         props.setUserInfo({
@@ -107,11 +115,16 @@ export default function SettingsScreen(props: SettingsProps) {
     }
 
     function SingleConnexionBlock(props: SingleBlockProps) {
+        let style
+        if (props.rightImage?.toString() === require("../assets/arrowRight.png").toString())
+            style = styles.rightArrow
+        else
+            style = styles.rightCheck
         return (
             <TouchableOpacity style={[styles.connexionContainer, styles.shadows]} onPress={props.onPress}>
                 <Image source={props.leftImage} style={styles.logoList}/>
                 <Text style={styles.textList}>{props.text}</Text>
-                <Image source={props.rightImage} style={styles.rightArrow}/>
+                <Image source={props.rightImage} style={style}/>
             </TouchableOpacity>
         )
     }
@@ -135,6 +148,7 @@ export default function SettingsScreen(props: SettingsProps) {
                     stravaId: props.userInfo.services.stravaId
                 }
             })
+            setImageGoogle(require("../assets/checkCircle.png"))
         }
 
         function spotifyConnexion() {
@@ -155,6 +169,7 @@ export default function SettingsScreen(props: SettingsProps) {
                     stravaId: props.userInfo.services.stravaId
                 }
             })
+            setImageSpotify(require("../assets/checkCircle.png"))
         }
 
         function twitterConnexion() {
@@ -175,6 +190,7 @@ export default function SettingsScreen(props: SettingsProps) {
                     stravaId: props.userInfo.services.stravaId
                 }
             })
+            setImageTwitter(require("../assets/checkCircle.png"))
         }
 
         function twitchConnexion() {
@@ -195,6 +211,7 @@ export default function SettingsScreen(props: SettingsProps) {
                     stravaId: props.userInfo.services.stravaId
                 }
             })
+            setImageTwitch(require("../assets/checkCircle.png"))
         }
 
         function stravaConnexion() {
@@ -215,19 +232,16 @@ export default function SettingsScreen(props: SettingsProps) {
                     stravaId: token
                 }
             })
+            setImageStrava(require("../assets/checkCircle.png"))
         }
-
-
-
-
 
         return (
             <View style={styles.mainConnexion}>
-                <SingleConnexionBlock leftImage={require("../assets/logo/google.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Google"} onPress={googleConnexion} />
-                <SingleConnexionBlock leftImage={require("../assets/logo/spotify.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Spotify"} onPress={spotifyConnexion} />
-                <SingleConnexionBlock leftImage={require("../assets/logo/twitter.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Twitter"} onPress={twitterConnexion} />
-                <SingleConnexionBlock leftImage={require("../assets/logo/strava.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Strava"} onPress={stravaConnexion} />
-                <SingleConnexionBlock leftImage={require("../assets/logo/twitch.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Twitch"} onPress={twitchConnexion} />
+                <SingleConnexionBlock leftImage={require("../assets/logo/google.png")} rightImage={imageGoogle} text={"Connexion à Google"} onPress={googleConnexion} />
+                <SingleConnexionBlock leftImage={require("../assets/logo/spotify.png")} rightImage={imageSpotify} text={"Connexion à Spotify"} onPress={spotifyConnexion} />
+                <SingleConnexionBlock leftImage={require("../assets/logo/twitter.png")} rightImage={imageTwitter} text={"Connexion à Twitter"} onPress={twitterConnexion} />
+                <SingleConnexionBlock leftImage={require("../assets/logo/strava.png")} rightImage={imageStrava} text={"Connexion à Strava"} onPress={stravaConnexion} />
+                <SingleConnexionBlock leftImage={require("../assets/logo/twitch.png")} rightImage={imageTwitch} text={"Connexion à Twitch"} onPress={twitchConnexion} />
             </View>
         )
     }
@@ -312,6 +326,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginLeft: 16,
         color: "black"
+    },
+    rightCheck: {
+        width: 32,
+        height: 32,
+        position: "absolute",
+        right: 0
     },
     rightArrow: {
         width: 7,
