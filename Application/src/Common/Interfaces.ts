@@ -11,6 +11,7 @@ export interface AreaList {
 
 export interface InfoArea {
     service: Service
+    trigger: boolean
     description: string
 }
 

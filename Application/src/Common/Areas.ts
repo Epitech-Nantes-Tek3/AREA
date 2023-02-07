@@ -6,6 +6,7 @@ export let ACTIONS: InfoArea[] = [
             name: "twitch",
             needsConnexion: true
         },
+        trigger: true,
         description: "Quand Kaméto est en live"
     },
     {
@@ -13,6 +14,7 @@ export let ACTIONS: InfoArea[] = [
             name: "iss",
             needsConnexion: false
         },
+        trigger: true,
         description: "Quand l'ISS passe au dessus de chez moi"
     },
     {
@@ -20,6 +22,7 @@ export let ACTIONS: InfoArea[] = [
             name: "météo",
             needsConnexion: false
         },
+        trigger: true,
         description: "Quand il pleut chez moi"
     }
 ]
@@ -30,6 +33,7 @@ export let REACTIONS: InfoArea[] = [
             name: "twitter",
             needsConnexion: true
         },
+        trigger: false,
         description: "Retweet Elon Musk"
     },
     {
@@ -37,6 +41,7 @@ export let REACTIONS: InfoArea[] = [
             name: "google",
             needsConnexion: true
         },
+        trigger: false,
         description: "M'envoyer un mail avec les infos"
     },
     {
@@ -44,6 +49,7 @@ export let REACTIONS: InfoArea[] = [
             name: "spotify",
             needsConnexion: true
         },
+        trigger: false,
         description: "Jouer du Daft Punk"
     }
 ]
