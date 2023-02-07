@@ -20,11 +20,11 @@ interface Location {
 
 export default function SettingsScreen(props: SettingsProps) {
     const [location, setLocation] = useState<Location>({latitude: props.userInfo.coord.latitude, longitude: props.userInfo.coord.longitude, city: props.userInfo.coord.city})
-    const [imageTwitter, setImageTwitter] = useState<ImageSourcePropType>(require("../assets/arrowRight.png"))
-    const [imageGoogle, setImageGoogle] = useState<ImageSourcePropType>(require("../assets/arrowRight.png"))
-    const [imageSpotify, setImageSpotify] = useState<ImageSourcePropType>(require("../assets/arrowRight.png"))
-    const [imageTwitch, setImageTwitch] = useState<ImageSourcePropType>(require("../assets/arrowRight.png"))
-    const [imageStrava, setImageStrava] = useState<ImageSourcePropType>(require("../assets/arrowRight.png"))
+    const [imageTwitter, setImageTwitter] = useState<ImageSourcePropType>(props.userInfo.services.twitterId === "" ? require("../assets/arrowRight.png") : require("../assets/checkCircle.png"))
+    const [imageGoogle, setImageGoogle] = useState<ImageSourcePropType>(props.userInfo.services.googleId === "" ? require("../assets/arrowRight.png") : require("../assets/checkCircle.png"))
+    const [imageSpotify, setImageSpotify] = useState<ImageSourcePropType>(props.userInfo.services.spotifyId === "" ? require("../assets/arrowRight.png") : require("../assets/checkCircle.png"))
+    const [imageTwitch, setImageTwitch] = useState<ImageSourcePropType>(props.userInfo.services.twitchId === "" ? require("../assets/arrowRight.png") : require("../assets/checkCircle.png"))
+    const [imageStrava, setImageStrava] = useState<ImageSourcePropType>(props.userInfo.services.stravaId === "" ? require("../assets/arrowRight.png") : require("../assets/checkCircle.png"))
 
 
 
