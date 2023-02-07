@@ -111,7 +111,6 @@ module.exports = {
         });
     },
     RegistedRequiredOpenMeteo: function(res, uid, data) {
-        firebaseFunctions.setDataInDb(`USERS/${uid}/OpenMeteoService`, data)
-        res.redirect('/')
+        firebaseFunctions.setDataInDb(`USERS/${uid}/OpenMeteoService/`, data)
     }
 }

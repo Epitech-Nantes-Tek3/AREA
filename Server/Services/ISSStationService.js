@@ -59,7 +59,6 @@ module.exports = {
             longitude: data.longitude
         }
         firebaseFunctions.setDataInDb(`USERS/${uid}/IssStation`, informations)
-        res.redirect('/')
     }
 }
 

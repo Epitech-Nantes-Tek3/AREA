@@ -24,6 +24,7 @@ app.use(express.urlencoded())
 //temporaire
 const ejs = require('ejs');
 const googleService = require('./Services/googleService');
+const { ActionTw } = require('./Services/twitterService');
 app.set('view engine', 'ejs');
 
 // parse application/x-www-form-urlencoded
@@ -108,15 +109,21 @@ app.get('/weather', (req, res) => {
     res.send('Weather Info')
 })
 
-app.get('/Register/weather', (req, res) => {
-    openMeteoService.RegistedRequiredOpenMeteo(res, firebaseUid, data)
+app.get('/register/position', (req, res) => {
+    const { latitude, longitude, uid } = req.body;
+    var position = {
+        latitude: latitude,
+        longitude: longitude
+    }
+    openMeteoService.RegistedRequiredOpenMeteo(res, uid, position)
+    ISSStationService.RegistedRequiredIss(res, uid, position)
 })
 
-app.get('/Register/iss', (req, res) => {
+app.get('/register/iss', (req, res) => {
     ISSStationService.RegistedRequiredIss(res, firebaseUid, data)
 })
 
-app.get('/Register/google', (req, res) => {
+app.get('/register/google', (req, res) => {
     googleService.RegistedRequiredGoogle(res, firebaseUid, data)
 })
 
@@ -166,4 +173,8 @@ app.get('/issStation', (req, res) => {
 
 app.get('/areas', (req, res) => {
     areasFunctions.areaLoop(req, res, firebaseUid)
+})
+
+app.get('/areas/register', (req, res) => {
+    areasFunctions.areaRegister(firebaseUid, '', '')
 })
