@@ -66,5 +66,16 @@ module.exports = {
           console.log("Data has been saved to Firebase successfully.");
         }
       });
+    },
+    resetPassword: function(req, res) {
+        const { email } = req.body;
+        console.log(email)
+        firebase.auth().sendPasswordResetEmail(email).then(() => {
+            console.log('Email sent to', email, 'for password reset');
+            res.json({emailSent: true});
+        }).catch((error) => {
+            console.log('Error sending email:', error);
+            res.json({emailSent: false});
+        })
     }
 }

@@ -11,6 +11,10 @@ import { ip} from "../../env";
 import { HomeScreenProps } from "../Common/Interfaces";
 import { Options } from "react-native-navigation";
 
+import auth from '@react-native-firebase/auth';
+import firebase from '@react-native-firebase/app'
+import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
+
 
 export default function SignInScreen() {
     // Gets the size of the current window
@@ -68,20 +72,32 @@ export default function SignInScreen() {
 
     function connectWithGoogle() {
         console.log("Subscribe with Google")
-        const props: HomeScreenProps = {
-            userMail: userMail,
-            userId: "idTest"
-        }
-        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
-    function connectWithFacebook() {
-        console.log("Subscribe with Facebook")
-        const props: HomeScreenProps = {
-            userMail: userMail,
-            userId: "idTest"
+    async function connectWithFacebook() {
+        const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+
+        if (result.isCancelled) {
+            throw 'user cancelled the login process';
         }
-        NavigatorPush("HomeScreen", "mainStack", options, props)
+        const data = await AccessToken.getCurrentAccessToken();
+
+        if (!data) {
+            throw 'Something went wrong obtaining access token';
+        }
+
+        const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+
+        // Sign-in the user with the credential
+        auth().signInWithCredential(facebookCredential).then((response) => {
+            let email = response.user.email || '';
+            const props: HomeScreenProps = {
+                userMail: email,
+                userId: response.user.uid
+            }
+            NavigatorPush("HomeScreen", "mainStack", options, props)
+        });
+
     }
 
     function navigateToConnexion() {

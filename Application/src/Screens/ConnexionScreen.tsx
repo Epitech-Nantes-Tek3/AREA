@@ -8,12 +8,10 @@ import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
 import { NavigatorPush } from "../Navigator";
 import { Options } from "react-native-navigation";
 import Circles from "../Components/Circles";
-import { environment } from "../../env";
-
+import { environment, ip } from "../../env";
 import auth from '@react-native-firebase/auth';
 import firebase from '@react-native-firebase/app'
 import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
-import { ip} from "../../env";
 import { HomeScreenProps } from "../Common/Interfaces";
 import NetInfo from "@react-native-community/netinfo";
 
@@ -72,8 +70,21 @@ export default function ConnexionScreen() {
         checkConnexion()
     })
 
-    function forgotPassword() {
+    async function forgotPassword() {
         console.log("Act on forgot password")
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({email: userMail})
+        }
+
+        try {
+            await fetch(ip + "resetPassword", requestOptions).then(response => {
+                console.log(response)
+            })
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     async function connectionAction() {
@@ -115,11 +126,6 @@ export default function ConnexionScreen() {
 
     function connectWithGoogle() {
         console.log("Connect with Google")
-        const props: HomeScreenProps = {
-            userMail: userMail,
-            userId: "idTest"
-        }
-        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     async function connectWithFacebook() {
@@ -134,8 +140,6 @@ export default function ConnexionScreen() {
             throw 'Something went wrong obtaining access token';
         }
 
-        // Create a Firebase credential with the AccessToken
-        console.log(data.accessToken)
         const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
 
         // Sign-in the user with the credential
