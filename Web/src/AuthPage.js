@@ -7,6 +7,7 @@ import "./AuthPage.css"
 import "./App.css"
 
 import {firebaseMod, provider, auth} from './firebaseConfig'
+import { ip } from './env'
 
 /**
  * @brief It creates the Sign up and Sign In Pages for the AREA
@@ -58,7 +59,7 @@ export default function AuthPage() {
 
     const requestServer = async (endpoint, requestOptions) => {
       try {
-        await fetch("http://10.29.125.146:8080/" + endpoint, requestOptions).then(response => {
+        await fetch(ip + endpoint, requestOptions).then(response => {
             response.json().then(data => {
                 console.log(data);
                 if (data.userUid !== 'error') {
