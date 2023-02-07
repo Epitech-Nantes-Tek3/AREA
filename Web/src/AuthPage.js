@@ -128,7 +128,9 @@ export default function AuthPage() {
                   </span>
 
                   <div className="form-group">
-                    <button className="button-center" onClick={onLoginFacebook}>
+                    <button className="button-center"
+                      style={{width: "60%", display: "block", margin: "auto", backgroundColor: "#3b5998"}}
+                      onClick={onLoginFacebook}>
                       Facebook
                     </button>
                   </div>
