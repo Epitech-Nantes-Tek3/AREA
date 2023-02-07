@@ -37,7 +37,6 @@ app.get('/', (req, res) => {
 })
 
 nodeCron.schedule("*/10 * * * * *", () => {
-    console.log("test");
     try {
         firebaseFunctions.getAllUsersFromFireBase().then(data => {
 
