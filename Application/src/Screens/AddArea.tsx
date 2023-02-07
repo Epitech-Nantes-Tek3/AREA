@@ -4,6 +4,7 @@ import { Globals } from "../Common/Globals";
 import { AddAreaProps, InfoArea, SingleArea } from "../Common/Interfaces";
 import { ACTIONS, REACTIONS } from "../Common/Areas";
 import { Navigation } from "react-native-navigation";
+import { ip } from "../../env";
 
 interface InfoBlockProps {
     area: InfoArea
@@ -33,13 +34,31 @@ export default function AddArea(props: AddAreaProps) {
         "strava": require("../assets/logo/strava.png")
     }
 
-    function sendArea() {
+    async function sendArea() {
         let area: SingleArea = {
             action: ACTIONS[selectedActionIndex],
             reaction: REACTIONS[selectedReactionIndex]
         }
         props.setAllAreas([area, ...props.allAreas])
-        Navigation.dismissAllModals()
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: area.action,
+                reaction: area.reaction,
+                uid: props.userInfo.id
+            })
+        }
+        try {
+            await fetch(ip + "register/areas", requestOptions).then(response => {
+                console.log(JSON.parse(JSON.stringify(response)))
+                Navigation.dismissAllModals()
+            }).catch(error => {
+                console.log(error)
+            })
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     function InfoBlock(props: InfoBlockProps) {

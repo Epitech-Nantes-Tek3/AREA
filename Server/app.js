@@ -114,7 +114,6 @@ app.get('/weather', (req, res) => {
 })
 
 app.post('/register/position', (req, res) => {
-    console.log(req.body)
     const { latitude, longitude, uid } = req.body;
     var position = {
         latitude: latitude,
@@ -181,14 +180,7 @@ app.get('/areas', (req, res) => {
 })
 
 app.post('/register/areas', (req, res) => {
-    var action = {
-        name: 'openMeteo',
-        trigger: true
-    }
-    var reaction = {
-        name: 'twitter',
-        subject: 'tweet',
-        text: 'il fait beau a nantes'  
-    }
+    const { action, reaction, uid } = req.body;
     areasFunctions.areaRegister(firebaseUid, action, reaction)
+    res.send('Area registered')
 })
