@@ -45,6 +45,10 @@ app.post('/login', (req, res) => {
     firebaseFunctions.login(req, res);
 })
 
+app.post('/resetPassword', (req, res) => {
+    firebaseFunctions.resetPassword(req, res)
+})
+
 //ABOUT
 
 app.get('/about.json', (req, res) => {

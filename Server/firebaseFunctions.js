@@ -52,5 +52,17 @@ module.exports = {
           console.log('Error creating new user:', error);
           res.json({userUid: 'error'}).status(400);
         });
+    },
+
+    resetPassword: function(req, res) {
+        const { email } = req.body;
+        console.log(email)
+        firebase.auth().sendPasswordResetEmail(email).then(() => {
+            console.log('Email sent to', email, 'for password reset');
+            res.json({emailSent: true});
+        }).catch((error) => {
+            console.log('Error sending email:', error);
+            res.json({emailSent: false});
+        })
     }
 }
