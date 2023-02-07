@@ -24,7 +24,7 @@ module.exports = {
               }
           });
       });
-  },
+    },
 
     login: function(req, res) {
         const {email, password} = req.body;
@@ -44,7 +44,7 @@ module.exports = {
         .createUserWithEmailAndPassword(email, password).then((userCredential) => {
           const db = firebase.database().ref(`USERS/${userCredential.user.uid}/`);
           db.set({
-            empty: 'empty'
+            areaNumber: 0
           })
           console.log('Successfully created new user:', userCredential.user.uid)
           res.json({userUid: userCredential.user.uid});
