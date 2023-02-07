@@ -16,6 +16,15 @@ module.exports = {
             });
         });
     },
+    getAllUsersFromFireBase: function() {
+        return new Promise((resolve, reject) => {
+            database.ref(`USERS/`).on('value', (snapshot) => {
+                if (snapshot.val()) {
+                    resolve(snapshot.val());
+                }
+            });
+        });
+    },
     getDataFromFireBaseServer: function(service) {
         return new Promise((resolve, reject) => {
             database.ref(`SERVER/${service}/`).on('value', (snapshot) => {

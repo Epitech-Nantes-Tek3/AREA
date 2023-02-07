@@ -11,6 +11,7 @@ const ISSStationService = require('./Services/ISSStationService');
 const areasFunctions = require('./Services/areasFunctions');
 const firebaseUid = 'leMgZPp8sfe2l06b6TU330bahJz2';
 const port = config.port;
+const nodeCron = require("node-cron")
 
 const session = require('express-session')
 
@@ -36,6 +37,28 @@ app.use(bodyParser.json())
 app.get('/', (req, res) => {
     res.send('Hello world !')
 })
+
+nodeCron.schedule("*/10 * * * * *", () => {
+    console.log("test");
+    try {
+        firebaseFunctions.getAllUsersFromFireBase().then(data => {
+
+            for (const uid in data) {
+                try {
+                    firebaseFunctions.getDataFromFireBase(uid, "IssStation").then(issData => {
+                        if (issData.gap != null) {
+                            console.log(ISSStationService.checkISSPosition(uid))
+                        }
+                    });
+                } catch (err) {
+                    console.log(err);
+                }
+        })
+    } catch (err) {
+        console.log(err)
+    }
+})
+
 
 //FIREBASE FUNCTIONS
 
