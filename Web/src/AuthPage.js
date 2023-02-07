@@ -34,10 +34,21 @@ export default function AuthPage() {
       }
     };
 
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        auth.getRedirectResult().then((result) => {
+          if (result.user !== null) {
+            navigate('/home');
+          }  
+        });
+      }
+    });
+    
+
     const onLoginFacebook = async (event) => {
       event.preventDefault();
       try {
-        await auth.signInWithRedirect(provider);
+        await auth.signInWithRedirect(provider)
       } catch (err) {
         console.log(err);
       };
