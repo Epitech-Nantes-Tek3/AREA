@@ -109,7 +109,8 @@ app.get('/weather', (req, res) => {
     res.send('Weather Info')
 })
 
-app.get('/register/position', (req, res) => {
+app.post('/register/position', (req, res) => {
+    console.log(req.body)
     const { latitude, longitude, uid } = req.body;
     var position = {
         latitude: latitude,
