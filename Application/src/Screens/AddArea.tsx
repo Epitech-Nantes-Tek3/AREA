@@ -51,7 +51,6 @@ export default function AddArea(props: AddAreaProps) {
         }
         try {
             await fetch(ip + "register/areas", requestOptions).then(response => {
-                console.log(JSON.parse(JSON.stringify(response)))
                 Navigation.dismissAllModals()
             }).catch(error => {
                 console.log(error)
