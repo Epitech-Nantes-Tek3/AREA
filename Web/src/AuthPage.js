@@ -1,11 +1,13 @@
-import React, {useState} from "react"
-import FacebookLogin from 'react-facebook-login'
+import React, {useEffect, useState} from "react"
 
 import { useNavigate } from "react-router-dom"
 
 import AreaLogo from './assets/logo.png'
 import "./AuthPage.css"
 import "./App.css"
+
+import {firebaseMod, provider, auth} from './firebaseConfig'
+import { ip } from './env'
 
 /**
  * @brief It creates the Sign up and Sign In Pages for the AREA
@@ -15,7 +17,6 @@ import "./App.css"
 export default function AuthPage() {
 
     let [authMode, setAuthMode] = useState("signin")
-
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
@@ -33,21 +34,35 @@ export default function AuthPage() {
       }
     };
 
-    const responseFacebook = (response) => {
-      console.log(response);
-      if (response.accessToken) {
-        navigate('/home');
-      } else {
-        console.log('failed to connect');
-      }
+    auth.onAuthStateChanged(user => {
+      auth.getRedirectResult().then((result) => {
+        console.log(result);
+        if (result.user !== null) {
+          navigate('/home');
+        }
+      });
+    })
+    
+
+    const onLoginFacebook = async (event) => {
+      event.preventDefault();
+      console.log('facebook')
+      try {
+        firebaseMod.auth().setPersistence(firebaseMod.auth.Auth.Persistence.NONE).then(async () => {
+          await auth.signInWithRedirect(provider);
+        })
+      } catch (err) {
+        console.log(err);
+      };
+
     }
 
     const requestServer = async (endpoint, requestOptions) => {
       try {
-        await fetch("http://192.168.0.71:8080/" + endpoint, requestOptions).then(response => {
+        await fetch(ip + endpoint, requestOptions).then(response => {
             response.json().then(data => {
                 console.log(data);
-                if (data.userUid != 'error') {
+                if (data.userUid !== 'error') {
                   navigate('/home');
                 }
             })
@@ -63,7 +78,7 @@ export default function AuthPage() {
         method: 'POST',
         mode: 'cors',
         headers: { 'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'  
+        'Access-Control-Allow-Origin': '*'
       },
         body: JSON.stringify({email: email, password: password})
       }
@@ -72,99 +87,106 @@ export default function AuthPage() {
       } else {
         await requestServer("login", requestOptions);
       }
-      
+
     };
 
     if (authMode === "signin") {
         return (
           <div className="Form-container">
-            
+
             <form className="Form" onSubmit={onSubmit}>
               <div className="Form-content">
-                <img src={AreaLogo} className="logo" alt="logo" />
-                <div className="text-center">
-                  Not registered yet ?  {"  "}
-                  <span className="link-primary" onClick={changeAuthMode}>
-                Sign Up
-                  </span>
-                </div>
+                <img src={AreaLogo} style={{width: 150, height: 150, display: "block", margin: "auto"}} alt="logo" />
+                <h3 className="Title">Se connecter</h3>
                 <div className="form-group">
                   <input
                     type="email"
                     className="form-control mt-1"
-                    placeholder="Enter email"
+                    style={{width: "60%", display: "block", margin: "auto"}}
+                    placeholder="Adresse email"
                     onChange={handleChange}
                   />
                 </div>
                 <div className="form-group">
                   <input
                     type="password"
+                    style={{width: "60%", display: "block", margin: "auto"}}
                     className="form-control mt-1"
-                    placeholder="Enter password"
+                    placeholder="Mot de passe"
                     onChange={handleChange}
                   />
                 </div>
                 <div className="form-group">
-                  <button className="button-center">
-                    Submit
+                  <button className="button-center"
+                    style={{width: "60%", display: "block", margin: "auto"}}>
+                    Se connecter
                   </button>
                 </div>
-                <div className="form-group">
-                  <FacebookLogin
-                    appId="604811154808703"
-                    autoLoad={false}
-                    fields="name,email,picture"
-                    scope="public_profile,user_friends"
-                    callback={responseFacebook}
-                    cssClass="facebook"
-                    icon="fa-facebook" />
+                <div className="text-center" style={{marginTop: 20}}>
+                  Pas encore de compte ?  {"  "}
+                  <span className="link-primary" onClick={changeAuthMode}>
+                    S'inscrire
+                  </span>
+
+                  <div className="form-group">
+                    <button className="button-center"
+                      style={{width: "60%", display: "block", margin: "auto", backgroundColor: "#3b5998"}}
+                      onClick={onLoginFacebook}>
+                      Facebook
+                    </button>
+                  </div>
                 </div>
-                <p className="text-center mt-2">
-                  Forgot <a href="#">password?</a>
-                </p>
               </div>
             </form>
           </div>
-        )
-      }
+          )}
+
+
 
       return (
         <div className="Form-container">
           <form className="Form" onSubmit={onSubmit}>
             <div className="Form-content">
-              <h3 className="Title">Sign Up</h3>
-              <div className="text-center">
-                Already registered?{" "}
-                <span className="link-primary" onClick={changeAuthMode}>
-                  Sign In
-                </span>
-              </div>
+              <img src={AreaLogo} style={{width: 150, height: 150, display: "block", margin: "auto"}} alt="logo" />
+              <h3 className="Title">S'inscrire</h3>
               <div className="form-group">
-                <br></br>
                 <input
                   type="email"
+                  style={{width: "60%", display: "block", margin: "auto"}}
                   className="form-control mt-1"
-                  placeholder="Email Address"
+                  placeholder="Adresse email"
                   onChange={handleChange}
                 />
               </div>
               <div className="form-group">
-                <br></br>
                 <input
                   type="password"
+                  style={{width: "60%", display: "block", margin: "auto"}}
                   className="form-control mt-1"
-                  placeholder="Password"
+                  placeholder="Mot de passe"
                   onChange={handleChange}
                 />
               </div>
               <div className="form-group">
-                <button className="button-center">
-                  Submit
+                <input
+                  type="password"
+                  style={{width: "60%", display: "block", margin: "auto"}}
+                  className="form-control mt-2"
+                  placeholder="Valider le mot de passe"
+                />
+              </div>
+              <div className="form-group">
+                <button className="button-center"
+                  style={{width: "60%", display: "block", margin: "auto"}}>
+                  S'inscrire
                 </button>
               </div>
-              <p className="text-center mt-2">
-                Forgot <a href="#">password?</a>
-              </p>
+              <div className="text-center">
+                Déjà un compte ?{" "}
+                <span className="link-primary" onClick={changeAuthMode}>
+                  Se connecter
+                </span>
+              </div>
             </div>
           </form>
         </div>

@@ -11,13 +11,8 @@
     box-shadow: rgb(0 0 0 / 16%) 1px 1px 10px;
     padding-top: 30px;
     padding-bottom: 20px;
-    border-radius: 8px;
+    border-radius: 10px;
     background-color: white;
-}
-
-.Form-content {
-    padding-left: 12%;
-    padding-right: 12%;
 }
 
 .Title {
@@ -49,6 +44,10 @@
     display: grid;
 }
 
+#facebook-button {
+    background-color: #0000ff;
+}
+
 .center {
     justify-content: center;
     flex-direction: column;
@@ -56,8 +55,7 @@
 }
 
 .facebook {
-    position: relative;
-    width: 180px;
+    width: "100%";
     height: 32px;
     border-radius: 18px;
     background-color :#3b5998;
@@ -71,9 +69,15 @@
 
 .form-group {
     margin: 1em;
-    padding-left: 15%;
+    width: "100%";
 }
 
 .link-primary {
     color: #0000ff;
+}
+
+.button-center {
+    width: "60%";
+    display: "block";
+    margin: "auto";
 }
