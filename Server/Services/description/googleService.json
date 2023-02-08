@@ -8,7 +8,7 @@
     ],
     "reactions": [
         {
-            "name": "SendMail",
+            "name": "Send an email",
             "description": "Sends an email to a given email address. The text is editable."
         }
     ]

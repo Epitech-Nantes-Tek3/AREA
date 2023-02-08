@@ -2,7 +2,7 @@
     "name": "OpenMeteoService",
     "actions": [
         {
-            "name": "WeatherisFineOrNot",
+            "name": "Weather is Fine Or Not",
             "description": "Receives weather data for a location defined by latitude/longitude. Returns with a trigger if the weather is good or bad."
         }
     ],
