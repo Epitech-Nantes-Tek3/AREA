@@ -42,24 +42,7 @@ nodeCron.schedule("*/10 * * * * *", () => {
 
             for (const uid in data) {
                 try {
-                    firebaseFunctions.getDataFromFireBase(uid, "").then(userData => {
-
-                        for (let i = 0; i < userData.areaNumber; i++) {
-                            firebaseFunctions.getDataFromFireBase(uid, "AREAS/AREA" + i + "/Action").then(areaData => {
-                                console.log(uid, areaData)
-                                /*if (areaData.service.name == "iss") {
-                                    ISSStationService.checkISSPosition(uid).then(response => {
-                                        if (response == areaData.trigger) {
-                                            firebaseFunctions.getDataFromFireBase(uid, "AREAS/AREA" + i + "/Reaction").then(reactionData => {
-                                                // execute the stored reaction
-                                            })
-                                        }
-                                    });
-                                }*/
-
-                            });
-                        }
-                    })
+                    areasFunctions.areaLoop(uid);
                 } catch (err) {
                     console.log(err);
                 }
