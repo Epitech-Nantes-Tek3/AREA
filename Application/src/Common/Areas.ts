@@ -1,88 +1,49 @@
-import { InfoArea, Service } from "./Interfaces"
+import { InfoArea } from "./Interfaces"
 
 export let ACTIONS: InfoArea[] = [
     {
-        service: {
-            name: "twitch",
-            needsConnexion: true
-        },
-        description: "Quand Kaméto est en live"
+        serviceName: "iss",
+        trigger: true,
+        description: "Quand l'ISS passe au dessus de chez moi",
+        text: undefined,
+        subject: undefined
     },
     {
-        service: {
-            name: "iss",
-            needsConnexion: false
-        },
-        description: "Quand l'ISS passe au dessus de chez moi"
-    },
-    {
-        service: {
-            name: "météo",
-            needsConnexion: false
-        },
-        description: "Quand il pleut chez moi"
+        serviceName: "météo",
+        trigger: true,
+        description: "Quand il fait beau chez moi",
+        text: undefined,
+        subject: undefined
     }
 ]
 
 export let REACTIONS: InfoArea[] = [
     {
-        service: {
-            name: "twitter",
-            needsConnexion: true
-        },
-        description: "Retweet Elon Musk"
+        serviceName: "twitter",
+        trigger: undefined,
+        description: "Retweet Elon Musk",
+        text: "ElonMusk",
+        subject: "retweet"
     },
     {
-        service: {
-            name: "google",
-            needsConnexion: true
-        },
-        description: "M'envoyer un mail avec les infos"
+        serviceName: "twitter",
+        trigger: undefined,
+        description: "Liker le dernier tweet sur Elon Musk",
+        text: "ElonMusk",
+        subject: "like"
     },
     {
-        service: {
-            name: "spotify",
-            needsConnexion: true
-        },
-        description: "Jouer du Daft Punk"
+        serviceName: "twitter",
+        trigger: undefined,
+        description: "Poster un tweet",
+        text: "Yo Elon",
+        subject: "tweet"
+    },
+    {
+        serviceName: "google",
+        trigger: undefined,
+        description: "M'envoyer un mail avec les infos",
+        text: "Pense au rendez-vous du 09/02",
+        subject: "Area Info"
     }
-]
-
-export let SERVICES: Array<Service> = [
-    {
-        name: "google",
-        needsConnexion: true
-    },
-    {
-        name: "spotify",
-        needsConnexion: true
-    },
-    {
-        name: "iss",
-        needsConnexion: false
-    },
-    {
-        name: "météo",
-        needsConnexion: false
-    },
-    {
-        name: "nasa",
-        needsConnexion: false
-    },
-    {
-        name: "google",
-        needsConnexion: true
-    },
-    {
-        name: "strava",
-        needsConnexion: true
-    },
-    {
-        name: "twitter",
-        needsConnexion: true
-    },
-    {
-        name: "twitch",
-        needsConnexion: true
-    },
 ]

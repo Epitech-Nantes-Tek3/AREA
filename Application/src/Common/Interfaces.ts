@@ -10,13 +10,11 @@ export interface AreaList {
 }
 
 export interface InfoArea {
-    service: Service
+    serviceName: "spotify" | "google" | "twitter" | "twitch" | "iss" | "météo" | "nasa" | "strava"
     description: string
-}
-
-export interface Service {
-    name: "spotify" | "google" | "twitter" | "twitch" | "iss" | "météo" | "nasa" | "strava"
-    needsConnexion: boolean
+    text: string | undefined
+    trigger: boolean | undefined
+    subject: string | undefined
 }
 
 export interface HomeScreenProps {
