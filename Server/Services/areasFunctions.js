@@ -5,10 +5,10 @@ const googleService = require('./googleService');
 const ISSService = require('././ISSStationService');
 
 let areas = [
-    { name: "openMeteo", function:  openMeteoService.ActionWeather},
-    { name: "Twitter", function:  twitterService.ActionTw},
-    { name: "Gmail", function:  googleService.send_mail},
-    { name: "Iss", function:  ISSService.checkISSPosition },
+    { name: "météo", function:  openMeteoService.ActionWeather},
+    { name: "twitter", function:  twitterService.ActionTw},
+    { name: "google", function:  googleService.send_mail},
+    { name: "iss", function:  ISSService.checkISSPosition },
 ]
 
 module.exports = {
@@ -21,9 +21,9 @@ module.exports = {
         firebaseFunctions.getDataFromFireBase(uid, 'AREAS')
         .then(data => {
             for (const area in data) {
-                const ActionName = data[area].Action.name;
+                const ActionName = data[area].Action.serviceName;
                 const Actiontrigger = data[area].Action.trigger;
-                const ReactionName = data[area].Reaction.name;
+                const ReactionName = data[area].Reaction.serviceName;
                 const ReactionSubject = data[area].Reaction.subject;
                 const Reactiontext = data[area].Reaction.text;
                 areas.forEach((action) => {
