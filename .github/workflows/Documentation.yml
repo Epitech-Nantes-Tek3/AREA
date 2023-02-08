@@ -1,0 +1,33 @@
+name: Documentation
+on:
+  push:
+    branches:
+      - "main"
+  workflow_dispatch:
+    inputs:
+      parts:
+        description: Select documentation to generate
+        required: true
+        type: choice
+        options:
+          - "server"
+          - "all"
+
+jobs:
+  documentation:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Create server documentation
+        uses: andstor/jsdoc-action@v1
+        with:
+          source_dir: ./Server/Services ./Server/app.js ./Server/config.js ./Server/firebaseFunctions.js
+          recurse: true
+          output_dir: ./server-docs
+      - name: Upload server documentation
+        uses: actions/upload-artifact@v3
+        with:
+          name: server documentation
+          path: ${{ github.workspace }}/Server/docs
