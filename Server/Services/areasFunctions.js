@@ -4,6 +4,12 @@ const twitterService = require('./twitterService');
 const googleService = require('./googleService');
 const ISSService = require('././ISSStationService');
 
+/**
+ * Contains all area.
+ * @type {{name, function}}
+ * @property {string} name Name
+ * @property {function} function Function
+*/
 let areas = [
     { name: "openMeteo", function:  openMeteoService.ActionWeather},
     { name: "Twitter", function:  twitterService.ActionTw},
@@ -11,15 +17,15 @@ let areas = [
     { name: "Iss", function:  ISSService.checkISSPosition },
 ]
 
+/**
+* areaLoop - This function is used to loop through the areas and perform corresponding actions and reactions
+* based on the data retrieved from Firebase for a specific user id.
+* @function areaLoop
+* @param {Object} req - Express request object
+* @param {Object} res - Express response object
+* @param {string} uid - User Id
+*/
 module.exports = {
-    /**
-    * areaLoop - This function is used to loop through the areas and perform corresponding actions and reactions
-    * based on the data retrieved from Firebase for a specific user id.
-    *
-    * @param {Object} req - Express request object
-    * @param {Object} res - Express response object
-    * @param {string} uid - User Id
-    */
     areaLoop: function(req, res, uid) {
         firebaseFunctions.getDataFromFireBase(uid, 'AREAS')
         .then(data => {
