@@ -9,6 +9,7 @@
 - [**Subject Description**](#subject-description)
 - [**Build the Project**](#build-the-project)
 - [**Compile and Launch Services**](#compile-and-launch-services)
+- [**Launch Tests**](#launch-tests)
 - [**Thanks for Reading**](#thanks-for-reading)
 - [**Authors**](#authors)
 
@@ -48,6 +49,10 @@ Our Services :
 The http://localhost:8081/client.apk root should provide an APK, an Android version of the mobile client.
 
 The http://localhost:8080/about.json root should answer with the server service.
+
+## **Launch Tests**
+
+Please read the following [**ReadMe**](./Application//README.md), it contains every explanations you will need.
 
 ## **Thanks for reading**
 
