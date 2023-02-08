@@ -8,11 +8,11 @@
     ],
     "reactions": [
         {
-            "name": "Like Tweet",
+            "name": "Likes Tweet",
             "description": "Like the tweet of a hashtag given in parameter"
         },
         {
-            "name": "Retweet Tweet",
+            "name": "Retweets Tweet",
             "description": "Retweet the tweet of a hashtag given in parameter"
         },
         {
