@@ -155,6 +155,15 @@ app.get('/issStation', (req, res) => {
     res.redirect('/')
 })
 
-app.get('/areas', (req, res) => {
-    areasFunctions.areaLoop(req, res, firebaseUid)
+app.get('/getAreas/:uid', (req, res) => {
+    const uid  = req.params.uid;
+    console.log("here")
+    firebaseFunctions.getDataFromFireBase(uid, 'AREAS')
+        .then(data => {
+            res.json({data: data}).status(200);
+            console.log("sending data", data)
+        })
+        .catch(error => {
+            res.json(error).status(400);
+        })
 })

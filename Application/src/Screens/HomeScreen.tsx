@@ -6,6 +6,7 @@ import { AddAreaProps, HomeScreenProps, SettingsProps, SingleArea, UserInfo } fr
 import Circles from "../Components/Circles";
 import { NavigatorPush, NavigatorshowModal } from "../Navigator";
 import Geolocation from 'react-native-geolocation-service';
+import { ip } from "../../env";
 
 interface AreaBlockProps {
     index: number
@@ -32,6 +33,23 @@ export default function HomeScreen(props: HomeScreenProps) {
             stravaId: ""
         }
     })
+
+    useEffect(() => {
+        try {
+            const fetchData = async () => {
+                await fetch(ip + "getAreas/" + userInformation.id)
+                    .then(response => {
+                        response.json().then(data => {
+                            console.log(data);
+                        })
+                })
+              };
+          
+              fetchData();
+        } catch (error) {
+            console.error(error);
+        }
+    }, [])
 
     useEffect(() => {
         if (Platform.OS === "ios") {

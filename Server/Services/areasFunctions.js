@@ -47,7 +47,6 @@ module.exports = {
                     }
                 });
             }
-            res.redirect('/')
         })
         .catch(error => {
             res.send('error')
