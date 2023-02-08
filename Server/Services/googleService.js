@@ -15,7 +15,7 @@ module.exports = {
      * @param {*} req Unnecessary but mandatory for areaLoop.
      * @param {*} res Unnecessary but mandatory for areaLoop.
      */
-    send_mail: function(subject, mailContent, uid, req, res) {
+    send_mail: function(subject, mailContent, uid) {
         firebaseFunctions.getDataFromFireBase(uid, 'GoogleService')
         .then(data => {
             const OAuth2_client = new OAuth2(data.clientId, data.clientSecret)
