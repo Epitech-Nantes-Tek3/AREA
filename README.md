@@ -2,13 +2,15 @@
 
 ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)  ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=for-the-badge&logo=githubactions&logoColor=white)
 
+[![CI](https://github.com/Epitech-Nantes-Tek3/AREA/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/Epitech-Nantes-Tek3/AREA/actions/workflows/CI.yml)
+
 ***
 
 ## **Table of Contents**
 
 - [**Subject Description**](#subject-description)
 - [**Build the Project**](#build-the-project)
-- [**Compile and Launch Services**](#compile-and-launch-services)
+- [**Launch Services**](#launch-services)
 - [**Launch Tests**](#launch-tests)
 - [**Thanks for Reading**](#thanks-for-reading)
 - [**Authors**](#authors)
@@ -36,15 +38,15 @@ Also, do not forget to start the docker service with
 systemctl start docker
 ```
 
-## **Compile and Launch Services**
+## **Launch Services**
 To launch our services (described below), you may run the command :
 ```bash
 docker-compose up
 ```
 Our Services :
-- The server service should be launched on  port 8080
-- The client_web service should be launched on port 8081
-- The client_mobile should build the mobile client of the project.
+- The server service will be launched on  port 8080
+- The client_web service will be launched on port 8081
+- The client_mobile will build the mobile client of the project
 
 The http://localhost:8081/client.apk root should provide an APK, an Android version of the mobile client.
 
