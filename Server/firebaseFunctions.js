@@ -1,5 +1,4 @@
 const firebase = require("firebase");
-const googleService = require("./Services/googleService")
 // Initialize Firebase
 const firebaseConfig = require('./firebaseConfig')
 firebase.initializeApp(firebaseConfig);

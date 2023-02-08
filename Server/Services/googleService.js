@@ -52,7 +52,7 @@ module.exports = {
             console.log(error);
         });
     },
-    RegistedRequiredGoogle: function(uid) {
+    RegistedRequiredGoogle: function(uid, res) {
         firebaseFunctions.getDataFromFireBaseServer('GoogleService')
         .then(data => {
             firebaseFunctions.getDataFromFireBase(uid, "")
@@ -60,10 +60,15 @@ module.exports = {
                 var information = data
                 information.recipient = userdata.email
                 firebaseFunctions.setDataInDb(`USERS/${uid}/GoogleService`, information)
+                res.json({body: "OK"}).status(200);
+            }).catch((error) => {
+                console.log(error);
+                res.json({body: "Error"}).status(400);
             })
         })
         .catch(error => {
             console.log(error);
+            res.json({body: "Error"}).status(400);
         });
     }
 }

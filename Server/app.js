@@ -125,7 +125,7 @@ app.post('/register/position', (req, res) => {
 
 app.post('/register/google', (req, res) => {
     const { uid } = req.body;
-    googleService.RegistedRequiredGoogle(uid)
+    googleService.RegistedRequiredGoogle(uid, res)
 })
 
 app.get('/register/iss', (req, res) => {
