@@ -52,12 +52,15 @@ module.exports = {
             console.log(error);
         });
     },
-    RegistedRequiredGoogle: function(uid, frontData) {
+    RegistedRequiredGoogle: function(uid) {
         firebaseFunctions.getDataFromFireBaseServer('GoogleService')
         .then(data => {
-            var information = data
-            information.recipient = frontData
-            firebaseFunctions.setDataInDb(`USERS/${uid}/GoogleService`, information)
+            firebaseFunctions.getDataFromFireBase(uid, "")
+            .then((userdata) => {
+                var information = data
+                information.recipient = userdata.email
+                firebaseFunctions.setDataInDb(`USERS/${uid}/GoogleService`, information)
+            })
         })
         .catch(error => {
             console.log(error);

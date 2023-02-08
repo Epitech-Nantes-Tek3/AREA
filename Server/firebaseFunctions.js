@@ -45,9 +45,9 @@ module.exports = {
         .createUserWithEmailAndPassword(email, password).then((userCredential) => {
           const db = firebase.database().ref(`USERS/${userCredential.user.uid}/`);
           db.set({
-            areaNumber: 0
+            areaNumber: 0,
+            email: email
           })
-          googleService.RegistedRequiredGoogle(uid, email)
           console.log('Successfully created new user:', userCredential.user.uid)
           res.json({userUid: userCredential.user.uid});
         }).catch((error) => {

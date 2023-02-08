@@ -123,13 +123,15 @@ app.post('/register/position', (req, res) => {
     ISSStationService.RegistedRequiredIss(res, uid, position)
 })
 
+app.post('/register/google', (req, res) => {
+    const { uid } = req.body;
+    googleService.RegistedRequiredGoogle(uid)
+})
+
 app.get('/register/iss', (req, res) => {
     ISSStationService.RegistedRequiredIss(res, firebaseUid, data)
 })
 
-app.get('/register/google', (req, res) => {
-    googleService.RegistedRequiredGoogle(res, firebaseUid, data)
-})
 
 app.get('/twitter', (req, res) => {
     res.render('index')
