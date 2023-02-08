@@ -9,6 +9,7 @@
 - [**Subject Description**](#subject-description)
 - [**Build the Project**](#build-the-project)
 - [**Compile and Launch Services**](#compile-and-launch-services)
+- [**Authors**](#authors)
 
 ## **Subject Description**
 
@@ -17,7 +18,7 @@ The goal of this project is to discover, as a whole, the software platform that 
 To do this, you must implement a software suite that functions similar to that of IFTTT and/or Zapier.
 
 This software suite will be broken into three parts :
-- An application server 
+- An application server
 - A web client to use the application from your browser by querying the application server
 - A mobile client to use the application from your phone by querying the application server.
 
@@ -48,4 +49,16 @@ The http://localhost:8081/client.apk root should provide an APK, an Android vers
 The http://localhost:8080/about.json root should answer with the server service.
 
 
+## **Authors**
 
+<table>
+    <tbody>
+        <tr>
+            <td align="center"><a href="https://github.com/osvegn/"><img src="https://avatars.githubusercontent.com/u/72011124?v=4" width="100px;" alt="osvegn"/><br/><sub><b>Thomas Prud'homme</b></sub></a><br/></td>
+            <td align="center"><a href="https://github.com/31Nathan/"><img src="https://avatars.githubusercontent.com/u/72010794?v=4" width="100px;" alt="31Nathan"/><br/><sub><b>Nathan Rousseau</b></sub></a><br/></td>
+            <td align="center"><a href="https://github.com/JohanCDev"><img src="https://avatars.githubusercontent.com/u/25590592?v=4" width="100px;" alt="JohanCDev"/><br/><sub><b>Johan Chrillesen</b></sub></a><br/></td>
+            <td align="center"><a href="https://github.com/STom6"><img src="https://avatars.githubusercontent.com/u/72015208?v=4" width="100px;" alt="STom6"/><br/><sub><b>Tom Sarrazin</b></sub></a><br/></td>
+            <td align="center"><a href="https://github.com/CedricCORGE"><img src="https://avatars.githubusercontent.com/u/64684672?v=4" width="100px;" alt="CedricCORGE"/><br/><sub><b>Cédric Corge</b></sub></a><br/></td>
+        <tr>
+    </tbody>
+</table>
