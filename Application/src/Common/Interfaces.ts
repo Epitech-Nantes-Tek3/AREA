@@ -12,8 +12,9 @@ export interface AreaList {
 export interface InfoArea {
     serviceName: "spotify" | "google" | "twitter" | "twitch" | "iss" | "météo" | "nasa" | "strava"
     description: string
-    text: "Il fait beau à Nantes" | "L'ISS passe loin de moi" | "Nantes" | "ISS"
+    text: string | undefined
     trigger: boolean | undefined
+    subject: string | undefined
 }
 
 export interface HomeScreenProps {
