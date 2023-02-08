@@ -181,6 +181,6 @@ app.get('/areas', (req, res) => {
 
 app.post('/register/areas', (req, res) => {
     const { action, reaction, uid } = req.body;
-    areasFunctions.areaRegister(firebaseUid, action, reaction)
+    areasFunctions.areaRegister(uid, action, reaction)
     res.send('Area registered')
 })
