@@ -11,7 +11,7 @@ export let ACTIONS: InfoArea[] = [
     {
         serviceName: "météo",
         trigger: true,
-        description: "Quand il pleut chez moi",
+        description: "Quand il fait beau chez moi",
         text: undefined,
         subject: undefined
     }
@@ -20,28 +20,28 @@ export let ACTIONS: InfoArea[] = [
 export let REACTIONS: InfoArea[] = [
     {
         serviceName: "twitter",
-        trigger: false,
+        trigger: undefined,
         description: "Retweet Elon Musk",
         text: "ElonMusk",
         subject: "retweet"
     },
     {
         serviceName: "twitter",
-        trigger: false,
+        trigger: undefined,
         description: "Liker le dernier tweet sur Elon Musk",
         text: "ElonMusk",
         subject: "like"
     },
     {
         serviceName: "twitter",
-        trigger: false,
+        trigger: undefined,
         description: "Poster un tweet",
         text: "Yo Elon",
         subject: "tweet"
     },
     {
         serviceName: "google",
-        trigger: false,
+        trigger: undefined,
         description: "M'envoyer un mail avec les infos",
         text: "Pense au rendez-vous du 09/02",
         subject: "Area Info"
