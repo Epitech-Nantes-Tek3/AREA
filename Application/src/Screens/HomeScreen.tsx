@@ -34,6 +34,10 @@ export default function HomeScreen(props: HomeScreenProps) {
     })
 
     useEffect(() => {
+        // Get Info from API (all areas, localization, services)
+    }, [])
+
+    useEffect(() => {
         if (Platform.OS === "ios") {
             if (hasAcceptedLocalization === false) {
                 Geolocation.requestAuthorization("whenInUse")
