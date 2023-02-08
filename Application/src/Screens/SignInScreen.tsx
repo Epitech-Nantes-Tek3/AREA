@@ -54,8 +54,8 @@ export default function SignInScreen() {
                             body: JSON.stringify({uid: data.userUid})
                         }
                         await fetch(ip + "register/google", requestOptions).then(response => {
-                            response.json().then(data => {
-                                if (data.body != 'Error') {
+                            response.json().then(dataGoogle => {
+                                if (dataGoogle.body != 'Error') {
                                     const props: HomeScreenProps = {
                                         userMail: userMail,
                                         userId: data.userUid
