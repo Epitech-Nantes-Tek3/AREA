@@ -187,3 +187,27 @@ app.post('/register/areas', (req, res) => {
     areasFunctions.areaRegister(uid, action, reaction)
     res.send('Area registered')
 })
+
+app.get('/getAreas/:uid', (req, res) => {
+    const uid  = req.params.uid;
+    firebaseFunctions.getDataFromFireBase(uid, 'AREAS')
+        .then(data => {
+            res.json({areas: data}).status(200);
+        })
+        .catch(error => {
+            console.log(error);
+            res.json(error).status(400);
+        })
+})
+
+app.get('/getPosition/:uid', (req, res) => {
+    const uid  = req.params.uid;
+    firebaseFunctions.getDataFromFireBase(uid, 'IssStation')
+        .then(data => {
+            res.json({latitude: data.latitude, longitude: data.longitude}).status(200);
+        })
+        .catch(error => {
+            console.log(error);
+            res.json(error).status(400);
+        })
+})

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, SafeAreaView, View, Text, Image, Dimensions, ScaledSize, TouchableOpacity, Alert, ScrollView, Platform, PermissionsAndroid, PermissionStatus } from "react-native";
 import { Options } from "react-native-navigation";
 import { Globals } from "../Common/Globals";
-import { AddAreaProps, HomeScreenProps, SettingsProps, SingleArea, UserInfo } from "../Common/Interfaces";
+import { AddAreaProps, HomeScreenProps, InfoArea, SettingsProps, SingleArea, UserInfo } from "../Common/Interfaces";
 import Circles from "../Components/Circles";
 import { NavigatorPush, NavigatorshowModal } from "../Navigator";
 import Geolocation from 'react-native-geolocation-service';
@@ -38,14 +38,55 @@ export default function HomeScreen(props: HomeScreenProps) {
         try {
             const fetchData = async () => {
                 await fetch(ip + "getAreas/" + userInformation.id)
-                    .then(response => {
-                        response.json().then(data => {
-                            console.log(data);
-                        })
+                .then(response => {
+                    response.json().then(data => {
+                        console.log(data)
+                        let areaArray: Array<SingleArea> = []
+                        for (const area in data.areas) {
+                            let action = data.areas[area].Action
+                            let reaction = data.areas[area].Reaction
+                            areaArray.push({action: action, reaction: reaction})
+                        }
+                        setAllAreas(areaArray)
+                    })
                 })
-              };
-          
-              fetchData();
+                .catch(error => {
+                    console.error(error);
+                })
+            };
+
+            const fetchUser = async () => {
+
+                await fetch(ip + "getPosition/" + userInformation.id)
+                .then(response => {
+                    response.json().then(data => {
+                        setUserInformation({
+                            mail: userInformation.mail,
+                            coord: {
+                                latitude: data.latitude,
+                                longitude: data.longitude,
+                                city: userInformation.coord.city
+                            },
+                            id: userInformation.id,
+                            services: {
+                                spotifyId: userInformation.services.spotifyId,
+                                googleId: userInformation.services.googleId,
+                                twitterId: userInformation.services.twitterId,
+                                twitchId: userInformation.services.twitchId,
+                                stravaId: userInformation.services.stravaId
+                            }
+                        })
+                    })
+                })
+                .catch(error => {
+                    console.error(error);
+                })
+            }
+
+            fetchData()
+            .then(async () => {
+                await fetchUser()
+            });
         } catch (error) {
             console.error(error);
         }
