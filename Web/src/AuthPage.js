@@ -1,11 +1,13 @@
-import React, {useState} from "react"
-import FacebookLogin from 'react-facebook-login'
+import React, {useEffect, useState} from "react"
 
 import { useNavigate } from "react-router-dom"
 
 import AreaLogo from './assets/logo.png'
 import "./AuthPage.css"
 import "./App.css"
+
+import {firebaseMod, provider, auth} from './firebaseConfig'
+import { ip } from './env'
 
 /**
  * @brief It creates the Sign up and Sign In Pages for the AREA
@@ -15,7 +17,6 @@ import "./App.css"
 export default function AuthPage() {
 
     let [authMode, setAuthMode] = useState("signin")
-
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
@@ -33,18 +34,32 @@ export default function AuthPage() {
       }
     };
 
-    const responseFacebook = (response) => {
-      console.log(response);
-      if (response.accessToken) {
-        navigate('/home');
-      } else {
-        console.log('failed to connect');
-      }
+    auth.onAuthStateChanged(user => {
+      auth.getRedirectResult().then((result) => {
+        console.log(result);
+        if (result.user !== null) {
+          navigate('/home');
+        }
+      });
+    })
+    
+
+    const onLoginFacebook = async (event) => {
+      event.preventDefault();
+      console.log('facebook')
+      try {
+        firebaseMod.auth().setPersistence(firebaseMod.auth.Auth.Persistence.NONE).then(async () => {
+          await auth.signInWithRedirect(provider);
+        })
+      } catch (err) {
+        console.log(err);
+      };
+
     }
 
     const requestServer = async (endpoint, requestOptions) => {
       try {
-        await fetch("http://192.168.0.71:8080/" + endpoint, requestOptions).then(response => {
+        await fetch(ip + endpoint, requestOptions).then(response => {
             response.json().then(data => {
                 console.log(data);
                 if (data.userUid !== 'error') {
@@ -103,8 +118,7 @@ export default function AuthPage() {
                 </div>
                 <div className="form-group">
                   <button className="button-center"
-                    style={{width: "60%", display: "block", margin: "auto"}}
-                  >
+                    style={{width: "60%", display: "block", margin: "auto"}}>
                     Se connecter
                   </button>
                 </div>
@@ -115,14 +129,11 @@ export default function AuthPage() {
                   </span>
 
                   <div className="form-group">
-                    <FacebookLogin
-                      appId="604811154808703"
-                      autoLoad={false}
-                      fields="name,email,picture"
-                      scope="public_profile,user_friends"
-                      callback={responseFacebook}
-                      cssClass="facebook"
-                      icon="fa-facebook" />
+                    <button className="button-center"
+                      style={{width: "60%", display: "block", margin: "auto", backgroundColor: "#3b5998"}}
+                      onClick={onLoginFacebook}>
+                      Facebook
+                    </button>
                   </div>
                 </div>
               </div>
