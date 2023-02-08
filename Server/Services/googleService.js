@@ -12,8 +12,6 @@ module.exports = {
      * @param {*} subject Unnecessary but mandatory for areaLoop.
      * @param {*} userName Name of the issuer
      * @param {*} uid The user's uid
-     * @param {*} req Unnecessary but mandatory for areaLoop.
-     * @param {*} res Unnecessary but mandatory for areaLoop.
      */
     send_mail: function(subject, mailContent, uid) {
         firebaseFunctions.getDataFromFireBase(uid, 'GoogleService')
