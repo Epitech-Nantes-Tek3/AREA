@@ -22,7 +22,9 @@ app.use(session({
 }))
 app.use(express.urlencoded())
 //temporaire
-const ejs = require('ejs')
+const ejs = require('ejs');
+const googleService = require('./Services/googleService');
+const { ActionTw } = require('./Services/twitterService');
 app.set('view engine', 'ejs');
 
 // parse application/x-www-form-urlencoded
@@ -111,6 +113,26 @@ app.get('/weather', (req, res) => {
     res.send('Weather Info')
 })
 
+app.post('/register/position', (req, res) => {
+    const { latitude, longitude, uid } = req.body;
+    var position = {
+        latitude: latitude,
+        longitude: longitude
+    }
+    openMeteoService.RegistedRequiredOpenMeteo(res, uid, position)
+    ISSStationService.RegistedRequiredIss(res, uid, position)
+})
+
+app.post('/register/google', (req, res) => {
+    const { uid } = req.body;
+    googleService.RegistedRequiredGoogle(uid, res)
+})
+
+app.get('/register/iss', (req, res) => {
+    ISSStationService.RegistedRequiredIss(res, firebaseUid, data)
+})
+
+
 app.get('/twitter', (req, res) => {
     res.render('index')
 })
@@ -155,15 +177,13 @@ app.get('/issStation', (req, res) => {
     res.redirect('/')
 })
 
-app.get('/getAreas/:uid', (req, res) => {
-    const uid  = req.params.uid;
-    console.log("here")
-    firebaseFunctions.getDataFromFireBase(uid, 'AREAS')
-        .then(data => {
-            res.json({data: data}).status(200);
-            console.log("sending data", data)
-        })
-        .catch(error => {
-            res.json(error).status(400);
-        })
+app.get('/areas', (req, res) => {
+    areasFunctions.areaLoop(firebaseUid)
+    res.send("AREAS")
+})
+
+app.post('/register/areas', (req, res) => {
+    const { action, reaction, uid } = req.body;
+    areasFunctions.areaRegister(uid, action, reaction)
+    res.send('Area registered')
 })

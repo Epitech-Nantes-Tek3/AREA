@@ -109,5 +109,8 @@ module.exports = {
         .catch(error => {
             console.log(error);
         });
+    },
+    RegistedRequiredOpenMeteo: function(res, uid, data) {
+        firebaseFunctions.setDataInDb(`USERS/${uid}/OpenMeteoService/`, data)
     }
 }
