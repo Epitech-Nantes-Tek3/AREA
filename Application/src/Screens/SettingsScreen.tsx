@@ -42,7 +42,7 @@ export default function SettingsScreen(props: SettingsProps) {
     }, [location])
 
     useEffect(() => {
-        getAddressFromCoordinates(props.userInfo.coord.latitude, props.userInfo.coord.longitude)
+        // getAddressFromCoordinates(props.userInfo.coord.latitude, props.userInfo.coord.longitude)
     }, [])
 
     // Get the city of the user with Reverse Geocoding from Google
