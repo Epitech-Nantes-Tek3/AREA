@@ -60,7 +60,7 @@ async function carryOutAnAction(appKey, appSecret, bearer, hashtagOrMessage, act
 */
 function GetIdTwitter(uid) {
     return new Promise((resolve, reject) => {
-        firebaseFunctions.getDataFromFireBase(uid, 'TwitterService')
+        firebaseFunctions.getDataFromFireBaseServer('twitterAccount')
         .then(data => {
             resolve(data);
         })
