@@ -12,6 +12,7 @@ export interface AreaList {
 export interface InfoArea {
     serviceName: "spotify" | "google" | "twitter" | "twitch" | "iss" | "météo" | "nasa" | "strava"
     description: string
+    text: "Il fait beau à Nantes" | "L'ISS passe loin de moi" | "Nantes" | "ISS"
     trigger: boolean | undefined
 }
 
