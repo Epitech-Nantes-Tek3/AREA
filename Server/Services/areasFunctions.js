@@ -14,13 +14,10 @@ let areas = [
 module.exports = {
     /**
     * areaLoop - This function is used to loop through the areas and perform corresponding actions and reactions
-    * based on the data retrieved from Firebase for a specific user id.
-    *
-    * @param {Object} req - Express request object
-    * @param {Object} res - Express response object
+    * based on the data retrieved from Firebase for a specific user
     * @param {string} uid - User Id
     */
-    areaLoop: function(req, res, uid) {
+    areaLoop: function(uid) {
         firebaseFunctions.getDataFromFireBase(uid, 'AREAS')
         .then(data => {
             for (const area in data) {
@@ -36,7 +33,7 @@ module.exports = {
                             if (data == Actiontrigger) {
                                 areas.forEach((reaction) => {
                                     if (reaction.name == ReactionName) {
-                                        reaction.function(ReactionSubject, Reactiontext, uid, req, res)
+                                        reaction.function(ReactionSubject, Reactiontext, uid)
                                     }
                                 })
                             } 
@@ -47,10 +44,8 @@ module.exports = {
                     }
                 });
             }
-            res.redirect('/')
         })
         .catch(error => {
-            res.send('error')
             console.log(error);
         });
     },

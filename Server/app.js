@@ -177,7 +177,7 @@ app.get('/issStation', (req, res) => {
 
 app.get('/areas', (req, res) => {
     areasFunctions.areaLoop(firebaseUid)
-    res.send("G")
+    res.send("AREAS")
 })
 
 app.post('/register/areas', (req, res) => {
