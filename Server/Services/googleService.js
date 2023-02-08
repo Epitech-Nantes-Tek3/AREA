@@ -52,7 +52,7 @@ module.exports = {
             console.log(error);
         });
     },
-    RegistedRequiredGoogle: function(res, uid, frontData) {
+    RegistedRequiredGoogle: function(uid, frontData) {
         firebaseFunctions.getDataFromFireBaseServer('GoogleService')
         .then(data => {
             var information = data
@@ -62,7 +62,6 @@ module.exports = {
         .catch(error => {
             console.log(error);
         });
-        res.redirect('/')
     }
 }
 

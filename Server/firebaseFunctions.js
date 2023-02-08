@@ -1,4 +1,5 @@
 const firebase = require("firebase");
+const googleService = require("./Services/googleService")
 // Initialize Firebase
 const firebaseConfig = require('./firebaseConfig')
 firebase.initializeApp(firebaseConfig);
@@ -46,6 +47,7 @@ module.exports = {
           db.set({
             areaNumber: 0
           })
+          googleService.RegistedRequiredGoogle(uid, email)
           console.log('Successfully created new user:', userCredential.user.uid)
           res.json({userUid: userCredential.user.uid});
         }).catch((error) => {
