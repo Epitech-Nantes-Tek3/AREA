@@ -51,6 +51,14 @@ module.exports = {
         .catch(error => {
             console.log(error);
         });
+    },
+    RegistedRequiredIss: function(res, uid, data) {
+        var informations = {
+            gap: 1000,
+            latitude: data.latitude,
+            longitude: data.longitude
+        }
+        firebaseFunctions.setDataInDb(`USERS/${uid}/IssStation`, informations)
     }
 }
 
