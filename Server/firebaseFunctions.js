@@ -34,6 +34,11 @@ module.exports = {
             });
         });
     },
+    removeDataFromFireBase: function(path) {
+        firebase.database().ref(path).on('value', (snapshot) => {
+            snapshot.ref.remove();
+        });
+    },
 
     login: function(req, res) {
         const {email, password} = req.body;

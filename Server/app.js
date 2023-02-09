@@ -202,9 +202,16 @@ app.get('/areas', (req, res) => {
 })
 
 app.post('/register/areas', (req, res) => {
-    const { action, reaction, uid } = req.body;
-    areasFunctions.areaRegister(uid, action, reaction)
+    const { action, reaction, uid, id } = req.body;
+    areasFunctions.areaRegister(uid, action, reaction, id)
     res.send('Area registered')
+})
+
+app.post('/remove/area', (req, res) => {
+    const { uid, id } = req.body;
+    console.log(uid, id)
+    areasFunctions.areaRemove(uid, id)
+    res.json({body: "Success"}).status(200);
 })
 
 app.get('/getAreas/:uid', (req, res) => {

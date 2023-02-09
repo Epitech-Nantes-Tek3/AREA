@@ -54,24 +54,29 @@ module.exports = {
     * @param {string} uid - user id
     * @param {object} Action - action data to be stored
     * @param {object} Reaction - reaction data to be stored
+    * @param {string} id - area id
     */
-    areaRegister: function(uid, Action, Reaction) {
+    areaRegister: function(uid, Action, Reaction, id) {
         firebaseFunctions.getDataFromFireBase(uid, '')
         .then(data => {
-            console.log(data.areaNumber)
-            areaname = `AREA${data.areaNumber + 1}`
-            console.log(areaname)
             var area = {
                 Action,
                 Reaction,
+                id
             }
-            console.log(area)
-            var areaNumber = data.areaNumber + 1
-            firebaseFunctions.setDataInDb(`USERS/${uid}/AREAS/${areaname}`, area);
-            firebaseFunctions.setDataInDb(`USERS/${uid}/areaNumber`, areaNumber);
+            console.log("Area " + id, area)
+            firebaseFunctions.setDataInDb(`USERS/${uid}/AREAS/${id}`, area);
         })
         .catch(error => {
             console.log(error);
         });
+    },
+    /**
+    * areaRemove - function that removes the specified area in the firebase database
+    * @param {string} uid - user id
+    * @param {string} id - area id
+    */
+    areaRemove: function(uid, id) {
+        firebaseFunctions.removeDataFromFireBase(`USERS/${uid}/AREAS/${id}`)
     }
 }
