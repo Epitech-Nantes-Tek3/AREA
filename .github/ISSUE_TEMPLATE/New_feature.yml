@@ -41,6 +41,8 @@ body:
         - label: Application
         - label: Web
         - label: Automation
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: Additional context
