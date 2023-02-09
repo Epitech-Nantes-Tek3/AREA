@@ -1,16 +1,37 @@
+/**
+ * GoogleService module
+ * @module GoogleService
+ */
+
+/**
+ * @constant nodemailer
+ * @requires nodemailer
+ */
 const nodemailer = require('nodemailer')
+
+/**
+ * @constant {google}
+ * @requires googleapis
+ */
 const  { google } = require('googleapis')
-const OAuth2 = google.auth.OAuth2
+
+/**
+ * @constant firebaseFunctions
+ * @requires firebaseFunctions
+ */
 const firebaseFunctions = require('../firebaseFunctions')
+
+const OAuth2 = google.auth.OAuth2
 
 module.exports = {
     /**
-     * brief Sends an email using Gmail with Nodemailer. It first reads in the Firebase database. Then it uses 
+     * UNUSED PARAMETER: subject
+     * Sends an email using Gmail with Nodemailer. It first reads in the Firebase database. Then it uses 
      * an OAuth2 library to get an access token from Google. It configures the content of the email and uses the 
-     * Nodemailer library to send the email. 
-     * @param {*} mailContent Content of the mail
+     * Nodemailer library to send the email.
+     * @function send_mail
      * @param {*} subject Unnecessary but mandatory for areaLoop.
-     * @param {*} userName Name of the issuer
+     * @param {*} mailContent Content of the mail
      * @param {*} uid The user's uid
      */
     send_mail: function(subject, mailContent, uid) {
@@ -50,6 +71,9 @@ module.exports = {
             console.log(error);
         });
     },
+    /**
+     * UNDOCUMENTED
+     */
     RegistedRequiredGoogle: function(uid, res) {
         firebaseFunctions.getDataFromFireBaseServer('GoogleService')
         .then(data => {
@@ -71,6 +95,9 @@ module.exports = {
     }
 }
 
+/**
+ * UNDOCUMENTED
+ */
 function get_html_message(mailContent) {
     return `${mailContent}`
 }
