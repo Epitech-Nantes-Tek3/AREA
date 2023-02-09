@@ -26,7 +26,7 @@ jobs:
       - name: Create server documentation
         uses: andstor/jsdoc-action@v1
         with:
-          source_dir: ./Server/Services ./Server/app.js ./Server/config.js ./Server/firebaseFunctions.js
+          source_dir: ./Server/Services ./Server/app.js ./Server/config.js ./Server/firebaseFunctions.js ./Server/readme.md
           recurse: true
           output_dir: ./server-docs
       - name: Upload server documentation
