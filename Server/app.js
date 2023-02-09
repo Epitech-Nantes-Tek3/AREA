@@ -210,8 +210,14 @@ app.post('/register/areas', (req, res) => {
 app.post('/remove/area', (req, res) => {
     const { uid, id } = req.body;
     console.log(uid, id)
-    areasFunctions.areaRemove(uid, id)
-    res.json({body: "Success"}).status(200);
+    firebaseFunctions.removeDataFromFireBase(`USERS/${uid}/AREAS/${id}`)
+    .then(() => {
+        res.json({body: "Success"}).status(200);
+    })
+    .catch(error => {
+        console.log(error);
+        res.json(error).status(400);
+    })
 })
 
 app.get('/getAreas/:uid', (req, res) => {

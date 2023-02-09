@@ -154,9 +154,7 @@ export default function HomeScreen(props: HomeScreenProps) {
 
     function removeAreaFromList(index: number) {
         async function supressArea() {
-            console.log("suppression de l'area")
             try {
-                console.log("Remove", userInformation.id, allAreas[index].id)
                 const requestOptions = {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -164,10 +162,15 @@ export default function HomeScreen(props: HomeScreenProps) {
                 }
 
                 await fetch(ip + "remove/area", requestOptions).then(response => {
-                    var data = JSON.parse(JSON.stringify(response))
-                    let copyAreas = [...allAreas]
-                    copyAreas.splice(index, 1)
-                    setAllAreas(copyAreas)
+                    response.json().then(data => {
+                        if (data.body === "Success") {
+                            let copyAreas = [...allAreas]
+                            copyAreas.splice(index, 1)
+                            setAllAreas(copyAreas)
+                        } else {
+                            console.log("Error")
+                        }
+                    })
                 });
             } catch (error) {
                 console.log(error);

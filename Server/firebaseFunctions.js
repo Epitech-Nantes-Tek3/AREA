@@ -35,8 +35,12 @@ module.exports = {
         });
     },
     removeDataFromFireBase: function(path) {
-        firebase.database().ref(path).on('value', (snapshot) => {
-            snapshot.ref.remove();
+        return new Promise((resolve, reject) => {
+            database.ref(path).on('value', (snapshot) => {
+                if (snapshot.val()) {
+                    resolve(snapshot.ref.remove());
+                }
+            });
         });
     },
 

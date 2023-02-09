@@ -64,19 +64,10 @@ module.exports = {
                 Reaction,
                 id
             }
-            console.log("Area " + id, area)
             firebaseFunctions.setDataInDb(`USERS/${uid}/AREAS/${id}`, area);
         })
         .catch(error => {
             console.log(error);
         });
     },
-    /**
-    * areaRemove - function that removes the specified area in the firebase database
-    * @param {string} uid - user id
-    * @param {string} id - area id
-    */
-    areaRemove: function(uid, id) {
-        firebaseFunctions.removeDataFromFireBase(`USERS/${uid}/AREAS/${id}`)
-    }
 }
