@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - "main"
+  pull_request:
+    branches:
+      - "main"
   workflow_dispatch:
     inputs:
       parts:
@@ -28,7 +31,7 @@ jobs:
           output_dir: ./server-docs
           front_page: ./Server/readme.md
       - name: Upload server documentation
-        uses: actions/upload-artifact@v3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          name: server documentation
-          path: ./server-docs
+          folder: server-docs
+          target-folder: docs/server
