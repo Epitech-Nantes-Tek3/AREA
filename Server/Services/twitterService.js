@@ -5,8 +5,6 @@ const { TwitterApi } = require('twitter-api-v2')
 /**
  * @brief uses the Twitter API to perform different actions depending on the action argument. Depending on 
  * the value of action, the function can send a tweet, search for tweets and like or retweet them.
- * @param {*} req is an object that contains information about the HTTP request that called this function
- * @param {*} res is an object that handles the HTTP response that will be sent to the user.
  * @param {*} appKey is an application key provided by Twitter to access their API. It is used to identify the 
  * application making the request.
  * @param {*} appSecret is an application secret provided by Twitter to access their API. It is used to secure 
@@ -17,13 +15,14 @@ const { TwitterApi } = require('twitter-api-v2')
  * action argument. It is used to send a tweet or to search for tweets.
  * @param {*} action is an argument that determines what action should be performed by the function. It 
  * can take the values 'tweet', 'like' or 'retweet'.
+ * @param {*} userData required data for TwitterApi
  */
-async function carryOutAnAction(req, res, appKey, appSecret, bearer, hashtagOrMessage, action) {
+async function carryOutAnAction(appKey, appSecret, bearer, hashtagOrMessage, action, userData) {
     const client = new TwitterApi ({
         appKey: appKey,
         appSecret: appSecret,
-        accessToken: req.Twitteruid.userToken,
-        accessSecret: req.Twitteruid.userTokenSecret
+        accessToken: userData.userToken,
+        accessSecret: userData.userTokenSecret
     })
     if (action == 'tweet') {
         const twClient = client.readWrite;
@@ -41,9 +40,9 @@ async function carryOutAnAction(req, res, appKey, appSecret, bearer, hashtagOrMe
             const whereTakenTweets = await twitterBearer.v2.search(hashtagOrMessage);
             console.log(whereTakenTweets.data.meta.newest_id)
             if (action == 'like')
-                await client.v2.like(req.Twitteruid.userId , whereTakenTweets.data.meta.newest_id);
+                await client.v2.like(userData.userId , whereTakenTweets.data.meta.newest_id);
             else
-                await client.v2.retweet(req.Twitteruid.userId , whereTakenTweets.data.meta.newest_id);
+                await client.v2.retweet(userData.userId , whereTakenTweets.data.meta.newest_id);
         } catch (e) {
             console.log(e)
         }
@@ -61,7 +60,7 @@ async function carryOutAnAction(req, res, appKey, appSecret, bearer, hashtagOrMe
 */
 function GetIdTwitter(uid) {
     return new Promise((resolve, reject) => {
-        firebaseFunctions.getDataFromFireBase(uid, 'TwitterService')
+        firebaseFunctions.getDataFromFireBaseServer('twitterAccount')
         .then(data => {
             resolve(data);
         })
@@ -76,19 +75,18 @@ function GetIdTwitter(uid) {
 * "carryOutAnAction" function to perform the action.
 * @param {string} action is the desired action to be performed (retweet, like, or tweet)
 * @param {string} hashtagOrMessage is the hashtag or message to be used for the action
-* @param {*} req is an object that contains information about the HTTP request that called this function
-* @param {*} res is an object that handles the HTTP response that will be sent to the user.
+* @param {*} userData required data for TwitterApi
 */
 
-function doAct(action, hashtagOrMessage, req, res) {
+function doAct(action, hashtagOrMessage, userData) {
     firebaseFunctions.getDataFromFireBaseServer('twitter')
     .then(data => {
         if (action === 'retweet')
-            carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'retweet');
+            carryOutAnAction(data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'retweet', userData);
         else if (action === 'like')
-            carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'like');
+            carryOutAnAction(data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'like', userData);
             else if (action === 'tweet')
-            carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'tweet');
+            carryOutAnAction(data.appKey, data.appSecret, data.bearer, hashtagOrMessage, 'tweet', userData);
     })
     .catch(error => {
         console.log(error);
@@ -231,14 +229,11 @@ module.exports = {
     * @param {string} action is a string representing the desired action to be performed (e.g. retweet, like, tweet)
     * @param {string} hashtagOrMessage is a string representing the hashtag or message for the desired action.
     * @param {string} uid is the unique identifier for the user on the app.
-    * @param {*} req is an object that contains information about the HTTP request that called this function
-    * @param {*} res is an object that handles the HTTP response that will be sent to the user.
     */
-    ActionTw: function(action, hashtagOrMessage, uid, req, res) {
+    ActionTw: function(action, hashtagOrMessage, uid) {
         GetIdTwitter(uid)
         .then(data => {
-            req.Twitteruid = data
-            doAct(action, hashtagOrMessage, uid, req, res)
+            doAct(action, hashtagOrMessage, data)
         })
         .catch(error => {
             console.log(error);

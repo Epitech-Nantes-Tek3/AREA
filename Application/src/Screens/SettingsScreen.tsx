@@ -3,6 +3,7 @@ import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSou
 import { Globals } from "../Common/Globals";
 import Geolocation from 'react-native-geolocation-service';
 import { UserInfo } from "../Common/Interfaces";
+import { ip } from "../../env";
 
 
 
@@ -40,6 +41,10 @@ export default function SettingsScreen(props: SettingsProps) {
         })
     }, [location])
 
+    useEffect(() => {
+        // getAddressFromCoordinates(props.userInfo.coord.latitude, props.userInfo.coord.longitude)
+    }, [])
+
     // Get the city of the user with Reverse Geocoding from Google
     async function getAddressFromCoordinates(lat: number, long: number) {
         fetch("https://api-adresse.data.gouv.fr/reverse/?lon=" + long + "&lat=" + lat)
@@ -71,14 +76,32 @@ export default function SettingsScreen(props: SettingsProps) {
         if (props.hasAuthorization) {
             Geolocation.getCurrentPosition(
                 async (position) => {
-                    await getAddressFromCoordinates(position.coords.latitude, position.coords.longitude)
+                    getAddressFromCoordinates(position.coords.latitude, position.coords.longitude).then(async () => {
+                        const requestOptions = {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude,
+                                uid: props.userInfo.id
+                            })
+                        }
+                        try {
+                            await fetch(ip + "register/position", requestOptions).then(response => {
+                                console.log(JSON.parse(JSON.stringify(response)))
+                            });
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    })
+                    .catch((err) => console.error(err))
                 },
                 (error) => {
                   console.error(error.code, error.message);
                 },
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
             )
-        }
+        } 
     }
 
     function ProfileInfo() {

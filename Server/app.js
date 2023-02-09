@@ -11,6 +11,7 @@ const ISSStationService = require('./Services/ISSStationService');
 const areasFunctions = require('./Services/areasFunctions');
 const firebaseUid = 'leMgZPp8sfe2l06b6TU330bahJz2';
 const port = config.port;
+const nodeCron = require("node-cron")
 
 const session = require('express-session')
 
@@ -22,7 +23,9 @@ app.use(session({
 }))
 app.use(express.urlencoded())
 //temporaire
-const ejs = require('ejs')
+const ejs = require('ejs');
+const googleService = require('./Services/googleService');
+const { ActionTw } = require('./Services/twitterService');
 app.set('view engine', 'ejs');
 
 // parse application/x-www-form-urlencoded
@@ -34,6 +37,24 @@ app.use(bodyParser.json())
 app.get('/', (req, res) => {
     res.send('Hello world !')
 })
+
+nodeCron.schedule("*/10 * * * * *", () => {
+    try {
+        firebaseFunctions.getAllUsersFromFireBase().then(data => {
+
+            for (const uid in data) {
+                try {
+                    areasFunctions.areaLoop(uid);
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        })
+    } catch (err) {
+        console.log(err)
+    }
+})
+
 
 //FIREBASE FUNCTIONS
 
@@ -111,6 +132,26 @@ app.get('/weather', (req, res) => {
     res.send('Weather Info')
 })
 
+app.post('/register/position', (req, res) => {
+    const { latitude, longitude, uid } = req.body;
+    var position = {
+        latitude: latitude,
+        longitude: longitude
+    }
+    openMeteoService.RegistedRequiredOpenMeteo(res, uid, position)
+    ISSStationService.RegistedRequiredIss(res, uid, position)
+})
+
+app.post('/register/google', (req, res) => {
+    const { uid } = req.body;
+    googleService.RegistedRequiredGoogle(uid, res)
+})
+
+app.get('/register/iss', (req, res) => {
+    ISSStationService.RegistedRequiredIss(res, firebaseUid, data)
+})
+
+
 app.get('/twitter', (req, res) => {
     res.render('index')
 })
@@ -156,5 +197,36 @@ app.get('/issStation', (req, res) => {
 })
 
 app.get('/areas', (req, res) => {
-    areasFunctions.areaLoop(req, res, firebaseUid)
+    areasFunctions.areaLoop(firebaseUid)
+    res.send("AREAS")
+})
+
+app.post('/register/areas', (req, res) => {
+    const { action, reaction, uid } = req.body;
+    areasFunctions.areaRegister(uid, action, reaction)
+    res.send('Area registered')
+})
+
+app.get('/getAreas/:uid', (req, res) => {
+    const uid  = req.params.uid;
+    firebaseFunctions.getDataFromFireBase(uid, 'AREAS')
+        .then(data => {
+            res.json({areas: data}).status(200);
+        })
+        .catch(error => {
+            console.log(error);
+            res.json(error).status(400);
+        })
+})
+
+app.get('/getPosition/:uid', (req, res) => {
+    const uid  = req.params.uid;
+    firebaseFunctions.getDataFromFireBase(uid, 'IssStation')
+        .then(data => {
+            res.json({latitude: data.latitude, longitude: data.longitude}).status(200);
+        })
+        .catch(error => {
+            console.log(error);
+            res.json(error).status(400);
+        })
 })

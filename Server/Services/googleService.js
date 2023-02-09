@@ -12,10 +12,8 @@ module.exports = {
      * @param {*} subject Unnecessary but mandatory for areaLoop.
      * @param {*} userName Name of the issuer
      * @param {*} uid The user's uid
-     * @param {*} req Unnecessary but mandatory for areaLoop.
-     * @param {*} res Unnecessary but mandatory for areaLoop.
      */
-    send_mail: function(subject, mailContent, uid, req, res) {
+    send_mail: function(subject, mailContent, uid) {
         firebaseFunctions.getDataFromFireBase(uid, 'GoogleService')
         .then(data => {
             const OAuth2_client = new OAuth2(data.clientId, data.clientSecret)
@@ -50,6 +48,25 @@ module.exports = {
         })
         .catch(error => {
             console.log(error);
+        });
+    },
+    RegistedRequiredGoogle: function(uid, res) {
+        firebaseFunctions.getDataFromFireBaseServer('GoogleService')
+        .then(data => {
+            firebaseFunctions.getDataFromFireBase(uid, "")
+            .then((userdata) => {
+                var information = data
+                information.recipient = userdata.email
+                firebaseFunctions.setDataInDb(`USERS/${uid}/GoogleService`, information)
+                res.json({body: "OK"}).status(200);
+            }).catch((error) => {
+                console.log(error);
+                res.json({body: "Error"}).status(400);
+            })
+        })
+        .catch(error => {
+            console.log(error);
+            res.json({body: "Error"}).status(400);
         });
     }
 }

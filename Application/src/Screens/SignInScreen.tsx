@@ -45,15 +45,28 @@ export default function SignInScreen() {
         }
         try {
             await fetch(ip + "register", requestOptions).then(response => {
-                response.json().then(data => {
+                response.json().then(async data => {
                     console.log(data);
                     if (data.userUid != 'error') {
-                        const props: HomeScreenProps = {
-                            userMail: userMail,
-                            userId: data.userUid
+                        const requestOptions = {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({uid: data.userUid})
                         }
-                        NavigatorPush("HomeScreen", "mainStack", options, props)
+                        await fetch(ip + "register/google", requestOptions).then(response => {
+                            response.json().then(dataGoogle => {
+                                if (dataGoogle.body != 'Error') {
+                                    const props: HomeScreenProps = {
+                                        userMail: userMail,
+                                        userId: data.userUid
+                                    }
+                                    NavigatorPush("HomeScreen", "mainStack", options, props)
+                                }
+                            })
+                        })
                     }
+                }).catch(error => {
+                    console.log(error);
                 })
             });
         } catch (error) {
