@@ -3,9 +3,6 @@ on:
   push:
     branches:
       - "main"
-  pull_request:
-    branches:
-      - "main"
   workflow_dispatch:
     inputs:
       parts:
@@ -29,6 +26,7 @@ jobs:
           source_dir: ./Server/
           recurse: true
           output_dir: ./server-docs
+          front_page: ./Server/readme.md
       - name: Upload server documentation
         uses: actions/upload-artifact@v3
         with:
