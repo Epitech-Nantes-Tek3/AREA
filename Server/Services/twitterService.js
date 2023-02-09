@@ -74,6 +74,7 @@ async function carryOutAnAction(appKey, appSecret, bearer, hashtagOrMessage, act
     }
 }
 /**
+ * PARAMETER UNUSED: uid
  * Allows the user to perform an action (retweet, like or tweet) on Twitter.
  * It first retrieves the Twitter API data from Firebase using "getDataFromFireBaseServer" function.
  * Then, depending on the action passed as a parameter, it calls "carryOutAnAction" function to carry out the specified action.
