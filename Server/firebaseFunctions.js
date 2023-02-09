@@ -1,12 +1,27 @@
+/**
+ * firebaseFunctions module
+ * @module firebaseFunctions
+ */
+
+/**
+ * @constant firebase
+ * @requires firebase
+ */
 const firebase = require("firebase");
-// Initialize Firebase
+
+/**
+ * @constant firebaseConfig
+ * @requires firebaseConfig
+ */
 const firebaseConfig = require('./firebaseConfig')
 firebase.initializeApp(firebaseConfig);
 
-// Get a reference to the database
 var database = firebase.database();
 
 module.exports = {
+    /**
+     * UNDOCUMENTED
+     */
     getDataFromFireBase: function(uid, service) {
         return new Promise((resolve, reject) => {
             database.ref(`USERS/${uid}/${service}`).on('value', (snapshot) => {
@@ -16,6 +31,9 @@ module.exports = {
             });
         });
     },
+    /**
+     * UNDOCUMENTED
+     */
     getAllUsersFromFireBase: function() {
         return new Promise((resolve, reject) => {
             database.ref(`USERS/`).on('value', (snapshot) => {
@@ -25,6 +43,9 @@ module.exports = {
             });
         });
     },
+    /**
+     * UNDOCUMENTED
+     */
     getDataFromFireBaseServer: function(service) {
         return new Promise((resolve, reject) => {
             database.ref(`SERVER/${service}/`).on('value', (snapshot) => {
@@ -34,7 +55,9 @@ module.exports = {
             });
         });
     },
-
+    /**
+     * UNDOCUMENTED
+     */
     login: function(req, res) {
         const {email, password} = req.body;
         firebase.auth().signInWithEmailAndPassword(email, password).then((userCredential) => {
@@ -44,10 +67,12 @@ module.exports = {
             console.log('Error at the sign in:', error);
             res.json({userUid: 'error'}).status(400);
         })
-        },
-        
-        register: function(req, res) {
-            const { email, password } = req.body;
+    },
+    /**
+     * UNDOCUMENTED
+     */
+    register: function(req, res) {
+        const { email, password } = req.body;
         console.log(email, password);
         firebase.auth()
         .createUserWithEmailAndPassword(email, password).then((userCredential) => {
@@ -64,7 +89,8 @@ module.exports = {
         });
     },
     /**
-     * @brief Function to write data to a specific path in Firebase database
+     * Function to write data to a specific path in Firebase database
+     * @function setDataInDb
      * @param {*} path The path in the Firebase database where the data will be written to. 
      * @param {*} data The data that will be written to the specified path.
      */
@@ -77,6 +103,9 @@ module.exports = {
         }
       });
     },
+    /**
+     * UNDOCUMENTED
+     */
     resetPassword: function(req, res) {
         const { email } = req.body;
         console.log(email)
