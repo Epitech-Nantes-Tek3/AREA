@@ -13,31 +13,35 @@ import auth from '@react-native-firebase/auth';
 import firebase from '@react-native-firebase/app'
 import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
 import { HomeScreenProps } from "../Common/Interfaces";
-import NetInfo from "@react-native-community/netinfo";
 
 
 export default function ConnexionScreen() {
     // Gets the size of the current window
     const window: ScaledSize = Dimensions.get("window")
 
-    useEffect(() => {
-        const firebaseConfig = {
-            apiKey: environment.APIKEY,
-            authDomain: environment.AUTHDOMAIN,
-            databaseURL: environment.DATABASEURL,
-            projectId: environment.PROJECTID,
-            storageBucket: environment.STORAGEBUCKET,
-            messagingSenderId: environment.MESSAGINGSENDERID,
-            appId: environment.APPID
-        }
-        firebase.initializeApp(firebaseConfig)
-    })
-
     // Hooks allowing use to get/set user infos
     const [userMail, setUserMail] = useState("")
     const [userPass, setUserPass] = useState("")
     const [ip, setIp] = useState("http://localhost:8080") // Mettre l'adresse du serveur par défaut dans le futur
     const [isConnected, setIsConnected] = useState(false)
+    const [isSetup, setIsSetup] = useState(false)
+
+    // Hook to initialize firebase that is called only once
+    useEffect(() => {
+        if (!isSetup) {
+            const firebaseConfig = {
+                apiKey: environment.APIKEY,
+                authDomain: environment.AUTHDOMAIN,
+                databaseURL: environment.DATABASEURL,
+                projectId: environment.PROJECTID,
+                storageBucket: environment.STORAGEBUCKET,
+                messagingSenderId: environment.MESSAGINGSENDERID,
+                appId: environment.APPID
+            }
+            firebase.initializeApp(firebaseConfig)
+            setIsSetup(true)
+        }
+    })
 
     // Options to push the next screen
     const options: Options = {
