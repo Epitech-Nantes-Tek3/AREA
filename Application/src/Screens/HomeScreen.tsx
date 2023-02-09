@@ -40,12 +40,12 @@ export default function HomeScreen(props: HomeScreenProps) {
                 await fetch(ip + "getAreas/" + userInformation.id)
                 .then(response => {
                     response.json().then(data => {
-                        console.log(data)
                         let areaArray: Array<SingleArea> = []
                         for (const area in data.areas) {
                             let action = data.areas[area].Action
                             let reaction = data.areas[area].Reaction
-                            areaArray.push({action: action, reaction: reaction})
+                            let id = data.areas[area].id
+                            areaArray.push({action: action, reaction: reaction, id: id})
                         }
                         setAllAreas(areaArray)
                     })
@@ -153,10 +153,25 @@ export default function HomeScreen(props: HomeScreenProps) {
     }
 
     function removeAreaFromList(index: number) {
-        function supressArea() {
-            let copyAreas = [...allAreas]
-            copyAreas.splice(index, 1)
-            setAllAreas(copyAreas)
+        async function supressArea() {
+            console.log("suppression de l'area")
+            try {
+                console.log("Remove", userInformation.id, allAreas[index].id)
+                const requestOptions = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({uid: userInformation.id, id: allAreas[index].id})
+                }
+
+                await fetch(ip + "remove/area", requestOptions).then(response => {
+                    var data = JSON.parse(JSON.stringify(response))
+                    let copyAreas = [...allAreas]
+                    copyAreas.splice(index, 1)
+                    setAllAreas(copyAreas)
+                });
+            } catch (error) {
+                console.log(error);
+            }
         }
 
         Alert.alert(

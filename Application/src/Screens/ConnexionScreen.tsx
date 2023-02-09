@@ -31,7 +31,7 @@ export default function ConnexionScreen() {
             appId: environment.APPID
         }
         firebase.initializeApp(firebaseConfig)
-    })
+    }, [])
 
     // Hooks allowing use to get/set user infos
     const [userMail, setUserMail] = useState("")

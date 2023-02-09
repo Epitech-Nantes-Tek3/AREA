@@ -3,6 +3,7 @@ import { Dispatch } from "react"
 export interface SingleArea {
     action: InfoArea
     reaction: InfoArea
+    id: string
 }
 
 export interface AreaList {
