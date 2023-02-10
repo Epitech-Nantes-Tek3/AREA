@@ -14,7 +14,7 @@ import { ip } from './env'
  * It has a login with facebook on Sign In page
  * @returns the page corresponding to the current authMode
  */
-export default function AuthPage() {
+export default function AuthPage(props) {
 
     let [authMode, setAuthMode] = useState("signin")
     const navigate = useNavigate();
@@ -63,6 +63,8 @@ export default function AuthPage() {
             response.json().then(data => {
                 console.log(data);
                 if (data.userUid !== 'error') {
+                  props.userInformation.id = data.userUid;
+                  props.userInformation.mail = email;
                   navigate('/home');
                 }
             })

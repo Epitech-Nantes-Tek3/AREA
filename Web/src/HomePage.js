@@ -15,6 +15,9 @@ export default function HomePage(props) {
 
 
     useEffect(() => {
+        if (props.userInformation.mail == "") {
+            navigate('/auth')
+        }
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition((position) => {
                 props.setUserInformation({
@@ -161,6 +164,9 @@ export default function HomePage(props) {
         navigate('/addArea')
     }
 
+    const settings = () => {
+        navigate('/settings')
+    }
     return (
         <div style={{
             display: "flex",
@@ -175,6 +181,7 @@ export default function HomePage(props) {
             }}>
                 <h1 style={{fontSize: 50, marginBottom: 10}}>Re-Bonjour !</h1>
                 <img src={AddImage} style={{width: 80, height: 80, position: "absolute", right: 150, top: 30, color: "black"}} onClick={addArea}/>
+                <img style={{width: 80, height: 80, position: "absolute", right: 150, top: 130, color: "black"}} onClick={settings}/>
             </div>
             <h2 style={{fontSize: 40, marginTop: 0, textAlign: "center"}}>AREAs actives</h2>
             <DisplayAreas />

@@ -7,7 +7,7 @@ import LogoGoogle from './assets/google.png';
 import LogoMeteo from './assets/meteo.png';
 import LogoNasa from './assets/nasa.png'
 import CheckCircle from './assets/checkCircle.png'
-import { Component, useState } from 'react';
+import { Component, useEffect, useState } from 'react';
 import { ACTIONS, REACTIONS } from "./Common/Areas"
 import { useNavigate } from "react-router-dom"
 
@@ -31,6 +31,11 @@ export default function AddAreaPage(props) {
         "strava": LogoStrava
     }
 
+    useEffect(() => {
+        if (props.userInformation.mail == "") {
+            navigate("/auth")
+        }
+    })
     const sendArea = () => {
         let area = {
             action: ACTIONS[selectedActionIndex],
