@@ -25,6 +25,7 @@ export default function ConnexionScreen() {
     const [ip, setIp] = useState("http://localhost:8080") // Mettre l'adresse du serveur par défaut dans le futur
     const [isConnected, setIsConnected] = useState(false)
     const [isSetup, setIsSetup] = useState(false)
+    const [isBadPassword, setIsBadPassword] = useState(false)
 
     // Hook to initialize firebase that is called only once
     useEffect(() => {
@@ -89,13 +90,17 @@ export default function ConnexionScreen() {
                             userId: data.userUid,
                             ip: ip
                         }
+                        setIsBadPassword(false)
                         console.log("Connect user", userMail, userPass)
                         NavigatorPush("HomeScreen", "mainStack", options, props)
+                    } else {
+                        setIsBadPassword(true)
                     }
                 })
             });
         } catch (error) {
             console.log(error);
+            setIsBadPassword(true)
         }
     }
 
@@ -223,9 +228,13 @@ export default function ConnexionScreen() {
                         autoComplete="password"
                         autoCorrect={false}
                         returnKeyType="done"
+                        onSubmitEditing={connectionAction}
                         testID="pwdpassword"
                     />
-                    <Text style={styles.forgottenText} onPress={forgotPassword}>Un oubli ?</Text>
+                    <View style={{width: "100%"}}>
+                        {isBadPassword && <Text style={styles.errorText} onPress={forgotPassword}>Erreur de connexion</Text>}
+                        <Text style={styles.forgottenText} onPress={forgotPassword}>Un oubli ?</Text>
+                    </View>
                     <TouchableOpacity
                         style={[styles.inputBorderStyle, styles.connectInside]}
                         onPress={connectionAction}>
@@ -298,11 +307,20 @@ const styles = StyleSheet.create({
     },
     forgottenText: {
         textAlign: "right",
-        paddingRight: 5,
+        paddingRight: 12,
         color: Globals.Colors.dark,
         marginBottom: 8,
         fontSize: 12,
         fontFamily: "Poppins-Medium"
+    },
+    errorText: {
+        textAlign: "left",
+        paddingLeft: 12,
+        color: "red",
+        marginBottom: 8,
+        fontSize: 12,
+        fontFamily: "Poppins-Medium",
+        position: "absolute",
     },
     connectInside: {
         borderColor: Globals.Colors.main,
