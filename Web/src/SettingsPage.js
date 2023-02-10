@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom"
 import { ip } from "./env"
+import { getAllCacheData, addDataIntoCache } from './CacheManagement'
 
 export default function SettingsPage(props) {
     const navigate = useNavigate();
     const [location, setLocation] = useState('')
-    useEffect(() => {
-        if (props.userInformation.mail === "") {
-            navigate('/auth');
-        }
-    }, [props.userInformation])
 
+    useEffect(() => {
+        loginWithCache("/settings");
+    }, [])
+    const loginWithCache = async (page) => {
+        var cacheData = await getAllCacheData();
+        if (cacheData !== undefined && cacheData.mail !== undefined) {
+          props.userInformation.mail = cacheData.mail;
+          navigate(page);
+        } else {
+          navigate('/auth')
+        }
+      }
     async function getAddressFromCoordinates(lat, long) {
         fetch("https://api-adresse.data.gouv.fr/reverse/?lon=" + long + "&lat=" + lat)
             .then((res) => {

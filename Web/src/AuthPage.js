@@ -9,6 +9,8 @@ import "./App.css"
 import {firebaseMod, provider, auth} from './firebaseConfig'
 import { ip } from './env'
 
+import { getAllCacheData, addDataIntoCache } from './CacheManagement'
+
 /**
  * @brief It creates the Sign up and Sign In Pages for the AREA
  * It has a login with facebook on Sign In page
@@ -26,6 +28,20 @@ export default function AuthPage(props) {
         setAuthMode(authMode === "signin" ? "signup" : "signin")
     }
 
+    var cacheData;
+    useEffect(() => {
+      loginWithCache("/home");
+    }, [])
+
+    const loginWithCache = async (page) => {
+      cacheData = await getAllCacheData();
+      if (cacheData !== undefined && cacheData.mail !== undefined) {
+        props.userInformation.mail = cacheData.mail;
+        navigate(page);
+      } else {
+        navigate('/auth')
+      }
+    }
     const handleChange = (event) => {
       if (event.target.type === "email") {
         setEmail(event.target.value);
@@ -42,7 +58,6 @@ export default function AuthPage(props) {
         }
       });
     })
-    
 
     const onLoginFacebook = async (event) => {
       event.preventDefault();
@@ -65,6 +80,7 @@ export default function AuthPage(props) {
                 if (data.userUid !== 'error') {
                   props.userInformation.id = data.userUid;
                   props.userInformation.mail = email;
+                  addDataIntoCache("area", {ip}, props.userInformation);
                   navigate('/home');
                 }
             })
@@ -136,6 +152,18 @@ export default function AuthPage(props) {
                       onClick={onLoginFacebook}>
                       Facebook
                     </button>
+                    <button className="button-center"
+                      style={{width: "60%", display: "block", margin: "auto", backgroundColor: "#db3236"}}
+                      onClick={()=>addDataIntoCache("area", {ip}, props.userInformation)}>
+                      addDataIntoCache
+                    </button>
+                    <button className="button-center"
+                      style={{width: "60%", display: "block", margin: "auto", backgroundColor: "#db3236"}}
+                      onClick={()=>cacheData = getAllCacheData()}>
+                      getAllCacheData
+                    </button>
+                    <h6>All Cache Data is: {JSON.stringify(cacheData)}</h6>
+                    <h6>All props Data is: {JSON.stringify(props.userInformation)}</h6>
                   </div>
                 </div>
               </div>
