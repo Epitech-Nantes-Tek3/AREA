@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TrashImage from './assets/trash.png';
 import AddImage from "./assets/add.png";
+import SettingsImage from "./assets/avatar.png";
 import { useNavigate } from "react-router-dom"
 import { getAllCacheData, addDataIntoCache } from './CacheManagement'
 
@@ -193,7 +194,7 @@ export default function HomePage(props) {
             }}>
                 <h1 style={{fontSize: 50, marginBottom: 10}}>Re-Bonjour !</h1>
                 <img src={AddImage} style={{width: 80, height: 80, position: "absolute", right: 150, top: 30, color: "black"}} onClick={addArea}/>
-                <img style={{width: 80, height: 80, position: "absolute", right: 150, top: 130, color: "black"}} onClick={settings}/>
+                <img src={SettingsImage} style={{width: 80, height: 80, position: "absolute", right: 150, top: 130, color: "black"}} onClick={settings}/>
             </div>
             <h2 style={{fontSize: 40, marginTop: 0, textAlign: "center"}}>AREAs actives</h2>
             <DisplayAreas />

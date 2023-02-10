@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom"
 import { ip } from "./env"
+import './SettingsPage.css'
+import HomeImage from './assets/logo.png';
 import { getAllCacheData, addDataIntoCache } from './CacheManagement'
 
 export default function SettingsPage(props) {
@@ -10,6 +12,9 @@ export default function SettingsPage(props) {
     useEffect(() => {
         loginWithCache("/settings");
     }, [])
+    useEffect(() => {
+        getLocalization();
+    }, [props.hasAuthorization])
     const loginWithCache = async (page) => {
         var cacheData = await getAllCacheData();
         if (cacheData !== undefined && cacheData.mail !== undefined) {
@@ -72,13 +77,33 @@ export default function SettingsPage(props) {
                 },
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
             )
-        } 
+        }
     }
     return (
-        <div>
+        <div id='global'>
+            <div id='home'>
+                <img
+                    src={HomeImage}
+                    alt="Home"
+                    style={{
+                    width:50,
+                    height:50
+                    }}
+                    onClick={() => {
+                        navigate('/home')
+                    }}
+                >
+                </img>
+            </div>
             <h1>Settings</h1>
             <p>Mail: {props.userInformation.mail}</p>
-            <p>Location: {location.city}</p>
+            <p>Location: {props.userInformation.coord.city}</p>
+            <p
+                onClick={() => {
+                    addDataIntoCache("area", {ip}, {});
+                    navigate('/auth')
+                }}
+            >Déconnexion</p>
         </div>
     )
 }

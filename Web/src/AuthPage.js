@@ -152,18 +152,6 @@ export default function AuthPage(props) {
                       onClick={onLoginFacebook}>
                       Facebook
                     </button>
-                    <button className="button-center"
-                      style={{width: "60%", display: "block", margin: "auto", backgroundColor: "#db3236"}}
-                      onClick={()=>addDataIntoCache("area", {ip}, props.userInformation)}>
-                      addDataIntoCache
-                    </button>
-                    <button className="button-center"
-                      style={{width: "60%", display: "block", margin: "auto", backgroundColor: "#db3236"}}
-                      onClick={()=>cacheData = getAllCacheData()}>
-                      getAllCacheData
-                    </button>
-                    <h6>All Cache Data is: {JSON.stringify(cacheData)}</h6>
-                    <h6>All props Data is: {JSON.stringify(props.userInformation)}</h6>
                   </div>
                 </div>
               </div>
