@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom"
 import { ip } from "./env"
 import './SettingsPage.css'
 import HomeImage from './assets/logo.png';
+import GoogleImage from './assets/google.png';
+import SpotifyImage from './assets/spotify.png';
+import TwitterImage from './assets/twitter.png';
+import TwitchImage from './assets/twitch.png';
+import StravaImage from './assets/strava.png';
 import { getAllCacheData, addDataIntoCache } from './CacheManagement'
 
 export default function SettingsPage(props) {
@@ -97,8 +102,44 @@ export default function SettingsPage(props) {
             </div>
             <h1>Settings</h1>
             <p>Mail: {props.userInformation.mail}</p>
-            <p>Location: {props.userInformation.coord.city}</p>
+            <p>Location: {(props.userInformation.coord.city == null) ? props.userInformation.coord.city : "UNDEFINED"}</p>
+            <img src={GoogleImage}
+                alt="Google"
+                style={{
+                    width:50,
+                    height:50
+                }}
+            ></img><br></br>
+            <img src={SpotifyImage}
+                alt="Spotify"
+                style={{
+                    width:50,
+                    height:50
+                }}
+            ></img><br></br>
+            <img src={TwitterImage}
+                alt="Twitter"
+                style={{
+                    width:50,
+                    height:50
+                }}
+            ></img><br></br>
+            <img src={StravaImage}
+                alt="Strava"
+                style={{
+                    width:50,
+                    height:50
+                }}
+            ></img><br></br>
+            <img src={TwitchImage}
+                alt="Twitch"
+                style={{
+                    width:50,
+                    height:50
+                }}
+            ></img><br></br>
             <p
+                id='deconnexion'
                 onClick={() => {
                     addDataIntoCache("area", {ip}, {});
                     navigate('/auth')
