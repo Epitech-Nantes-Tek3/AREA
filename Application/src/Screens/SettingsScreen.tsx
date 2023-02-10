@@ -157,26 +157,6 @@ export default function SettingsScreen(props: SettingsProps) {
         })
     }
 
-    function IpBlock() {
-        return (
-            <View style={[styles.localisationContainer, styles.shadows, {backgroundColor: isConnected ? "lightgreen" : "pink"}]}>
-                <TextInput
-                    style={styles.ipInput}
-                    onChangeText={(text) => setIp(text)}
-                    value={ip}
-                    placeholder={"Adresse ip"}
-                    placeholderTextColor={"#7B7B7B"}
-                    keyboardType="numbers-and-punctuation"
-                    textContentType="URL"
-                    autoCorrect={false}
-                    returnKeyType="done"
-                    onSubmitEditing={getIpStatus}
-                    testID="ipAddress"
-                />
-            </View>
-        )
-    }
-
     function SingleConnexionBlock(props: SingleBlockProps) {
         return (
             <TouchableOpacity style={[styles.connexionContainer, styles.shadows]} onPress={props.onPress}>
@@ -310,20 +290,21 @@ export default function SettingsScreen(props: SettingsProps) {
                 <ProfileInfo />
                 <SingleBlock leftImage={require("../assets/locate.png")} text={"Localisation : " + (location.city === "" ? "Inconnue" : location.city)} onPress={getLocalization} />
                 <View style={[styles.localisationContainer, styles.shadows, {backgroundColor: isConnected ? "lightgreen" : "pink"}]}>
-                <TextInput
-                    style={styles.ipInput}
-                    onChangeText={(text) => setIp(text)}
-                    value={ip}
-                    placeholder={"Adresse ip"}
-                    placeholderTextColor={"#7B7B7B"}
-                    keyboardType="numbers-and-punctuation"
-                    textContentType="URL"
-                    autoCorrect={false}
-                    returnKeyType="done"
-                    onSubmitEditing={getIpStatus}
-                    testID="ipAddress"
-                />
-            </View>
+                    <Image source={require("../assets/ipLogo.png")} style={[styles.logoList, { left: 16 }]}/>
+                    <TextInput
+                        style={styles.textList}
+                        onChangeText={(text) => setIp(text)}
+                        value={ip}
+                        placeholder={"Adresse ip"}
+                        placeholderTextColor={"#7B7B7B"}
+                        keyboardType="numbers-and-punctuation"
+                        textContentType="URL"
+                        autoCorrect={false}
+                        returnKeyType="done"
+                        onSubmitEditing={getIpStatus}
+                        testID="ipAddress"
+                    />
+                </View>
                 <ConnexionBlocks/>
             </ScrollView>
         </SafeAreaView>
