@@ -21,6 +21,7 @@ export interface InfoArea {
 export interface HomeScreenProps {
     userMail: string
     userId: string
+    ip: string
 }
 
 export interface SettingsProps {
@@ -48,6 +49,7 @@ export interface UserInfo {
     coord: Location
     id: string
     services: ServicesInfo
+    ip: string
 }
 
 export interface AddAreaProps {

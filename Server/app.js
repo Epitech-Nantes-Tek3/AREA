@@ -38,6 +38,10 @@ app.get('/', (req, res) => {
     res.send('Hello world !')
 })
 
+app.get("/testConnexion", (req, res) => {
+    res.send("Connexion established").status(200);
+})
+
 nodeCron.schedule("*/10 * * * * *", () => {
     try {
         firebaseFunctions.getAllUsersFromFireBase().then(data => {

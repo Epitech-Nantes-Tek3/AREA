@@ -4,7 +4,6 @@ import { Globals } from "../Common/Globals";
 import { AddAreaProps, InfoArea, SingleArea } from "../Common/Interfaces";
 import { ACTIONS, REACTIONS } from "../Common/Areas";
 import { Navigation } from "react-native-navigation";
-import { ip } from "../../env";
 import uuid from 'react-native-uuid';
 
 interface InfoBlockProps {
@@ -54,7 +53,7 @@ export default function AddArea(props: AddAreaProps) {
             })
         }
         try {
-            await fetch(ip + "register/areas", requestOptions).then(response => {
+            await fetch(props.userInfo.ip + "/register/areas", requestOptions).then(response => {
                 Navigation.dismissAllModals()
             }).catch(error => {
                 console.log(error)
