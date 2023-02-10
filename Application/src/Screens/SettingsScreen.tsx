@@ -290,7 +290,7 @@ export default function SettingsScreen(props: SettingsProps) {
                 <ProfileInfo />
                 <SingleBlock leftImage={require("../assets/locate.png")} text={"Localisation : " + (location.city === "" ? "Inconnue" : location.city)} onPress={getLocalization} />
                 <View style={[styles.localisationContainer, styles.shadows, {backgroundColor: isConnected ? "lightgreen" : "pink"}]}>
-                    <Image source={require("../assets/ipLogo.png")} style={[styles.logoList, { left: 16 }]}/>
+                    <Image source={require("../assets/ipLogo.png")} style={[styles.logoList, { left: 16, tintColor: "#5281B7" }]}/>
                     <TextInput
                         style={styles.textList}
                         onChangeText={(text) => setIp(text)}
