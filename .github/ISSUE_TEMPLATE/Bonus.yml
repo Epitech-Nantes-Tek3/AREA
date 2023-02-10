@@ -1,0 +1,41 @@
+name: Bonus
+description: Create an issue for a bonus task.
+title: "[BONUS]: "
+labels: ["bonus"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bonus task request!
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the bonus task you want to implement.
+      placeholder: "Describe the bonus task you want to implement."
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: To do
+      description: Describe the steps to implement the bonus task.
+      placeholder: "Describe the steps to implement the bonus task."
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Usefulness
+      description: Describe the usefulness of the bonus task.
+      options:
+        - useful
+        - funny
+        - easteregg
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: Add any other context or screenshots about the bonus task request here.
+      placeholder: "Add any other context or screenshots about the bonus task request here."
+    validations:
+      required: false
