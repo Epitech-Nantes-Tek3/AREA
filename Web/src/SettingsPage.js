@@ -1,19 +1,76 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom"
+import { ip } from "./env"
 
 export default function SettingsPage(props) {
     const navigate = useNavigate();
-
+    const [location, setLocation] = useState('')
     useEffect(() => {
         if (props.userInformation.mail === "") {
             navigate('/auth');
         }
     }, [props.userInformation])
 
+    async function getAddressFromCoordinates(lat, long) {
+        fetch("https://api-adresse.data.gouv.fr/reverse/?lon=" + long + "&lat=" + lat)
+            .then((res) => {
+                res.json()
+                    .then((jsonRes) => {
+                        if (jsonRes && jsonRes.features && jsonRes.features[0] && jsonRes.features[0].properties)
+                            setLocation({latitude: lat, longitude: long, city: jsonRes.features[0].properties.city});
+                        else {
+                            setLocation({latitude: lat, longitude: long, city: location.city});
+                            alert("Erreur",
+                                "Une erreur a été rencontrée en essayant de trouver votre ville à partir de votre localisation. Vos données ont tout de même été mises à jour.",
+                                [
+                                    {
+                                      text: "Ok",
+                                      style: "default"
+                                    },
+                                ]
+                            )
+                        }
+                    })
+            })
+            .catch((err) => console.warn(err)
+        ).catch((err) => console.warn(err))
+    }
+    async function getLocalization() {
+        if (props.hasAuthorization) {
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    getAddressFromCoordinates(position.coords.latitude, position.coords.longitude).then(async () => {
+                        const requestOptions = {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude,
+                                uid: props.userInfo.id
+                            })
+                        }
+                        try {
+                            await fetch(ip + "register/position", requestOptions).then(response => {
+                                console.log(JSON.parse(JSON.stringify(response)))
+                            });
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    })
+                    .catch((err) => console.error(err))
+                },
+                (error) => {
+                  console.error(error.code, error.message);
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+            )
+        } 
+    }
     return (
         <div>
             <h1>Settings</h1>
             <p>Mail: {props.userInformation.mail}</p>
+            <p>Location: {location.city}</p>
         </div>
     )
 }

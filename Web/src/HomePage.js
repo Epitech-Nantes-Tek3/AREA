@@ -18,7 +18,12 @@ export default function HomePage(props) {
         if (props.userInformation.mail == "") {
             navigate('/auth')
         }
-        if (navigator.geolocation) {
+    }, [props.userInformation])
+    useEffect(() => {
+        if (props.userInformation.locationAccept == false && navigator.geolocation) {
+            props.userInformation.locationAccept = true
+        }
+        if (props.userInformation.locationAccept) {
             navigator.geolocation.getCurrentPosition((position) => {
                 props.setUserInformation({
                     mail: props.userInformation.mail,

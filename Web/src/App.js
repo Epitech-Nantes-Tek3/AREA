@@ -12,6 +12,7 @@ import { useState } from 'react';
 function App() {
   const [userInformation, setUserInformation] = useState({
     mail: "",
+    locationAccept: false,
     coord: {
         latitude: 0,
         longitude: 0,
