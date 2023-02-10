@@ -6,7 +6,6 @@ import { AddAreaProps, HomeScreenProps, InfoArea, SettingsProps, SingleArea, Use
 import Circles from "../Components/Circles";
 import { NavigatorPush, NavigatorshowModal } from "../Navigator";
 import Geolocation from 'react-native-geolocation-service';
-import { ip } from "../../env";
 
 interface AreaBlockProps {
     index: number
@@ -31,13 +30,14 @@ export default function HomeScreen(props: HomeScreenProps) {
             twitterId: "",
             twitchId: "",
             stravaId: ""
-        }
+        },
+        ip: props.ip
     })
 
     useEffect(() => {
         try {
             const fetchData = async () => {
-                await fetch(ip + "getAreas/" + userInformation.id)
+                await fetch(userInformation.ip + "/getAreas/" + userInformation.id)
                 .then(response => {
                     response.json().then(data => {
                         console.log(data)
@@ -57,7 +57,7 @@ export default function HomeScreen(props: HomeScreenProps) {
 
             const fetchUser = async () => {
 
-                await fetch(ip + "getPosition/" + userInformation.id)
+                await fetch(userInformation.ip + "/getPosition/" + userInformation.id)
                 .then(response => {
                     response.json().then(data => {
                         setUserInformation({
@@ -74,7 +74,8 @@ export default function HomeScreen(props: HomeScreenProps) {
                                 twitterId: userInformation.services.twitterId,
                                 twitchId: userInformation.services.twitchId,
                                 stravaId: userInformation.services.stravaId
-                            }
+                            },
+                            ip: userInformation.ip
                         })
                     })
                 })
