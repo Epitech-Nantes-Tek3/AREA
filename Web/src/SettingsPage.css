@@ -1,0 +1,60 @@
+#global {
+    text-align: center;
+}
+
+#home {
+    padding: 10px;
+    text-align: left;
+}
+
+/* label "clickable-text" */
+
+.clickable-text {
+    color:blue;
+    text-decoration: none;
+    /* border: 1px solid #ddd; */
+    padding: 5px;
+    border-radius: 10px;
+    background-color: #ffffff;
+}
+
+.clickable-text:hover {
+    color: red;
+    cursor: pointer;
+}
+
+#connexion-services {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+}
+
+#deconnexion {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+#home {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: left;
+    padding: 10px;
+    /* width:100px; */
+    /* background-color: blue; */
+    position: absolute;
+}
+
+#homehome {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    width: 100px;
+}
