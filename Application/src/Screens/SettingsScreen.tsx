@@ -1,17 +1,8 @@
 import React, { Dispatch, useEffect, useState } from "react";
-import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSourcePropType, GestureResponderEvent, ScrollView, Alert } from "react-native";
+import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSourcePropType, GestureResponderEvent, ScrollView, Alert, TextInput } from "react-native";
 import { Globals } from "../Common/Globals";
 import Geolocation from 'react-native-geolocation-service';
-import { UserInfo } from "../Common/Interfaces";
-import { ip } from "../../env";
-
-
-
-interface SettingsProps {
-    userInfo: UserInfo
-    setUserInfo: Dispatch<React.SetStateAction<UserInfo>>
-    hasAuthorization: boolean
-}
+import { SettingsProps } from "../Common/Interfaces";
 
 interface Location {
     latitude: number
@@ -21,6 +12,8 @@ interface Location {
 
 export default function SettingsScreen(props: SettingsProps) {
     const [location, setLocation] = useState<Location>({latitude: props.userInfo.coord.latitude, longitude: props.userInfo.coord.longitude, city: props.userInfo.coord.city})
+    const [isConnected, setIsConnected] = useState<boolean>(false)
+    const [ip, setIp] = useState<string>(props.userInfo.ip)
 
     useEffect(() => {
         props.setUserInfo({
@@ -37,11 +30,13 @@ export default function SettingsScreen(props: SettingsProps) {
                 twitterId: props.userInfo.services.twitterId,
                 twitchId: props.userInfo.services.twitchId,
                 stravaId: props.userInfo.services.stravaId
-            }
+            },
+            ip: props.userInfo.ip
         })
     }, [location])
 
     useEffect(() => {
+        getIpStatus()
         // getAddressFromCoordinates(props.userInfo.coord.latitude, props.userInfo.coord.longitude)
     }, [])
 
@@ -87,7 +82,7 @@ export default function SettingsScreen(props: SettingsProps) {
                             })
                         }
                         try {
-                            await fetch(ip + "register/position", requestOptions).then(response => {
+                            await fetch(props.userInfo.ip + "/register/position", requestOptions).then(response => {
                                 console.log(JSON.parse(JSON.stringify(response)))
                             });
                         } catch (error) {
@@ -129,6 +124,39 @@ export default function SettingsScreen(props: SettingsProps) {
         )
     }
 
+    function getIpStatus() {
+        console.log("getIpStatus")
+        try {
+            fetch(ip + "/testConnexion").then(response => {
+                if (response.status == 200)
+                    setIsConnected(true)
+            }).catch(error => {
+                console.error(error);
+                setIsConnected(false)
+            })
+        } catch (error) {
+            console.error(error);
+            setIsConnected(false)
+        }
+        props.setUserInfo({
+            mail: props.userInfo.mail,
+            coord: {
+                latitude: location.latitude,
+                longitude: location.longitude,
+                city: location.city
+            },
+            id: props.userInfo.id,
+            services: {
+                spotifyId: props.userInfo.services.spotifyId,
+                googleId: props.userInfo.services.googleId,
+                twitterId: props.userInfo.services.twitterId,
+                twitchId: props.userInfo.services.twitchId,
+                stravaId: props.userInfo.services.stravaId
+            },
+            ip: ip
+        })
+    }
+
     function SingleConnexionBlock(props: SingleBlockProps) {
         return (
             <TouchableOpacity style={[styles.connexionContainer, styles.shadows]} onPress={props.onPress}>
@@ -156,7 +184,8 @@ export default function SettingsScreen(props: SettingsProps) {
                     twitterId: props.userInfo.services.twitterId,
                     twitchId: props.userInfo.services.twitchId,
                     stravaId: props.userInfo.services.stravaId
-                }
+                },
+                ip: props.userInfo.ip
             })
         }
 
@@ -176,7 +205,8 @@ export default function SettingsScreen(props: SettingsProps) {
                     twitterId: props.userInfo.services.twitterId,
                     twitchId: props.userInfo.services.twitchId,
                     stravaId: props.userInfo.services.stravaId
-                }
+                },
+                ip: props.userInfo.ip
             })
         }
 
@@ -196,7 +226,8 @@ export default function SettingsScreen(props: SettingsProps) {
                     twitterId: token,
                     twitchId: props.userInfo.services.twitchId,
                     stravaId: props.userInfo.services.stravaId
-                }
+                },
+                ip: props.userInfo.ip
             })
         }
 
@@ -216,7 +247,8 @@ export default function SettingsScreen(props: SettingsProps) {
                     twitterId: props.userInfo.services.twitterId,
                     twitchId: token,
                     stravaId: props.userInfo.services.stravaId
-                }
+                },
+                ip: props.userInfo.ip
             })
         }
 
@@ -236,13 +268,10 @@ export default function SettingsScreen(props: SettingsProps) {
                     twitterId: props.userInfo.services.twitterId,
                     twitchId: props.userInfo.services.twitchId,
                     stravaId: token
-                }
+                },
+                ip: props.userInfo.ip
             })
         }
-
-
-
-
 
         return (
             <View style={styles.mainConnexion}>
@@ -260,6 +289,22 @@ export default function SettingsScreen(props: SettingsProps) {
             <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentScrollview}>
                 <ProfileInfo />
                 <SingleBlock leftImage={require("../assets/locate.png")} text={"Localisation : " + (location.city === "" ? "Inconnue" : location.city)} onPress={getLocalization} />
+                <View style={[styles.localisationContainer, styles.shadows, {backgroundColor: isConnected ? "lightgreen" : "pink"}]}>
+                    <Image source={require("../assets/ipLogo.png")} style={[styles.logoList, { left: 16, tintColor: "#5281B7" }]}/>
+                    <TextInput
+                        style={styles.textList}
+                        onChangeText={(text) => setIp(text)}
+                        value={ip}
+                        placeholder={"Adresse ip"}
+                        placeholderTextColor={"#7B7B7B"}
+                        keyboardType="numbers-and-punctuation"
+                        textContentType="URL"
+                        autoCorrect={false}
+                        returnKeyType="done"
+                        onSubmitEditing={getIpStatus}
+                        testID="ipAddress"
+                    />
+                </View>
                 <ConnexionBlocks/>
             </ScrollView>
         </SafeAreaView>
@@ -267,6 +312,12 @@ export default function SettingsScreen(props: SettingsProps) {
 }
 
 const styles = StyleSheet.create({
+    ipInput: {
+        width: "80%",
+        padding: 10,
+        fontFamily: "Poppins-Medium",
+        fontSize: 16,
+    },
     container: {
         flex: 1,
         flexDirection: "column",

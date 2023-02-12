@@ -56,6 +56,21 @@ module.exports = {
         });
     },
     /**
+    * removeDataFromFireBase - This function is used to remove data from firebase at a precise path
+    * @param {string} path - path to the data to be removed
+    */
+    removeDataFromFireBase: function(path) {
+        return new Promise((resolve, reject) => {
+            database.ref(path).on('value', (snapshot) => {
+                if (snapshot.val()) {
+                    resolve(snapshot.ref.remove());
+                }
+                reject("Data not found");
+            });
+        });
+    },
+
+    /**
      * UNDOCUMENTED
      */
     login: function(req, res) {
