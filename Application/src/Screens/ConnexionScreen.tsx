@@ -13,29 +13,37 @@ import auth from '@react-native-firebase/auth';
 import firebase from '@react-native-firebase/app'
 import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
 import { HomeScreenProps } from "../Common/Interfaces";
-import NetInfo from "@react-native-community/netinfo";
 
 
 export default function ConnexionScreen() {
     // Gets the size of the current window
     const window: ScaledSize = Dimensions.get("window")
 
-    useEffect(() => {
-        const firebaseConfig = {
-            apiKey: environment.APIKEY,
-            authDomain: environment.AUTHDOMAIN,
-            databaseURL: environment.DATABASEURL,
-            projectId: environment.PROJECTID,
-            storageBucket: environment.STORAGEBUCKET,
-            messagingSenderId: environment.MESSAGINGSENDERID,
-            appId: environment.APPID
-        }
-        firebase.initializeApp(firebaseConfig)
-    })
-
     // Hooks allowing use to get/set user infos
     const [userMail, setUserMail] = useState("")
     const [userPass, setUserPass] = useState("")
+    const [ip, setIp] = useState("http://localhost:8080") // Mettre l'adresse du serveur par défaut dans le futur
+    const [isConnected, setIsConnected] = useState(false)
+    const [isSetup, setIsSetup] = useState(false)
+
+    // Hook to initialize firebase that is called only once
+    useEffect(() => {
+        if (!isSetup) {
+            const firebaseConfig = {
+                apiKey: environment.APIKEY,
+                authDomain: environment.AUTHDOMAIN,
+                databaseURL: environment.DATABASEURL,
+                projectId: environment.PROJECTID,
+                storageBucket: environment.STORAGEBUCKET,
+                messagingSenderId: environment.MESSAGINGSENDERID,
+                appId: environment.APPID
+            }
+            firebase.initializeApp(firebaseConfig).then(() => {
+                console.log("Firebase initialized")
+                setIsSetup(true)
+            })
+        }
+    })
 
     // Options to push the next screen
     const options: Options = {
@@ -44,31 +52,6 @@ export default function ConnexionScreen() {
             visible: false
         }
     }
-
-    function checkConnexion() {
-        NetInfo.fetch().then((result: any) => {
-            if (!result.isInternetReachable) {
-                Alert.alert("Pas internet",
-                "Essaye de te connecter à Internet pour utiliser l'app :)",
-                [
-                    {
-                        text: "Annuler",
-                        style: "cancel"
-                    },
-                    {
-                        text: "Réessayer",
-                        onPress: checkConnexion,
-                        style: "default"
-                    }
-                ]
-                )
-            }
-        });
-    }
-
-    useEffect(() => {
-        checkConnexion()
-    })
 
     async function forgotPassword() {
         console.log("Act on forgot password")
@@ -79,7 +62,7 @@ export default function ConnexionScreen() {
         }
 
         try {
-            await fetch(ip + "resetPassword", requestOptions).then(response => {
+            await fetch(ip + "/resetPassword", requestOptions).then(response => {
                 console.log(response)
             })
         } catch (error) {
@@ -97,13 +80,14 @@ export default function ConnexionScreen() {
         }
 
         try {
-            await fetch(ip + "login", requestOptions).then(response => {
+            await fetch(ip + "/login", requestOptions).then(response => {
                 response.json().then(data => {
                     console.log(data);
                     if (data.userUid != 'error') {
                         const props: HomeScreenProps = {
                             userMail: userMail,
-                            userId: data.userUid
+                            userId: data.userUid,
+                            ip: ip
                         }
                         console.log("Connect user", userMail, userPass)
                         NavigatorPush("HomeScreen", "mainStack", options, props)
@@ -119,7 +103,8 @@ export default function ConnexionScreen() {
         console.log("Connect with Apple")
         const props: HomeScreenProps = {
             userMail: userMail,
-            userId: "idTest"
+            userId: "idTest",
+            ip: ip
         }
         NavigatorPush("HomeScreen", "mainStack", options, props)
     }
@@ -146,7 +131,8 @@ export default function ConnexionScreen() {
         auth().signInWithCredential(facebookCredential);
         const props: HomeScreenProps = {
             userMail: userMail,
-            userId: "idTest"
+            userId: "idTest",
+            ip: ip
         }
         NavigatorPush("HomeScreen", "mainStack", options, props)
 
@@ -154,6 +140,23 @@ export default function ConnexionScreen() {
 
     function navigateToSubscribe() {
         NavigatorPush("SignInScreen", "mainStack", options, {})
+    }
+
+    function getIpStatus() {
+        try {
+            fetch(ip + "/testConnexion").then(response => {
+                if (response.status == 200)
+                    setIsConnected(true)
+            }).catch(error => {
+                console.error(error);
+                setIsConnected(false)
+                return true
+            })
+        } catch (error) {
+            console.error(error);
+            setIsConnected(false)
+            return false
+        }
     }
 
     function SocialButtons() {
@@ -184,7 +187,7 @@ export default function ConnexionScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <Circles/>
-            <View style={{flex: 10}}>
+            <View style={{flex: 10, zIndex: 0}}>
                 <Image
                     source={require("../assets/logo.png")}
                     style={
@@ -232,12 +235,43 @@ export default function ConnexionScreen() {
                 <Separator width={"90%"} text="ou"/>
                 <SocialButtons/>
             </View>
+            <View style={styles.ipContainer}>
+                <TextInput
+                    style={[{borderColor: isConnected ? "green" : "red"}, styles.ipInput]}
+                    onChangeText={(text) => setIp(text)}
+                    value={ip}
+                    placeholder={"Adresse ip"}
+                    placeholderTextColor={"#7B7B7B"}
+                    keyboardType="numbers-and-punctuation"
+                    textContentType="URL"
+                    autoCorrect={false}
+                    returnKeyType="done"
+                    onSubmitEditing={getIpStatus}
+                    testID="ipAddress"
+                />
+            </View>
             <SignUp/>
         </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
+    ipContainer: {
+        position: "absolute",
+        top: 40,
+        height: 40,
+        width: "100%",
+    },
+    ipInput: {
+        width: "80%",
+        height: 40,
+        borderBottomWidth: 1,
+        borderRadius: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        zIndex: 10,
+        alignSelf: "center"
+    },
     container: {
         flex: 1,
         flexDirection: "column",

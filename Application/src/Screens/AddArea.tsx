@@ -4,7 +4,7 @@ import { Globals } from "../Common/Globals";
 import { AddAreaProps, InfoArea, SingleArea } from "../Common/Interfaces";
 import { ACTIONS, REACTIONS } from "../Common/Areas";
 import { Navigation } from "react-native-navigation";
-import { ip } from "../../env";
+import uuid from 'react-native-uuid';
 
 interface InfoBlockProps {
     area: InfoArea
@@ -37,8 +37,10 @@ export default function AddArea(props: AddAreaProps) {
     async function sendArea() {
         let area: SingleArea = {
             action: ACTIONS[selectedActionIndex],
-            reaction: REACTIONS[selectedReactionIndex]
+            reaction: REACTIONS[selectedReactionIndex],
+            id: uuid.v4().toString()
         }
+        console.log("New area: ", area)
         props.setAllAreas([area, ...props.allAreas])
         const requestOptions = {
             method: 'POST',
@@ -46,11 +48,12 @@ export default function AddArea(props: AddAreaProps) {
             body: JSON.stringify({
                 action: area.action,
                 reaction: area.reaction,
+                id: area.id,
                 uid: props.userInfo.id
             })
         }
         try {
-            await fetch(ip + "register/areas", requestOptions).then(response => {
+            await fetch(props.userInfo.ip + "/register/areas", requestOptions).then(response => {
                 Navigation.dismissAllModals()
             }).catch(error => {
                 console.log(error)

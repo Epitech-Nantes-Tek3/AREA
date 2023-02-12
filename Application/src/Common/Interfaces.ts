@@ -3,6 +3,7 @@ import { Dispatch } from "react"
 export interface SingleArea {
     action: InfoArea
     reaction: InfoArea
+    id: string
 }
 
 export interface AreaList {
@@ -20,6 +21,7 @@ export interface InfoArea {
 export interface HomeScreenProps {
     userMail: string
     userId: string
+    ip: string
 }
 
 export interface SettingsProps {
@@ -47,6 +49,7 @@ export interface UserInfo {
     coord: Location
     id: string
     services: ServicesInfo
+    ip: string
 }
 
 export interface AddAreaProps {

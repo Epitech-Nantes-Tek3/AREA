@@ -24,6 +24,8 @@ export default function SignInScreen() {
     const [userMail, setUserMail] = useState("")
     const [userPass, setUserPass] = useState("")
     const [userValidPass, setUserValidPass] = useState("")
+    const [ip, setIp] = useState("")
+    const [isConnected, setIsConnected] = useState(false)
 
     // Options to push the next screen
     const options: Options = {
@@ -44,7 +46,7 @@ export default function SignInScreen() {
             body: JSON.stringify({email: userMail, password: userPass})
         }
         try {
-            await fetch(ip + "register", requestOptions).then(response => {
+            await fetch(ip + "/register", requestOptions).then(response => {
                 response.json().then(async data => {
                     console.log(data);
                     if (data.userUid != 'error') {
@@ -53,12 +55,13 @@ export default function SignInScreen() {
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({uid: data.userUid})
                         }
-                        await fetch(ip + "register/google", requestOptions).then(response => {
+                        await fetch(ip + "/register/google", requestOptions).then(response => {
                             response.json().then(dataGoogle => {
                                 if (dataGoogle.body != 'Error') {
                                     const props: HomeScreenProps = {
                                         userMail: userMail,
-                                        userId: data.userUid
+                                        userId: data.userUid,
+                                        ip: ip
                                     }
                                     NavigatorPush("HomeScreen", "mainStack", options, props)
                                 }
@@ -78,7 +81,8 @@ export default function SignInScreen() {
         console.log("Subscribe with Apple")
         const props: HomeScreenProps = {
             userMail: userMail,
-            userId: "idTest"
+            userId: "idTest",
+            ip: ip
         }
         NavigatorPush("HomeScreen", "mainStack", options, props)
     }
@@ -106,7 +110,8 @@ export default function SignInScreen() {
             let email = response.user.email || '';
             const props: HomeScreenProps = {
                 userMail: email,
-                userId: response.user.uid
+                userId: response.user.uid,
+                ip: ip
             }
             NavigatorPush("HomeScreen", "mainStack", options, props)
         });
@@ -115,6 +120,21 @@ export default function SignInScreen() {
 
     function navigateToConnexion() {
         NavigatorPop("mainStack")
+    }
+
+    function getIpStatus() {
+        try {
+            fetch(ip + "/testConnexion").then(response => {
+                if (response.status == 200)
+                    setIsConnected(true)
+            }).catch(error => {
+                console.error(error);
+                setIsConnected(false)
+            })
+        } catch (error) {
+            console.error(error);
+            setIsConnected(false)
+        }
     }
 
     function SocialButtons() {
@@ -203,12 +223,43 @@ export default function SignInScreen() {
                 <Separator width={"90%"} text="ou"/>
                 <SocialButtons/>
             </View>
+            <View style={styles.ipContainer}>
+                <TextInput
+                    style={[{borderColor: isConnected ? "green" : "red"}, styles.ipInput]}
+                    onChangeText={(text) => setIp(text)}
+                    value={ip}
+                    placeholder={"Adresse ip"}
+                    placeholderTextColor={"#7B7B7B"}
+                    keyboardType="numbers-and-punctuation"
+                    textContentType="URL"
+                    autoCorrect={false}
+                    returnKeyType="done"
+                    onSubmitEditing={getIpStatus}
+                    testID="ipAddress"
+                />
+            </View>
             <SignUp/>
         </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
+    ipContainer: {
+        position: "absolute",
+        top: 40,
+        height: 40,
+        width: "100%",
+    },
+    ipInput: {
+        width: "80%",
+        height: 40,
+        borderBottomWidth: 1,
+        borderRadius: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        zIndex: 10,
+        alignSelf: "center"
+    },
     container: {
         flex: 1,
         flexDirection: "column",
