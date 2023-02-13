@@ -206,9 +206,22 @@ app.get('/areas', (req, res) => {
 })
 
 app.post('/register/areas', (req, res) => {
-    const { action, reaction, uid } = req.body;
-    areasFunctions.areaRegister(uid, action, reaction)
+    const { action, reaction, uid, id } = req.body;
+    areasFunctions.areaRegister(uid, action, reaction, id)
     res.send('Area registered')
+})
+
+app.post('/remove/area', (req, res) => {
+    const { uid, id } = req.body;
+    console.log(uid, id)
+    firebaseFunctions.removeDataFromFireBase(`USERS/${uid}/AREAS/${id}`)
+    .then(() => {
+        res.json({body: "Success"}).status(200);
+    })
+    .catch(error => {
+        console.log(error);
+        res.json(error).status(400);
+    })
 })
 
 app.get('/getAreas/:uid', (req, res) => {
