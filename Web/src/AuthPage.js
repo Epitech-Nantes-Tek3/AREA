@@ -19,6 +19,7 @@ export default function AuthPage() {
     let [authMode, setAuthMode] = useState("signin")
     const navigate = useNavigate();
 
+    const [isBadPassord, setIsBadPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -42,7 +43,6 @@ export default function AuthPage() {
         }
       });
     })
-    
 
     const onLoginFacebook = async (event) => {
       event.preventDefault();
@@ -63,12 +63,16 @@ export default function AuthPage() {
             response.json().then(data => {
                 console.log(data);
                 if (data.userUid !== 'error') {
+                  setIsBadPassword(false);
                   navigate('/home');
+                } else {
+                  setIsBadPassword(true);
                 }
             })
         });
       } catch (error) {
           console.log(error);
+          setIsBadPassword(true);
       }
     }
 
@@ -115,6 +119,7 @@ export default function AuthPage() {
                     placeholder="Mot de passe"
                     onChange={handleChange}
                   />
+                  <p style={{width: "60%", display: "block", margin: "auto", color: "red"}}>{(isBadPassord) ? "Erreur de connexion" : ""}</p>
                 </div>
                 <div className="form-group">
                   <button className="button-center"
@@ -175,6 +180,7 @@ export default function AuthPage() {
                   placeholder="Valider le mot de passe"
                 />
               </div>
+              <p style={{width: "60%", display: "block", margin: "auto", color: "red"}}>{(isBadPassord) ? "Erreur de connexion" : ""}</p>
               <div className="form-group">
                 <button className="button-center"
                   style={{width: "60%", display: "block", margin: "auto"}}>
