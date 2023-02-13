@@ -36,7 +36,10 @@ function AuthPage(props) {
      * If he is, it redirects him to the home page.
      */
     useEffect(() => {
-        navigate(loginWithCache("/home", props));
+        if (loginWithCache("/home", props) === "/home") {
+            console.log("Already logged in")
+            navigate("/home");
+        }
     }, [])
 
     /**
@@ -45,6 +48,7 @@ function AuthPage(props) {
      * @param event - The event that triggered the function.
      */
     function handleChange(event) {
+        console.log("aaa")
         if (event.target.type === "email") {
             setEmail(event.target.value);
         } else {
@@ -135,25 +139,6 @@ function AuthPage(props) {
     }
 
     /**
-     * It returns an input with the type, placeholder and onChange props.
-     * @param {type: string, placeHolder: string, change: function} props - the props of the input (type, placeholder, change)
-     * @returns the input div with the props
-     */
-    function Input(props) {
-        return (
-            <div className="form-group">
-                <input
-                    type={props.type}
-                    className="form-control mt-1"
-                    style={{ width: "60%", display: "block", margin: "auto" }}
-                    placeholder={props.placeholder}
-                    onChange={props.change}
-                />
-            </div>
-        )
-    }
-
-    /**
      * It returns a button with the text props.
      * @param {string} props - the props of the button (text)
      * @returns the button div with the props
@@ -186,6 +171,24 @@ function AuthPage(props) {
         )
     }
     /**
+     * It returns an input with the type, placeholder and onChange props.
+     * @param {type: string, placeHolder: string, change: function} props - the props of the input (type, placeholder, change)
+     * @returns the input div with the props
+     */
+    function Input(props) {
+        return (
+            <div className="form-group">
+                <input
+                    type={props.type}
+                    className="form-control mt-1"
+                    style={{ width: "60%", display: "block", margin: "auto" }}
+                    placeholder={props.placeholder}
+                    onChange={handleChange}
+                />
+            </div>
+        )
+    }
+    /**
      * It returns a form with an email input, a password input, a button to submit
      * the form, and a link to change the authentication mode
      * @returns A form with a title, an email input, a password input, a button to
@@ -199,15 +202,31 @@ function AuthPage(props) {
                     <div className="Form-content">
                         <img src={AreaLogo} style={{ width: 150, height: 150, display: "block", margin: "auto" }} alt="logo" />
                         <h3 className="Title">Se connecter</h3>
-                        <Input type="email" placeholder="Adresse email" change={handleChange} />
-                        <Input type="password" placeholder="Mot de passe" change={handleChange} />
+                        <div className="form-group">
+                            <input
+                                type="email"
+                                className="form-control mt-1"
+                                style={{ width: "60%", display: "block", margin: "auto" }}
+                                placeholder="Adresse email"
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <input
+                                type="password"
+                                className="form-control mt-1"
+                                style={{ width: "60%", display: "block", margin: "auto" }}
+                                placeholder="Mot de passe"
+                                onChange={handleChange}
+                            />
+                        </div>
                         <CenterButton text="Se connecter" />
                         <div className="text-center" style={{ marginTop: 20 }}>
                             Pas encore de compte ?  {"  "}
                             <span className="link-primary" onClick={changeAuthMode}>
                                 S'inscrire
                             </span>
-                            <AuthButton text="Facebook" action={onLoginFacebook}/>
+                            <AuthButton text="Facebook" action={{ onLoginFacebook }} />
                         </div>
                     </div>
                 </form>
@@ -227,9 +246,9 @@ function AuthPage(props) {
                     <div className="Form-content">
                         <img src={AreaLogo} style={{ width: 150, height: 150, display: "block", margin: "auto" }} alt="logo" />
                         <h3 className="Title">S'inscrire</h3>
-                        <Input type="email" placeholder="Adresse email" change={handleChange} />
-                        <Input type="password" placeholder="Mot de passe" change={handleChange} />
-                        <Input type="password" placeholder="Valider le mot de passe" change={handleChange} />
+                        <Input type="email" placeholder="Adresse email" change={{ handleChange }} />
+                        <Input type="password" placeholder="Mot de passe" change={{ handleChange }} />
+                        <Input type="password" placeholder="Valider le mot de passe" change={{ handleChange }} />
                         <CenterButton text="S'inscrire" />
                         <div className="text-center">
                             Déjà un compte ?{" "}
