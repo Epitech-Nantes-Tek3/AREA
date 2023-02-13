@@ -135,9 +135,21 @@ const styles = {
     },
     headerBackButton: {
         position: 'relative',
-        width: 30,
+        width: 15,
         height: 30,
+        transform: 'rotate(180deg)',
+        paddingLeft: 10,
     },
+    subHeader: {
+        position: 'relative',
+        height: 50,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    headerHomeText: {
+        position: 'relative',
+    }
 }
 
 /**
@@ -190,7 +202,7 @@ export default function SettingsPage(props) {
      */
     function Service(props) {
         return (
-            <div id={props.service} style={styles.service}>
+            <div id={props.service} style={styles.service} onMouseOver={updateCursor} onMouseOut={updateCursor}>
                 <img src={props.image} style={styles.serviceImage}></img>
                 <p style={styles.serviceText}>Connexion à {props.service}</p>
                 <img src={ArrowRight} style={styles.serviceArrow}></img>
@@ -220,7 +232,7 @@ export default function SettingsPage(props) {
      */
     function Deconnexion() {
         return (
-            <div style={styles.deconnexion} onClick={() => {addDataIntoCache("area", {ip}, {}); navigate('/auth')}}>
+            <div style={styles.deconnexion} onClick={() => {addDataIntoCache("area", {ip}, {}); navigate('/auth')}} onMouseOver={updateCursor} onMouseOut={updateCursor}>
                 <img src={DeconnexionImage}></img>
                 <p>Deconnexion</p>
                 <p></p>
@@ -252,7 +264,10 @@ export default function SettingsPage(props) {
     function Header() {
         return (
             <div style={styles.header}>
-                <img src={logoImage} style={styles.headerBackButton} onClick={goHome} onMouseOver={updateCursor} onMouseOut={updateCursor}></img>
+                <div style={styles.subHeader} onClick={goHome} onMouseOver={updateCursor} onMouseOut={updateCursor}>
+                    <img src={ArrowRight} style={styles.headerBackButton}></img>
+                    <p style={styles.headerHomeText}>Home</p>
+                </div>
                 <div style={styles.headerTitle}>Settings</div>
                 <div></div>
             </div>
@@ -260,7 +275,6 @@ export default function SettingsPage(props) {
     }
     return (
         <div id='global' style={{textAlign:'center'}}>
-            {/* <h1>Settings</h1> */}
             <Header />
             <Profile />
             <Location />
