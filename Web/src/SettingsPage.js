@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from "react-router-dom"
 import { ip } from "./env"
-import './SettingsPage.css'
+import logoImage from './assets/logo.png';
 import ProfileImage from './assets/avatar.png';
 import GoogleImage from './assets/google.png';
 import SpotifyImage from './assets/spotify.png';
@@ -21,9 +21,9 @@ const styles = {
     profile: {
         position: 'relative',
         backgroundColor: '#5281B7',
-        width: "33%",
-        height: 150,
-        left: "33%",
+        width: "20%",
+        height: 100,
+        left: "40%",
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
@@ -33,13 +33,20 @@ const styles = {
     },
     profilePicture: {
         position: 'relative',
-        width: 130,
-        height: 130,
+        width: 80,
+        height: 80,
         borderRadius: 100,
         left: "5%",
     },
     profileEmail: {
         position: 'relative',
+    },
+    profileRectEmail: {
+        position: 'relative',
+        paddingLeft: 10,
+        paddingRight: 10,
+        backgroundColor: '#ffffff',
+        borderRadius: 5,
     },
     location: {
         position: 'relative',
@@ -108,7 +115,29 @@ const styles = {
         justifyContent: 'space-around',
         marginBottom: 10,
         marinTop: 10
-    }
+    },
+    header: {
+        position: 'relative',
+        height: 50,
+        width: "100%",
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        borderRadius: 15,
+        marginBottom: 10,
+    },
+    headerTitle: {
+        position: 'relative',
+        color: '#000000',
+        fontSize: 32,
+        fontWeight: 'bold',
+    },
+    headerBackButton: {
+        position: 'relative',
+        width: 30,
+        height: 30,
+    },
 }
 
 /**
@@ -120,7 +149,11 @@ export default function SettingsPage(props) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        navigate(loginWithCache("/settings", props));
+        if (loginWithCache("/settings", props).page === '/auth') {
+            navigate("/auth");
+        }
+        console.log("SettingsPage.js: useEffect")
+        console.log(props.userInformation)
     }, [])
 
     /**
@@ -131,7 +164,9 @@ export default function SettingsPage(props) {
         return (
             <div style={styles.profile}>
                 <img src={ProfileImage} style={styles.profilePicture}></img>
-                <div style={styles.profileEmail}>{props.userInformation.mail}</div>
+                <div style={styles.profileRectEmail}>
+                    <div style={styles.profileEmail}>{props.userInformation.mail}</div>
+                </div>
             </div>
         )
     }
@@ -192,9 +227,41 @@ export default function SettingsPage(props) {
             </div>
         )
     }
+    /**
+     * The function goHome() is called when the user clicks on the "Home" button
+     */
+    function goHome() {
+        navigate('/home');
+    }
+    /**
+     * If the cursor is a pointer, make it default. If the cursor is default, make
+     * it a pointer
+     */
+    function updateCursor() {
+        var cursor = document.getElementById('global');
+        if (cursor.style.cursor === 'pointer') {
+            cursor.style.cursor = 'default';
+        } else {
+            cursor.style.cursor = 'pointer';
+        }
+    }
+    /**
+     * This function returns a div with a Google image, a title, and a blank div
+     * @returns A div with a header image, a header title, and a div.
+     */
+    function Header() {
+        return (
+            <div style={styles.header}>
+                <img src={logoImage} style={styles.headerBackButton} onClick={goHome} onMouseOver={updateCursor} onMouseOut={updateCursor}></img>
+                <div style={styles.headerTitle}>Settings</div>
+                <div></div>
+            </div>
+        )
+    }
     return (
-        <div id='global'>
-            <h1>Settings</h1>
+        <div id='global' style={{textAlign:'center'}}>
+            {/* <h1>Settings</h1> */}
+            <Header />
             <Profile />
             <Location />
             <ServicesAuth />
