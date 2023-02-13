@@ -1,14 +1,37 @@
+
+/**
+ * IssStationService module
+ * @module IssStationService
+ */
+
+/**
+ * @constant {cp}
+ * @requires fs
+ */
 const { cp } = require('fs');
+
+/**
+ * @constant http
+ * @requires http
+ */
 const http  = require('http');
+
+/**
+ * @constant firebaseFunctions
+ * @requires firebaseFunctions
+ */
 const firebaseFunctions = require('../firebaseFunctions');
+
 const url = 'http://api.open-notify.org/iss-now.json';
 const EarthRadius = 6374
 
 module.exports = {
     /**
-     * @brief Check the ISS position, compute the distance between the user and the 
+     * Check the ISS position, compute the distance between the user and the 
      * ISS and return true if iss is close
+     * @function checkISSPosition
      * @param {*} uid needed to connect to the firebase to get user position
+     * @returns {Promise}
      */
     checkISSPosition: function(uid) {
         return firebaseFunctions.getDataFromFireBase(uid, 'IssStation')
@@ -52,6 +75,10 @@ module.exports = {
             console.log(error);
         });
     },
+    /**
+     * UNDOCUMENTED
+     * UNUSED PARAMETER: res
+     */
     RegistedRequiredIss: function(res, uid, data) {
         var informations = {
             gap: 1000,
@@ -63,11 +90,10 @@ module.exports = {
 }
 
 /**
- * @brief Convert a degree value in radiant
- *
+ * Convert a degree value in radiant
+ * @function Radiant
  * @param1 degrees to be converted in radiant
- *
- * @return the converted value
+ * @return {number} the converted value
  * */
 function Radiant(degrees)
 {

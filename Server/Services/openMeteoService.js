@@ -1,5 +1,22 @@
+/**
+ * OpenMeteoService module
+ * @module OpenMeteoService
+ */
+
+/**
+ * It allows to use http.
+ * @constant http
+ * @requires http
+ */
 const http = require('http');
+
+/**
+ * It allows to use firebaseFunctions.
+ * @constant firebaseFunctions
+ * @requires firebaseFunctions
+ */
 const firebaseFunctions = require('../firebaseFunctions');
+
 let comparaisons = [
     { name: "Ciel clair", result: 0},
     { name: "Principalement clair", result: 1},
@@ -33,13 +50,14 @@ let comparaisons = [
 ]
 
 /**
-* @brief Check if it is weather is fine or not based on the current date and 
-* time and the weather code provided by the API.
-* @param latitude Latitude of the location to check the weather for.
-* @param longitude Longitude of the location to check the weather for.
-* @returns {Promise} A promise that resolves to a boolean indicating whether it is 
-* weather is fine or not.
-*/
+ * Check if it is weather is fine or not based on the current date and 
+ * time and the weather code provided by the API.
+ * @function WeatherisFineOrNot
+ * @param latitude Latitude of the location to check the weather for.
+ * @param longitude Longitude of the location to check the weather for.
+ * @returns {Promise} A promise that resolves to a boolean indicating whether it is 
+ * weather is fine or not.
+ */
 function WeatherisFineOrNot(latitude, longitude) {
     return new Promise((resolve, reject) => {
         http.get(`http://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=weathercode`, function (response) {
@@ -67,10 +85,11 @@ function WeatherisFineOrNot(latitude, longitude) {
 }
 
 /**
-* @brief GetLocation function retrieves the location data from Firebase for the specified user ID.
-* @param uid (string) user ID
-* @returns Promise that resolves with location data if successful or rejects with an error if unsuccessful
-*/
+ * GetLocation function retrieves the location data from Firebase for the specified user ID.
+ * @function GetLocation
+ * @param uid (string) user ID
+ * @returns Promise that resolves with location data if successful or rejects with an error if unsuccessful
+ */
 function GetLocation(uid) {
     return new Promise((resolve, reject) => {
         firebaseFunctions.getDataFromFireBase(uid, 'OpenMeteoService')
@@ -86,6 +105,7 @@ function GetLocation(uid) {
 module.exports = {
     /**
     * ActionWeather is a Promise that is used to determine if the weather is fine or not.
+    * @function ActionWeather
     * @param {string} uid - The unique identifier of a user.
     * @returns {Promise} A Promise that resolves with a boolean value indicating if the weather is fine or not.
     */
@@ -110,6 +130,10 @@ module.exports = {
             console.log(error);
         });
     },
+    /**
+     * UNDOCUMENTED
+     * PARAMETER UNUSED: res
+     */
     RegistedRequiredOpenMeteo: function(res, uid, data) {
         firebaseFunctions.setDataInDb(`USERS/${uid}/OpenMeteoService/`, data)
     }
