@@ -1,3 +1,9 @@
+/**
+ * @file SettingsPage.js
+ * @description This file contains the settings page of the application
+ * @module SettingsPage
+ */
+
 import React, { useEffect } from 'react';
 import { useNavigate } from "react-router-dom"
 import { ip } from "./env"
@@ -15,7 +21,8 @@ import { addDataIntoCache } from './CacheManagement'
 import { loginWithCache } from './Common/Login'
 
 /**
- * Styles of the page
+ * @description Styles of the page
+ * @constant {Object} styles - Styles of the page
  */
 const styles = {
     profile: {
@@ -153,7 +160,8 @@ const styles = {
 }
 
 /**
- * Settings page of the application
+ * @description Settings page of the application
+ * @function SettingsPage - The settings page
  * @param {Object} props contains the user information and allAreas
  * @returns The html page
  */
@@ -170,6 +178,7 @@ export default function SettingsPage(props) {
 
     /**
      * It returns a div with a profile picture and an email address
+     * @function Profile - The profile div
      * @returns A div with a profile picture and the email of the user.
      */
     function Profile() {
@@ -184,6 +193,7 @@ export default function SettingsPage(props) {
     }
     /**
      * It returns a div with an image and a text element
+     * @function Location - The location div
      * @returns A div with a location image and a text that says the city of the
      * user.
      */
@@ -197,6 +207,7 @@ export default function SettingsPage(props) {
     }
     /**
      * It returns a div with an image, a text and another image
+     * @function Service - The service div
      * @param props - the props object
      * @returns A div with an image, a text and an arrow.
      */
@@ -212,6 +223,7 @@ export default function SettingsPage(props) {
     /**
      * It returns a div with a style of connexionServices, which contains 5
      * Service components
+     * @function ServicesAuth - The services auth div
      * @returns A div with the className connexionServices and a list of Service
      * components.
      */
@@ -228,6 +240,7 @@ export default function SettingsPage(props) {
     }
     /**
      * It returns a div with a clickable image and a text
+     * @function Deconnexion - The deconnexion div
      * @returns A deconnexion button
      */
     function Deconnexion() {
@@ -241,13 +254,17 @@ export default function SettingsPage(props) {
     }
     /**
      * The function goHome() is called when the user clicks on the "Home" button
+     * @function goHome - The function that is called when the user clicks on the
+     * "Home" button
      */
     function goHome() {
         navigate('/home');
     }
     /**
      * If the cursor is a pointer, make it default. If the cursor is default, make
-     * it a pointer
+     * it a pointer.
+     * @function updateCursor - The function that is called when the user hovers
+     * over a div
      */
     function updateCursor() {
         var cursor = document.getElementById('global');
@@ -259,6 +276,7 @@ export default function SettingsPage(props) {
     }
     /**
      * This function returns a div with a Google image, a title, and a blank div
+     * @function Header - The header div
      * @returns A div with a header image, a header title, and a div.
      */
     function Header() {
