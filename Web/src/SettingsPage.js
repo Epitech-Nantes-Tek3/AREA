@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom"
 import { ip } from "./env"
 import './SettingsPage.css'
 import ProfileImage from './assets/avatar.png';
-import HomeImage from './assets/logo.png';
 import GoogleImage from './assets/google.png';
 import SpotifyImage from './assets/spotify.png';
 import TwitterImage from './assets/twitter.png';
@@ -15,13 +14,16 @@ import ArrowRight from './assets/arrowRight.png';
 import { addDataIntoCache } from './CacheManagement'
 import { loginWithCache } from './Common/Login'
 
+/**
+ * Styles of the page
+ */
 const styles = {
     profile: {
         position: 'relative',
         backgroundColor: '#5281B7',
-        width: "50%",
+        width: "33%",
         height: 150,
-        left: "25%",
+        left: "33%",
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
@@ -42,9 +44,9 @@ const styles = {
     location: {
         position: 'relative',
         backgroundColor: '#5281B7',
-        width: "33%",
+        width: "20%",
         height: 50,
-        left: "33%",
+        left: "40%",
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'row',
@@ -62,8 +64,8 @@ const styles = {
     },
     connexionServices: {
         position: 'relative',
-        width: "33%",
-        left: "33%",
+        width: "20%",
+        left: "40%",
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -97,8 +99,8 @@ const styles = {
         position: 'relative',
         backgroundColor: '#5281B7',
         height: 50,
-        width: "33%",
-        left: "33%",
+        width: "20%",
+        left: "40%",
         borderRadius: 15,
         display: 'flex',
         flexDirection: 'row',
@@ -109,6 +111,11 @@ const styles = {
     }
 }
 
+/**
+ * Settings page of the application
+ * @param {Object} props contains the user information and allAreas
+ * @returns The html page
+ */
 export default function SettingsPage(props) {
     const navigate = useNavigate();
 
@@ -116,6 +123,10 @@ export default function SettingsPage(props) {
         navigate(loginWithCache("/settings", props));
     }, [])
 
+    /**
+     * It returns a div with a profile picture and an email address
+     * @returns A div with a profile picture and the email of the user.
+     */
     function Profile() {
         return (
             <div style={styles.profile}>
@@ -124,6 +135,11 @@ export default function SettingsPage(props) {
             </div>
         )
     }
+    /**
+     * It returns a div with an image and a text element
+     * @returns A div with a location image and a text that says the city of the
+     * user.
+     */
     function Location() {
         return (
             <div style={styles.location}>
@@ -132,6 +148,11 @@ export default function SettingsPage(props) {
             </div>
         )
     }
+    /**
+     * It returns a div with an image, a text and another image
+     * @param props - the props object
+     * @returns A div with an image, a text and an arrow.
+     */
     function Service(props) {
         return (
             <div id={props.service} style={styles.service}>
@@ -141,6 +162,12 @@ export default function SettingsPage(props) {
             </div>
         )
     }
+    /**
+     * It returns a div with a style of connexionServices, which contains 5
+     * Service components
+     * @returns A div with the className connexionServices and a list of Service
+     * components.
+     */
     function ServicesAuth() {
         return (
             <div style={styles.connexionServices}>
@@ -152,6 +179,10 @@ export default function SettingsPage(props) {
             </div>
         )
     }
+    /**
+     * It returns a div with a clickable image and a text
+     * @returns A deconnexion button
+     */
     function Deconnexion() {
         return (
             <div style={styles.deconnexion} onClick={() => {addDataIntoCache("area", {ip}, {}); navigate('/auth')}}>
