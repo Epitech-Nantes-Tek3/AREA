@@ -177,11 +177,17 @@ export default function HomePage(props) {
         navigate('/addArea')
     }
 
-    const settings = () => {
+    const goSettings = () => {
         navigate('/settings')
     }
+    function mouseHover() {
+        document.getElementById("global").style.cursor = "pointer";
+    }
+    function mouseOut() {
+        document.getElementById("global").style.cursor = "default";
+    }
     return (
-        <div style={{
+        <div id="global" style={{
             display: "flex",
             flexDirection: "column",
             width: "100%",
@@ -194,7 +200,7 @@ export default function HomePage(props) {
             }}>
                 <h1 style={{fontSize: 50, marginBottom: 10}}>Re-Bonjour !</h1>
                 <img src={AddImage} style={{width: 80, height: 80, position: "absolute", right: 150, top: 30, color: "black"}} onClick={addArea}/>
-                <img src={SettingsImage} style={{width: 80, height: 80, position: "absolute", right: 150, top: 130, color: "black"}} onClick={settings}/>
+                <img src={SettingsImage} style={{width: 80, height: 80, position: "absolute", right: 150, top: 130, color: "black", borderRadius:100}} onMouseOver={mouseHover} onMouseOut={mouseOut}onClick={goSettings}/>
             </div>
             <h2 style={{fontSize: 40, marginTop: 0, textAlign: "center"}}>AREAs actives</h2>
             <DisplayAreas />
