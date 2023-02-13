@@ -1,0 +1,83 @@
+.Form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.Form {
+    width: 420px;
+    box-shadow: rgb(0 0 0 / 16%) 1px 1px 10px;
+    padding-top: 30px;
+    padding-bottom: 20px;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.Title {
+    text-align: center;
+    margin-bottom: 1em;
+    font-size: 25px;
+    color: rgb(34, 34, 34);
+    font-weight: 800;
+}
+
+.text-center {
+    text-align: center;
+    margin-bottom: 1em;
+}
+
+.button-center {
+    position: relative;
+    display: block;
+    width: 180px;
+    height: 28px;
+    border-radius: 18px;
+    background-color:#1c89ff;
+    border: solid 1px transparent;
+    font-size: 18px;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all .1s ease-in-out;
+    color : white;
+    display: grid;
+}
+
+#facebook-button {
+    background-color: #0000ff;
+}
+
+.center {
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.facebook {
+    width: "100%";
+    height: 32px;
+    border-radius: 18px;
+    background-color :#3b5998;
+    border: solid 1px transparent;
+    font-size: 15px;
+    font-weight: 250;
+    cursor: pointer;
+    transition: all .1s ease-in-out;
+    color : white;
+}
+
+.form-group {
+    margin: 1em;
+    width: "100%";
+}
+
+.link-primary {
+    color: #0000ff;
+}
+
+.button-center {
+    width: "60%";
+    display: "block";
+    margin: "auto";
+}

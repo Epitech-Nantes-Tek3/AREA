@@ -1,6 +1,20 @@
-const googleService = require('./googleService');
+/**
+ * OpenMeteoService module
+ * @module OpenMeteoService
+ */
+
+/**
+ * It allows to use http.
+ * @constant http
+ * @requires http
+ */
 const http = require('http');
 
+/**
+ * It allows to use firebaseFunctions.
+ * @constant firebaseFunctions
+ * @requires firebaseFunctions
+ */
 const firebaseFunctions = require('../firebaseFunctions');
 
 let comparaisons = [
@@ -35,43 +49,92 @@ let comparaisons = [
     { name: "Orage avec grêle forte", result: 99}
 ]
 
-module.exports = {
-    WeatherRainingOrNot: function(res, uid) {
-        firebaseFunctions.getDataFromFireBase(uid, 'OpenMeteoService')
-        .then(data => {
-            var request = http.get(`http://api.open-meteo.com/v1/forecast?latitude=${data.latitude}&longitude=${data.longitude}&hourly=weathercode`, function (response) {
+/**
+ * Check if it is weather is fine or not based on the current date and 
+ * time and the weather code provided by the API.
+ * @function WeatherisFineOrNot
+ * @param latitude Latitude of the location to check the weather for.
+ * @param longitude Longitude of the location to check the weather for.
+ * @returns {Promise} A promise that resolves to a boolean indicating whether it is 
+ * weather is fine or not.
+ */
+function WeatherisFineOrNot(latitude, longitude) {
+    return new Promise((resolve, reject) => {
+        http.get(`http://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=weathercode`, function (response) {
             var buffer = ""
-            var data;
+            var dataJson;
             response.on("data", function (chunk) {
                 buffer += chunk;
             }); 
             response.on("end", function (err) {
-                data = JSON.parse(buffer);
-                // get date and time info
+                dataJson = JSON.parse(buffer);
                 var date = new Date().toISOString().slice(0, 10);
                 var hour = new Date().getHours();
-                // Search for data corresponding to the current date
-                data.hourly.time.forEach(function(time, i) {
-                    // Compare date and time
+                dataJson.hourly.time.forEach(function(time, i) {
                     if (time.slice(0, 10) == date && time.slice(11, 13) == hour) {
-                        // obtaining the weather code to get the time
-                        var weatherCode = data.hourly.weathercode[i];
-                        comparaisons.forEach((comparaison) => {
-                            // comparison of the weathercode to all our weathercodes
-                            if (comparaison.result == weatherCode) {
-                                console.log('success, send an email')
-                                googleService.send_mail(`Le temps est : ${comparaison.name} le ${date} à ${hour} heures`, `météo a ${hour} heures`, 'AREA METEO', uid)
-                                return;
-                            }
-                        });
+                        var weatherCode = dataJson.hourly.weathercode[i];
+                        if (weatherCode > 0 || weatherCode < 4)
+                            resolve(true);
+                        else
+                            resolve(false);
                     }
                 });
             })
         })
-        res.send('Weather info')
+    });
+}
+
+/**
+ * GetLocation function retrieves the location data from Firebase for the specified user ID.
+ * @function GetLocation
+ * @param uid (string) user ID
+ * @returns Promise that resolves with location data if successful or rejects with an error if unsuccessful
+ */
+function GetLocation(uid) {
+    return new Promise((resolve, reject) => {
+        firebaseFunctions.getDataFromFireBase(uid, 'OpenMeteoService')
+        .then(data => {
+            resolve(data);
         })
         .catch(error => {
             console.log(error);
         });
+    });
+}
+
+module.exports = {
+    /**
+    * ActionWeather is a Promise that is used to determine if the weather is fine or not.
+    * @function ActionWeather
+    * @param {string} uid - The unique identifier of a user.
+    * @returns {Promise} A Promise that resolves with a boolean value indicating if the weather is fine or not.
+    */
+    ActionWeather: function(uid) {
+        return new Promise((resolve, reject) => {
+            GetLocation(uid)
+            .then(data => {
+                WeatherisFineOrNot(data.latitude, data.longitude)
+                .then(weatherIsFine => {
+                    if (weatherIsFine === true)
+                        resolve(true);
+                    else {
+                        resolve(false);
+                    }
+                })
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    },
+    /**
+     * UNDOCUMENTED
+     * PARAMETER UNUSED: res
+     */
+    RegistedRequiredOpenMeteo: function(res, uid, data) {
+        firebaseFunctions.setDataInDb(`USERS/${uid}/OpenMeteoService/`, data)
     }
 }

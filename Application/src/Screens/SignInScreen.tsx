@@ -5,8 +5,15 @@ import { Globals } from "../Common/Globals";
 import FacebookSocialButton from "../Components/SocialButtons/FacebookButton";
 import GoogleSocialButton from "../Components/SocialButtons/GoogleSocialButton";
 import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
-import { NavigatorPop } from "../Navigator";
+import { NavigatorPop, NavigatorPush } from "../Navigator";
 import Circles from "../Components/Circles";
+import { ip} from "../../env";
+import { HomeScreenProps } from "../Common/Interfaces";
+import { Options } from "react-native-navigation";
+
+import auth from '@react-native-firebase/auth';
+import firebase from '@react-native-firebase/app'
+import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
 
 
 export default function SignInScreen() {
@@ -17,27 +24,117 @@ export default function SignInScreen() {
     const [userMail, setUserMail] = useState("")
     const [userPass, setUserPass] = useState("")
     const [userValidPass, setUserValidPass] = useState("")
+    const [ip, setIp] = useState("")
+    const [isConnected, setIsConnected] = useState(false)
 
-    function connectionAction() {
+    // Options to push the next screen
+    const options: Options = {
+        popGesture: false,
+        topBar: {
+            visible: false
+        }
+    }
+    async function connectionAction() {
         if (userPass !== userValidPass)
             Alert.alert("Not the same")
         console.log("Subscribe user", userMail, userPass, userValidPass)
+        console.log("Connect user", userMail, userPass)
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({email: userMail, password: userPass})
+        }
+        try {
+            await fetch(ip + "/register", requestOptions).then(response => {
+                response.json().then(async data => {
+                    console.log(data);
+                    if (data.userUid != 'error') {
+                        const requestOptions = {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({uid: data.userUid})
+                        }
+                        await fetch(ip + "/register/google", requestOptions).then(response => {
+                            response.json().then(dataGoogle => {
+                                if (dataGoogle.body != 'Error') {
+                                    const props: HomeScreenProps = {
+                                        userMail: userMail,
+                                        userId: data.userUid,
+                                        ip: ip
+                                    }
+                                    NavigatorPush("HomeScreen", "mainStack", options, props)
+                                }
+                            })
+                        })
+                    }
+                }).catch(error => {
+                    console.log(error);
+                })
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     function connectWithApple() {
         console.log("Subscribe with Apple")
+        const props: HomeScreenProps = {
+            userMail: userMail,
+            userId: "idTest",
+            ip: ip
+        }
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     function connectWithGoogle() {
         console.log("Subscribe with Google")
     }
 
-    function connectWithFacebook() {
-        console.log("Subscribe with Facebook")
+    async function connectWithFacebook() {
+        const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+
+        if (result.isCancelled) {
+            throw 'user cancelled the login process';
+        }
+        const data = await AccessToken.getCurrentAccessToken();
+
+        if (!data) {
+            throw 'Something went wrong obtaining access token';
+        }
+
+        const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+
+        // Sign-in the user with the credential
+        auth().signInWithCredential(facebookCredential).then((response) => {
+            let email = response.user.email || '';
+            const props: HomeScreenProps = {
+                userMail: email,
+                userId: response.user.uid,
+                ip: ip
+            }
+            NavigatorPush("HomeScreen", "mainStack", options, props)
+        });
+
     }
 
     function navigateToConnexion() {
         NavigatorPop("mainStack")
+    }
+
+    function getIpStatus() {
+        try {
+            fetch(ip + "/testConnexion").then(response => {
+                if (response.status == 200)
+                    setIsConnected(true)
+            }).catch(error => {
+                console.error(error);
+                setIsConnected(false)
+            })
+        } catch (error) {
+            console.error(error);
+            setIsConnected(false)
+        }
     }
 
     function SocialButtons() {
@@ -126,12 +223,43 @@ export default function SignInScreen() {
                 <Separator width={"90%"} text="ou"/>
                 <SocialButtons/>
             </View>
+            <View style={styles.ipContainer}>
+                <TextInput
+                    style={[{borderColor: isConnected ? "green" : "red"}, styles.ipInput]}
+                    onChangeText={(text) => setIp(text)}
+                    value={ip}
+                    placeholder={"Adresse ip"}
+                    placeholderTextColor={"#7B7B7B"}
+                    keyboardType="numbers-and-punctuation"
+                    textContentType="URL"
+                    autoCorrect={false}
+                    returnKeyType="done"
+                    onSubmitEditing={getIpStatus}
+                    testID="ipAddress"
+                />
+            </View>
             <SignUp/>
         </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
+    ipContainer: {
+        position: "absolute",
+        top: 40,
+        height: 40,
+        width: "100%",
+    },
+    ipInput: {
+        width: "80%",
+        height: 40,
+        borderBottomWidth: 1,
+        borderRadius: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        zIndex: 10,
+        alignSelf: "center"
+    },
     container: {
         flex: 1,
         flexDirection: "column",

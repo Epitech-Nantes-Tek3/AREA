@@ -1,21 +1,46 @@
+/**
+ * GoogleService module
+ * @module GoogleService
+ */
+
+/**
+ * @constant nodemailer
+ * @requires nodemailer
+ */
 const nodemailer = require('nodemailer')
+
+/**
+ * @constant {google}
+ * @requires googleapis
+ */
 const  { google } = require('googleapis')
-const OAuth2 = google.auth.OAuth2
+
+/**
+ * @constant firebaseFunctions
+ * @requires firebaseFunctions
+ */
 const firebaseFunctions = require('../firebaseFunctions')
 
-//receive a text. Sends it with the user mail ID of the configGmail.js to recipient of the configGmail.js .
+const OAuth2 = google.auth.OAuth2
+
 module.exports = {
-    send_mail: function(mail_content, subject, userName, uid) {
-        //read in DB
+    /**
+     * UNUSED PARAMETER: subject
+     * Sends an email using Gmail with Nodemailer. It first reads in the Firebase database. Then it uses 
+     * an OAuth2 library to get an access token from Google. It configures the content of the email and uses the 
+     * Nodemailer library to send the email.
+     * @function send_mail
+     * @param {*} subject Unnecessary but mandatory for areaLoop.
+     * @param {*} mailContent Content of the mail
+     * @param {*} uid The user's uid
+     */
+    send_mail: function(subject, mailContent, uid) {
         firebaseFunctions.getDataFromFireBase(uid, 'GoogleService')
         .then(data => {
-
-            //required to obtain an access token
             const OAuth2_client = new OAuth2(data.clientId, data.clientSecret)
             OAuth2_client.setCredentials( {refresh_token : data.refreshToken})
             const accessToken = OAuth2_client.getAccessToken()
 
-            // content of configGmail.js required by nodemailer
             const transport = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
@@ -28,14 +53,12 @@ module.exports = {
                 }
             })
 
-            //content of the mail
             const mail_options = {
-                from: `${userName} <${data.user}>`,
+                from: `'AREA BOT' <${data.user}>`,
                 to: data.recipient,
-                subject: subject,
-                text: get_html_message(mail_content)
+                subject: `Area Message`,
+                text: get_html_message(mailContent)
             }
-            //send with nodemailer
             transport.sendMail(mail_options, function(error, res) {
                 if (error) {
                     console.log('Error: ', error)
@@ -109,11 +132,34 @@ module.exports = {
         }).catch(error => {
         console.log(error);
     });
-  }
+  },
+    /**
+     * UNDOCUMENTED
+     */
+    RegistedRequiredGoogle: function(uid, res) {
+        firebaseFunctions.getDataFromFireBaseServer('GoogleService')
+        .then(data => {
+            firebaseFunctions.getDataFromFireBase(uid, "")
+            .then((userdata) => {
+                var information = data
+                information.recipient = userdata.email
+                firebaseFunctions.setDataInDb(`USERS/${uid}/GoogleService`, information)
+                res.json({body: "OK"}).status(200);
+            }).catch((error) => {
+                console.log(error);
+                res.json({body: "Error"}).status(400);
+            })
+        })
+        .catch(error => {
+            console.log(error);
+            res.json({body: "Error"}).status(400);
+        });
+    }
 }
 
-// returns the text sent in mail format
-
-function get_html_message(mail_content) {
-    return `${mail_content}`
+/**
+ * UNDOCUMENTED
+ */
+function get_html_message(mailContent) {
+    return `${mailContent}`
 }

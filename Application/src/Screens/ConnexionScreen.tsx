@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, SafeAreaView, Image, Platform, Dimensions, TextInput, View, TouchableOpacity, ScaledSize } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, SafeAreaView, Image, Platform, Dimensions, TextInput, View, TouchableOpacity, ScaledSize, Alert } from "react-native";
 import Separator, { Line } from "../Components/Separator";
 import { Globals } from "../Common/Globals";
 import FacebookSocialButton from "../Components/SocialButtons/FacebookButton";
@@ -8,6 +8,11 @@ import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
 import { NavigatorPush } from "../Navigator";
 import { Options } from "react-native-navigation";
 import Circles from "../Components/Circles";
+import { environment, ip } from "../../env";
+import auth from '@react-native-firebase/auth';
+import firebase from '@react-native-firebase/app'
+import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
+import { HomeScreenProps } from "../Common/Interfaces";
 
 
 export default function ConnexionScreen() {
@@ -17,35 +22,141 @@ export default function ConnexionScreen() {
     // Hooks allowing use to get/set user infos
     const [userMail, setUserMail] = useState("")
     const [userPass, setUserPass] = useState("")
+    const [ip, setIp] = useState("http://localhost:8080") // Mettre l'adresse du serveur par défaut dans le futur
+    const [isConnected, setIsConnected] = useState(false)
+    const [isSetup, setIsSetup] = useState(false)
 
-    function forgotPassword() {
-        console.log("Act on forgot password")
+    // Hook to initialize firebase that is called only once
+    useEffect(() => {
+        if (!isSetup) {
+            const firebaseConfig = {
+                apiKey: environment.APIKEY,
+                authDomain: environment.AUTHDOMAIN,
+                databaseURL: environment.DATABASEURL,
+                projectId: environment.PROJECTID,
+                storageBucket: environment.STORAGEBUCKET,
+                messagingSenderId: environment.MESSAGINGSENDERID,
+                appId: environment.APPID
+            }
+            firebase.initializeApp(firebaseConfig).then(() => {
+                console.log("Firebase initialized")
+                setIsSetup(true)
+            })
+        }
+    })
+
+    // Options to push the next screen
+    const options: Options = {
+        popGesture: false,
+        topBar: {
+            visible: false
+        }
     }
 
-    function connectionAction() {
+    async function forgotPassword() {
+        console.log("Act on forgot password")
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({email: userMail})
+        }
+
+        try {
+            await fetch(ip + "/resetPassword", requestOptions).then(response => {
+                console.log(response)
+            })
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function connectionAction() {
         console.log("Connect user", userMail, userPass)
+
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({email: userMail, password: userPass})
+        }
+
+        try {
+            await fetch(ip + "/login", requestOptions).then(response => {
+                response.json().then(data => {
+                    console.log(data);
+                    if (data.userUid != 'error') {
+                        const props: HomeScreenProps = {
+                            userMail: userMail,
+                            userId: data.userUid,
+                            ip: ip
+                        }
+                        console.log("Connect user", userMail, userPass)
+                        NavigatorPush("HomeScreen", "mainStack", options, props)
+                    }
+                })
+            });
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     function connectWithApple() {
         console.log("Connect with Apple")
+        const props: HomeScreenProps = {
+            userMail: userMail,
+            userId: "idTest",
+            ip: ip
+        }
+        NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
     function connectWithGoogle() {
         console.log("Connect with Google")
     }
 
-    function connectWithFacebook() {
-        console.log("Connect with Facebook")
+    async function connectWithFacebook() {
+        const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+
+        if (result.isCancelled) {
+            throw 'user cancelled the login process';
+        }
+        const data = await AccessToken.getCurrentAccessToken();
+
+        if (!data) {
+            throw 'Something went wrong obtaining access token';
+        }
+
+        const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+
+        // Sign-in the user with the credential
+        auth().signInWithCredential(facebookCredential);
+        const props: HomeScreenProps = {
+            userMail: userMail,
+            userId: "idTest",
+            ip: ip
+        }
+        NavigatorPush("HomeScreen", "mainStack", options, props)
+
     }
 
     function navigateToSubscribe() {
-        const options: Options = {
-            topBar: {
-                visible: false
-            },
-            popGesture: false
+        NavigatorPush("SignInScreen", "mainStack", options, {})
+    }
+
+    function getIpStatus() {
+        try {
+            fetch(ip + "/testConnexion").then(response => {
+                if (response.status == 200)
+                    setIsConnected(true)
+            }).catch(error => {
+                console.error(error);
+                setIsConnected(false)
+                return true
+            })
+        } catch (error) {
+            console.error(error);
+            setIsConnected(false)
+            return false
         }
-        NavigatorPush("SignInScreen", options, {}, "mainStack")
     }
 
     function SocialButtons() {
@@ -66,7 +177,7 @@ export default function ConnexionScreen() {
                 <View style={signStyles.textContainer}>
                     <Text style={signStyles.mobileNoAccountText}>Pas encore de compte ? </Text>
                     <TouchableOpacity onPress={navigateToSubscribe}>
-                        <Text style={signStyles.mobileSignInText}>S'inscrire</Text>
+                        <Text style={signStyles.mobileSignInText} testID='inscription-redirect'>S'inscrire</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -76,7 +187,7 @@ export default function ConnexionScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <Circles/>
-            <View style={{flex: 10}}>
+            <View style={{flex: 10, zIndex: 0}}>
                 <Image
                     source={require("../assets/logo.png")}
                     style={
@@ -100,7 +211,7 @@ export default function ConnexionScreen() {
                         autoComplete="email"
                         autoCorrect={false}
                         returnKeyType="next"
-
+                        testID="emailAddress"
                     />
                     <TextInput
                         style={[styles.inputBorderStyle, styles.inputInside]}
@@ -112,6 +223,7 @@ export default function ConnexionScreen() {
                         autoComplete="password"
                         autoCorrect={false}
                         returnKeyType="done"
+                        testID="pwdpassword"
                     />
                     <Text style={styles.forgottenText} onPress={forgotPassword}>Un oubli ?</Text>
                     <TouchableOpacity
@@ -123,12 +235,43 @@ export default function ConnexionScreen() {
                 <Separator width={"90%"} text="ou"/>
                 <SocialButtons/>
             </View>
+            <View style={styles.ipContainer}>
+                <TextInput
+                    style={[{borderColor: isConnected ? "green" : "red"}, styles.ipInput]}
+                    onChangeText={(text) => setIp(text)}
+                    value={ip}
+                    placeholder={"Adresse ip"}
+                    placeholderTextColor={"#7B7B7B"}
+                    keyboardType="numbers-and-punctuation"
+                    textContentType="URL"
+                    autoCorrect={false}
+                    returnKeyType="done"
+                    onSubmitEditing={getIpStatus}
+                    testID="ipAddress"
+                />
+            </View>
             <SignUp/>
         </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
+    ipContainer: {
+        position: "absolute",
+        top: 40,
+        height: 40,
+        width: "100%",
+    },
+    ipInput: {
+        width: "80%",
+        height: 40,
+        borderBottomWidth: 1,
+        borderRadius: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        zIndex: 10,
+        alignSelf: "center"
+    },
     container: {
         flex: 1,
         flexDirection: "column",

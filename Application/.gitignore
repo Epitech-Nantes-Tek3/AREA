@@ -23,6 +23,7 @@ project.xcworkspace
 **/.xcode.env.local
 
 # Gradle
+android/.gradle/
 android/app/build/*
 /build/
 /packages/react-native-gradle-plugin/build/
@@ -142,3 +143,12 @@ ios/Podfile.lock
 
 # Yarn
 yarn.lock
+
+#Env
+env.ts
+
+#Signed key
+area.keystore
+
+#File created on release
+index.android.bundle

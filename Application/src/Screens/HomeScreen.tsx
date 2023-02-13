@@ -1,27 +1,183 @@
-import React, { useState } from "react";
-import { StyleSheet, SafeAreaView, View, Text, Image, Dimensions, ScaledSize, TouchableOpacity, Alert, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, SafeAreaView, View, Text, Image, Dimensions, ScaledSize, TouchableOpacity, Alert, ScrollView, Platform, PermissionsAndroid, PermissionStatus } from "react-native";
+import { Options } from "react-native-navigation";
 import { Globals } from "../Common/Globals";
-import { SingleArea } from "../Common/Interfaces";
-import AreaBlock from "../Components/AreaBlock";
+import { AddAreaProps, HomeScreenProps, InfoArea, SettingsProps, SingleArea, UserInfo } from "../Common/Interfaces";
 import Circles from "../Components/Circles";
-import { NavigatorshowModal } from "../Navigator";
+import { NavigatorPush, NavigatorshowModal } from "../Navigator";
+import Geolocation from 'react-native-geolocation-service';
 
 interface AreaBlockProps {
     index: number
     area: SingleArea
 }
 
-export default function HomeScreen() {
+export default function HomeScreen(props: HomeScreenProps) {
     const window: ScaledSize = Dimensions.get("window")
     const [allAreas, setAllAreas] = useState<Array<SingleArea>>([])
+    const [hasAcceptedLocalization, setHasAcceptedLocalization] = useState(false)
+    const [userInformation, setUserInformation] = useState<UserInfo>({
+        mail: props.userMail,
+        coord: {
+            latitude: 0,
+            longitude: 0,
+            city: ""
+        },
+        id: props.userId,
+        services: {
+            spotifyId: "",
+            googleId: "",
+            twitterId: "",
+            twitchId: "",
+            stravaId: ""
+        },
+        ip: props.ip
+    })
+
+    useEffect(() => {
+        try {
+            const fetchData = async () => {
+                await fetch(userInformation.ip + "/getAreas/" + userInformation.id)
+                .then(response => {
+                    response.json().then(data => {
+                        let areaArray: Array<SingleArea> = []
+                        for (const area in data.areas) {
+                            let action = data.areas[area].Action
+                            let reaction = data.areas[area].Reaction
+                            let id = data.areas[area].id
+                            areaArray.push({action: action, reaction: reaction, id: id})
+                        }
+                        setAllAreas(areaArray)
+                    })
+                })
+                .catch(error => {
+                    console.error(error);
+                })
+            };
+
+            const fetchUser = async () => {
+
+                await fetch(userInformation.ip + "/getPosition/" + userInformation.id)
+                .then(response => {
+                    response.json().then(data => {
+                        setUserInformation({
+                            mail: userInformation.mail,
+                            coord: {
+                                latitude: data.latitude,
+                                longitude: data.longitude,
+                                city: userInformation.coord.city
+                            },
+                            id: userInformation.id,
+                            services: {
+                                spotifyId: userInformation.services.spotifyId,
+                                googleId: userInformation.services.googleId,
+                                twitterId: userInformation.services.twitterId,
+                                twitchId: userInformation.services.twitchId,
+                                stravaId: userInformation.services.stravaId
+                            },
+                            ip: userInformation.ip
+                        })
+                    })
+                })
+                .catch(error => {
+                    console.error(error);
+                })
+            }
+
+            fetchData()
+            .then(async () => {
+                await fetchUser()
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }, [])
+
+    useEffect(() => {
+        if (Platform.OS === "ios") {
+            if (hasAcceptedLocalization === false) {
+                Geolocation.requestAuthorization("whenInUse")
+                    .then((res: Geolocation.AuthorizationResult) => {
+                        setHasAcceptedLocalization(res === "granted")
+                    })
+                    .catch((err) => {
+                        console.error(err)
+                    })
+            }
+        }
+        if (Platform.OS === 'android') {
+            PermissionsAndroid.request(
+              PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+            ).then((res: PermissionStatus) => {
+                setHasAcceptedLocalization(res === PermissionsAndroid.RESULTS.GRANTED)
+            })
+        }
+    })
 
     function navigateToProfile() {
+        let options: Options = {
+            topBar: {
+                title: {
+                    text: "Profil" 
+                },
+                background: {
+                    color: "transparent"
+                },
+            }
+        }
+        let propsSending: SettingsProps = {
+            hasAuthorization: hasAcceptedLocalization,
+            userInfo: userInformation,
+            setUserInfo: setUserInformation
+        }
+        NavigatorPush("SettingsScreen", "mainStack", options, propsSending)
     }
 
     function navigateToAddArea() {
+        let options: Options = {
+            topBar: {
+                title: {
+                    text: "Ajouter une AREA" 
+                },
+                background: {
+                    color: "transparent"
+                },
+            }
+        }
+        let propsSending: AddAreaProps = {
+            userInfo: userInformation,
+            setUserInfo: setUserInformation,
+            allAreas: allAreas,
+            setAllAreas: setAllAreas
+        }
+        NavigatorshowModal("AddArea", options, propsSending)
     }
 
     function removeAreaFromList(index: number) {
+        async function supressArea() {
+            try {
+                const requestOptions = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({uid: userInformation.id, id: allAreas[index].id})
+                }
+
+                await fetch(ip + "remove/area", requestOptions).then(response => {
+                    response.json().then(data => {
+                        if (data.body === "Success") {
+                            let copyAreas = [...allAreas]
+                            copyAreas.splice(index, 1)
+                            setAllAreas(copyAreas)
+                        } else {
+                            console.log("Error")
+                        }
+                    })
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
         Alert.alert(
             "Supprimer",
             "Tu vas supprimer une AREA, veux-tu continuer ?",
@@ -32,11 +188,7 @@ export default function HomeScreen() {
               },
               {
                 text: "Supprimer",
-                onPress: () => {
-                    let copyAreas = [...allAreas]
-                    copyAreas.splice(index, 1)
-                    setAllAreas(copyAreas)
-                },
+                onPress: supressArea,
                 style: "destructive"
               }
             ]
@@ -47,8 +199,8 @@ export default function HomeScreen() {
         return (
             <View style={areaBlock.container}>
                 <View style={areaBlock.textContainer}>
-                    <Text style={areaBlock.text}>{props.area.action}</Text>
-                    <Text style={areaBlock.text}>{props.area.reaction}</Text>
+                    <Text style={areaBlock.text}>{props.area.action.description}</Text>
+                    <Text style={areaBlock.text}>{props.area.reaction.description}</Text>
                 </View>
                 <View style={areaBlock.trashContainer}>
                     <TouchableOpacity style={areaBlock.imageSize} onPress={() => removeAreaFromList(props.index)}>

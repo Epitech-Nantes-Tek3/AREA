@@ -1,0 +1,34 @@
+name: Documentation
+on:
+  push:
+    branches:
+      - "main"
+  workflow_dispatch:
+    inputs:
+      parts:
+        description: Select documentation to generate
+        required: true
+        type: choice
+        options:
+          - "server"
+          - "all"
+
+jobs:
+  documentation:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Create server documentation
+        uses: andstor/jsdoc-action@v1
+        with:
+          source_dir: ./Server/
+          recurse: true
+          output_dir: ./server-docs
+          front_page: ./Server/readme.md
+      - name: Upload server documentation
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: server-docs
+          target-folder: docs/server
