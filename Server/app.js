@@ -282,3 +282,13 @@ app.get('/spotify/islisteningto', (req, res) => {
 app.get('/spotify/pause', (req, res) => {
     spotifyService.pauseMusic(req, res)
 })
+
+/// Shuffle the playlist or not of the user
+app.get('/spotify/wantshuffle', (req, res) => {
+    spotifyService.setShuffle(req, res, false)
+})
+
+/// Create a new playlist on the logged user
+app.get('/spotify/createplaylist', (req, res) => {
+    spotifyService.createPlaylist(req, res, 'AreaPlaylist')
+})

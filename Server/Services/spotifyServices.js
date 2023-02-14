@@ -129,7 +129,23 @@ module.exports = {
         spotifyApi.pause().then(function() {
             res.send("Music Paused !")
         }, function(err) {
-            console.log(err)
+            console.log('Something went wrong!', err)
         });
     },
+
+    setShuffle : function(req, res, wantShuffle) {
+        spotifyApi.setShuffle(wantShuffle).then(function() {
+          res.send('Succes')
+        }, function  (err) {
+          console.log('Something went wrong!', err);
+        });
+    },
+
+    createPlaylist : function(req, res, playlistName, public=true, playlistDesc='') {
+        spotifyApi.createPlaylist(playlistName, { 'description': playlistDesc, 'public': public }).then(function(data) {
+            console.log('Created playlist ', playlistName);
+        }, function(err) {
+            console.log('Something went wrong!', err);
+        });
+    }
 }
