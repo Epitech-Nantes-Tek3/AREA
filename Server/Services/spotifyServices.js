@@ -1,4 +1,13 @@
+/**
+ * @constant SpotifyWebApi
+ * @module spotify-web-api-node
+ */
 const SpotifyWebApi = require('spotify-web-api-node');
+
+/**
+ * @constant firebaseFunctions
+ * @requires firebaseFunctions
+ */
 const firebaseFunctions = require('../firebaseFunctions')
 
 const scopes = [
@@ -30,6 +39,14 @@ const spotifyApi = new SpotifyWebApi({
 
 
 module.exports = {
+    /**
+     * Callback linked to redirect URI for Spotify
+     * Will set the access token and refresh token with the given authorizations
+     * @function callBack
+     * @param {*} req the request
+     * @param {*} res the request's result
+     * @returns
+     */
     callBack : function (req, res) {
         const error = req.query.error;
         const code = req.query.code;
@@ -74,6 +91,12 @@ module.exports = {
             });
     },
 
+    /**
+     * Register a User to spotify, thanks to his client ID and Secret
+     * @function registerUser
+     * @param {*} req the request
+     * @param {*} res the request's result
+     */
     registerUser : function (req, res) {
         firebaseFunctions.getDataFromFireBaseServer('Spotify').then(async serverData => {
 
@@ -83,6 +106,14 @@ module.exports = {
             res.redirect(spotifyApi.createAuthorizeURL(scopes));
           })
     },
+
+    /**
+     * Checks if the logged user follows some artists
+     * @function isfollowing
+     * @param {*} req the request
+     * @param {*} res the request's result
+     * @param {*} artistUid the spotify uid of the searched artists
+     */
     isfollowing : function (req, res, artistUid) {
         spotifyApi.isFollowingArtists(artistUid).then(function(data) {
             let isFollowing = data.body;
@@ -96,6 +127,12 @@ module.exports = {
             console.log('Something went wrong!', err);
         });
     },
+    /**
+     * Checks if the logged user is currently listening to some music
+     * @function isListening
+     * @param {*} req the request
+     * @param {*} res the request's result
+     */
     isListening : function (req, res) {
         spotifyApi.getMyCurrentPlaybackState().then(function(data) {
             if (data.body && data.body.is_playing) {
@@ -108,6 +145,13 @@ module.exports = {
         });
 
     },
+    /**
+     * Checks if the logged user is listening to a specific music searched by the music name
+     * @function isListeningTo
+     * @param {*} req the request
+     * @param {*} res the request's result
+     * @param {*} musicName the name of the music we're looking for
+     */
     isListeningTo : function (req, res, musicName) {
         spotifyApi.getMyCurrentPlaybackState().then(function(data) {
             if (data.body && data.body.is_playing) {
@@ -125,6 +169,12 @@ module.exports = {
 
     },
 
+    /**
+     * If ther is a music playing, pause it
+     * @function pause
+     * @param {*} req the request
+     * @param {*} res the request's result
+     */
     pauseMusic : function (req, res) {
         spotifyApi.pause().then(function() {
             res.send("Music Paused !")
@@ -133,6 +183,14 @@ module.exports = {
         });
     },
 
+    /**
+     * Set the shuffle mode to on or off, corresponding to want shuffle
+     * The logged user should listen to music, or it can lead to undefined behavior
+     * @function setShuffle
+     * @param {*} req the request
+     * @param {*} res the request's result
+     * @param {*} wantShuffle if true, the shuffle will be on, otherwise it will be off
+     */
     setShuffle : function(req, res, wantShuffle) {
         spotifyApi.setShuffle(wantShuffle).then(function() {
           res.send('Succes')
@@ -141,6 +199,15 @@ module.exports = {
         });
     },
 
+    /**
+     * Create a new playlist for the logged user
+     * @function createPlaylist
+     * @param {*} req the request
+     * @param {*} res the request's result
+     * @param {*} playlistName the name of the playlist
+     * @param {*} public define whereas the playlist is public or not
+     * @param {*} playlistDesc the description of the playlist
+     */
     createPlaylist : function(req, res, playlistName, public=true, playlistDesc='') {
         spotifyApi.createPlaylist(playlistName, { 'description': playlistDesc, 'public': public }).then(function(data) {
             console.log('Created playlist ', playlistName);
