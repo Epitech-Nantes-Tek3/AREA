@@ -277,3 +277,8 @@ app.get('/spotify/islistening', (req, res) => {
 app.get('/spotify/islisteningto', (req, res) => {
     spotifyService.isListeningTo(req, res, 'Butterflies and Hurricanes')
 })
+
+/// Pause the current music
+app.get('/spotify/pause', (req, res) => {
+    spotifyService.pauseMusic(req, res)
+})

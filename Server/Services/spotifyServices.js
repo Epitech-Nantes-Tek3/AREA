@@ -72,7 +72,7 @@ module.exports = {
             console.error('Error getting Tokens:', error);
             res.send(`Error getting Tokens: ${error}`);
             });
-},
+    },
 
     registerUser : function (req, res) {
         firebaseFunctions.getDataFromFireBaseServer('Spotify').then(async serverData => {
@@ -125,16 +125,11 @@ module.exports = {
 
     },
 
-
-    getUser : function (req, res) {
-        spotifyApi.pause()
-        .then(function() {
-            console.log('Playback paused');
+    pauseMusic : function (req, res) {
+        spotifyApi.pause().then(function() {
+            res.send("Music Paused !")
         }, function(err) {
-            //if the user making the request is non-premium, a 403 FORBIDDEN response code will be returned
-            console.log('Something went wrong!', err);
+            console.log(err)
         });
-
-        res.send('C BO LA VIE')
-    }
+    },
 }
