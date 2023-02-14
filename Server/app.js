@@ -250,14 +250,20 @@ app.get('/getPosition/:uid', (req, res) => {
 
 })
 
+/// SPOTIFY SERVICES
+// CURRENTLY LOGGED WITH Nathan Rousseau Account
+
+// Login
 app.get('/spotify', (req, res) => {
     spotifyService.registerUser(req, res)
 })
 
+// Redirect Uri
 app.get('/spotify/callback', (req, res) => {
     spotifyService.callBack(req, res)
 })
 
-app.get('/spotify/user', (req, res) => {
-    spotifyService.getUser(req, res)
+/// Check if the logged user follow Elvis presley
+app.get('/spotify/isfollowing', (req, res) => {
+    spotifyService.isfollowing(req, res, ['43ZHCT0cAZBISjO8DG9PnE'])
 })

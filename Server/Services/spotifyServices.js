@@ -80,7 +80,7 @@ module.exports = {
             spotifyApi.setClientId(serverData.clientID)
             spotifyApi.setClientSecret(serverData.clientSecret)
 
-            await res.redirect(spotifyApi.createAuthorizeURL(scopes));
+            res.redirect(spotifyApi.createAuthorizeURL(scopes));
 
             // spotifyApi.clientCredentialsGrant().then(
             //   function(data) {
@@ -116,6 +116,19 @@ module.exports = {
             //       console.log('Something went wrong when retrieving an access token', err);
             //   });
           })
+    },
+    isfollowing : function (req, res, artistUid) {
+        spotifyApi.isFollowingArtists(artistUid).then(function(data) {
+            let isFollowing = data.body;
+
+            for (let index = 0; index < artistUid.length; index++) {
+                console.log(artistUid[index] + ':' + isFollowing[index])
+            }
+
+            res.send(isFollowing)
+        }, function(err) {
+            console.log('Something went wrong!', err);
+        });
     },
     getUser : function (req, res) {
         spotifyApi.pause()
