@@ -27,3 +27,4 @@ yarn.lock
 
 # Firebase config
 src/firebaseConfig.js
+src/env.js

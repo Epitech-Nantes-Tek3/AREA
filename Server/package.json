@@ -9,6 +9,7 @@
     "firebase": "^8.6.8",
     "googleapis": "^110.0.0",
     "got": "12.5.3",
+    "jsdoc": "^4.0.0",
     "login-with-twitter": "^1.2.4",
     "node-cron": "^3.0.2",
     "nodemailer": "^6.9.0",
