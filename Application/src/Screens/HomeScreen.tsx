@@ -162,7 +162,7 @@ export default function HomeScreen(props: HomeScreenProps) {
                     body: JSON.stringify({uid: userInformation.id, id: allAreas[index].id})
                 }
 
-                await fetch(ip + "remove/area", requestOptions).then(response => {
+                await fetch(userInformation.ip + "/remove/area", requestOptions).then(response => {
                     response.json().then(data => {
                         if (data.body === "Success") {
                             let copyAreas = [...allAreas]

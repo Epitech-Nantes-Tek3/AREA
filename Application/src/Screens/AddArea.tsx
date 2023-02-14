@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { StyleSheet, SafeAreaView, View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
+import { StyleSheet, SafeAreaView, View, Text, Image, TouchableOpacity, ScrollView, TextInput } from "react-native";
 import { Globals } from "../Common/Globals";
 import { AddAreaProps, InfoArea, SingleArea } from "../Common/Interfaces";
 import { ACTIONS, REACTIONS } from "../Common/Areas";
 import { Navigation } from "react-native-navigation";
+import { Modal } from "../Components/Modal";
 import uuid from 'react-native-uuid';
 
 interface InfoBlockProps {
@@ -23,6 +24,8 @@ interface SelectionBlockProps {
 export default function AddArea(props: AddAreaProps) {
     const [selectedActionIndex, setSelectedActionIndex] = useState<number>(0)
     const [selectedReactionIndex, setSelectedReactionIndex] = useState<number>(0)
+    const [isModalVisible, setModalVisible] = useState<boolean>(false)
+    const [modalInput, setModalInput] = useState<string>("")
     let logo = {
         "spotify": require("../assets/logo/spotify.png"),
         "iss": require("../assets/logo/iss.png"),
@@ -67,6 +70,7 @@ export default function AddArea(props: AddAreaProps) {
         let color = (props.index === props.selectedIndex ? "#7D7D7D" : "#392D37")
 
         function pressBlock() {
+            setModalVisible(!isModalVisible)
             props.setIndex(props.index)
         }
 
@@ -122,6 +126,28 @@ export default function AddArea(props: AddAreaProps) {
                     </TouchableOpacity>
                 </View>
             </View>
+            <Modal isVisible={isModalVisible}>
+                <Modal.Container>
+                    <Modal.Header title="Rentrez une valeur" />
+                    <Modal.Body>
+                        <Text style={{}}>Change text to value wanted</Text>
+                        <TextInput
+                            style={{}}
+                            onChangeText={(text) => setModalInput(text)}
+                            value={modalInput}
+                            placeholder={"Value"}
+                            placeholderTextColor={"#7B7B7B"}
+                            autoCorrect={true}
+                            returnKeyType="done"
+                        />
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <TouchableOpacity onPress={() => setModalVisible(!isModalVisible)}>
+                            <Text>Agree</Text>
+                        </TouchableOpacity>
+                    </Modal.Footer>
+                </Modal.Container>
+            </Modal>
         </SafeAreaView>
     )
 }
