@@ -251,5 +251,5 @@ app.get('/getPosition/:uid', (req, res) => {
 })
 
 app.get('/spotify', (req, res) => {
-    spotifyService.registerUser()
+    spotifyService.registerUser(req, res)
 })
