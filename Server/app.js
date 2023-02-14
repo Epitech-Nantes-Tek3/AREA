@@ -253,3 +253,11 @@ app.get('/getPosition/:uid', (req, res) => {
 app.get('/spotify', (req, res) => {
     spotifyService.registerUser(req, res)
 })
+
+app.get('/spotify/callback', (req, res) => {
+    spotifyService.callBack(req, res)
+})
+
+app.get('/spotify/user', (req, res) => {
+    spotifyService.getUser(req, res)
+})
