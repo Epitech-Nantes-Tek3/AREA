@@ -81,40 +81,6 @@ module.exports = {
             spotifyApi.setClientSecret(serverData.clientSecret)
 
             res.redirect(spotifyApi.createAuthorizeURL(scopes));
-
-            // spotifyApi.clientCredentialsGrant().then(
-            //   function(data) {
-            //       console.log('The access token is ' + data.body['access_token']);
-            //       spotifyApi.setAccessToken(data.body['access_token']);
-
-            //       // The Logged User
-            //       spotifyApi.getMe().then(function(data) {
-            //           console.log(data.body);
-            //       }, function(err) {
-            //           console.log('Something went wrong!', err);
-            //       });
-
-            //       /// ELVIS ALBUM
-            //       // spotifyApi.getArtistAlbums('43ZHCT0cAZBISjO8DG9PnE').then(
-            //       //     function(data) {
-            //       //     console.log('Artist albums', data.body);
-            //       //     },
-            //       //     function(err) {
-            //       //     console.error(err);
-            //       //     }
-            //       // );
-
-            //       //// GET CREEPLACREPE
-            //     //   spotifyApi.getUser('92n7d1dfv2dqbtonl88ff5xjf').then(function(data) {
-            //     //     console.log('Some information about this user', data.body);
-            //     //     }, function(err) {
-            //     //     console.log('Something went wrong!', err);
-            //     //   });
-            //     //   res.send('Réussite')
-            //   },
-            //   function(err) {
-            //       console.log('Something went wrong when retrieving an access token', err);
-            //   });
           })
     },
     isfollowing : function (req, res, artistUid) {
@@ -130,6 +96,36 @@ module.exports = {
             console.log('Something went wrong!', err);
         });
     },
+    isListening : function (req, res) {
+        spotifyApi.getMyCurrentPlaybackState().then(function(data) {
+            if (data.body && data.body.is_playing) {
+                res.send("User is currently playing something!");
+            } else {
+                res.send("User is not playing anything, or doing so in private.");
+            }
+        }, function(err) {
+            console.log('Something went wrong!', err);
+        });
+
+    },
+    isListeningTo : function (req, res, musicName) {
+        spotifyApi.getMyCurrentPlaybackState().then(function(data) {
+            if (data.body && data.body.is_playing) {
+                var currMusic = data.body.item.name
+                if (currMusic === musicName)
+                    res.send("User is listening to : " + musicName)
+                else
+                    res.send("User is not listening to " + musicName + ", User is listening to " + currMusic)
+            } else {
+                res.send("User is not playing anything, or doing so in private.");
+            }
+        }, function(err) {
+            console.log('Something went wrong!', err);
+        });
+
+    },
+
+
     getUser : function (req, res) {
         spotifyApi.pause()
         .then(function() {

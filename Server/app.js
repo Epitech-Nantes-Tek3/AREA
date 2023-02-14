@@ -267,3 +267,13 @@ app.get('/spotify/callback', (req, res) => {
 app.get('/spotify/isfollowing', (req, res) => {
     spotifyService.isfollowing(req, res, ['43ZHCT0cAZBISjO8DG9PnE'])
 })
+
+/// Check if the logged user is currently listening some music
+app.get('/spotify/islistening', (req, res) => {
+    spotifyService.isListening(req, res)
+})
+
+/// Check if the user is listening to a specific music (by his name)
+app.get('/spotify/islisteningto', (req, res) => {
+    spotifyService.isListeningTo(req, res, 'Butterflies and Hurricanes')
+})
