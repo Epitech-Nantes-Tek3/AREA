@@ -6,6 +6,7 @@ var bodyParser = require('body-parser')
 const fs = require('fs');
 const openMeteoService = require('./Services/openMeteoService');
 const twitterService = require('./Services/twitterService');
+const TwitchService = require('./Services/TwitchService');
 const firebaseFunctions = require('./firebaseFunctions');
 const ISSStationService = require('./Services/ISSStationService');
 const areasFunctions = require('./Services/areasFunctions');
@@ -42,22 +43,22 @@ app.get("/testConnexion", (req, res) => {
     res.send("Connexion established").status(200);
 })
 
-nodeCron.schedule("*/10 * * * * *", () => {
-    try {
-        firebaseFunctions.getAllUsersFromFireBase().then(data => {
+// nodeCron.schedule("*/10 * * * * *", () => {
+//     try {
+//         firebaseFunctions.getAllUsersFromFireBase().then(data => {
 
-            for (const uid in data) {
-                try {
-                    areasFunctions.areaLoop(uid);
-                } catch (err) {
-                    console.log(err);
-                }
-            }
-        })
-    } catch (err) {
-        console.log(err)
-    }
-})
+//             for (const uid in data) {
+//                 try {
+//                     areasFunctions.areaLoop(uid);
+//                 } catch (err) {
+//                     console.log(err);
+//                 }
+//             }
+//         })
+//     } catch (err) {
+//         console.log(err)
+//     }
+// })
 
 
 //FIREBASE FUNCTIONS
@@ -153,6 +154,17 @@ app.post('/register/google', (req, res) => {
 
 app.get('/register/iss', (req, res) => {
     ISSStationService.RegistedRequiredIss(res, firebaseUid, data)
+})
+
+app.get('/twitch', (req, res) => {
+    TwitchService.getTwitchAuthorization('krl_stream')
+    .then(dataTwitch => {
+        console.log(dataTwitch);
+    })
+    .catch(error => {
+        console.error(error);
+    });
+    res.send('TwitchService')
 })
 
 
