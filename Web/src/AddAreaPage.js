@@ -7,9 +7,10 @@ import LogoGoogle from './assets/google.png';
 import LogoMeteo from './assets/meteo.png';
 import LogoNasa from './assets/nasa.png'
 import CheckCircle from './assets/checkCircle.png'
-import { Component, useState } from 'react';
+import { Component, useEffect, useState } from 'react';
 import { ACTIONS, REACTIONS } from "./Common/Areas"
 import { useNavigate } from "react-router-dom"
+import { getAllCacheData } from "./CacheManagement"
 
 /**
  * @brief Return the AddArea page for AREA
@@ -31,6 +32,18 @@ export default function AddAreaPage(props) {
         "strava": LogoStrava
     }
 
+    useEffect(() => {
+        loginWithCache("/addArea");
+    }, [])
+    const loginWithCache = async (page) => {
+        var cacheData = await getAllCacheData();
+        if (cacheData !== undefined && cacheData.mail !== undefined) {
+            props.userInformation.mail = cacheData.mail;
+            navigate(page);
+        } else {
+            navigate('/auth')
+        }
+    }
     const sendArea = () => {
         let area = {
             action: ACTIONS[selectedActionIndex],

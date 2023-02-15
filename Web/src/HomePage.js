@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import TrashImage from './assets/trash.png';
 import AddImage from "./assets/add.png";
+import SettingsImage from "./assets/avatar.png";
 import { useNavigate } from "react-router-dom"
+import { getAllCacheData, addDataIntoCache } from './CacheManagement'
 
 /**
  * @brief Return the Home page for AREA
@@ -13,9 +15,23 @@ export default function HomePage(props) {
 
     const navigate = useNavigate();
 
-
     useEffect(() => {
-        if (navigator.geolocation) {
+        loginWithCache("/home");
+    }, [])
+    const loginWithCache = async (page) => {
+        var cacheData = await getAllCacheData();
+        if (cacheData !== undefined && cacheData.mail !== undefined) {
+          props.userInformation.mail = cacheData.mail;
+          navigate(page);
+        } else {
+          navigate('/auth')
+        }
+    }
+    useEffect(() => {
+        if (props.userInformation.locationAccept == false && navigator.geolocation) {
+            props.userInformation.locationAccept = true
+        }
+        if (props.userInformation.locationAccept) {
             navigator.geolocation.getCurrentPosition((position) => {
                 props.setUserInformation({
                     mail: props.userInformation.mail,
@@ -161,8 +177,17 @@ export default function HomePage(props) {
         navigate('/addArea')
     }
 
+    const goSettings = () => {
+        navigate('/settings')
+    }
+    function mouseHover() {
+        document.getElementById("global").style.cursor = "pointer";
+    }
+    function mouseOut() {
+        document.getElementById("global").style.cursor = "default";
+    }
     return (
-        <div style={{
+        <div id="global" style={{
             display: "flex",
             flexDirection: "column",
             width: "100%",
@@ -175,6 +200,7 @@ export default function HomePage(props) {
             }}>
                 <h1 style={{fontSize: 50, marginBottom: 10}}>Re-Bonjour !</h1>
                 <img src={AddImage} style={{width: 80, height: 80, position: "absolute", right: 150, top: 30, color: "black"}} onClick={addArea}/>
+                <img src={SettingsImage} style={{width: 80, height: 80, position: "absolute", right: 150, top: 130, color: "black", borderRadius:100}} onMouseOver={mouseHover} onMouseOut={mouseOut}onClick={goSettings}/>
             </div>
             <h2 style={{fontSize: 40, marginTop: 0, textAlign: "center"}}>AREAs actives</h2>
             <DisplayAreas />
