@@ -21,6 +21,8 @@ import { loginWithCache } from './Common/Login'
 function AuthPage(props) {
     const navigate = useNavigate();
     let [authMode, setAuthMode] = useState("signin")
+
+    const [isBadPassord, setIsBadPassword] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
@@ -98,15 +100,19 @@ function AuthPage(props) {
                 response.json().then(data => {
                     console.log(data);
                     if (data.userUid !== 'error') {
+                        setIsBadPassword(false);
                         props.userInformation.id = data.userUid;
                         props.userInformation.mail = email;
                         addDataIntoCache("area", { ip }, props.userInformation);
                         navigate('/home');
+                    } else {
+                        setIsBadPassword(true);
                     }
                 })
             });
         } catch (error) {
             console.log(error);
+            setIsBadPassword(true);
         }
     }
 
@@ -157,8 +163,8 @@ function AuthPage(props) {
     /**
      * It returns a button with the text and action props.
      * @param {text: string, action: function} props - the props of the button (text, action)
-     * @returns the button div with the props
-     */
+                            * @returns the button div with the props
+                            */
     function AuthButton(props) {
         return (
             <div className="form-group">
@@ -173,8 +179,8 @@ function AuthPage(props) {
     /**
      * It returns an input with the type, placeholder and onChange props.
      * @param {type: string, placeHolder: string, change: function} props - the props of the input (type, placeholder, change)
-     * @returns the input div with the props
-     */
+                            * @returns the input div with the props
+                            */
     function Input(props) {
         return (
             <div className="form-group">

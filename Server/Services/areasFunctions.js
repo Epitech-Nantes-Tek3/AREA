@@ -1,9 +1,44 @@
-const firebaseFunctions = require('../firebaseFunctions')
+/**
+ * AreasFunctions module
+ * @module areasFunctions
+ */
+
+/**
+ * @constant firebaseFunctions
+ * @requires firebaseFunctions
+ */
+const firebaseFunctions = require('../firebaseFunctions');
+
+/**
+ * @constant openMeteoService
+ * @requires openMeteoService
+ */
 const openMeteoService = require('./openMeteoService');
+
+/**
+ * @constant twitterService
+ * @requires twitterService
+ */
 const twitterService = require('./twitterService');
+
+/**
+ * @constant googleService
+ * @requires googleService
+ */
 const googleService = require('./googleService');
+
+/**
+ * @constant IssStationService
+ * @requires ISSStationService
+ */
 const ISSService = require('././ISSStationService');
 
+/**
+ * Contains all area.
+ * @type {{name, function}}
+ * @property {string} name Name
+ * @property {function} function Function
+*/
 let areas = [
     { name: "météo", function:  openMeteoService.ActionWeather},
     { name: "twitter", function:  twitterService.ActionTw},
@@ -14,7 +49,10 @@ let areas = [
 module.exports = {
     /**
     * areaLoop - This function is used to loop through the areas and perform corresponding actions and reactions
-    * based on the data retrieved from Firebase for a specific user
+    * based on the data retrieved from Firebase for a specific user id.
+    * @function areaLoop
+    * @param {Object} req - Express request object
+    * @param {Object} res - Express response object
     * @param {string} uid - User Id
     */
     areaLoop: function(uid) {
@@ -51,6 +89,7 @@ module.exports = {
     },
     /**
     * areaRegister - function that stores the provided area data in the firebase database under the specified user id
+    * @function areaRegister
     * @param {string} uid - user id
     * @param {object} Action - action data to be stored
     * @param {object} Reaction - reaction data to be stored
