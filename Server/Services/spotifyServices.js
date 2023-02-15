@@ -1,6 +1,6 @@
 /**
  * @constant SpotifyWebApi
- * @module spotify-web-api-node
+ * @requires spotify-web-api-node
  */
 const SpotifyWebApi = require('spotify-web-api-node');
 
