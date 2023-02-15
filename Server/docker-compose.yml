@@ -1,0 +1,19 @@
+version: "2.2"
+services:
+  server:
+    build:
+      context: ./
+    command: npm run dev
+    image: areacontainerregistry.azurecr.io/server
+    volumes:
+      - server:/tmp
+    ports:
+      - "8080:8080"
+    container_name: server
+
+volumes:
+  server:
+    # driver: azure_file
+    # driver_opts:
+    #   share_name: server
+    #   storage_account_name: areastorage2023

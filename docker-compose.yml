@@ -6,7 +6,7 @@ services:
       context: ./Server
     command: npm run dev
     volumes:
-      - .:/tmp
+      - server:/tmp
     ports:
       - "8080:8080"
     healthcheck:
@@ -25,6 +25,7 @@ services:
     build:
       context: ./Web
       dockerfile: Dockerfile
+    # image: areacontainerregistry.azurecr.io/client_web
     command: npm start
     ports:
       - "8081:3000"
@@ -46,3 +47,7 @@ services:
 
 volumes:
   area:
+    driver: azure_file
+    driver_opts:
+      share_name: area
+      storage_account_name: areastorage2023

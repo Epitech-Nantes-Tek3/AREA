@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TrashImage from './assets/trash.png';
 import AddImage from "./assets/add.png";
 import { useNavigate } from "react-router-dom"
-
+import {ip} from "./env";
 /**
  * @brief Return the Home page for AREA
  * This page will be updated soon
@@ -177,6 +177,7 @@ export default function HomePage(props) {
                 <img src={AddImage} style={{width: 80, height: 80, position: "absolute", right: 150, top: 30, color: "black"}} onClick={addArea}/>
             </div>
             <h2 style={{fontSize: 40, marginTop: 0, textAlign: "center"}}>AREAs actives</h2>
+            <h2>{ip}</h2>
             <DisplayAreas />
         </div>
 
