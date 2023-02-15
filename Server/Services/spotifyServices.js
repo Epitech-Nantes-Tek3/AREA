@@ -1,10 +1,17 @@
 /**
+ * SpotifyService module
+ * @module SpotifyService
+ */
+
+/**
+ * It allows to use spotify web api node
  * @constant SpotifyWebApi
  * @requires spotify-web-api-node
  */
 const SpotifyWebApi = require('spotify-web-api-node');
 
 /**
+ * It allows to use firebaseFunctions.
  * @constant firebaseFunctions
  * @requires firebaseFunctions
  */
