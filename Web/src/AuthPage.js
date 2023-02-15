@@ -252,9 +252,33 @@ function AuthPage(props) {
                     <div className="Form-content">
                         <img src={AreaLogo} style={{ width: 150, height: 150, display: "block", margin: "auto" }} alt="logo" />
                         <h3 className="Title">S'inscrire</h3>
-                        <Input type="email" placeholder="Adresse email" change={{ handleChange }} />
-                        <Input type="password" placeholder="Mot de passe" change={{ handleChange }} />
-                        <Input type="password" placeholder="Valider le mot de passe" change={{ handleChange }} />
+                        <div className="form-group">
+                            <input
+                                type="email"
+                                className="form-control mt-1"
+                                style={{ width: "60%", display: "block", margin: "auto" }}
+                                placeholder="Adresse email"
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <input
+                                type="password"
+                                className="form-control mt-1"
+                                style={{ width: "60%", display: "block", margin: "auto" }}
+                                placeholder="Mot de passe"
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <input
+                                type="password"
+                                className="form-control mt-1"
+                                style={{ width: "60%", display: "block", margin: "auto" }}
+                                placeholder="Valider le mot de passe"
+                                onChange={handleChange}
+                            />
+                        </div>
                         <CenterButton text="S'inscrire" />
                         <div className="text-center">
                             Déjà un compte ?{" "}
