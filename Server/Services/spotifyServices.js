@@ -32,6 +32,10 @@ const scopes = [
     'user-follow-modify'
   ];
 
+/**
+ * @constant spotifyApi
+ * Will be used for all spotify actions related with the @constant scopes authorizations
+ * */
 const spotifyApi = new SpotifyWebApi({
     redirectUri : 'http://localhost:8080/spotify/callback',
     scopes : scopes
