@@ -12,6 +12,7 @@ const areasFunctions = require('./Services/areasFunctions');
 const firebaseUid = 'leMgZPp8sfe2l06b6TU330bahJz2';
 const port = config.port;
 const nodeCron = require("node-cron")
+const { Client, Token } = require('strava-oauth2');
 
 const session = require('express-session')
 
@@ -247,3 +248,38 @@ app.get('/getPosition/:uid', (req, res) => {
             res.json(error).status(400);
         })
 })
+
+const configStrava = {
+    client_id: 0,
+    client_secret: "",
+    redirect_uri: 'http://localhost:8080/auth/callback',
+    scope: 'read,activity:read_all'
+};
+
+var client;
+
+app.get('/auth', async (req, res) => {
+    const stravaClient = await firebaseFunctions.getDataFromFireBaseServer('Strava');
+
+    configStrava.client_id = stravaClient.client_id;
+    configStrava.client_secret = stravaClient.client_secret;
+    console.log(configStrava);
+    client = new Client(configStrava);
+    res.redirect(client.getAuthorizationUri());
+});
+
+// Must be the same as the redirect_uri specified in the config
+app.get('/auth/callback', async (req, res) => {
+    const token = await client.getToken(req.originalUrl);
+    // Process token...
+
+    console.log(token);
+
+    res.redirect('/home');
+});
+
+app.get('/home', (req, res) => {
+
+    res.send('Welcome!');
+
+});
