@@ -1,178 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import TrashImage from './assets/trash.png';
-import AddImage from "./assets/add.png";
+import AddAreaImage from "./assets/add.png";
+import LogoImage from "./assets/logo.png";
 import SettingsImage from "./assets/avatar.png";
 import { useNavigate } from "react-router-dom"
-import { getAllCacheData, addDataIntoCache } from './CacheManagement'
+import { loginWithCache } from './Common/Login'
+import Popup from 'reactjs-popup';
 
 /**
  * @brief Return the Home page for AREA
  * This page will be updated soon
  */
 export default function HomePage(props) {
-    const [asked, setAsked] = useState(false)
-    const [location, setLocation] = useState({latitude: props.userInformation.coord.latitude, longitude: props.userInformation.coord.longitude, city: props.userInformation.coord.city})
+    // const [asked, setAsked] = useState(false)
+    // const [location, setLocation] = useState({ latitude: props.userInformation.coord.latitude, longitude: props.userInformation.coord.longitude, city: props.userInformation.coord.city })
 
     const navigate = useNavigate();
-
-    useEffect(() => {
-        loginWithCache("/home");
-    }, [])
-    const loginWithCache = async (page) => {
-        var cacheData = await getAllCacheData();
-        if (cacheData !== undefined && cacheData.mail !== undefined) {
-          props.userInformation.mail = cacheData.mail;
-          navigate(page);
-        } else {
-          navigate('/auth')
-        }
-    }
-    useEffect(() => {
-        if (props.userInformation.locationAccept == false && navigator.geolocation) {
-            props.userInformation.locationAccept = true
-        }
-        if (props.userInformation.locationAccept) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                props.setUserInformation({
-                    mail: props.userInformation.mail,
-                    coord: {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        city: props.userInformation.coord.city
-                    },
-                    id: props.userInformation.id,
-                    services: {
-                        spotifyId: props.userInformation.services.spotifyId,
-                        googleId: props.userInformation.services.googleId,
-                        twitterId: props.userInformation.services.twitterId,
-                        twitchId: props.userInformation.services.twitchId,
-                        stravaId: props.userInformation.services.stravaId
-                    }
-                })
-                setLocation({latitude: position.coords.latitude, longitude: position.coords.longitude, city: props.userInformation.coord.city})
-            })
-        }
-    })
-
-    useEffect(() => {
-        if (asked) {
-            fetch("https://api-adresse.data.gouv.fr/reverse/?lon=" + location.longitude + "&lat=" + location.latitude)
-            .then((res) => {
-                res.json()
-                    .then((jsonRes) => {
-                        if (jsonRes && jsonRes.features && jsonRes.features[0] && jsonRes.features[0].properties)
-                            setLocation({latitude: location.latitude, longitude: location.longitude, city: jsonRes.features[0].properties.city});
-                        else {
-                            setLocation({latitude: location.latitude, longitude: location.longitude, city: location.city});
-                            alert("Une erreur a été rencontrée en essayant de trouver votre ville à partir de votre localisation. Vos données ont tout de même été mises à jour.")
-                        }
-                    })
-            }).catch((err) => {
-                console.warn("error while fetching city from location: ", err)
-            })
-            setAsked(true)
-        }
-
-        props.setUserInformation({
-            mail: props.userInformation.mail,
-            coord: {
-                latitude: location.latitude,
-                longitude: location.longitude,
-                city: location.city
-            },
-            id: props.userInformation.id,
-            services: {
-                spotifyId: props.userInformation.services.spotifyId,
-                googleId: props.userInformation.services.googleId,
-                twitterId: props.userInformation.services.twitterId,
-                twitchId: props.userInformation.services.twitchId,
-                stravaId: props.userInformation.services.stravaId
-            }
-        })
-    }, [location])
-
-    function removeAreaFromList(index) {
-        let copyItems = [...props.allAreas];
-        copyItems.splice(index, 1);
-        props.setAllAreas(copyItems);
-    }
-
-    function AreaBlock(props) {
-        return (
-            <div style={{
-                display: "flex",
-                width: 400,
-                height: 100,
-                borderRadius: 20,
-                marginTop: 24,
-                flexDirection: "row",
-                backgroundColor: "#95B8D1",
-            }}>
-                <div style={{
-                    display: "flex",
-                    flex: 3,
-                    justifyContent: "space-around",
-                    paddingVertical: 12,
-                    flexDirection: "column",
-                    width: "100%",
-                }}>
-                    <span style={{
-                        marginLeft: 20,
-                        fontSize: 15,
-                        fontFamily: "Poppins-Regular"
-                    }}>{props.area.action.description}</span>
-                    <span style={{
-                        marginLeft: 20,
-                        fontSize: 15,
-                        fontFamily: "Poppins-Regular"
-                    }}>{props.area.reaction.description}</span>
-                </div>
-                <div style={{
-                    flex: 2,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    display: "flex"
-                }}>
-                    <div style={{
-                        width: 40,
-                        height: 40,
-                    }} onClick={() => removeAreaFromList(props.index)}>
-                        <img src={TrashImage} alt={"Logo de poubelle"} style={{
-                            width: 40,
-                            height: 40,
-                            color: "black"
-                        }}/>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-
-    function DisplayAreas() {
-        if (props.allAreas.length !== 0)
-            return (
-                <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
-                    {
-                        props.allAreas.map((item, index) => {
-                            return (
-                                <AreaBlock area={item} index={index}/>
-                            )}
-                        )
-                    }
-                </div>
-            )
-        return (
-            <div style={{
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "column"
-            }}>
-                <h3>Tu n'as pas encore créé d'AREA 🥺</h3>
-            </div>
-
-        )
-    }
-
     const addArea = () => {
         navigate('/addArea')
     }
@@ -180,31 +23,286 @@ export default function HomePage(props) {
     const goSettings = () => {
         navigate('/settings')
     }
-    function mouseHover() {
-        document.getElementById("global").style.cursor = "pointer";
+
+    useEffect(() => {
+        loginWithCache("/home", props);
+    }, [])
+    // useEffect(() => {
+    //     if (props.userInformation.locationAccept === false && navigator.geolocation) {
+    //         props.userInformation.locationAccept = true
+    //     }
+    //     if (props.userInformation.locationAccept) {
+    //         navigator.geolocation.getCurrentPosition((position) => {
+    //             props.setUserInformation({
+    //                 mail: props.userInformation.mail,
+    //                 coord: {
+    //                     latitude: position.coords.latitude,
+    //                     longitude: position.coords.longitude,
+    //                     city: props.userInformation.coord.city
+    //                 },
+    //                 id: props.userInformation.id,
+    //                 services: {
+    //                     spotifyId: props.userInformation.services.spotifyId,
+    //                     googleId: props.userInformation.services.googleId,
+    //                     twitterId: props.userInformation.services.twitterId,
+    //                     twitchId: props.userInformation.services.twitchId,
+    //                     stravaId: props.userInformation.services.stravaId
+    //                 }
+    //             })
+    //             setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude, city: props.userInformation.coord.city })
+    //         })
+    //     }
+    // })
+
+    // useEffect(() => {
+    //     if (asked) {
+    //         fetch("https://api-adresse.data.gouv.fr/reverse/?lon=" + location.longitude + "&lat=" + location.latitude)
+    //             .then((res) => {
+    //                 res.json()
+    //                     .then((jsonRes) => {
+    //                         if (jsonRes && jsonRes.features && jsonRes.features[0] && jsonRes.features[0].properties)
+    //                             setLocation({ latitude: location.latitude, longitude: location.longitude, city: jsonRes.features[0].properties.city });
+    //                         else {
+    //                             setLocation({ latitude: location.latitude, longitude: location.longitude, city: location.city });
+    //                             alert("Une erreur a été rencontrée en essayant de trouver votre ville à partir de votre localisation. Vos données ont tout de même été mises à jour.")
+    //                         }
+    //                     })
+    //             }).catch((err) => {
+    //                 console.warn("error while fetching city from location: ", err)
+    //             })
+    //         setAsked(true)
+    //     }
+
+    //     props.setUserInformation({
+    //         mail: props.userInformation.mail,
+    //         coord: {
+    //             latitude: location.latitude,
+    //             longitude: location.longitude,
+    //             city: location.city
+    //         },
+    //         id: props.userInformation.id,
+    //         services: {
+    //             spotifyId: props.userInformation.services.spotifyId,
+    //             googleId: props.userInformation.services.googleId,
+    //             twitterId: props.userInformation.services.twitterId,
+    //             twitchId: props.userInformation.services.twitchId,
+    //             stravaId: props.userInformation.services.stravaId
+    //         }
+    //     })
+    // }, [location])
+
+    function removeAreaFromList(index) {
+        let copyItems = [...props.allAreas];
+        copyItems.splice(index, 1);
+        props.setAllAreas(copyItems);
     }
-    function mouseOut() {
-        document.getElementById("global").style.cursor = "default";
-    }
-    return (
-        <div id="global" style={{
-            display: "flex",
+
+    function DisplayArea(props) {
+        const title = (props.area.title) ? props.area.title : "AREA " + props.index;
+        const action = (props.area.action) ? props.area.action : "Action";
+        const reaction = (props.area.reaction) ? props.area.reaction : "Reaction";
+        const global = {
+            position: "relative",
+            backgroundColor: "lightgrey",
+            padding: "10px",
+            borderRadius: "10px",
+            diplsay: "flex",
             flexDirection: "column",
-            width: "100%",
-            padding: 50
-        }}>
-            <div style={{
+            alignItems: "center",
+            justifyContent: "center",
+            textAlign: "center",
+            opacity: "0.9",
+
+            title: {
+                fontSize: "20px",
+                fontWeight: "bold",
+            },
+            action: {
+                fontSize: "15px",
+            },
+            reaction: {
+                fontSize: "15px",
+            },
+            trash: {
+                position: "relative",
+                width: "30px",
+                height: "30px",
+                cursor: "pointer",
+                border: "1px solid black",
+                borderRadius: "20%",
+            }
+
+        }
+        return (
+            <div style={global}>
+                <div style={global.title}>{title}</div>
+                <div style={global.action}>{action.description}.</div>
+                <div style={global.reaction}>{reaction.description}.</div>
+                <img src={TrashImage} style={global.trash} onClick={() => removeAreaFromList(props.index)} />
+            </div>
+        )
+    }
+    function AreaBlock(props) {
+        const title = (props.area.title) ? props.area.title : "AREA " + props.index;
+        const actionLogo = (props.area.action.logo) ? props.area.action.logo : "https://www.flaticon.com/svg/static/icons/svg/25/25231.svg";
+        const reactionLogo = (props.area.reaction.logo) ? props.area.reaction.logo : "https://www.flaticon.com/svg/static/icons/svg/25/25231.svg";
+        const style = {
+            areaBlock: {
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                backgroundColor: "lightgrey",
+                width: "300px",
+                height: "150px",
+                borderRadius: "20px",
+                margin: "10px",
+                cursor: "pointer",
+
+                title: {
+                    position: "relative",
+                    fontSize: "18px",
+                    margin: "5px",
+                },
+                content: {
+                    position: "relative",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-around",
+                    alignItems: "center",
+                    backgroundColor: "#5281B7",
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "20px",
+                },
+            }
+        }
+
+        return (
+            <Popup trigger={
+            <div style={style.areaBlock}>
+                <p style={style.areaBlock.title}>{title}</p>
+                <div style={style.areaBlock.content}>
+                    <img src={actionLogo} alt={"Logo de l'action"} />
+                    <img src={reactionLogo} alt={"Logo de la réaction"} />
+                </div>
+            </div>
+            } modal>
+                <DisplayArea area={props.area} index={props.index} />
+            </Popup>
+        )
+    }
+    function DisplayAreas() {
+        const style = {
+            displayAreas: {
+                position: "relative",
+                display: "grid",
+                gridTemplateColumns: "repeat(3, auto)",
+                justifyContent: "space-around",
+                alignItems: "center",
+                width: "minmax(300px, 100%)",
+                height: "100%",
+                padding: "10px",
+            },
+            noArea: {
+                position: "relative",
+            }
+        }
+
+        if (props.allAreas.length !== 0) {
+            return (
+                <div style={style.displayAreas}>{
+                    props.allAreas.map((item, index) => {
+                        return (
+                            <AreaBlock area={item} index={index} />
+                        )
+                    })
+                }</div>
+            )
+        }
+        return (
+            <div style={style.displayAreas}>
+                <h3 style={style.noArea}>Tu n'as pas encore créé d'AREA 🥺</h3>
+            </div>
+        )
+    }
+    function Header() {
+        const mail = props.userInformation.mail;
+        const style = {
+            header: {
+                position: "relative",
                 display: "flex",
                 flexDirection: "row",
-                position: "relative"
-            }}>
-                <h1 style={{fontSize: 50, marginBottom: 10}}>Re-Bonjour !</h1>
-                <img src={AddImage} style={{width: 80, height: 80, position: "absolute", right: 150, top: 30, color: "black"}} onClick={addArea}/>
-                <img src={SettingsImage} style={{width: 80, height: 80, position: "absolute", right: 150, top: 130, color: "black", borderRadius:100}} onMouseOver={mouseHover} onMouseOut={mouseOut}onClick={goSettings}/>
-            </div>
-            <h2 style={{fontSize: 40, marginTop: 0, textAlign: "center"}}>AREAs actives</h2>
-            <DisplayAreas />
-        </div>
+                justifyContent: "flex-start",
+                alignItems: "center",
+                height: "50px",
+                padding: "10px",
 
+                logo: {
+                    position: "relative",
+                    width: "50px",
+                    height: "50px",
+                    cursor: "pointer",
+                },
+                title: {
+                    position: "relative",
+                    paddingLeft: "10px",
+                },
+                settings: {
+                    position: "relative",
+                    width: "50px",
+                    height: "50px",
+                    marginLeft: "auto",
+                    borderRadius: "50%",
+                    cursor: "pointer",
+                },
+            },
+        }
+
+        return (
+            <div style={style.header}>
+                <img src={LogoImage} style={style.header.logo} alt="logo" />
+                <h1 style={style.header.title}>Re-Bonjour, {(mail) ? mail : "MAIL UNDEFINED"} !</h1>
+                <img src={SettingsImage} style={style.header.settings} onClick={goSettings} alt="settings" />
+            </div>
+        )
+    }
+    function Body() {
+        const style = {
+            body: {
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+                alignItems: "center",
+                title: {
+                    position: "relative",
+                    fontSize: "32px",
+                },
+                addArea: {
+                    position: "relative",
+                    width: "50px",
+                    height: "50px",
+                    cursor: "pointer",
+                },
+            },
+        }
+
+        return (
+            <div style={style.body}>
+                <p style={style.body.title}>AREAS</p>
+                <img style={style.body.addArea} src={AddAreaImage} onClick={addArea} alt="addArea" />
+                <DisplayAreas />
+            </div>
+        )
+    }
+    const globalStyle = {
+        position: "relative"
+    }
+    return (
+        <div id="global" style={globalStyle}>
+            <Header />
+            <Body />
+        </div>
     )
 }
