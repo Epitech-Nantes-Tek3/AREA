@@ -7,7 +7,7 @@ import LogoGoogle from './assets/google.png';
 import LogoMeteo from './assets/meteo.png';
 import LogoNasa from './assets/nasa.png'
 import CheckCircle from './assets/checkCircle.png'
-import { Component, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ACTIONS, REACTIONS } from "./Common/Areas"
 import { useNavigate } from "react-router-dom"
 import { getAllCacheData } from "./CacheManagement"
