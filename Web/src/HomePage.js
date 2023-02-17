@@ -31,12 +31,11 @@ export default function HomePage(props) {
                     res.json()
                         .then((jsonRes) => {
                             if (jsonRes && jsonRes.features && jsonRes.features[0] && jsonRes.features[0].properties) {
-                                alert(JSON.stringify(jsonRes.features[0].properties.city))
                                 setLocation({ latitude: location.latitude, longitude: location.longitude, city: jsonRes.features[0].properties.city });
                             }
                             else {
                                 setLocation({ latitude: location.latitude, longitude: location.longitude, city: location.city });
-                                // alert("Une erreur a été rencontrée en essayant de trouver votre ville à partir de votre localisation. Vos données ont tout de même été mises à jour.")
+                                alert("Une erreur a été rencontrée en essayant de trouver votre ville à partir de votre localisation. Vos données ont tout de même été mises à jour.")
                             }
                         })
                 }).catch((err) => {
@@ -93,12 +92,23 @@ export default function HomePage(props) {
         }
     }, [])
 
+    /**
+     * @description Remove an area from the list of areas
+     * @function removeAreaFromList
+     * @param {*} index The index of the area to remove
+     */
     function removeAreaFromList(index) {
         let copyItems = [...props.allAreas];
         copyItems.splice(index, 1);
         props.setAllAreas(copyItems);
     }
 
+    /**
+     * @description Display an area
+     * @function DisplayArea
+     * @param {*} props The props of the area
+     * @returns The area to display
+     */
     function DisplayArea(props) {
         const title = (props.area.title) ? props.area.title : "AREA " + props.index;
         const action = (props.area.action) ? props.area.action : "Action";
@@ -144,6 +154,13 @@ export default function HomePage(props) {
             </div>
         )
     }
+
+    /**
+     * @description Display the list of areas
+     * @function DisplayAreas
+     * @param {*} props The props of the list of areas
+     * @returns The area block to display
+     */
     function AreaBlock(props) {
         const title = (props.area.title) ? props.area.title : "AREA " + props.index;
         const actionLogo = (props.area.action.logo) ? props.area.action.logo : "https://www.flaticon.com/svg/static/icons/svg/25/25231.svg";
@@ -194,6 +211,12 @@ export default function HomePage(props) {
             </Popup>
         )
     }
+
+    /**
+     * @description Display the list of areas
+     * @function DisplayAreas
+     * @returns The list of areas to display
+     */
     function DisplayAreas() {
         const style = {
             displayAreas: {
@@ -228,6 +251,12 @@ export default function HomePage(props) {
             </div>
         )
     }
+
+    /**
+     * @description Display the header of the page
+     * @function Header
+     * @returns The header of the page
+     */
     function Header() {
         const mail = props.userInformation.mail;
         const style = {
@@ -269,6 +298,12 @@ export default function HomePage(props) {
             </div>
         )
     }
+
+    /**
+     * @description Display the body of the page
+     * @function Body
+     * @returns The body of the page
+     */
     function Body() {
         const style = {
             body: {
