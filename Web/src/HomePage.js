@@ -12,8 +12,8 @@ import Popup from 'reactjs-popup';
  * This page will be updated soon
  */
 export default function HomePage(props) {
-    // const [asked, setAsked] = useState(false)
-    // const [location, setLocation] = useState({ latitude: props.userInformation.coord.latitude, longitude: props.userInformation.coord.longitude, city: props.userInformation.coord.city })
+    const [asked, setAsked] = useState(false)
+    const [location, setLocation] = useState({ latitude: props.userInformation.coord.latitude, longitude: props.userInformation.coord.longitude, city: props.userInformation.coord.city })
 
     const navigate = useNavigate();
     const addArea = () => {
@@ -25,71 +25,73 @@ export default function HomePage(props) {
     }
 
     useEffect(() => {
+        if (asked === false) {
+            fetch("https://api-adresse.data.gouv.fr/reverse/?lon=" + location.longitude + "&lat=" + location.latitude)
+                .then((res) => {
+                    res.json()
+                        .then((jsonRes) => {
+                            if (jsonRes && jsonRes.features && jsonRes.features[0] && jsonRes.features[0].properties) {
+                                alert(JSON.stringify(jsonRes.features[0].properties.city))
+                                setLocation({ latitude: location.latitude, longitude: location.longitude, city: jsonRes.features[0].properties.city });
+                            }
+                            else {
+                                setLocation({ latitude: location.latitude, longitude: location.longitude, city: location.city });
+                                // alert("Une erreur a été rencontrée en essayant de trouver votre ville à partir de votre localisation. Vos données ont tout de même été mises à jour.")
+                            }
+                        })
+                }).catch((err) => {
+                    console.warn("error while fetching city from location: ", err)
+                })
+            setAsked(true)
+            props.setUserInformation({
+                mail: props.userInformation.mail,
+                locationAccept: props.userInformation.locationAccept,
+                coord: {
+                    latitude: location.latitude,
+                    longitude: location.longitude,
+                    city: location.city
+                },
+                id: props.userInformation.id,
+                services: {
+                    spotifyId: props.userInformation.services.spotifyId,
+                    googleId: props.userInformation.services.googleId,
+                    twitterId: props.userInformation.services.twitterId,
+                    twitchId: props.userInformation.services.twitchId,
+                    stravaId: props.userInformation.services.stravaId
+                }
+            })
+        }
+
+    }, [location])
+
+    useEffect(() => {
         loginWithCache("/home", props);
+        if (props.userInformation.locationAccept === false && navigator.geolocation) {
+            props.userInformation.locationAccept = true
+        }
+        if (props.userInformation.locationAccept) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                props.setUserInformation({
+                    mail: props.userInformation.mail,
+                    locationAccept: props.userInformation.locationAccept,
+                    coord: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        city: props.userInformation.coord.city
+                    },
+                    id: props.userInformation.id,
+                    services: {
+                        spotifyId: props.userInformation.services.spotifyId,
+                        googleId: props.userInformation.services.googleId,
+                        twitterId: props.userInformation.services.twitterId,
+                        twitchId: props.userInformation.services.twitchId,
+                        stravaId: props.userInformation.services.stravaId
+                    }
+                })
+                setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude, city: props.userInformation.coord.city })
+            })
+        }
     }, [])
-    // useEffect(() => {
-    //     if (props.userInformation.locationAccept === false && navigator.geolocation) {
-    //         props.userInformation.locationAccept = true
-    //     }
-    //     if (props.userInformation.locationAccept) {
-    //         navigator.geolocation.getCurrentPosition((position) => {
-    //             props.setUserInformation({
-    //                 mail: props.userInformation.mail,
-    //                 coord: {
-    //                     latitude: position.coords.latitude,
-    //                     longitude: position.coords.longitude,
-    //                     city: props.userInformation.coord.city
-    //                 },
-    //                 id: props.userInformation.id,
-    //                 services: {
-    //                     spotifyId: props.userInformation.services.spotifyId,
-    //                     googleId: props.userInformation.services.googleId,
-    //                     twitterId: props.userInformation.services.twitterId,
-    //                     twitchId: props.userInformation.services.twitchId,
-    //                     stravaId: props.userInformation.services.stravaId
-    //                 }
-    //             })
-    //             setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude, city: props.userInformation.coord.city })
-    //         })
-    //     }
-    // })
-
-    // useEffect(() => {
-    //     if (asked) {
-    //         fetch("https://api-adresse.data.gouv.fr/reverse/?lon=" + location.longitude + "&lat=" + location.latitude)
-    //             .then((res) => {
-    //                 res.json()
-    //                     .then((jsonRes) => {
-    //                         if (jsonRes && jsonRes.features && jsonRes.features[0] && jsonRes.features[0].properties)
-    //                             setLocation({ latitude: location.latitude, longitude: location.longitude, city: jsonRes.features[0].properties.city });
-    //                         else {
-    //                             setLocation({ latitude: location.latitude, longitude: location.longitude, city: location.city });
-    //                             alert("Une erreur a été rencontrée en essayant de trouver votre ville à partir de votre localisation. Vos données ont tout de même été mises à jour.")
-    //                         }
-    //                     })
-    //             }).catch((err) => {
-    //                 console.warn("error while fetching city from location: ", err)
-    //             })
-    //         setAsked(true)
-    //     }
-
-    //     props.setUserInformation({
-    //         mail: props.userInformation.mail,
-    //         coord: {
-    //             latitude: location.latitude,
-    //             longitude: location.longitude,
-    //             city: location.city
-    //         },
-    //         id: props.userInformation.id,
-    //         services: {
-    //             spotifyId: props.userInformation.services.spotifyId,
-    //             googleId: props.userInformation.services.googleId,
-    //             twitterId: props.userInformation.services.twitterId,
-    //             twitchId: props.userInformation.services.twitchId,
-    //             stravaId: props.userInformation.services.stravaId
-    //         }
-    //     })
-    // }, [location])
 
     function removeAreaFromList(index) {
         let copyItems = [...props.allAreas];
@@ -180,13 +182,13 @@ export default function HomePage(props) {
 
         return (
             <Popup trigger={
-            <div style={style.areaBlock}>
-                <p style={style.areaBlock.title}>{title}</p>
-                <div style={style.areaBlock.content}>
-                    <img src={actionLogo} alt={"Logo de l'action"} />
-                    <img src={reactionLogo} alt={"Logo de la réaction"} />
+                <div style={style.areaBlock}>
+                    <p style={style.areaBlock.title}>{title}</p>
+                    <div style={style.areaBlock.content}>
+                        <img src={actionLogo} alt={"Logo de l'action"} />
+                        <img src={reactionLogo} alt={"Logo de la réaction"} />
+                    </div>
                 </div>
-            </div>
             } modal>
                 <DisplayArea area={props.area} index={props.index} />
             </Popup>
