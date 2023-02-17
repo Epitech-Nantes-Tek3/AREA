@@ -10,6 +10,7 @@
     "react": "^18.1.0",
     "react-dom": "^18.2.0",
     "react-facebook-login": "^4.1.1",
+    "react-native-uuid": "^2.0.1",
     "react-router-dom": "6.8.0",
     "react-scripts": "^5.0.1",
     "react-with-firebase-auth": "^1.4.1",

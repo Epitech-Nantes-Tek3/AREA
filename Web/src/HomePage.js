@@ -6,6 +6,7 @@ import SettingsImage from "./assets/avatar.png";
 import { useNavigate } from "react-router-dom"
 import { loginWithCache } from './Common/Login'
 import Popup from 'reactjs-popup';
+import { ip } from './env'
 
 /**
  * @brief Return the Home page for AREA
@@ -14,7 +15,7 @@ import Popup from 'reactjs-popup';
 export default function HomePage(props) {
     const [asked, setAsked] = useState(false)
     const [location, setLocation] = useState({ latitude: props.userInformation.coord.latitude, longitude: props.userInformation.coord.longitude, city: props.userInformation.coord.city })
-
+    // const [allAreas, setAllAreas] = useState([])
     const navigate = useNavigate();
     const addArea = () => {
         navigate('/addArea')
@@ -64,7 +65,36 @@ export default function HomePage(props) {
     }, [location])
 
     useEffect(() => {
-        loginWithCache("/home", props);
+        loginWithCache("/home", props).then(() => {
+            ;
+            try {
+                const fetchData = async () => {
+                    while (props.userInformation.id === undefined) {
+                        await new Promise(r => setTimeout(r, 1000));
+                    }
+                    console.log(props.userInformation.id)
+                    await fetch(ip + "getAreas/" + props.userInformation.id)
+                        .then(response => {
+                            response.json().then(data => {
+                                let areaArray = []
+                                for (const area in data.areas) {
+                                    let action = data.areas[area].Action
+                                    let reaction = data.areas[area].Reaction
+                                    let id = data.areas[area].id
+                                    areaArray.push({ action: action, reaction: reaction, id: id })
+                                }
+                                props.setAllAreas(areaArray)
+                            })
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        })
+                };
+                fetchData();
+            } catch (error) {
+                console.log(error);
+            }
+        })
         if (props.userInformation.locationAccept === false && navigator.geolocation) {
             props.userInformation.locationAccept = true
         }
@@ -98,9 +128,29 @@ export default function HomePage(props) {
      * @param {*} index The index of the area to remove
      */
     function removeAreaFromList(index) {
-        let copyItems = [...props.allAreas];
-        copyItems.splice(index, 1);
-        props.setAllAreas(copyItems);
+        async function supressArea() {
+            try {
+                const requestOptions = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ uid: props.userInformation.id, id: props.allAreas[index].id })
+                }
+
+                await fetch(ip + "remove/area", requestOptions).then(response => {
+                    console.log(response)
+                    if (response.status === 200) {
+                        let copyAreas = [...props.allAreas]
+                        copyAreas.splice(index, 1)
+                        props.setAllAreas(copyAreas)
+                    } else {
+                        console.log("Error")
+                    }
+                })
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        supressArea()
     }
 
     /**
