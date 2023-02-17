@@ -10,40 +10,130 @@
  */
 const firebaseFunctions = require('../firebaseFunctions')
 
-async function requestApi(data, token, endpoint) {
-    let authorizationObject = data;
-    let { access_token, expires_in, token_type } = authorizationObject;
+const { ApiClient } = require('twitch');
+const https = require('https');
 
-    //token_type first letter must be uppercase    
-    token_type = token_type.substring(0, 1).toUpperCase() + token_type.substring(1, token_type.length);
 
-    let authorization = `${token_type} ${access_token}`;
+const scopes = [
+    "analytics:read:extensions",
+    "analytics:read:games",
+    "moderator:read:followers",
+    "channel:manage:moderators",
+    "channel:manage:predictions"
+].join(" ");
+
+const response_type = "token"
+
+const twitch_oauth_url = "https://id.twitch.tv/oauth2/authorize"
+
+function encodeQueryString(params) {
+    const queryString = new URLSearchParams();
+    for (let paramName in params) {
+        queryString.append(paramName, params[paramName]);
+    }
+    return queryString.toString();
+}
+
+function encodeUrlScope(params) 
+{
+    let items = []
+    for (let key in params) {
+        let value = encodeURIComponent(params[key])
+        items.push(`${key}=${value}`)
+    }
+    return items.join("&")
+}
+
+async function checkTopGames(games, clientId, authorization) {
     let headers = {
-        authorization,
-        "Client-Id": token.clientId,
+        "Authorization": authorization,
+        "Client-Id": clientId,
     };
-    const res = await fetch(endpoint, { headers });
+    OriginUrl = "https://api.twitch.tv/helix/games/top"
+    const res = await fetch(OriginUrl, { headers });
     const dataTwitch = await res.json();
-    return dataTwitch;
+    if (dataTwitch.data[0].name == games) {
+        console.log("true top games is", game);
+        return true;
+    } else {
+        console.log("false top game is", dataTwitch.data[0].name);
+        return false;
+    }
+}
+
+async function getStreamByUserName(username, clientId, authorization) {
+    let headers = {
+        "Authorization": authorization,
+        "Client-Id": clientId,
+    };
+    params = {
+        user_login: username,
+    }
+    OriginUrl = "https://api.twitch.tv/helix/streams"
+    url = `${OriginUrl}?${encodeQueryString(params)}`
+    const res = await fetch(url, { headers });
+    const dataTwitch = await res.json();
+    if (dataTwitch.data[0]) {
+        console.log("true", username, "is on live.")
+        return true;
+    } else {
+        console.log("false", username, "does not stream.")
+        return true;
+    }
+}
+
+async function checkMorethan1kViewers(username, clientId, authorization) {
+    let headers = {
+        "Authorization": authorization,
+        "Client-Id": clientId,
+    };
+    params = {
+        user_login: username,
+    }
+    OriginUrl = "https://api.twitch.tv/helix/streams"
+    url = `${OriginUrl}?${encodeQueryString(params)}`
+    const res = await fetch(url, { headers });
+    const dataTwitch = await res.json();
+    if (dataTwitch.data[0]) {
+        if (dataTwitch.data[0].viewer_count > 1000) {
+            console.log("true", username, "got ", dataTwitch.data[0].viewer_count, ".")
+            return true;
+        } else {
+            console.log("false", username, "does not have 1000 viewer.")
+            return true;
+        }
+    } else {
+        console.log("false", username, "does not stream.")
+        return true;
+    }
 }
 
 module.exports = {
-    getTwitchAuthorization: function(chanelName) {
+    getTwitchAuthorization: function(req, res) {
         return firebaseFunctions.getDataFromFireBaseServer("Twitch")
         .then(token => {
-            let url = `https://id.twitch.tv/oauth2/token?client_id=${token.clientId}&client_secret=${token.clientSecret}&grant_type=client_credentials`;
-            return fetch(url, {method: "POST",})
-            .then((res) => res.json())
-            .then(async(data) => {
-                let dataTwitch = await requestApi(data, token, `https://api.twitch.tv/helix/users?login=${chanelName}`);
-                return dataTwitch;
-            });
+            const params = {
+                client_id: token.clientId,
+                redirect_uri: token.redirect_url,
+                scope : scopes,
+                response_type: response_type
+            }
+            const url = `${twitch_oauth_url}?${encodeUrlScope(params)}`
+            res.redirect(url);
         })
         .catch(error => {
             console.error(error)
         })
+    },
+    doAct: function(authorization, action ,userId) {
+        return firebaseFunctions.getDataFromFireBaseServer("Twitch")
+        .then(token => {
+            if (action == "morethan1k")
+                checkMorethan1kViewers(userId, token.clientId, authorization)
+            else if (action == "stream")
+                getStreamByUserName(userId, token.clientId, authorization)
+            else if (action == "topGames")
+                checkTopGames(userId, token.clientId, authorization)
+        })
     }
 }
-
-
-

@@ -14,6 +14,8 @@ const firebaseUid = 'leMgZPp8sfe2l06b6TU330bahJz2';
 const port = config.port;
 const nodeCron = require("node-cron")
 
+const url = require('url');
+
 const session = require('express-session')
 
 app.use(cors());
@@ -157,20 +159,31 @@ app.get('/register/iss', (req, res) => {
 })
 
 app.get('/twitch', (req, res) => {
-    TwitchService.getTwitchAuthorization('krl_stream')
-    .then(dataTwitch => {
-        console.log(dataTwitch);
-    })
-    .catch(error => {
-        console.error(error);
-    });
-    res.send('TwitchService')
+    TwitchService.getTwitchAuthorization(req, res)
 })
 
+app.get('/twitch/sign', (req, res) => {
+    res.send('Hello twitch!');
+})
+
+app.get('/twitch/doAct', (req, res) => {
+    token_type = "bearer"
+    token_type = token_type.substring(0, 1).toUpperCase() + token_type.substring(1, token_type.length);
+    access_token = "szs051l2ba3t1vydndu69gw4jz3a9y"
+    let authorization = `${token_type} ${access_token}`;
+    TwitchService.doAct(authorization, "topGames", "Counter-Strike: Global Offensive")
+    TwitchService.doAct(authorization, "stream", "gotaga")
+    TwitchService.doAct(authorization, "morethan1k", "papesan")
+    res.send("TWITCH ACT");
+})
 
 app.get('/twitter', (req, res) => {
     res.render('index')
 })
+//kd189fr4pfww06kkbctba66v016cie
+
+
+
 
 app.get('/tw', (req, res) => {
     twitterService.ActionTw('like', 'chelsea', firebaseUid, req, res)
