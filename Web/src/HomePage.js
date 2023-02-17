@@ -15,7 +15,6 @@ import { ip } from './env'
 export default function HomePage(props) {
     const [asked, setAsked] = useState(false)
     const [location, setLocation] = useState({ latitude: props.userInformation.coord.latitude, longitude: props.userInformation.coord.longitude, city: props.userInformation.coord.city })
-    // const [allAreas, setAllAreas] = useState([])
     const navigate = useNavigate();
     const addArea = () => {
         navigate('/addArea')
