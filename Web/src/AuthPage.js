@@ -136,9 +136,9 @@ function AuthPage(props) {
             body: JSON.stringify({ email: email, password: password })
         }
         if (authMode === "signup") {
-            await requestServer("register", requestOptions);
+            await requestServer("/register", requestOptions);
         } else {
-            await requestServer("login", requestOptions);
+            await requestServer("/login", requestOptions);
         }
     }
 

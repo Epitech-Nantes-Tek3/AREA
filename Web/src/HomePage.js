@@ -3,6 +3,8 @@ import TrashImage from './assets/trash.png';
 import AddImage from "./assets/add.png";
 import SettingsImage from "./assets/avatar.png";
 import { useNavigate } from "react-router-dom"
+import { authWithCache } from './Common/Login'
+import { ip } from './env'
 
 /**
  * @brief Return the Home page for AREA
@@ -13,6 +15,16 @@ export default function HomePage(props) {
     const [location, setLocation] = useState({latitude: props.userInformation.coord.latitude, longitude: props.userInformation.coord.longitude, city: props.userInformation.coord.city})
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        try {
+            authWithCache(props.setUserInformation, props, ip);
+            console.log("Already logged in")
+        } catch (error) {
+            console.log("Unable to login" + error);
+            navigate("/auth")
+        }
+    }, [])
 
     useEffect(() => {
         if (props.userInformation.locationAccept == false && navigator.geolocation) {

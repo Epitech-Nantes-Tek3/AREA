@@ -17,6 +17,7 @@ import LocationImage from './assets/locate.png';
 import DeconnexionImage from './assets/deconnexion.png';
 import ArrowRight from './assets/arrowRight.png';
 import { addDataIntoCache } from './Common/CacheManagement'
+import { authWithCache } from './Common/Login';
 
 /**
  * @description Styles of the page
@@ -166,7 +167,15 @@ const styles = {
 export default function SettingsPage(props) {
     const navigate = useNavigate();
 
-
+    useEffect(() => {
+        try {
+            authWithCache(props.setUserInformation, props, ip);
+            console.log("Already logged in")
+        } catch (error) {
+            console.log("Unable to login" + error);
+            navigate("/auth")
+        }
+    }, [])
     /**
      * It returns a div with a profile picture and an email address
      * @function Profile - The profile div
