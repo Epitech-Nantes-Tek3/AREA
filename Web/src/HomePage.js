@@ -3,7 +3,6 @@ import TrashImage from './assets/trash.png';
 import AddImage from "./assets/add.png";
 import SettingsImage from "./assets/avatar.png";
 import { useNavigate } from "react-router-dom"
-import { getAllCacheData, addDataIntoCache } from './CacheManagement'
 
 /**
  * @brief Return the Home page for AREA
@@ -15,18 +14,6 @@ export default function HomePage(props) {
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        loginWithCache("/home");
-    }, [])
-    const loginWithCache = async (page) => {
-        var cacheData = await getAllCacheData();
-        if (cacheData !== undefined && cacheData.mail !== undefined) {
-          props.userInformation.mail = cacheData.mail;
-          navigate(page);
-        } else {
-          navigate('/auth')
-        }
-    }
     useEffect(() => {
         if (props.userInformation.locationAccept == false && navigator.geolocation) {
             props.userInformation.locationAccept = true

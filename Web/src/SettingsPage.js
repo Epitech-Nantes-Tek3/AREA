@@ -7,7 +7,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from "react-router-dom"
 import { ip } from "./env"
-import logoImage from './assets/logo.png';
 import ProfileImage from './assets/avatar.png';
 import GoogleImage from './assets/google.png';
 import SpotifyImage from './assets/spotify.png';
@@ -17,8 +16,7 @@ import StravaImage from './assets/strava.png';
 import LocationImage from './assets/locate.png';
 import DeconnexionImage from './assets/deconnexion.png';
 import ArrowRight from './assets/arrowRight.png';
-import { addDataIntoCache } from './CacheManagement'
-import { loginWithCache } from './Common/Login'
+import { addDataIntoCache } from './Common/CacheManagement'
 
 /**
  * @description Styles of the page
@@ -168,13 +166,6 @@ const styles = {
 export default function SettingsPage(props) {
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (loginWithCache("/settings", props).page === '/auth') {
-            navigate("/auth");
-        }
-        console.log("SettingsPage.js: useEffect")
-        console.log(props.userInformation)
-    }, [])
 
     /**
      * It returns a div with a profile picture and an email address
@@ -245,7 +236,7 @@ export default function SettingsPage(props) {
      */
     function Deconnexion() {
         return (
-            <div style={styles.deconnexion} onClick={() => {addDataIntoCache("area", {ip}, {}); navigate('/auth')}} onMouseOver={updateCursor} onMouseOut={updateCursor}>
+            <div style={styles.deconnexion} onClick={() => {addDataIntoCache("area", {}); navigate('/auth')}} onMouseOver={updateCursor} onMouseOut={updateCursor}>
                 <img src={DeconnexionImage}></img>
                 <p>Deconnexion</p>
                 <p></p>
