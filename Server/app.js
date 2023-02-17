@@ -169,8 +169,9 @@ app.get('/twitch/sign', (req, res) => {
 app.get('/twitch/doAct', (req, res) => {
     token_type = "bearer"
     token_type = token_type.substring(0, 1).toUpperCase() + token_type.substring(1, token_type.length);
-    access_token = "szs051l2ba3t1vydndu69gw4jz3a9y"
+    access_token = "6ms23ibr1ae2e52trh6qnxzgo277mt"
     let authorization = `${token_type} ${access_token}`;
+    TwitchService.doAct(authorization, "message", "papesan")
     TwitchService.doAct(authorization, "topGames", "Counter-Strike: Global Offensive")
     TwitchService.doAct(authorization, "stream", "gotaga")
     TwitchService.doAct(authorization, "morethan1k", "papesan")

@@ -19,7 +19,8 @@ const scopes = [
     "analytics:read:games",
     "moderator:read:followers",
     "channel:manage:moderators",
-    "channel:manage:predictions"
+    "channel:manage:predictions",
+    "user:manage:whispers"
 ].join(" ");
 
 const response_type = "token"
@@ -108,6 +109,36 @@ async function checkMorethan1kViewers(username, clientId, authorization) {
     }
 }
 
+async function sendWhisper(userFrom, userTo, message, authorization) {
+    let headers = {
+        "Authorization": authorization,
+        "Client-Id": userFrom,
+        "Content-Type" : "application/json"
+    };
+    let params = {
+        from_id: userFrom,
+        to_id: userTo,
+        message: message
+    };
+    let OriginUrl = "https://api.twitch.tv/helix/whispers"
+    let url = `${OriginUrl}?${encodeQueryString(params)}`
+    let requestOptions = {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({text: message}),
+    };
+    try {
+        let response = await fetch(url, requestOptions);
+        if (!response.ok) {
+            throw new Error(`Error sending whisper: ${response.status} ${response.statusText}`);
+        }
+        console.log(`Whisper sent to ${userTo}: ${message}`);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
 module.exports = {
     getTwitchAuthorization: function(req, res) {
         return firebaseFunctions.getDataFromFireBaseServer("Twitch")
@@ -128,7 +159,9 @@ module.exports = {
     doAct: function(authorization, action ,userId) {
         return firebaseFunctions.getDataFromFireBaseServer("Twitch")
         .then(token => {
-            if (action == "morethan1k")
+            if (action == "message")
+                sendWhisper(token.clientId, 566732693, "Hello Twitch !", authorization)
+            else if (action == "morethan1k")
                 checkMorethan1kViewers(userId, token.clientId, authorization)
             else if (action == "stream")
                 getStreamByUserName(userId, token.clientId, authorization)
