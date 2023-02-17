@@ -1,31 +1,10 @@
-// import { ip } from '../env'
-
-/**
- * This function gets all the data from the cache and returns it
- * @returns the cacheData variable.
- */
-// export async function getAllCacheData() {
-//     var cacheData;
-//     var url = {ip}
-//     const cacheStorage = await caches.open("area");
-//     const cachedResponse = await cacheStorage.match(url);
-//     try {
-//         var data = await cachedResponse.json();
-//         console.log("data: " + JSON.stringify(data));
-//         cacheData = data;
-//     }
-//     catch (error) {
-//         console.log("error" + error);
-//     }
-//     return cacheData;
-// };
-
 export function getDataFromCache(cacheName) {
     try {
         const data = localStorage.getItem(cacheName);
         if (data) {
-            console.log("getDataFromCache: " + data);
-            return JSON.parse(data);
+            var newData = JSON.parse(data);
+            newData.password = atob(newData.password)
+            return newData;
         } else {
             console.log("no data in cache");
             return null;

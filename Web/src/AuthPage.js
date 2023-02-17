@@ -35,7 +35,7 @@ function AuthPage(props) {
      */
     useEffect(() => {
         try {
-            authWithCache(props.setUserInformation, props);
+            authWithCache(props.setUserInformation, props, ip);
             console.log("Already logged in")
             navigate("/home");
         } catch (error) {
@@ -101,7 +101,7 @@ function AuthPage(props) {
                         setIsBadPassword(false);
                         props.userInformation.id = data.userUid;
                         props.userInformation.mail = email;
-                        addDataIntoCache("area", {mail: props.userInformation.mail, id: props.userInformation.id});
+                        addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa(JSON.parse(requestOptions.body).password) });
                         navigate('/home');
                     } else {
                         setIsBadPassword(true);
