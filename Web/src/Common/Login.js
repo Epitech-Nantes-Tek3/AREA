@@ -1,5 +1,4 @@
-import { getAllCacheData } from '../CacheManagement'
-
+import { getDataFromCache } from './CacheManagement'
 /**
  * It checks if the user has a cache, if so, it returns the page, if not, it
  * returns the auth page
@@ -7,12 +6,29 @@ import { getAllCacheData } from '../CacheManagement'
  * @param props - The props of the page you're on.
  * @returns The page that the user is on.
  */
-export async function loginWithCache(page, props) {
-    var cacheData = await getAllCacheData();
-    if (cacheData !== undefined && cacheData.mail !== undefined) {
-        props.userInformation.mail = cacheData.mail;
-        return (page);
+export function authWithCache(setUserInformation, props) {
+    var cacheData = getDataFromCache("area");
+    if (cacheData !== undefined && cacheData.mail !== undefined && cacheData.id !== undefined) {
+        setUserInformation({
+            mail: cacheData.mail,
+            locationAccept: props.userInformation.locationAccept,
+            coord: {
+                latitude: props.userInformation.coord.latitude,
+                longitude: props.userInformation.coord.longitude,
+                city: props.userInformation.coord.city
+            },
+            id: cacheData.id,
+            services: {
+                spotifyId: props.userInformation.services.spotifyId,
+                googleId: props.userInformation.services.googleId,
+                twitterId: props.userInformation.services.twitterId,
+                twitchId: props.userInformation.services.twitchId,
+                stravaId: props.userInformation.services.stravaId
+            }
+        }
+        )
     } else {
-        return ('/auth')
+        console.log("no cache");
+        throw new Error("no cache");
     }
 }
