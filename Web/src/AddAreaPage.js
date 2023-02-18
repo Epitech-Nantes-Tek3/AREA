@@ -12,6 +12,7 @@ import { ACTIONS, REACTIONS } from "./Common/Areas"
 import { useNavigate } from "react-router-dom"
 import { authWithCache } from './Common/Login';
 import { ip } from "./env"
+import uuid from 'react-native-uuid';
 
 /**
  * @brief Return the AddArea page for AREA
@@ -43,13 +44,32 @@ export default function AddAreaPage(props) {
         }
     }, [])
 
-    const sendArea = () => {
+    const sendArea = async () => {
         let area = {
             action: ACTIONS[selectedActionIndex],
-            reaction: REACTIONS[selectedReactionIndex]
+            reaction: REACTIONS[selectedReactionIndex],
+            id: uuid.v4().toString()
         }
         props.setAllAreas([...props.allAreas, area])
-        navigate('/home', {state : { newArea : area}})
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: area.action,
+                reaction: area.reaction,
+                id: area.id,
+                uid: props.userInformation.id
+            })
+        }
+        try {
+            await fetch(ip + "/register/areas", requestOptions).then(response => {
+                navigate('/home', {state : { newArea : area}})
+            }).catch(error => {
+                console.log(error)
+            })
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     function ButtonValidate () {
