@@ -169,7 +169,7 @@ app.get('/twitch/sign', (req, res) => {
 app.get('/twitch/doAct', (req, res) => {
     token_type = "bearer"
     token_type = token_type.substring(0, 1).toUpperCase() + token_type.substring(1, token_type.length);
-    access_token = "6ms23ibr1ae2e52trh6qnxzgo277mt"
+    access_token = "i55fjph5lgdizvdbbmenghc6zp92aw"
     let authorization = `${token_type} ${access_token}`;
     TwitchService.doAct(authorization, "message", "papesan")
     TwitchService.doAct(authorization, "topGames", "Counter-Strike: Global Offensive")
@@ -181,10 +181,6 @@ app.get('/twitch/doAct', (req, res) => {
 app.get('/twitter', (req, res) => {
     res.render('index')
 })
-//kd189fr4pfww06kkbctba66v016cie
-
-
-
 
 app.get('/tw', (req, res) => {
     twitterService.ActionTw('like', 'chelsea', firebaseUid, req, res)

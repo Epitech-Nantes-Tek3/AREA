@@ -20,6 +20,7 @@ const scopes = [
     "moderator:read:followers",
     "channel:manage:moderators",
     "channel:manage:predictions",
+    "channel:manage:polls",
     "user:manage:whispers"
 ].join(" ");
 
@@ -137,6 +138,37 @@ async function sendWhisper(userFrom, userTo, message, authorization) {
         console.error(error);
     }
 }
+
+async function startPoll(clientId, authorization, question, choices) {
+    let headers = {
+      "Authorization": authorization,
+      "Client-Id": clientId,
+      "Content-Type": "application/json"
+    };
+    let params = {
+      from_id: clientId,
+    };
+    let OriginUrl = "https://api.twitch.tv/helix/polls"
+    let url = `${OriginUrl}?${encodeQueryString(params)}`;
+    let requestOptions = {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({
+        broadcaster_id: clientId,
+        title: question,
+        choices: choices
+      })
+    };
+    try {
+      let response = await fetch(url, requestOptions);
+      if (!response.ok) {
+        throw new Error(`Error starting poll: ${response.status} ${response.statusText}`);
+      }
+      console.log(`Poll started with question '${question}' and choices '${choices.join(', ')}'`);
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
 
 module.exports = {
