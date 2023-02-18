@@ -84,6 +84,25 @@ async function getStreamByUserName(username, clientId, authorization) {
     }
 }
 
+async function getStreamInfo(username, clientId, authorization) {
+    let headers = {
+        "Authorization": authorization,
+        "Client-Id": clientId,
+    };
+    params = {
+        user_login: username,
+    }
+    OriginUrl = "https://api.twitch.tv/helix/streams"
+    url = `${OriginUrl}?${encodeQueryString(params)}`
+    const res = await fetch(url, { headers });
+    const dataTwitch = await res.json();
+    if (dataTwitch.data[0]) {
+        return dataTwitch.data[0];
+    } else {
+        return "undefined";
+    }
+}
+
 async function checkMorethan1kViewers(username, clientId, authorization) {
     let headers = {
         "Authorization": authorization,
@@ -141,34 +160,34 @@ async function sendWhisper(userFrom, userTo, message, authorization) {
 
 async function startPoll(clientId, authorization, question, choices) {
     let headers = {
-      "Authorization": authorization,
-      "Client-Id": clientId,
-      "Content-Type": "application/json"
+        "Authorization": authorization,
+        "Client-Id": clientId,
+        "Content-Type": "application/json"
     };
     let params = {
-      from_id: clientId,
+        from_id: clientId
     };
     let OriginUrl = "https://api.twitch.tv/helix/polls"
     let url = `${OriginUrl}?${encodeQueryString(params)}`;
     let requestOptions = {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify({
-        broadcaster_id: clientId,
-        title: question,
-        choices: choices
-      })
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+            broadcaster_id: clientId,
+            title: question,
+            choices: choices
+        })
     };
     try {
-      let response = await fetch(url, requestOptions);
-      if (!response.ok) {
-        throw new Error(`Error starting poll: ${response.status} ${response.statusText}`);
-      }
-      console.log(`Poll started with question '${question}' and choices '${choices.join(', ')}'`);
+        let response = await fetch(url, requestOptions);
+        if (!response.ok) {
+            throw new Error(`Error starting poll: ${response.status} ${response.statusText}`);
+        }
+        console.log(`Poll started with question '${question}' and choices '${choices.join(', ')}'`);
     } catch (error) {
-      console.error(error);
+        console.error(error);
     }
-  }
+}
 
 
 module.exports = {
