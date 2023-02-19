@@ -4,7 +4,7 @@ import AddAreaImage from "./assets/add.png";
 import LogoImage from "./assets/logo.png";
 import SettingsImage from "./assets/avatar.png";
 import { useNavigate } from "react-router-dom"
-import { loginWithCache } from './Common/Login'
+import { authWithCache } from './Common/Login'
 import Popup from 'reactjs-popup';
 import { ip } from './env'
 
@@ -16,6 +16,7 @@ export default function HomePage(props) {
     const [asked, setAsked] = useState(false)
     const [location, setLocation] = useState({ latitude: props.userInformation.coord.latitude, longitude: props.userInformation.coord.longitude, city: props.userInformation.coord.city })
     const navigate = useNavigate();
+
     const addArea = () => {
         navigate('/addArea')
     }
@@ -23,6 +24,61 @@ export default function HomePage(props) {
     const goSettings = () => {
         navigate('/settings')
     }
+
+    useEffect(() => {
+        try {
+            authWithCache(props.setUserInformation, props, ip);
+            console.log("Already logged in")
+        } catch (error) {
+            console.log("Unable to login" + error);
+            navigate("/auth")
+        }
+        const fetchData = () => {
+            console.log(props.userInformation.id)
+            fetch(ip + "/getAreas/" + props.userInformation.id)
+                .then(response => {
+                    response.json().then(data => {
+                        let areaArray = []
+                        for (const area in data.areas) {
+                            let action = data.areas[area].Action
+                            let reaction = data.areas[area].Reaction
+                            let id = data.areas[area].id
+                            areaArray.push({ action: action, reaction: reaction, id: id })
+                        }
+                        props.setAllAreas(areaArray)
+                    })
+                })
+                .catch(error => {
+                    console.error(error);
+                })
+        };
+        fetchData();
+        if (props.userInformation.locationAccept === false && navigator.geolocation) {
+            props.userInformation.locationAccept = true
+        }
+        if (props.userInformation.locationAccept) {
+            navigator.geolocation.getCurrentPosition((position) => {
+                props.setUserInformation({
+                    mail: props.userInformation.mail,
+                    locationAccept: props.userInformation.locationAccept,
+                    coord: {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        city: props.userInformation.coord.city
+                    },
+                    id: props.userInformation.id,
+                    services: {
+                        spotifyId: props.userInformation.services.spotifyId,
+                        googleId: props.userInformation.services.googleId,
+                        twitterId: props.userInformation.services.twitterId,
+                        twitchId: props.userInformation.services.twitchId,
+                        stravaId: props.userInformation.services.stravaId
+                    }
+                })
+                setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude, city: props.userInformation.coord.city })
+            })
+        }
+    }, [])
 
     useEffect(() => {
         if (asked === false) {
@@ -62,70 +118,11 @@ export default function HomePage(props) {
         }
 
     }, [location])
-
-    useEffect(() => {
-        loginWithCache("/home", props).then(() => {
-            ;
-            try {
-                const fetchData = async () => {
-                    while (props.userInformation.id === undefined) {
-                        await new Promise(r => setTimeout(r, 1000));
-                    }
-                    console.log(props.userInformation.id)
-                    await fetch(ip + "getAreas/" + props.userInformation.id)
-                        .then(response => {
-                            response.json().then(data => {
-                                let areaArray = []
-                                for (const area in data.areas) {
-                                    let action = data.areas[area].Action
-                                    let reaction = data.areas[area].Reaction
-                                    let id = data.areas[area].id
-                                    areaArray.push({ action: action, reaction: reaction, id: id })
-                                }
-                                props.setAllAreas(areaArray)
-                            })
-                        })
-                        .catch(error => {
-                            console.error(error);
-                        })
-                };
-                fetchData();
-            } catch (error) {
-                console.log(error);
-            }
-        })
-        if (props.userInformation.locationAccept === false && navigator.geolocation) {
-            props.userInformation.locationAccept = true
-        }
-        if (props.userInformation.locationAccept) {
-            navigator.geolocation.getCurrentPosition((position) => {
-                props.setUserInformation({
-                    mail: props.userInformation.mail,
-                    locationAccept: props.userInformation.locationAccept,
-                    coord: {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        city: props.userInformation.coord.city
-                    },
-                    id: props.userInformation.id,
-                    services: {
-                        spotifyId: props.userInformation.services.spotifyId,
-                        googleId: props.userInformation.services.googleId,
-                        twitterId: props.userInformation.services.twitterId,
-                        twitchId: props.userInformation.services.twitchId,
-                        stravaId: props.userInformation.services.stravaId
-                    }
-                })
-                setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude, city: props.userInformation.coord.city })
-            })
-        }
-    }, [])
-
     /**
-     * @description Remove an area from the list of areas
-     * @function removeAreaFromList
-     * @param {*} index The index of the area to remove
-     */
+    * @description Remove an area from the list of areas
+    * @function removeAreaFromList
+    * @param {*} index The index of the area to remove
+    */
     function removeAreaFromList(index) {
         async function supressArea() {
             try {
@@ -135,7 +132,7 @@ export default function HomePage(props) {
                     body: JSON.stringify({ uid: props.userInformation.id, id: props.allAreas[index].id })
                 }
 
-                await fetch(ip + "remove/area", requestOptions).then(response => {
+                await fetch(ip + "/remove/area", requestOptions).then(response => {
                     console.log(response)
                     if (response.status === 200) {
                         let copyAreas = [...props.allAreas]
@@ -383,7 +380,7 @@ export default function HomePage(props) {
         )
     }
     const globalStyle = {
-        position: "relative"
+        position: "relative",
     }
     return (
         <div id="global" style={globalStyle}>

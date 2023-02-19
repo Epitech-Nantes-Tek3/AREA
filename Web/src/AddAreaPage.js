@@ -10,9 +10,9 @@ import CheckCircle from './assets/checkCircle.png'
 import { useEffect, useState } from 'react';
 import { ACTIONS, REACTIONS } from "./Common/Areas"
 import { useNavigate } from "react-router-dom"
-import { getAllCacheData } from "./CacheManagement"
+import { authWithCache } from './Common/Login';
+import { ip } from "./env"
 import uuid from 'react-native-uuid';
-import {ip} from './env'
 
 /**
  * @brief Return the AddArea page for AREA
@@ -35,17 +35,15 @@ export default function AddAreaPage(props) {
     }
 
     useEffect(() => {
-        loginWithCache("/addArea");
-    }, [])
-    const loginWithCache = async (page) => {
-        var cacheData = await getAllCacheData();
-        if (cacheData !== undefined && cacheData.mail !== undefined) {
-            props.userInformation.mail = cacheData.mail;
-            navigate(page);
-        } else {
-            navigate('/auth')
+        try {
+            authWithCache(props.setUserInformation, props, ip);
+            console.log("Already logged in")
+        } catch (error) {
+            console.log("Unable to login" + error);
+            navigate("/auth")
         }
-    }
+    }, [])
+
     const sendArea = async () => {
         let area = {
             action: ACTIONS[selectedActionIndex],
@@ -64,7 +62,7 @@ export default function AddAreaPage(props) {
             })
         }
         try {
-            await fetch(ip + "register/areas", requestOptions).then(response => {
+            await fetch(ip + "/register/areas", requestOptions).then(response => {
                 navigate('/home', {state : { newArea : area}})
             }).catch(error => {
                 console.log(error)
