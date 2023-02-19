@@ -72,7 +72,7 @@ export default function HomePage(props) {
                         await new Promise(r => setTimeout(r, 1000));
                     }
                     console.log(props.userInformation.id)
-                    await fetch(ip + "getAreas/" + props.userInformation.id)
+                    await fetch(ip + "/getAreas/" + props.userInformation.id)
                         .then(response => {
                             response.json().then(data => {
                                 let areaArray = []
