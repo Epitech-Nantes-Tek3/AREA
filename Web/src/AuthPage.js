@@ -34,6 +34,7 @@ function AuthPage(props) {
      * If he is, it redirects him to the home page.
      */
     useEffect(() => {
+        updateIP({target:{value: props.userInformation.ip}})
         try {
             authWithCache(props.setUserInformation, props, props.userInformation.ip);
             console.log("Already logged in")
@@ -55,17 +56,6 @@ function AuthPage(props) {
             setPassword(event.target.value);
         }
     }
-
-    /* Checking if the user is already logged in. If he is, it redirects him to
-    the home page. */
-    // auth.onAuthStateChanged(user => {
-    //     auth.getRedirectResult().then((result) => {
-    //         console.log(result);
-    //         if (result.user !== null) {
-    //             navigate('/home');
-    //         }
-    //     });
-    // })
 
     /**
      * The function is called when the user clicks on the Facebook login button.
@@ -286,6 +276,7 @@ function AuthPage(props) {
                 <form className="Form" onSubmit={onSubmit}>
                     <div className="Form-content">
                         <img src={AreaLogo} style={{ width: 150, height: 150, display: "block", margin: "auto" }} alt="logo" />
+                        <input style={{ backgroundColor: color, display: "block", margin: "auto" }} type="text" defaultValue={props.userInformation.ip} placeholder="IP du server" onChange={updateIP} />
                         <h3 className="Title">S'inscrire</h3>
                         <div className="form-group">
                             <input
