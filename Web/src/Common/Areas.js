@@ -4,7 +4,7 @@ export let ACTIONS = [
             name: "twitch",
             needsConnexion: true
         },
-        description: "Quand Kaméto est en live"
+        description: "Quand Kaméto est en live",
     },
     {
         service: {

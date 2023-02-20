@@ -2,6 +2,14 @@ import React, { useState, useEffect } from 'react';
 import TrashImage from './assets/trash.png';
 import AddAreaImage from "./assets/add.png";
 import LogoImage from "./assets/logo.png";
+import LogoSpotify from "./assets/spotify.png"
+import LogoIss from "./assets/iss.png"
+import LogoStrava from './assets/strava.png';
+import LogoTwitch from './assets/twitch.png';
+import LogoTwitter from './assets/twitter.png';
+import LogoGoogle from './assets/google.png';
+import LogoMeteo from './assets/meteo.png';
+import LogoNasa from './assets/nasa.png';
 import SettingsImage from "./assets/avatar.png";
 import { useNavigate } from "react-router-dom"
 import { authWithCache } from './Common/Login'
@@ -16,6 +24,17 @@ export default function HomePage(props) {
     const [asked, setAsked] = useState(false)
     const [location, setLocation] = useState({ latitude: props.userInformation.coord.latitude, longitude: props.userInformation.coord.longitude, city: props.userInformation.coord.city })
     const navigate = useNavigate();
+
+    let logo = {
+        "spotify": LogoSpotify,
+        "iss": LogoIss,
+        "nasa": LogoNasa,
+        "twitter": LogoTwitter,
+        "google": LogoGoogle,
+        "météo": LogoMeteo,
+        "twitch": LogoTwitch,
+        "strava": LogoStrava
+    }
 
     const addArea = () => {
         navigate('/addArea')
@@ -248,8 +267,8 @@ export default function HomePage(props) {
                 <div style={style.areaBlock}>
                     <p style={style.areaBlock.title}>{title}</p>
                     <div style={style.areaBlock.content}>
-                        <img src={actionLogo} alt={"Logo de l'action"} />
-                        <img src={reactionLogo} alt={"Logo de la réaction"} />
+                        <img src={logo[props.area.action.service.name]} alt={"Logo de l'action"} style={{width: "30px", height: "30px"}} />
+                        <img src={logo[props.area.reaction.service.name]} alt={"Logo de la réaction"} style={{width: "30px", height: "30px"}} />
                     </div>
                 </div>
             } modal>

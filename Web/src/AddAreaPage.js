@@ -14,14 +14,13 @@ import { useNavigate } from "react-router-dom"
 import { authWithCache } from './Common/Login';
 import { ip } from "./env"
 import uuid from 'react-native-uuid';
+import Popup from "reactjs-popup";
 
 /**
  * @brief Return the AddArea page for AREA
  * This page will be updated soon
  */
 export default function AddAreaPage(props) {
-    // const [selectedActionIndex, setSelectedActionIndex] = useState(0)
-    // const [selectedReactionIndex, setSelectedReactionIndex] = useState(0)
     const navigate = useNavigate();
 
     const [pageInfo, setPageInfo] = useState({
@@ -30,7 +29,8 @@ export default function AddAreaPage(props) {
         selectedIndex: [0, 0, 0],
         next: [goSelectReaction, goResume, sendArea],
         prev: [goHome, goSelectAction, goSelectReaction],
-        index: 0
+        index: 0,
+        areaTitle: ""
     })
 
     let logo = {
@@ -76,30 +76,36 @@ export default function AddAreaPage(props) {
         updatePageIndex(2)
     }
     async function sendArea() {
-        let area = {
-            action: ACTIONS[pageInfo.selectedIndex[0]],
-            reaction: REACTIONS[pageInfo.selectedIndex[1]],
-            id: uuid.v4().toString()
-        }
-        props.setAllAreas([...props.allAreas, area])
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                action: area.action,
-                reaction: area.reaction,
-                id: area.id,
-                uid: props.userInformation.id
-            })
-        }
-        try {
-            await fetch(ip + "/register/areas", requestOptions).then(response => {
-                navigate('/home', { state: { newArea: area } })
-            }).catch(error => {
-                console.log(error)
-            })
-        } catch (error) {
-            console.log(error);
+        if (props.userInformation.id !== "") {
+            let area = {
+                action: ACTIONS[pageInfo.selectedIndex[0]],
+                reaction: REACTIONS[pageInfo.selectedIndex[1]],
+                id: uuid.v4().toString()
+            }
+            props.setAllAreas([...props.allAreas, area])
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: area.action,
+                    reaction: area.reaction,
+                    id: area.id,
+                    uid: props.userInformation.id,
+                    title: pageInfo.areaTitle
+                })
+            }
+            try {
+                await fetch(ip + "/register/areas", requestOptions).then(response => {
+                    navigate('/home', { state: { newArea: area } })
+                }).catch(error => {
+                    console.log(error)
+                })
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+            alert("Une erreur est survenu.")
+            navigate('/home')
         }
     }
 
@@ -182,6 +188,20 @@ export default function AddAreaPage(props) {
                 index: pageInfo.index
             })
         }
+        function PopupConfig() {
+            return (
+                <p style={{backgroundColor: "lightgrey", padding: "2px 5px", borderRadius:"10px"}}>Config</p>
+            )
+        }
+        function Config() {
+            if (props.area.hasOwnProperty('config')) {
+                return (
+                    <Popup trigger={PopupConfig} modal>
+                        <p style={{width: "500px", height: "500px", backgroundColor: "red"}}>woow</p>
+                    </Popup>
+                )
+            }
+        }
         return (
             <div style={style.block}
                 onClick={selectIndex}>
@@ -190,7 +210,9 @@ export default function AddAreaPage(props) {
                     <img src={logo[props.area.service.name]} style={style.block.image} />
                     <div style={style.block.title}>{props.area.service.name}</div>
                 </div>
-                <div style={style.block.content}>content</div>
+                <div style={style.block.content}>{props.area.description}
+                    <Config />
+                </div>
             </div>
         )
     }
@@ -222,6 +244,17 @@ export default function AddAreaPage(props) {
         )
     }
 
+    function setAreaTitle(value) {
+        setPageInfo({
+            title: pageInfo.title,
+            list: pageInfo.list,
+            selectedIndex: pageInfo.selectedIndex,
+            next: pageInfo.next,
+            prev: pageInfo.prev,
+            index: pageInfo.index,
+            areaTitle: value
+        })
+    }
     function AreaResume() {
         const style = {
             global: {
@@ -241,7 +274,7 @@ export default function AddAreaPage(props) {
         if (pageInfo.index === 2) {
             return (
                 <div style={style.global}>
-                    <input type="text" />
+                    <input placeholder="Title" type="text" onChange={(event) => {setAreaTitle(event.target.value)}}/>
                     <div style={style.actionTitle}>ACTION</div>
                     <InfoBlock area={ACTIONS[pageInfo.selectedIndex[0]]} index={-1} selectedIndex={0} />
                     <div style={style.reactionTitle}>REACTION</div>
