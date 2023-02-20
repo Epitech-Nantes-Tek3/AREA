@@ -48,8 +48,18 @@ const spotifyApi = new SpotifyWebApi({
     scopes : scopes
 });
 
-
+/**
+ * It is required to send requests
+ * @var request
+ * @requires request
+ */
 var request = require('request');
+
+/**
+ * It allows to create url from parameters
+ * @constant querystring
+ * @requires querystring
+ */
 const querystring  = require('querystring');
 
 module.exports = {
@@ -59,6 +69,7 @@ module.exports = {
      * @function callBack
      * @param {*} req the request
      * @param {*} res the request's result
+     * @param {*} serverData client credentials of the developper account
      */
     callBack : function (req, res, serverData) {
         var code = req.query.code || null;
