@@ -1,5 +1,5 @@
 import React, { Dispatch, useEffect, useState } from "react";
-import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSourcePropType, GestureResponderEvent, ScrollView, Alert, TextInput } from "react-native";
+import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSourcePropType, GestureResponderEvent, ScrollView, Alert, TextInput, Linking } from "react-native";
 import { Globals } from "../Common/Globals";
 import Geolocation from 'react-native-geolocation-service';
 import { SettingsProps } from "../Common/Interfaces";
@@ -246,24 +246,27 @@ export default function SettingsScreen(props: SettingsProps) {
                 'user-read-recently-played',
                 'user-follow-read',
                 'user-follow-modify'
-              ];
+              ]
 
             try {
                 await fetch(ip + "/spotify").then(response => {
                     response.json().then(data => {
+                        console.log(data)
                         var clientID = data
 
-                        const url = 'https://accounts.spotify.com/authorize?' +
-                            stringify({
-                            response_type: 'code',
-                            client_id: clientID,
-                            scope: scopes,
-                            show_dialog : true,
-                            redirect_uri: 'http://localhost:8080/spotify/callback',
-                            state : generateRandomString(16)
-                        })
+                        const url = new URL('https://accounts.spotify.com/en/authorize?');
 
-                        locationURL.set(url)
+                        url.searchParams.append('response_type', 'code');
+                        url.searchParams.append('client_id', clientID);
+                        scopes.forEach(scope => {
+                            url.searchParams.append('scope', scope);
+                        });
+                        url.searchParams.append('redirect_uri', 'http://localhost:8080/spotify/callback');
+                        url.searchParams.append('state', generateRandomString(16));
+                        url.searchParams.append('show_dialog', "true");
+
+                        console.log(url)
+                        Linking.openURL(url.href).catch((err) => console.log('An error occurred', err))
                     })
                 }).catch(error => {
                     console.log(error)
