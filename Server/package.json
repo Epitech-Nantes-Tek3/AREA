@@ -13,12 +13,9 @@
     "login-with-twitter": "^1.2.4",
     "node-cron": "^3.0.2",
     "nodemailer": "^6.9.0",
-<<<<<<< HEAD
     "strava-oauth2": "^1.1.0",
     "strava-v3": "^2.1.0",
-=======
     "spotify-web-api-node": "^5.0.2",
->>>>>>> main
     "twitter-api-v2": "^1.14.0"
   },
   "scripts": {
