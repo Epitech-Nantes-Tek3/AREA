@@ -12,9 +12,9 @@ const areasFunctions = require('./Services/areasFunctions');
 const firebaseUid = 'leMgZPp8sfe2l06b6TU330bahJz2';
 const port = config.port;
 const nodeCron = require("node-cron")
+var stravaApi = require('strava-v3');
 const { Client, Token } = require('strava-oauth2');
-
-const url = require('url');
+const spotifyService = require('./Services/spotifyServices')
 
 const session = require('express-session')
 
@@ -258,8 +258,6 @@ const configStrava = {
     scope: 'read,activity:read_all'
 };
 
-var client;
-var stravaApi = require('strava-v3');
 var stravaClient = '';
 
 app.get('/auth', async (req, res) => {
@@ -267,7 +265,7 @@ app.get('/auth', async (req, res) => {
 
     configStrava.client_id = stravaClientData.client_id;
     configStrava.client_secret = stravaClientData.client_secret;
-    client = new Client(configStrava);
+    var client = new Client(configStrava);
     res.redirect(client.getAuthorizationUri());
 });
 
@@ -298,3 +296,46 @@ app.get('/strava/activities', async (req, res) => {
     const activities = await stravaClient.athlete.listActivities({});
     res.json(activities).status(200);
 });
+
+/// SPOTIFY SERVICES
+// CURRENTLY LOGGED WITH Nathan Rousseau Account
+
+// Login
+app.get('/spotify', (req, res) => {
+    spotifyService.registerUser(req, res)
+})
+
+// Redirect Uri
+app.get('/spotify/callback', (req, res) => {
+    spotifyService.callBack(req, res)
+})
+
+/// Check if the logged user follow Elvis presley
+app.get('/spotify/isfollowing', (req, res) => {
+    spotifyService.isfollowing(req, res, ['43ZHCT0cAZBISjO8DG9PnE'])
+})
+
+/// Check if the logged user is currently listening some music
+app.get('/spotify/islistening', (req, res) => {
+    spotifyService.isListening(req, res)
+})
+
+/// Check if the user is listening to a specific music (by his name)
+app.get('/spotify/islisteningto', (req, res) => {
+    spotifyService.isListeningTo(req, res, 'Butterflies and Hurricanes')
+})
+
+/// Pause the current music
+app.get('/spotify/pause', (req, res) => {
+    spotifyService.pauseMusic(req, res)
+})
+
+/// Shuffle the playlist or not of the user
+app.get('/spotify/wantshuffle', (req, res) => {
+    spotifyService.setShuffle(req, res, false)
+})
+
+/// Create a new playlist on the logged user
+app.get('/spotify/createplaylist', (req, res) => {
+    spotifyService.createPlaylist(req, res, 'AreaPlaylist')
+})

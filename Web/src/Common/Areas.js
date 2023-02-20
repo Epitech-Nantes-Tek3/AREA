@@ -19,7 +19,28 @@ export let ACTIONS = [
             needsConnexion: false
         },
         description: "Quand il pleut chez moi"
-    }
+    },
+    {
+        service: {
+            name: "spotify",
+            needsConnexion: true
+        },
+        description: "Si l'utilisateur suit un artiste sélectionné"
+    },
+    {
+        service: {
+            name: "spotify",
+            needsConnexion: true
+        },
+        description: "Si l'utilisateur écoute de la musique"
+    },
+    {
+        service: {
+            name: "spotify",
+            needsConnexion: true
+        },
+        description: "Si l'utilisateur écoute une musique spécifique"
+    },
 ]
 
 export let REACTIONS = [
@@ -42,6 +63,20 @@ export let REACTIONS = [
             name: "spotify",
             needsConnexion: true
         },
-        description: "Jouer du Daft Punk"
+        description: "Pause la musique en cours"
+    },
+    {
+        service: {
+            name: "spotify",
+            needsConnexion: true
+        },
+        description: "Met en aléatoire la file d\'attente"
+    },
+    {
+        service: {
+            name: "spotify",
+            needsConnexion: true
+        },
+        description: "Crée une playlist"
     }
 ]
