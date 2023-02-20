@@ -167,14 +167,7 @@ app.get('/twitch/sign', (req, res) => {
 })
 
 app.get('/twitch/doAct', (req, res) => {
-    token_type = "bearer"
-    token_type = token_type.substring(0, 1).toUpperCase() + token_type.substring(1, token_type.length);
-    access_token = "i55fjph5lgdizvdbbmenghc6zp92aw"
-    let authorization = `${token_type} ${access_token}`;
-    TwitchService.doAct(authorization, "message", "papesan")
-    TwitchService.doAct(authorization, "topGames", "Counter-Strike: Global Offensive")
-    TwitchService.doAct(authorization, "stream", "gotaga")
-    TwitchService.doAct(authorization, "morethan1k", "papesan")
+    TwitchService.actionTwitch("game", firebaseUid, "Just Chatting")
     res.send("TWITCH ACT");
 })
 
