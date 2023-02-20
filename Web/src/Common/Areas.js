@@ -77,6 +77,21 @@ export let REACTIONS = [
     },
     {
         service: {
+            name: "twitter",
+            needsConnexion: true
+        },
+        description: "Retweet #{config}",
+        config: [
+            "elonmusk",
+            "hashtag",
+            "psg",
+            "lgbtq",
+            "cgt",
+            "ratio"
+        ]
+    },
+    {
+        service: {
             name: "google",
             needsConnexion: true
         },
