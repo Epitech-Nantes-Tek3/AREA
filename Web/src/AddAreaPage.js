@@ -27,6 +27,7 @@ export default function AddAreaPage(props) {
         title: ["Selectionne une action", "Selectionne une réaction", "Choisie le titre de ton area"],
         list: [ACTIONS, REACTIONS, []],
         selectedIndex: [0, 0, 0],
+        selectedConfig: [0],
         next: [goSelectReaction, goResume, sendArea],
         prev: [goHome, goSelectAction, goSelectReaction],
         index: 0,
@@ -57,13 +58,17 @@ export default function AddAreaPage(props) {
         navigate("/home")
     }
     function updatePageIndex(index) {
+        var n = pageInfo.selectedConfig
+        n[2] = n[0]
         setPageInfo({
             title: pageInfo.title,
             list: pageInfo.list,
+            selectedConfig: n,
             selectedIndex: pageInfo.selectedIndex,
             next: pageInfo.next,
             prev: pageInfo.prev,
-            index: index
+            index: index,
+            areaTitle: pageInfo.areaTitle
         })
     }
     function goSelectAction() {
@@ -179,29 +184,43 @@ export default function AddAreaPage(props) {
         function selectIndex() {
             var newSelectedIndex = pageInfo.selectedIndex
             newSelectedIndex[pageInfo.index] = props.index
+            var n = pageInfo.selectedConfig
+            n[2] = n[0]
             setPageInfo({
                 title: pageInfo.title,
                 list: pageInfo.list,
+                selectedConfig: n,
                 selectedIndex: newSelectedIndex,
                 next: pageInfo.next,
                 prev: pageInfo.prev,
-                index: pageInfo.index
+                index: pageInfo.index,
+                areaTitle: pageInfo.areaTitle
             })
         }
         function PopupConfig() {
             return (
-                <p style={{backgroundColor: "lightgrey", padding: "2px 5px", borderRadius:"10px"}}>Config</p>
+                <p style={{ backgroundColor: "lightgrey", padding: "2px 5px", borderRadius: "10px" }}>Config : {pageInfo.selectedConfig[pageInfo.index][props.index]}</p>
             )
         }
         function Config() {
-            if (props.area.hasOwnProperty('config')) {
+            if (props.area.hasOwnProperty('config') && pageInfo.index === 2) {
                 return (
-                    <Popup trigger={PopupConfig} modal>
-                        <p style={{width: "500px", height: "500px", backgroundColor: "red"}}>woow</p>
+                    <Popup trigger={PopupConfig}>
+                        <div style={{ position: "relative", backgroundColor: "lightgrey", width: "100%", height: "100%", padding:"10px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
+                            {
+                                props.area.config.map((item, index) => {
+                                    var color = pageInfo.selectedConfig[pageInfo.index][props.index] === index ? "red" : "blue"
+                                    return (
+                                        <div style={{ position: "relative", backgroundColor: color, width: "100%", height: "100%", textAlign: "center", margin:"2px", borderRadius:"10px" }} onClick={() => {var newSelected = pageInfo.selectedConfig; newSelected[pageInfo.index][props.index] = index; setPageInfo({title: pageInfo.title, list: pageInfo.list, selectedIndex: pageInfo.selectedIndex, selectedConfig: newSelected, next: pageInfo.next, prev: pageInfo.prev, index: pageInfo.index, areaTitle: pageInfo.areaTitle})}}>{item}</div>
+                                    )
+                                })
+                            }
+                        </div>
                     </Popup>
                 )
             }
         }
+        var a = (props.area.hasOwnProperty('config') && pageInfo.index === 2) ? props.area.config[pageInfo.selectedConfig[pageInfo.index][props.index]] : ""
         return (
             <div style={style.block}
                 onClick={selectIndex}>
@@ -210,7 +229,7 @@ export default function AddAreaPage(props) {
                     <img src={logo[props.area.service.name]} style={style.block.image} />
                     <div style={style.block.title}>{props.area.service.name}</div>
                 </div>
-                <div style={style.block.content}>{props.area.description}
+                <div style={style.block.content}>{props.area.description.split("{config}").join(a)}
                     <Config />
                 </div>
             </div>
@@ -245,9 +264,12 @@ export default function AddAreaPage(props) {
     }
 
     function setAreaTitle(value) {
+        var n = pageInfo.selectedConfig
+        n[2] = n[0]
         setPageInfo({
             title: pageInfo.title,
             list: pageInfo.list,
+            selectedConfig: n,
             selectedIndex: pageInfo.selectedIndex,
             next: pageInfo.next,
             prev: pageInfo.prev,
@@ -274,7 +296,7 @@ export default function AddAreaPage(props) {
         if (pageInfo.index === 2) {
             return (
                 <div style={style.global}>
-                    <input placeholder="Title" type="text" onChange={(event) => {setAreaTitle(event.target.value)}}/>
+                    <input placeholder="Title" type="text" onChange={(event) => { setAreaTitle(event.target.value) }} />
                     <div style={style.actionTitle}>ACTION</div>
                     <InfoBlock area={ACTIONS[pageInfo.selectedIndex[0]]} index={-1} selectedIndex={0} />
                     <div style={style.reactionTitle}>REACTION</div>

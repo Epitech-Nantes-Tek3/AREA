@@ -4,7 +4,16 @@ export let ACTIONS = [
             name: "twitch",
             needsConnexion: true
         },
-        description: "Quand Kaméto est en live",
+        description: "Quand {config} est en live",
+        config: [
+            "terasgul",
+            "krl_stream",
+            "domingo",
+            "manuellferraraTV",
+            "amouranth",
+            "pekeasmr",
+            "brucegrannec"
+        ]
     },
     {
         service: {
@@ -25,7 +34,15 @@ export let ACTIONS = [
             name: "spotify",
             needsConnexion: true
         },
-        description: "Si l'utilisateur suit un artiste sélectionné"
+        description: "Si l'utilisateur suit {config}",
+        config: [
+            "jul",
+            "avicii",
+            "an'om",
+            "sebastien patoche",
+            "bilal hassani",
+            "theo lavabo"
+        ]
     },
     {
         service: {
@@ -39,7 +56,14 @@ export let ACTIONS = [
             name: "spotify",
             needsConnexion: true
         },
-        description: "Si l'utilisateur écoute une musique spécifique"
+        description: "Si l'utilisateur écoute {config}",
+        config: [
+            "let you down",
+            "as it was",
+            "ambiance à l'africaine",
+            "butterflies and haurricanes",
+            "logobitombo"
+        ]
     },
 ]
 
