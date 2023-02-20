@@ -4,46 +4,89 @@ export let ACTIONS: InfoArea[] = [
     {
         serviceName: "iss",
         trigger: true,
-        description: "Quand l'ISS passe au dessus de chez moi",
-        text: undefined,
-        subject: undefined
+        description: "Quand l'ISS passe à moins de ??? km de chez moi",
+        option: "Gap",
+        text: false,
     },
     {
         serviceName: "météo",
         trigger: true,
-        description: "Quand il fait beau chez moi",
-        text: undefined,
-        subject: undefined
-    }
+        description: "Quand il fait beau à ???",
+        text: false,
+        option: "City",
+    },
+    {
+        serviceName : "spotify",
+        trigger: true,
+        description: "Si l'utilisateur suit ???",
+        text: false,
+        option: "Artist",
+    },
+    {
+        serviceName : "spotify",
+        trigger: true,
+        description: "Si l'utilisateur écoute de la musique",
+        text: false,
+        option: undefined,
+    },
+    {
+        serviceName : "spotify",
+        trigger: true,
+        description: "Si l'utilisateur écoute ???",
+        text: false,
+        option: "Song",
+    },
 ]
 
 export let REACTIONS: InfoArea[] = [
     {
         serviceName: "twitter",
-        trigger: undefined,
-        description: "Retweet Elon Musk",
-        text: "ElonMusk",
-        subject: "retweet"
+        trigger: false,
+        description: "Retweet ???",
+        text: false,
+        option: "Topic",
     },
     {
         serviceName: "twitter",
-        trigger: undefined,
-        description: "Liker le dernier tweet sur Elon Musk",
-        text: "ElonMusk",
-        subject: "like"
+        trigger: false,
+        description: "Liker le dernier tweet sur ???",
+        text: false,
+        option: "Topic",
     },
     {
         serviceName: "twitter",
-        trigger: undefined,
+        trigger: false,
         description: "Poster un tweet",
-        text: "Yo Elon",
-        subject: "tweet"
+        text: true,
+        option: undefined,
     },
     {
         serviceName: "google",
-        trigger: undefined,
-        description: "M'envoyer un mail avec les infos",
-        text: "Pense au rendez-vous du 09/02",
-        subject: "Area Info"
-    }
+        trigger: false,
+        description: "M'envoyer un mail",
+        text: true,
+        option: undefined,
+    },
+    {
+        serviceName: "google",
+        trigger: false,
+        description: "Envoyer un mail à ???",
+        text: true,
+        option: undefined,
+    },
+    {
+        serviceName: "spotify",
+        trigger: false,
+        description: 'Pause la musique en cours',
+        text: false,
+        option: undefined,
+    },
+    {
+        serviceName: "spotify",
+        trigger: false,
+        description: "Met en aléatoire la file d'attente de l'utilisateur",
+        text: false,
+        option: undefined,
+    },
+
 ]

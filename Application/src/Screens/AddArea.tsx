@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, SafeAreaView, View, Text, Image, TouchableOpacity, ScrollView, TextInput } from "react-native";
 import { Globals } from "../Common/Globals";
 import { AddAreaProps, InfoArea, SingleArea } from "../Common/Interfaces";
@@ -6,12 +6,15 @@ import { ACTIONS, REACTIONS } from "../Common/Areas";
 import { Navigation } from "react-native-navigation";
 import { Modal } from "../Components/Modal";
 import uuid from 'react-native-uuid';
+import { Picker } from "@react-native-picker/picker";
+import { Streamers, Games, Artists, Songs, Hashtags, Cities, Gap, Viewers } from "../Common/Interfaces"
 
 interface InfoBlockProps {
     area: InfoArea
     index: number
     selectedIndex: number
     setIndex: Function
+    type: "action" | "reaction"
 }
 
 interface SelectionBlockProps {
@@ -19,6 +22,7 @@ interface SelectionBlockProps {
     list: Array<InfoArea>, 
     setSelected: React.Dispatch<React.SetStateAction<number>>
     selectedIndex: number
+    type: "action" | "reaction"
 }
 
 export default function AddArea(props: AddAreaProps) {
@@ -26,6 +30,11 @@ export default function AddArea(props: AddAreaProps) {
     const [selectedReactionIndex, setSelectedReactionIndex] = useState<number>(0)
     const [isModalVisible, setModalVisible] = useState<boolean>(false)
     const [modalInput, setModalInput] = useState<string>("")
+    const [modalTitle, setModalTitle] = useState<"Enter" | "Select" | undefined>("Select")
+    const [selectOptions, setSelectOptions] = useState<Array<string>>([])
+    const [actionInput, setActionInput] = useState<string>("")
+    const [reactionInput, setReactionInput] = useState<string>("")
+    const [currentType, setCurrentType] = useState<"action" | "reaction">("action")
     let logo = {
         "spotify": require("../assets/logo/spotify.png"),
         "iss": require("../assets/logo/iss.png"),
@@ -36,6 +45,30 @@ export default function AddArea(props: AddAreaProps) {
         "twitch": require("../assets/logo/twitch.png"),
         "strava": require("../assets/logo/strava.png")
     }
+
+    let selectOptionsMap = {
+        "Gap": Gap,
+        "Streamer": Streamers,
+        "Games": Games,
+        "Artist": Artists,
+        "Song": Songs,
+        "Topic": Hashtags,
+        "City": Cities,
+        "Viewers": Viewers
+    }
+
+    useEffect(() => {
+        if (currentType === "action") {
+            setActionInput(modalInput)
+        } else {
+            setReactionInput(modalInput)
+        }
+    }, [modalInput])
+
+    useEffect(() => {
+        setActionInput("")
+        setReactionInput("")
+    }, [selectOptions, modalTitle])
 
     async function sendArea() {
         let area: SingleArea = {
@@ -70,7 +103,24 @@ export default function AddArea(props: AddAreaProps) {
         let color = (props.index === props.selectedIndex ? "#7D7D7D" : "#392D37")
 
         function pressBlock() {
-            setModalVisible(!isModalVisible)
+            if (props.type === "action") {
+                setCurrentType("action")
+            } else {
+                setCurrentType("reaction")
+            }
+
+
+            if (props.area.text == true) {
+                setModalTitle("Enter")
+                setModalVisible(!isModalVisible)
+            } else if (props.area.option !== undefined) {
+                setModalTitle("Select")
+                setSelectOptions(selectOptionsMap[props.area.option!])
+                setModalVisible(!isModalVisible)
+            } else {
+                setModalTitle(undefined)
+                setModalVisible(false)
+            }
             props.setIndex(props.index)
         }
 
@@ -101,7 +151,7 @@ export default function AddArea(props: AddAreaProps) {
                     {
                         props.list.flatMap((item, index) => {
                             return (
-                                <InfoBlock area={item} index={index} selectedIndex={props.selectedIndex} setIndex={props.setSelected}/>
+                                <InfoBlock area={item} index={index} selectedIndex={props.selectedIndex} setIndex={props.setSelected} type={props.type}/>
                             )}
                         )
                     }
@@ -113,12 +163,12 @@ export default function AddArea(props: AddAreaProps) {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.topContainer}>
-                <SelectionBlock title={"Actions"} list={ACTIONS} selectedIndex={selectedActionIndex} setSelected={setSelectedActionIndex} />
-                <SelectionBlock title={"Réactions"} list={REACTIONS} selectedIndex={selectedReactionIndex} setSelected={setSelectedReactionIndex} />
+                <SelectionBlock title={"Actions"} list={ACTIONS} selectedIndex={selectedActionIndex} setSelected={setSelectedActionIndex} type={"action"} />
+                <SelectionBlock title={"Réactions"} list={REACTIONS} selectedIndex={selectedReactionIndex} setSelected={setSelectedReactionIndex} type={"reaction"} />
             </View>
             <View style={styles.bottomContainer}>
                 <Text style={styles.areaTextSummary}>
-                    {ACTIONS[selectedActionIndex].description + ". " + REACTIONS[selectedReactionIndex].description + "."}
+                    {ACTIONS[selectedActionIndex].description.replace("???", actionInput) + ". " + REACTIONS[selectedReactionIndex].description.replace("???", reactionInput) + "."}
                 </Text>
                 <View style={styles.validationButtonContainer}>
                     <TouchableOpacity style={styles.validationButtonStyle} onPress={sendArea}>
@@ -126,23 +176,48 @@ export default function AddArea(props: AddAreaProps) {
                     </TouchableOpacity>
                 </View>
             </View>
+            
+            
+            
             <Modal isVisible={isModalVisible}>
                 <Modal.Container>
-                    <Modal.Header title="Rentrez une valeur" />
+                    <Modal.Header title={modalTitle === "Enter" ? "Rentrez une valeur" : "Choisissez une valeur"} />
                     <Modal.Body>
-                        <Text style={{}}>Change text to value wanted</Text>
-                        <TextInput
-                            style={{}}
-                            onChangeText={(text) => setModalInput(text)}
-                            value={modalInput}
-                            placeholder={"Value"}
-                            placeholderTextColor={"#7B7B7B"}
-                            autoCorrect={true}
-                            returnKeyType="done"
-                        />
+                        {modalTitle === "Enter" &&
+                            <TextInput
+                                style={{}}
+                                onChangeText={(text) => setModalInput(text)}
+                                value={modalInput}
+                                placeholder={"Value"}
+                                placeholderTextColor={"#7B7B7B"}
+                                autoCorrect={true}
+                                returnKeyType="done"
+                            />
+                        }
+                        {modalTitle === "Select" &&
+                            <Picker
+                                selectedValue={modalInput}
+                                onValueChange={(itemValue, itemIndex) => {
+                                    console.log(itemValue)
+                                    setModalInput(itemValue)
+                                }
+                                }
+                            >
+                                {selectOptions.map((item, index) => {
+                                    item = item.charAt(0).toUpperCase() + item.slice(1);
+                                    return (
+                                        <Picker.Item label={item} value={item} />
+                                    )
+                                })
+                                }
+                          </Picker>
+                        }
                     </Modal.Body>
                     <Modal.Footer>
-                        <TouchableOpacity onPress={() => setModalVisible(!isModalVisible)}>
+                        <TouchableOpacity onPress={() => setModalVisible(!isModalVisible)} style={{left: 50, bottom: 10, position: "absolute"}}>
+                            <Text>Close</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => setModalVisible(!isModalVisible)} style={{right: 50, bottom: 10, position: "absolute"}}>
                             <Text>Agree</Text>
                         </TouchableOpacity>
                     </Modal.Footer>

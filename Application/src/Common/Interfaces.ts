@@ -6,6 +6,77 @@ export interface SingleArea {
     id: string
 }
 
+export const Streamers = [
+    "amouranth",
+    "brucegrannec",
+    "domingo",
+    "krl_stream",
+    "manuellferraraTV",
+    "pekeasmr",
+    "terasgul",
+]
+
+export const Games = [
+    "CS-GO",
+    "Hogwarts Legacy",
+    "League of Legends",
+    "Minecraft",
+    "Rocket League",
+]
+
+export const Artists = [
+    "an'om",
+    "avicii",
+    "bilal hassani",
+    "jul",
+    "sebastien patoche",
+    "theo lavabo"
+]
+
+export const Songs = [
+    "Ambiance à l'africaine, Magic System",
+    "As it was, Harry Styles",
+    "Butterfly & Hurricanes, Muse",
+    "Let you down, NF",
+    "Logobitombo, Moussier Tombola"
+]
+
+export const Hashtags = [
+    "cgt",
+    "elonmusk",
+    "hashtag",
+    "lgbtq",
+    "psg",
+    "ratio"
+]
+
+export const Cities = [
+    "Ma position",
+    "Anus",
+    "Colmar",
+    "Faucon",
+    "Moncuq",
+    "Nantes",
+    "Paris",
+    "Poil",
+    "Strasbourg",
+    "Tourcoing",
+]
+
+export const Gap = [
+    "5000",
+    "10000",
+    "15000",
+    "20000",
+]
+
+export const Viewers = [
+    "1",
+    "1000",
+    "10000",
+    "50000",
+]
+
 export interface AreaList {
     list: Array<SingleArea>
 }
@@ -13,9 +84,9 @@ export interface AreaList {
 export interface InfoArea {
     serviceName: "spotify" | "google" | "twitter" | "twitch" | "iss" | "météo" | "nasa" | "strava"
     description: string
-    text: string | undefined
-    trigger: boolean | undefined
-    subject: string | undefined
+    option: "Topic" | "Song" | "Artist" | "City" | "Games" | "Streamer" | "Gap" | "Viewers" | undefined
+    text: boolean
+    trigger: boolean
 }
 
 export interface HomeScreenProps {
