@@ -4,9 +4,6 @@ import { Globals } from "../Common/Globals";
 import Geolocation from 'react-native-geolocation-service';
 import { SettingsProps } from "../Common/Interfaces";
 
-import { stringify } from 'querystring';
-import { locationURL } from 'location-href';
-
 interface Location {
     latitude: number
     longitude: number
@@ -207,6 +204,9 @@ export default function SettingsScreen(props: SettingsProps) {
             return text;
         };
 
+        /**
+         * Ensure the spotify connexion of the user
+         */
         async function spotifyConnexion() {
             let token = "ImTestingATokenItIsSoFunnySpotify"
             props.setUserInfo({
@@ -265,7 +265,6 @@ export default function SettingsScreen(props: SettingsProps) {
                         url.searchParams.append('state', generateRandomString(16));
                         url.searchParams.append('show_dialog', "true");
 
-                        console.log(url)
                         Linking.openURL(url.href).catch((err) => console.log('An error occurred', err))
                     })
                 }).catch(error => {
