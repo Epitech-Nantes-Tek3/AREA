@@ -14,6 +14,8 @@ const port = config.port;
 const nodeCron = require("node-cron")
 const { Client, Token } = require('strava-oauth2');
 
+const url = require('url');
+
 const session = require('express-session')
 
 app.use(cors());
@@ -257,29 +259,42 @@ const configStrava = {
 };
 
 var client;
+var stravaApi = require('strava-v3');
+var stravaClient = '';
 
 app.get('/auth', async (req, res) => {
-    const stravaClient = await firebaseFunctions.getDataFromFireBaseServer('Strava');
+    const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
 
-    configStrava.client_id = stravaClient.client_id;
-    configStrava.client_secret = stravaClient.client_secret;
-    console.log(configStrava);
+    configStrava.client_id = stravaClientData.client_id;
+    configStrava.client_secret = stravaClientData.client_secret;
     client = new Client(configStrava);
     res.redirect(client.getAuthorizationUri());
 });
 
 // Must be the same as the redirect_uri specified in the config
 app.get('/auth/callback', async (req, res) => {
-    const token = await client.getToken(req.originalUrl);
-    // Process token...
-
-    console.log(token);
-
-    res.redirect('/home');
+    const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
+    res.redirect('http://www.strava.com/oauth/authorize?client_id=' + stravaClientData.client_id + '&response_type=code&redirect_uri=http://localhost:8080/auth/callback2/&approval_prompt=force&scope=read,activity:read_all');
 });
 
-app.get('/home', (req, res) => {
+app.get('/auth/callback2', async (req, res) => {
+    const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
+    await fetch('https://www.strava.com/oauth/token?client_id=' + stravaClientData.client_id + '&client_secret=' + stravaClientData.client_secret + '&code=' + req.query.code + '&grant_type=authorization_code', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then((response) => {
+        response.json().then(async (data) => {
+            stravaClient = new stravaApi.client(data.access_token);
+        });
+    });
+    res.redirect('/');
+});
 
-    res.send('Welcome!');
-
+app.get('/strava/activities', async (req, res) => {
+    const activities = await stravaClient.athlete.listActivities({});
+    res.json(activities).status(200);
 });
