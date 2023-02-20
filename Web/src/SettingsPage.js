@@ -5,7 +5,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { useNavigate } from "react-router-dom"
+import { redirect, useNavigate } from "react-router-dom"
 import { ip } from "./env"
 import logoImage from './assets/logo.png';
 import ProfileImage from './assets/avatar.png';
@@ -19,6 +19,9 @@ import DeconnexionImage from './assets/deconnexion.png';
 import ArrowRight from './assets/arrowRight.png';
 import { addDataIntoCache } from './CacheManagement'
 import { loginWithCache } from './Common/Login'
+
+const querystring  = require('querystring');
+const locationURL = require('location-href')
 
 /**
  * @description Styles of the page
@@ -191,6 +194,18 @@ export default function SettingsPage(props) {
             </div>
         )
     }
+
+
+    var generateRandomString = function(length) {
+        var text = '';
+        var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+        for (var i = 0; i < length; i++) {
+          text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        return text;
+      };
+
     /**
      * It returns a div with an image and a text element
      * @function Location - The location div
@@ -205,6 +220,62 @@ export default function SettingsPage(props) {
             </div>
         )
     }
+
+
+
+    async function LogWith(serviceName) {
+        if (serviceName === 'Spotify') {
+            const scopes = [
+                'ugc-image-upload',
+                'user-read-playback-state',
+                'user-modify-playback-state',
+                'user-read-currently-playing',
+                'streaming',
+                'app-remote-control',
+                'user-read-email',
+                'user-read-private',
+                'playlist-read-collaborative',
+                'playlist-modify-public',
+                'playlist-read-private',
+                'playlist-modify-private',
+                'user-library-modify',
+                'user-library-read',
+                'user-top-read',
+                'user-read-playback-position',
+                'user-read-recently-played',
+                'user-follow-read',
+                'user-follow-modify'
+              ];
+
+
+
+            try {
+                await fetch(ip + "spotify").then(response => {
+                    response.json().then(data => {
+                        var clientID = data.clientID
+
+                        const url = 'https://accounts.spotify.com/authorize?' +
+                            querystring.stringify({
+                            response_type: 'code',
+                            client_id: clientID,
+                            scope: scopes,
+                            show_dialog : true,
+                            redirect_uri: 'http://localhost:8080/spotify/callback',
+                            state : generateRandomString(16)
+                        })
+
+                        // locationURL.set(url)
+
+                        console.log(url)
+                    })
+                }).catch(error => {
+                    console.log(error)
+                })
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
     /**
      * It returns a div with an image, a text and another image
      * @function Service - The service div
@@ -213,7 +284,7 @@ export default function SettingsPage(props) {
      */
     function Service(props) {
         return (
-            <div id={props.service} style={styles.service} onMouseOver={updateCursor} onMouseOut={updateCursor}>
+            <div id={props.service} style={styles.service} onMouseOver={updateCursor} onMouseOut={updateCursor} onClick={()=> LogWith(props.service)}>
                 <img src={props.image} style={styles.serviceImage}></img>
                 <p style={styles.serviceText}>Connexion à {props.service}</p>
                 <img src={ArrowRight} style={styles.serviceArrow}></img>
