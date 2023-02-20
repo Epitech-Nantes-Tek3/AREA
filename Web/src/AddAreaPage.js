@@ -52,7 +52,7 @@ export default function AddAreaPage(props) {
             console.log("Unable to login" + error);
             navigate("/auth")
         }
-    })
+    }, [])
     function goHome() {
         navigate("/home")
     }
@@ -245,7 +245,7 @@ export default function AddAreaPage(props) {
                     <div style={style.actionTitle}>ACTION</div>
                     <InfoBlock area={ACTIONS[pageInfo.selectedIndex[0]]} index={-1} selectedIndex={0} />
                     <div style={style.reactionTitle}>REACTION</div>
-                    <InfoBlock area={REACTIONS[pageInfo.selectedIndex[0]]} index={-1} selectedIndex={0} />
+                    <InfoBlock area={REACTIONS[pageInfo.selectedIndex[1]]} index={-1} selectedIndex={0} />
                 </div>
             )
         }
