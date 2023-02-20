@@ -53,18 +53,29 @@ function encodeQueryString(params) {
     return queryString.toString();
 }
 
+function encodeUrlScope(params) 
+{
+    let items = []
+    for (let key in params) {
+        let value = encodeURIComponent(params[key])
+        items.push(`${key}=${value}`)
+    }
+    return items.join("&")
+}
+
 /**
  * Check if the Top Twich game is the same as the one selected by the user
  * @function checkTopGames
  * @param {String} uid uid of the user
- * @param {String} games Games selected by the user
+ * @param {String} game Game selected by the user
  */
+
 function checkTopGames(uid, game) {
     firebaseFunctions.getDataFromFireBase(uid, "Twitch")
     .then(async clientToken => {
         let headers = {
             "Authorization": clientToken.authorization,
-            "Client-Id": clientToken.clientId,
+            "Client-Id": clientToken.ClientId,
         };
         OriginUrl = "https://api.twitch.tv/helix/games/top"
         const res = await fetch(OriginUrl, { headers });
@@ -157,6 +168,22 @@ function checkVierwers(uid , streamerName__nbViewers) {
 }
 
 module.exports = {
+    getTwitchAuthorization: function(req, res) {
+        return firebaseFunctions.getDataFromFireBaseServer("Twitch")
+        .then(token => {
+            const params = {
+                client_id: token.clientId,
+                redirect_uri: token.redirect_url,
+                scope : scopes,
+                response_type: response_type
+            }
+            const url = `${twitch_oauth_url}?${encodeUrlScope(params)}`
+            res.redirect(url);
+        })
+        .catch(error => {
+            console.error(error)
+        })
+    },
     /**
      * function tree which allows you to choose the right function
      * @param {string} func function chosen by the user
