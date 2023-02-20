@@ -1,0 +1,31 @@
+{
+    "name": "SpotifyService",
+    "actions": [
+        {
+            "name": "Follow an Artist?",
+            "description": "if the user follows an artist given in parameter"
+        },
+        {
+            "name": "Listen music",
+            "description": "if the user is listening to some music"
+        },
+        {
+            "name": "Listen specific music",
+            "description": "if the user is listening to specific music given in parameter"
+        }
+    ],
+    "reactions": [
+        {
+            "name": "Pause Music",
+            "description": "Pause the current music"
+        },
+        {
+            "name": "Shuffle waiting list",
+            "description": "Shuffle or not the waiting list, with a shuffle boolean given in parameter"
+        },
+        {
+            "name": "Create a playlist",
+            "description": "Create a playlist, with the name, description and if the playlist is public given in parameter"
+        }
+    ]
+}

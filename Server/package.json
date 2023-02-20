@@ -16,6 +16,7 @@
     "twitch": "^4.6.7",
     "twitch-api": "^0.5.0",
     "twitch-api-v5": "^2.0.4",
+    "spotify-web-api-node": "^5.0.2",
     "twitter-api-v2": "^1.14.0"
   },
   "scripts": {

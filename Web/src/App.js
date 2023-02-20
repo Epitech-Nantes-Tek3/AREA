@@ -1,6 +1,7 @@
 import AddArea from './AddAreaPage';
 import AuthPage from './AuthPage';
 import HomePage from './HomePage';
+import SettingsPage from './SettingsPage';
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { useState } from 'react';
 
@@ -11,6 +12,7 @@ import { useState } from 'react';
 function App() {
   const [userInformation, setUserInformation] = useState({
     mail: "",
+    locationAccept: false,
     coord: {
         latitude: 0,
         longitude: 0,
@@ -37,6 +39,7 @@ function App() {
         <Route path="/auth" element={<AuthPage allAreas={allAreas} setAllAreas={setAllAreas} userInformation={userInformation} setUserInformation={setUserInformation} />} />
         <Route path="/addArea" element={<AddArea allAreas={allAreas} setAllAreas={setAllAreas} userInformation={userInformation} setUserInformation={setUserInformation} />} />
         <Route path="/home" element={<HomePage allAreas={allAreas} setAllAreas={setAllAreas} userInformation={userInformation} setUserInformation={setUserInformation} />} />
+        <Route path="/settings" element={<SettingsPage allAreas={allAreas} setAllAreas={setAllAreas} userInformation={userInformation} setUserInformation={setUserInformation} />} />
       </Routes>
     </BrowserRouter>
   );
