@@ -197,6 +197,7 @@ export default function SettingsPage(props) {
 
     /**
      * Generates a random string containing numbers and letters
+     * @function generateRandomString
      * @param  {number} length The length of the string
      * @return {string} The generated string
      */
@@ -228,6 +229,7 @@ export default function SettingsPage(props) {
 
     /**
      * Ensure the log in of the user in the services
+     * @function LogWith
      * @param {string} serviceName the name of the service where you want to register
      */
     async function LogWith(serviceName) {

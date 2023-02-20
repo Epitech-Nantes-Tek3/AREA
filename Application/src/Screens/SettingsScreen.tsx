@@ -191,6 +191,7 @@ export default function SettingsScreen(props: SettingsProps) {
 
          /**
          * Generates a random string containing numbers and letters
+         * @function generateRandomString
          * @param  {number} length The length of the string
          * @return {string} The generated string
          */
@@ -206,6 +207,7 @@ export default function SettingsScreen(props: SettingsProps) {
 
         /**
          * Ensure the spotify connexion of the user
+         * @function spotifyConnexion
          */
         async function spotifyConnexion() {
             let token = "ImTestingATokenItIsSoFunnySpotify"
