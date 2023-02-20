@@ -4,7 +4,6 @@ import AreaLogo from './assets/logo.png'
 import "./AuthPage.css"
 import "./App.css"
 import { firebaseMod, provider, auth } from './firebaseConfig'
-import { ip } from './env'
 import { addDataIntoCache } from './Common/CacheManagement'
 import { authWithCache } from './Common/Login'
 
@@ -17,6 +16,7 @@ import { authWithCache } from './Common/Login'
 function AuthPage(props) {
     const navigate = useNavigate();
     let [authMode, setAuthMode] = useState("signin")
+    const [color, setColor] = useState("red");
 
     const [isBadPassord, setIsBadPassword] = useState(false);
     const [email, setEmail] = useState('');
@@ -35,7 +35,7 @@ function AuthPage(props) {
      */
     useEffect(() => {
         try {
-            authWithCache(props.setUserInformation, props, ip);
+            authWithCache(props.setUserInformation, props, props.userInformation.ip);
             console.log("Already logged in")
             navigate("/home");
         } catch (error) {
@@ -58,14 +58,14 @@ function AuthPage(props) {
 
     /* Checking if the user is already logged in. If he is, it redirects him to
     the home page. */
-    auth.onAuthStateChanged(user => {
-        auth.getRedirectResult().then((result) => {
-            console.log(result);
-            if (result.user !== null) {
-                navigate('/home');
-            }
-        });
-    })
+    // auth.onAuthStateChanged(user => {
+    //     auth.getRedirectResult().then((result) => {
+    //         console.log(result);
+    //         if (result.user !== null) {
+    //             navigate('/home');
+    //         }
+    //     });
+    // })
 
     /**
      * The function is called when the user clicks on the Facebook login button.
@@ -94,14 +94,14 @@ function AuthPage(props) {
      */
     async function requestServer(endpoint, requestOptions) {
         try {
-            await fetch(ip + endpoint, requestOptions).then(response => {
+            await fetch(props.userInformation.ip + endpoint, requestOptions).then(response => {
                 response.json().then(data => {
                     console.log(data);
                     if (data.userUid !== 'error') {
                         setIsBadPassword(false);
                         props.userInformation.id = data.userUid;
                         props.userInformation.mail = email;
-                        addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa(JSON.parse(requestOptions.body).password) });
+                        addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa(JSON.parse(requestOptions.body).password), ip: props.userInformation.ip });
                         navigate('/home');
                     } else {
                         setIsBadPassword(true);
@@ -175,6 +175,58 @@ function AuthPage(props) {
         )
     }
 
+    async function fetchWithTimeout(resource, options = {}) {
+        const { timeout = 8000 } = options;
+
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+        const response = await fetch(resource, {
+            ...options,
+            signal: controller.signal
+        });
+        clearTimeout(id);
+        return response;
+    }
+    function updateIP(event) {
+        props.setUserInformation({
+            mail: props.userInformation.mail,
+            locationAccept: props.userInformation.locationAccept,
+            coord: {
+                latitude: props.userInformation.coord.latitude,
+                longitude: props.userInformation.coord.longitude,
+                city: props.userInformation.coord.city
+            },
+            id: props.userInformation.id,
+            services: {
+                spotifyId: props.userInformation.spotifyId,
+                googleId: props.userInformation.googleId,
+                twitterId: props.userInformation.twitterId,
+                twitchId: props.userInformation.twitchId,
+                stravaId: props.userInformation.stravaId
+            },
+            ip: event.target.value
+        })
+        console.log(event.target.value)
+        try {
+            fetchWithTimeout(event.target.value + "/testConnexion", {timeout: 500}).then(response => {
+                if (response.status == 200) {
+                    setColor("green")
+                    console.log("valide !")
+                    console.log(response)
+                } else {
+                    setColor("red")
+                }
+            }).catch(error => {
+                setColor("red")
+                console.log("invalide !")
+                console.log(error)
+            })
+        } catch (error) {
+            setColor("orange")
+            console.log("invalide !")
+            console.log(error)
+        }
+    }
     /**
      * It returns a form with an email input, a password input, a button to submit
      * the form, and a link to change the authentication mode
@@ -182,13 +234,14 @@ function AuthPage(props) {
      * submit the form, and a link to the sign up page.
      */
     function signInPage() {
+
         return (
             <div className="Form-container">
-
                 <form className="Form" onSubmit={onSubmit}>
                     <div className="Form-content">
                         <img src={AreaLogo} style={{ width: 150, height: 150, display: "block", margin: "auto" }} alt="logo" />
                         <h3 className="Title">Se connecter</h3>
+                        <input style={{ backgroundColor: color, display: "block", margin: "auto" }} type="text" defaultValue={props.userInformation.ip} placeholder="IP du server" onChange={updateIP} />
                         <div className="form-group">
                             <input
                                 type="email"

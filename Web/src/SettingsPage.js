@@ -6,7 +6,6 @@
 
 import React, { useEffect } from 'react';
 import { useNavigate } from "react-router-dom"
-import { ip } from "./env"
 import ProfileImage from './assets/avatar.png';
 import GoogleImage from './assets/google.png';
 import SpotifyImage from './assets/spotify.png';
@@ -19,7 +18,7 @@ import ArrowRight from './assets/arrowRight.png';
 import { addDataIntoCache } from './Common/CacheManagement'
 import { authWithCache } from './Common/Login';
 
-const querystring  = require('querystring');
+const querystring  = require('querystring-es3');
 const locationURL = require('location-href')
 
 /**
@@ -172,7 +171,7 @@ export default function SettingsPage(props) {
 
     useEffect(() => {
         try {
-            authWithCache(props.setUserInformation, props, ip);
+            authWithCache(props.setUserInformation, props, props.userInformation.ip);
             console.log("Already logged in")
         } catch (error) {
             console.log("Unable to login" + error);
@@ -257,7 +256,7 @@ export default function SettingsPage(props) {
               ].join(' ');
 
             try {
-                await fetch(ip + "/spotify").then(response => {
+                await fetch(props.userInformation.ip + "/spotify").then(response => {
                     response.json().then(data => {
                         var clientID = data
 
