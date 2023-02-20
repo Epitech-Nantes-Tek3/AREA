@@ -246,7 +246,7 @@ export default function SettingsScreen(props: SettingsProps) {
                 'user-read-recently-played',
                 'user-follow-read',
                 'user-follow-modify'
-              ]
+              ].join(' ')
 
             try {
                 await fetch(ip + "/spotify").then(response => {
@@ -258,9 +258,7 @@ export default function SettingsScreen(props: SettingsProps) {
 
                         url.searchParams.append('response_type', 'code');
                         url.searchParams.append('client_id', clientID);
-                        scopes.forEach(scope => {
-                            url.searchParams.append('scope', scope);
-                        });
+                        url.searchParams.append('scope', scopes);
                         url.searchParams.append('redirect_uri', 'http://localhost:8080/spotify/callback');
                         url.searchParams.append('state', generateRandomString(16));
                         url.searchParams.append('show_dialog', "true");
