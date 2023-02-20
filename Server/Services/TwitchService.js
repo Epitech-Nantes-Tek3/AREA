@@ -104,7 +104,7 @@ function getStreamByUserName(uid, streamerName) {
     .then(async clientToken => {
         let headers = {
             "Authorization": clientToken.authorization,
-            "Client-Id": clientToken.clientId,
+            "Client-Id": clientToken.ClientId,
         };
         params = {
             user_login: streamerName,
@@ -140,7 +140,7 @@ function checkVierwers(uid , streamerName__nbViewers) {
     .then(async clientToken => {
         let headers = {
             "Authorization": clientToken.authorization,
-            "Client-Id": clientToken.clientId,
+            "Client-Id": clientToken.ClientId,
         };
         params = {
             user_login: streamerName,
@@ -194,7 +194,7 @@ module.exports = {
         if (func == "viewers")
             checkVierwers(uid, param)
         else if (func == "stream")
-            getStreamByUserName(userId, param)
+            getStreamByUserName(uid, param)
         else if (func == "game")
             checkTopGames(uid, param)
     }

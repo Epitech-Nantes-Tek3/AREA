@@ -168,7 +168,7 @@ app.get('/twitch/sign', (req, res) => {
 })
 
 app.get('/twitch/doAct', (req, res) => {
-    TwitchService.actionTwitch("game", firebaseUid, "Just Chatting")
+    TwitchService.actionTwitch("stream", firebaseUid, "krl_stream")
     res.send("TWITCH ACT");
 })
 
