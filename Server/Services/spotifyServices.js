@@ -59,7 +59,6 @@ module.exports = {
      * @function callBack
      * @param {*} req the request
      * @param {*} res the request's result
-     * @returns
      */
     callBack : function (req, res, serverData) {
         var code = req.query.code || null;
@@ -220,11 +219,11 @@ module.exports = {
      * @param {*} req the request
      * @param {*} res the request's result
      * @param {*} playlistName the name of the playlist
-     * @param {*} public define whereas the playlist is public or not
+     * @param {*} isPublic define whereas the playlist is public or not
      * @param {*} playlistDesc the description of the playlist
      */
-    createPlaylist : function(req, res, playlistName, public=true, playlistDesc='') {
-        spotifyApi.createPlaylist(playlistName, { 'description': playlistDesc, 'public': public }).then(function(data) {
+    createPlaylist : function(req, res, playlistName, isPublic=true, playlistDesc='') {
+        spotifyApi.createPlaylist(playlistName, { 'description': playlistDesc, 'public': isPublic }).then(function(data) {
             console.log('Created playlist ', playlistName);
         }, function(err) {
             console.log('Something went wrong!', err);
