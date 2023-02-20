@@ -18,6 +18,7 @@ import DeconnexionImage from './assets/deconnexion.png';
 import ArrowRight from './assets/arrowRight.png';
 import { addDataIntoCache } from './Common/CacheManagement'
 import { authWithCache } from './Common/Login';
+import { Client, Token } from 'strava-oauth2';
 
 /**
  * @description Styles of the page
@@ -213,13 +214,39 @@ export default function SettingsPage(props) {
      */
     function Service(props) {
         return (
-            <div id={props.service} style={styles.service} onMouseOver={updateCursor} onMouseOut={updateCursor}>
+            <div onClick={stravaConnection} id={props.service} style={styles.service} onMouseOver={updateCursor} onMouseOut={updateCursor}>
                 <img src={props.image} style={styles.serviceImage}></img>
                 <p style={styles.serviceText}>Connexion à {props.service}</p>
                 <img src={ArrowRight} style={styles.serviceArrow}></img>
             </div>
         )
     }
+
+    const configStrava = {
+        client_id: 102338,
+        client_secret: "3473daba0cfd3917a58553295664d5e9d0c09476",
+        redirect_uri: 'http://localhost:8081/home',
+        scope: 'read,activity:read_all'
+    };
+
+    function stravaConnection() {
+        console.log('strava connection');
+        window.location.replace('http://localhost:8080/auth');
+        /*const requestOptions = {
+            method: 'GET',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            }
+        }
+        fetch('http://localhost:8080/auth', requestOptions)
+        /*var client = new Client(configStrava);
+        const url = client.getAuthorizationUri();
+        console.log(url);
+        window.location.replace('https://www.npmjs.com/package/strava-v3');*/
+    }
+
     /**
      * It returns a div with a style of connexionServices, which contains 5
      * Service components
