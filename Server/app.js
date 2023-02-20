@@ -256,7 +256,7 @@ app.get('/getPosition/:uid', (req, res) => {
 // Login
 app.get('/spotify', (req, res) => {
     firebaseFunctions.getDataFromFireBaseServer('Spotify').then(serverData => {
-        res.json(serverData).status(200);
+        res.json(serverData.clientID).status(200);
     })
 })
 

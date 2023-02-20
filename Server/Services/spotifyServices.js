@@ -65,7 +65,6 @@ module.exports = {
         var state = req.query.state || null;
 
         if (state === null) {
-        console.log(state)
         res.redirect('/#' +
             querystring.stringify({
             error: 'state_mismatch'
@@ -90,14 +89,10 @@ module.exports = {
             var access_token = body.access_token,
                 refresh_token = body.refresh_token;
 
-            var options = {
-                url: 'https://api.spotify.com/v1/me',
-                headers: { 'Authorization': 'Bearer ' + access_token },
-                json: true
-            };
-
             spotifyApi.setAccessToken(access_token)
             spotifyApi.setRefreshToken(refresh_token)
+
+            res.redirect('http://localhost:3000/settings')
 
             } else {
             res.redirect('/#' +

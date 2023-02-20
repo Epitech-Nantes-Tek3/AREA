@@ -5,7 +5,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { redirect, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { ip } from "./env"
 import ProfileImage from './assets/avatar.png';
 import GoogleImage from './assets/google.png';
@@ -250,9 +250,9 @@ export default function SettingsPage(props) {
 
 
             try {
-                await fetch(ip + "spotify").then(response => {
+                await fetch(ip + "/spotify").then(response => {
                     response.json().then(data => {
-                        var clientID = data.clientID
+                        var clientID = data
 
                         const url = 'https://accounts.spotify.com/authorize?' +
                             querystring.stringify({
@@ -264,9 +264,7 @@ export default function SettingsPage(props) {
                             state : generateRandomString(16)
                         })
 
-                        // locationURL.set(url)
-
-                        console.log(url)
+                        locationURL.set(url)
                     })
                 }).catch(error => {
                     console.log(error)
