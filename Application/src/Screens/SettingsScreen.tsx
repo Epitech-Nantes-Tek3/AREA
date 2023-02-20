@@ -1,5 +1,5 @@
 import React, { Dispatch, useEffect, useState } from "react";
-import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSourcePropType, GestureResponderEvent, ScrollView, Alert, TextInput } from "react-native";
+import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSourcePropType, GestureResponderEvent, ScrollView, Alert, TextInput, Linking } from "react-native";
 import { Globals } from "../Common/Globals";
 import Geolocation from 'react-native-geolocation-service';
 import { SettingsProps } from "../Common/Interfaces";
@@ -96,7 +96,7 @@ export default function SettingsScreen(props: SettingsProps) {
                 },
                 { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
             )
-        } 
+        }
     }
 
     function ProfileInfo() {
@@ -189,7 +189,27 @@ export default function SettingsScreen(props: SettingsProps) {
             })
         }
 
-        function spotifyConnexion() {
+         /**
+         * Generates a random string containing numbers and letters
+         * @function generateRandomString
+         * @param  {number} length The length of the string
+         * @return {string} The generated string
+         */
+        var generateRandomString = function(length : number) {
+            var text = '';
+            var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+            for (var i = 0; i < length; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
+            return text;
+        };
+
+        /**
+         * Ensure the spotify connexion of the user
+         * @function spotifyConnexion
+         */
+        async function spotifyConnexion() {
             let token = "ImTestingATokenItIsSoFunnySpotify"
             props.setUserInfo({
                 mail: props.userInfo.mail,
@@ -208,6 +228,52 @@ export default function SettingsScreen(props: SettingsProps) {
                 },
                 ip: props.userInfo.ip
             })
+            const scopes = [
+                'ugc-image-upload',
+                'user-read-playback-state',
+                'user-modify-playback-state',
+                'user-read-currently-playing',
+                'streaming',
+                'app-remote-control',
+                'user-read-email',
+                'user-read-private',
+                'playlist-read-collaborative',
+                'playlist-modify-public',
+                'playlist-read-private',
+                'playlist-modify-private',
+                'user-library-modify',
+                'user-library-read',
+                'user-top-read',
+                'user-read-playback-position',
+                'user-read-recently-played',
+                'user-follow-read',
+                'user-follow-modify'
+              ].join(' ')
+
+            try {
+                await fetch(ip + "/spotify").then(response => {
+                    response.json().then(data => {
+                        console.log(data)
+                        var clientID = data
+
+                        const url = new URL('https://accounts.spotify.com/en/authorize?');
+
+                        url.searchParams.append('response_type', 'code');
+                        url.searchParams.append('client_id', clientID);
+                        url.searchParams.append('scope', scopes);
+                        url.searchParams.append('redirect_uri', 'http://localhost:8080/spotify/callback');
+                        url.searchParams.append('state', generateRandomString(16));
+                        url.searchParams.append('show_dialog', "true");
+
+                        Linking.openURL(url.href).catch((err) => console.log('An error occurred', err))
+                    })
+                }).catch(error => {
+                    console.log(error)
+                })
+            } catch (error) {
+                console.log(error);
+            }
+
         }
 
         function twitterConnexion() {
