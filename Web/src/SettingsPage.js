@@ -227,7 +227,7 @@ export default function SettingsPage(props) {
 
 
     /**
-     *
+     * Ensure the log in of the user in the services
      * @param {string} serviceName the name of the service where you want to register
      */
     async function LogWith(serviceName) {
@@ -252,7 +252,7 @@ export default function SettingsPage(props) {
                 'user-read-recently-played',
                 'user-follow-read',
                 'user-follow-modify'
-              ];
+              ].join(' ');
 
             try {
                 await fetch(ip + "/spotify").then(response => {
@@ -269,7 +269,7 @@ export default function SettingsPage(props) {
                             state : generateRandomString(16)
                         })
 
-                        locationURL.set(url)
+                        window.open(url, 'popup', 'width=600,height=800')
                     })
                 }).catch(error => {
                     console.log(error)

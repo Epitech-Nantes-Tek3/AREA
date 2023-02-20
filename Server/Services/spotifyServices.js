@@ -92,7 +92,7 @@ module.exports = {
             spotifyApi.setAccessToken(access_token)
             spotifyApi.setRefreshToken(refresh_token)
 
-            res.redirect('http://localhost:3000/settings')
+            res.send("SUCCESS ! You can go back to the AREA Application.")
 
             } else {
             res.redirect('/#' +
