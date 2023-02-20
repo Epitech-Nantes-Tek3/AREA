@@ -15,21 +15,50 @@ const port = config.port;
 const nodeCron = require("node-cron")
 const spotifyService = require('./Services/spotifyServices')
 
+var passport = require('passport');
+
 const url = require('url');
 
 const session = require('express-session')
+var OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
+
+const TWITCH_CLIENT_ID = '1ikfbd316i8dggr27rtl8t9x3qrhvf';
+const TWITCH_SECRET    = 'je4r7zf1rwv6jn3q8g0fis4lxrgvc0';
+const SESSION_SECRET   = '<YOUR CLIENT SECRET HERE>';
+const CALLBACK_URL     = 'http://localhost:8080/auth/twitch/callback';
+
+app.use(session({secret: SESSION_SECRET, resave: false, saveUninitialized: false}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use('twitch', new OAuth2Strategy({
+    authorizationURL: 'https://id.twitch.tv/oauth2/authorize',
+    tokenURL: 'https://id.twitch.tv/oauth2/token',
+    clientID: TWITCH_CLIENT_ID,
+    clientSecret: TWITCH_SECRET,
+    callbackURL: CALLBACK_URL,
+    state: true
+  },
+  function(accessToken, refreshToken, profile, done) {
+    profile.accessToken = accessToken;
+    profile.refreshToken = refreshToken;
+
+    // Securely store user profile in your DB
+    //User.findOrCreate(..., function(err, user) {
+    //  done(err, user);
+    //});
+
+    done(null, profile);
+  }
+));
 
 app.use(cors());
-
-app.use(session({
-    secret:'tmp',
-    cookie:{}
-}))
 app.use(express.urlencoded())
 //temporaire
 const ejs = require('ejs');
 const googleService = require('./Services/googleService');
 const { ActionTw } = require('./Services/twitterService');
+const { Z_FIXED } = require('zlib');
 app.set('view engine', 'ejs');
 
 // parse application/x-www-form-urlencoded
@@ -159,12 +188,35 @@ app.get('/register/iss', (req, res) => {
     ISSStationService.RegistedRequiredIss(res, firebaseUid, data)
 })
 
-app.get('/twitch', (req, res) => {
-    TwitchService.getTwitchAuthorization(req, res)
+app.get('/twitch/auth/:uid', function (req, res) {
+    const uid  = req.params.uid;
+    if(req.session && req.session.passport && req.session.passport.user) {
+      console.log(req.session.passport.user)
+      console.log("auth :", uid)
+      res.send("BACK TO THE APP NOW")
+    }
+});
+
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+    done(null, user);
+});
+
+app.get('/auth/twitch/callback', passport.authenticate('twitch', { successRedirect: '/twitch/auth/:uid', failureRedirect: '/twitch/auth:uid' }));
+
+app.post('/twitch/post', (req, res) => {
+    console.log(req.body)
+    res.json({body: "OK"}).status(200);
 })
 
-app.get('/twitch/sign', (req, res) => {
-    res.send('Hello twitch!');
+app.get('/twitch/get', (req, res) => {
+    firebaseFunctions.getDataFromFireBaseServer('Twitch').then(serverData => {
+        console.log(serverData)
+        res.json(serverData).status(200);
+    })
 })
 
 app.get('/twitch/doAct', (req, res) => {
@@ -174,10 +226,6 @@ app.get('/twitch/doAct', (req, res) => {
 
 app.get('/twitter', (req, res) => {
     res.render('index')
-})
-
-app.get('/tw', (req, res) => {
-    twitterService.ActionTw('like', 'chelsea', firebaseUid, req, res)
 })
 
 app.get('/twitter/login', (req, res) => {
