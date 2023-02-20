@@ -120,6 +120,7 @@ module.exports = {
      * @function registerUser
      * @param {*} req the request
      * @param {*} res the request's result
+     * @return the needed credentials to register the user
      */
     registerUser : function (req, res) {
         firebaseFunctions.getDataFromFireBaseServer('Spotify').then(serverData => {
