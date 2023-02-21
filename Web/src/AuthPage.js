@@ -165,6 +165,15 @@ function AuthPage(props) {
         )
     }
 
+    /**
+     * It fetches a resource, but if the fetch takes longer than the timeout, it
+     * aborts the fetch
+     * @function fetchWithTimeout
+     * @param {string} resource - The URL to fetch.
+     * @param {*} [options] - An object containing any custom settings that you want
+     * to apply to the request.
+     * @returns A function that takes two parameters, resource and options.
+     */
     async function fetchWithTimeout(resource, options = {}) {
         const { timeout = 8000 } = options;
 
@@ -177,6 +186,12 @@ function AuthPage(props) {
         clearTimeout(id);
         return response;
     }
+
+    /**
+     * It updates the IP address of the user in the state of the application
+     * @function updateIP
+     * @param event - the event that triggered the function
+     */
     function updateIP(event) {
         props.setUserInformation({
             mail: props.userInformation.mail,
@@ -201,22 +216,20 @@ function AuthPage(props) {
             fetchWithTimeout(event.target.value + "/testConnexion", {timeout: 500}).then(response => {
                 if (response.status == 200) {
                     setColor("green")
-                    console.log("valide !")
-                    console.log(response)
                 } else {
                     setColor("red")
                 }
+                console.log(response)
             }).catch(error => {
                 setColor("red")
-                console.log("invalide !")
                 console.log(error)
             })
         } catch (error) {
-            setColor("orange")
-            console.log("invalide !")
+            setColor("red")
             console.log(error)
         }
     }
+
     /**
      * It returns a form with an email input, a password input, a button to submit
      * the form, and a link to change the authentication mode
