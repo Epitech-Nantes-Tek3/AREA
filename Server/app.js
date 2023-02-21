@@ -155,7 +155,7 @@ app.get('/about.json', (req, res) => {
                 "current_time": Date.now(),
                 "services": obj
             }
-        }
+        }, null, 2
     )
     res.send(about)
 })
@@ -333,12 +333,16 @@ app.get('/getPosition/:uid', (req, res) => {
 
 // Login
 app.get('/spotify', (req, res) => {
-    spotifyService.registerUser(req, res)
+    firebaseFunctions.getDataFromFireBaseServer('Spotify').then(serverData => {
+        res.json(serverData.clientID).status(200);
+    })
 })
 
 // Redirect Uri
 app.get('/spotify/callback', (req, res) => {
-    spotifyService.callBack(req, res)
+    firebaseFunctions.getDataFromFireBaseServer('Spotify').then(serverData => {
+        spotifyService.callBack(req, res, serverData)
+    })
 })
 
 /// Check if the logged user follow Elvis presley

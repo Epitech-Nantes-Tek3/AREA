@@ -4,9 +4,8 @@
  * @module SettingsPage
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom"
-import { ip } from "./env"
 import ProfileImage from './assets/avatar.png';
 import GoogleImage from './assets/google.png';
 import SpotifyImage from './assets/spotify.png';
@@ -18,6 +17,9 @@ import DeconnexionImage from './assets/deconnexion.png';
 import ArrowRight from './assets/arrowRight.png';
 import { addDataIntoCache } from './Common/CacheManagement'
 import { authWithCache } from './Common/Login';
+
+const querystring = require('querystring-es3');
+const locationURL = require('location-href')
 
 /**
  * @description Styles of the page
@@ -169,12 +171,13 @@ export default function SettingsPage(props) {
 
     useEffect(() => {
         try {
-            authWithCache(props.setUserInformation, props, ip);
+            authWithCache(props.setUserInformation, props, props.userInformation.ip);
             console.log("Already logged in")
         } catch (error) {
             console.log("Unable to login" + error);
             navigate("/auth")
         }
+        updateIP({target:{value: props.userInformation.ip}})
     }, [])
     /**
      * It returns a div with a profile picture and an email address
@@ -191,6 +194,23 @@ export default function SettingsPage(props) {
             </div>
         )
     }
+
+    /**
+     * Generates a random string containing numbers and letters
+     * @function generateRandomString
+     * @param  {number} length The length of the string
+     * @return {string} The generated string
+     */
+    var generateRandomString = function (length) {
+        var text = '';
+        var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+        for (var i = 0; i < length; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        return text;
+    };
+
     /**
      * It returns a div with an image and a text element
      * @function Location - The location div
@@ -204,6 +224,59 @@ export default function SettingsPage(props) {
                 <p style={styles.locationText}>{(props.userInformation.coord.city == null) ? props.userInformation.coord.city : "UNDEFINED"}</p>
             </div>
         )
+    }
+
+
+    /**
+     * Ensure the log in of the user on Spotify
+     * @function spotifyConnexion
+     */
+    async function spotifyConnexion() {
+        const scopes = [
+            'ugc-image-upload',
+            'user-read-playback-state',
+            'user-modify-playback-state',
+            'user-read-currently-playing',
+            'streaming',
+            'app-remote-control',
+            'user-read-email',
+            'user-read-private',
+            'playlist-read-collaborative',
+            'playlist-modify-public',
+            'playlist-read-private',
+            'playlist-modify-private',
+            'user-library-modify',
+            'user-library-read',
+            'user-top-read',
+            'user-read-playback-position',
+            'user-read-recently-played',
+            'user-follow-read',
+            'user-follow-modify'
+        ].join(' ');
+
+        try {
+            await fetch(props.userInformation.ip + "/spotify").then(response => {
+                response.json().then(data => {
+                    var clientID = data
+
+                    const url = 'https://accounts.spotify.com/authorize?' +
+                        querystring.stringify({
+                            response_type: 'code',
+                            client_id: clientID,
+                            scope: scopes,
+                            show_dialog: true,
+                            redirect_uri: 'http://localhost:8080/spotify/callback',
+                            state: generateRandomString(16)
+                        })
+                    console.log(url)
+                    window.open(url, 'popup', 'width=600,height=800')
+                })
+            }).catch(error => {
+                console.log(error)
+            })
+        } catch (error) {
+            console.log(error);
+        }
     }
     /**
      * It returns a div with an image, a text and another image
@@ -227,77 +300,78 @@ export default function SettingsPage(props) {
      * @function twitchConnexion
     */
     function twitchConnexion() {
-            const scopes = [
-                "analytics:read:extensions",
-                "analytics:read:games",
-                "moderator:read:followers",
-                "channel:manage:moderators",
-                "channel:manage:predictions",
-                "channel:manage:polls",
-                "user:manage:whispers"
-            ].join(" ");
-            const twitch_oauth_url = "https://id.twitch.tv/oauth2/authorize"
-            const response_type = "token"
+        const scopes = [
+            "analytics:read:extensions",
+            "analytics:read:games",
+            "moderator:read:followers",
+            "channel:manage:moderators",
+            "channel:manage:predictions",
+            "channel:manage:polls",
+            "user:manage:whispers"
+        ].join(" ");
+        const twitch_oauth_url = "https://id.twitch.tv/oauth2/authorize"
+        const response_type = "token"
 
-            twitchAuth(scopes, twitch_oauth_url, response_type)
+        twitchAuth(scopes, twitch_oauth_url, response_type)
+    }
+
+    /**
+     * Encode Uri
+     * @function encodeQueryString
+     * @param {*} params contains the elements to be added to the url.
+     */
+    function encodeUrlScope(params)
+    {
+        let items = []
+        for (let key in params) {
+            let value = encodeURIComponent(params[key])
+            items.push(`${key}=${value}`)
         }
-
-         /**
-         * Encode Uri
-         * @function encodeQueryString
-         * @param {*} params contains the elements to be added to the url.
-         */
-        function encodeUrlScope(params)
-        {
-            let items = []
-            for (let key in params) {
-                let value = encodeURIComponent(params[key])
-                items.push(`${key}=${value}`)
-            }
-            return items.join("&")
-        }
+        return items.join("&")
+    }
 
 
-        /**
-         * Authenticates the user with Twitch OAuth and send an access token to the back.
-         * @async
-         * @function twitchAuth
-         * @param {string} scopes - The list of scopes to be authorized by the user.
-         * @param {string} twitch_oauth_url - The URL for the Twitch OAuth endpoint.
-         * @param {string} response_type - The response type for the authorization request.
-        */
-        async function twitchAuth(scopes, twitch_oauth_url, response_type) {
-            var url = "";
-            try {
-                await fetch(ip + "/twitch/get").then(response => {
-                    response.json().then(async data => {
-                        const params = {
-                            client_id: data.clientId,
-                            redirect_uri: data.redirect_url,
-                            scope : scopes,
-                            response_type: response_type
-                        }
-                        url = `${twitch_oauth_url}?${encodeUrlScope(params)}`
-                        await Linking.openURL(url).catch((err) => console.log('An error occurred', err))
-                        const requestOptions = {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({uid: props.userInfo.id})
-                        }
-                        const uid = props.userInfo.id
-                        fetch(ip + "/twitch/post/", requestOptions)
-                        .then(response => {
-                                response.json().then(data => {
+    /**
+     * Authenticates the user with Twitch OAuth and send an access token to the back.
+     * @async
+     * @function twitchAuth
+     * @param {string} scopes - The list of scopes to be authorized by the user.
+     * @param {string} twitch_oauth_url - The URL for the Twitch OAuth endpoint.
+     * @param {string} response_type - The response type for the authorization request.
+    */
+    async function twitchAuth(scopes, twitch_oauth_url, response_type) {
+        var url = "";
+        try {
+            await fetch(props.userInformation.ip + "/twitch/get").then(response => {
+                response.json().then(async data => {
+                    const params = {
+                        client_id: data.clientId,
+                        redirect_uri: data.redirect_url,
+                        scope : scopes,
+                        response_type: response_type
+                    }
+                    console.log(props.userInformation.id)
+                    url = `${twitch_oauth_url}?${encodeUrlScope(params)}`
+                    window.open(url, 'popup', 'width=600,height=800')
+                    // await Linking.openURL(url).catch((err) => console.log('An error occurred', err))
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({uid: props.userInformation.id})
+                    }
+                    fetch(props.userInformation.ip + "/twitch/post/", requestOptions)
+                    .then(response => {
+                            response.json().then(data => {
 
-                            })
                         })
                     })
-                }).catch(error => {
-                    console.log(error)
                 })
-            } catch (error) {
-                console.log(error);
-            }
+            }).catch(error => {
+                console.log(error)
+            })
+        } catch (error) {
+            console.log(error);
+        }
 
         }
 
@@ -311,14 +385,35 @@ export default function SettingsPage(props) {
     function ServicesAuth() {
         return (
             <div style={styles.connexionServices}>
-                <Service image={GoogleImage} service="Google"/>
-                <Service image={SpotifyImage} service="Spotify" />
-                <Service image={TwitterImage} service="Twitter" />
+                <Service image={GoogleImage} service="Google"onPress={googleConnexion}/>
+                <Service image={SpotifyImage} service="Spotify" onPress={spotifyConnexion} />
+                <Service image={TwitterImage} service="Twitter" onPress={twitterConnexion}/>
                 <Service image={TwitchImage} service="Twitch" onPress={twitchConnexion} />
-                <Service image={StravaImage} service="Strava" />
+                <Service image={StravaImage} service="Strava" onPress={stravaConnexion}/>
             </div>
         )
     }
+    /**
+     * Empty for the moment
+     * @function stravaConnexion
+    */
+    function stravaConnexion() {
+    }
+
+    /**
+     * Empty for the moment
+     * @function twitterConnexion
+    */
+    function twitterConnexion() {
+    }
+
+    /**
+     * Empty for the moment
+     * @function googleConnexion
+    */
+    function googleConnexion() {
+    }
+
     /**
      * It returns a div with a clickable image and a text
      * @function Deconnexion - The deconnexion div
@@ -326,7 +421,7 @@ export default function SettingsPage(props) {
      */
     function Deconnexion() {
         return (
-            <div style={styles.deconnexion} onClick={() => {addDataIntoCache("area", {}); navigate('/auth')}} onMouseOver={updateCursor} onMouseOut={updateCursor}>
+            <div style={styles.deconnexion} onClick={() => { addDataIntoCache("area", {}); navigate('/auth') }} onMouseOver={updateCursor} onMouseOut={updateCursor}>
                 <img src={DeconnexionImage}></img>
                 <p>Deconnexion</p>
                 <p></p>
@@ -372,10 +467,99 @@ export default function SettingsPage(props) {
             </div>
         )
     }
+
+    const [color, setColor] = useState('black')
+
+    /**
+     * It fetches a resource, but if the fetch takes longer than the timeout, it
+     * aborts the fetch
+     * @function fetchWithTimeout
+     * @param {string} resource - The URL to fetch.
+     * @param {*} [options] - An object containing any custom settings that you want
+     * to apply to the request.
+     * @returns A function that takes two parameters, resource and options.
+     */
+    async function fetchWithTimeout(resource, options = {}) {
+        const { timeout = 8000 } = options;
+
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+        const response = await fetch(resource, {
+            ...options,
+            signal: controller.signal
+        });
+        clearTimeout(id);
+        return response;
+    }
+
+    /**
+     * It updates the IP address of the user in the state of the application
+     * @function updateIP
+     * @param event - the event that triggered the function
+     */
+    function updateIP(event) {
+        setColor("black")
+        console.log(event.target.value)
+        try {
+            fetchWithTimeout(event.target.value + "/testConnexion", { timeout: 500 }).then(response => {
+                if (response.status == 200) {
+                    setColor("#5281B7")
+                } else {
+                    setColor("red")
+                }
+                console.log(response)
+            }).catch(error => {
+                setColor("red")
+                console.log(error)
+            })
+        } catch (error) {
+            setColor("red")
+            console.log(error)
+        }
+        props.setUserInformation({
+            mail: props.userInformation.mail,
+            locationAccept: props.userInformation.locationAccept,
+            coord: {
+                latitude: props.userInformation.coord.latitude,
+                longitude: props.userInformation.coord.longitude,
+                city: props.userInformation.coord.city
+            },
+            id: props.userInformation.id,
+            services: {
+                spotifyId: props.userInformation.spotifyId,
+                googleId: props.userInformation.googleId,
+                twitterId: props.userInformation.twitterId,
+                twitchId: props.userInformation.twitchId,
+                stravaId: props.userInformation.stravaId
+            },
+            ip: event.target.value
+        })
+    }
+
+    const ipStyle = {
+        ip: {
+            position: 'relative',
+            backgroundColor: color,
+            width: "20%",
+            height: 50,
+            left: "40%",
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            borderRadius: 15,
+            marginBottom: 10
+        },
+    }
     return (
-        <div id='global' style={{textAlign:'center'}}>
+        <div id='global' style={{ textAlign: 'center' }}>
             <Header />
             <Profile />
+            <div style={ipStyle.ip}>
+                <div>
+                    {props.userInformation.ip}
+                </div>
+            </div>
             <Location />
             <ServicesAuth />
             <Deconnexion />

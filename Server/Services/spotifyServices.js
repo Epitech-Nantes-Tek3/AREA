@@ -48,6 +48,19 @@ const spotifyApi = new SpotifyWebApi({
     scopes : scopes
 });
 
+/**
+ * It is required to send requests
+ * @var request
+ * @requires request
+ */
+var request = require('request');
+
+/**
+ * It allows to create url from parameters
+ * @constant querystring
+ * @requires querystring
+ */
+const querystring  = require('querystring');
 
 module.exports = {
     /**
@@ -56,49 +69,50 @@ module.exports = {
      * @function callBack
      * @param {*} req the request
      * @param {*} res the request's result
+     * @param {*} serverData client credentials of the developper account
      */
-    callBack : function (req, res) {
-        const error = req.query.error;
-        const code = req.query.code;
-        const state = req.query.state;
+    callBack : function (req, res, serverData) {
+        var code = req.query.code || null;
+        var state = req.query.state || null;
 
-        if (error) {
-            console.error('Callback Error:', error);
-            res.send(`Callback Error: ${error}`);
-            return;
+        if (state === null) {
+        res.redirect('/#' +
+            querystring.stringify({
+            error: 'state_mismatch'
+            }));
+        } else {
+        var authOptions = {
+            url: 'https://accounts.spotify.com/api/token',
+            form: {
+            code: code,
+            redirect_uri: 'http://localhost:8080/spotify/callback',
+            grant_type: 'authorization_code'
+            },
+            headers: {
+            'Authorization': 'Basic ' + (new Buffer(serverData.clientID + ':' + serverData.clientSecret).toString('base64'))
+            },
+            json: true
+        };
+
+        request.post(authOptions, function(error, response, body) {
+            if (!error && response.statusCode === 200) {
+
+            var access_token = body.access_token,
+                refresh_token = body.refresh_token;
+
+            spotifyApi.setAccessToken(access_token)
+            spotifyApi.setRefreshToken(refresh_token)
+
+            res.send("SUCCESS ! You can go back to the AREA Application.")
+
+            } else {
+            res.redirect('/#' +
+                querystring.stringify({
+                error: 'invalid_token'
+                }));
+            }
+        });
         }
-
-        spotifyApi
-            .authorizationCodeGrant(code)
-            .then(data => {
-            const access_token = data.body['access_token'];
-            const refresh_token = data.body['refresh_token'];
-            const expires_in = data.body['expires_in'];
-
-            spotifyApi.setAccessToken(access_token);
-            spotifyApi.setRefreshToken(refresh_token);
-
-            console.log('access_token:', access_token);
-            console.log('refresh_token:', refresh_token);
-
-            console.log(
-                `Sucessfully retreived access token. Expires in ${expires_in} s.`
-            );
-            res.send('Success! You can now close the window.');
-
-            setInterval(async () => {
-                const data = await spotifyApi.refreshAccessToken();
-                const access_token = data.body['access_token'];
-
-                console.log('The access token has been refreshed!');
-                console.log('access_token:', access_token);
-                spotifyApi.setAccessToken(access_token);
-            }, expires_in / 2 * 1000);
-            })
-            .catch(error => {
-            console.error('Error getting Tokens:', error);
-            res.send(`Error getting Tokens: ${error}`);
-            });
     },
 
     /**
@@ -106,15 +120,12 @@ module.exports = {
      * @function registerUser
      * @param {*} req the request
      * @param {*} res the request's result
+     * @return the needed credentials to register the user
      */
     registerUser : function (req, res) {
-        firebaseFunctions.getDataFromFireBaseServer('Spotify').then(async serverData => {
-
-            spotifyApi.setClientId(serverData.clientID)
-            spotifyApi.setClientSecret(serverData.clientSecret)
-
-            res.redirect(spotifyApi.createAuthorizeURL(scopes));
-          })
+        firebaseFunctions.getDataFromFireBaseServer('Spotify').then(serverData => {
+            return serverData;
+        })
     },
 
     /**
