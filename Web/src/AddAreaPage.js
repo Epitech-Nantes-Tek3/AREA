@@ -51,9 +51,20 @@ export default function AddAreaPage(props) {
             navigate("/auth")
         }
     }, [])
+
+    /**
+     * Navigate to home page
+     * @function goHome
+     */
     function goHome() {
         navigate("/home")
     }
+
+    /**
+     * Update the page index in userInformation
+     * @function updatePageIndex
+     * @param {number} index The new page index
+     */
     function updatePageIndex(index) {
         setPageInfo({
             title: pageInfo.title,
@@ -64,15 +75,36 @@ export default function AddAreaPage(props) {
             index: index,
         })
     }
+
+    /**
+     * Update the index page to 0
+     * @function goSelectAction
+     */
     function goSelectAction() {
         updatePageIndex(0)
     }
+
+    /**
+     * Update the index page to 1
+     * @function goSelectReaction
+     */
     function goSelectReaction() {
         updatePageIndex(1)
     }
+
+    /**
+     * Update the index page to 2
+     * @function goResume
+     */
     function goResume() {
         updatePageIndex(2)
     }
+
+    /**
+     * Send the new area to the server.
+     * @async
+     * @function sendArea
+     */
     async function sendArea() {
         if (props.userInformation.id !== "") {
             let area = {
@@ -107,6 +139,12 @@ export default function AddAreaPage(props) {
         }
     }
 
+    /**
+     * Return the html info block
+     * @function InfoBlock
+     * @param {*} props All properties needed for this function
+     * @returns html info block
+     */
     function InfoBlock(props) {
         let border = props.selectedIndex === props.index ? "solid 2px darkblue" : "none";
 
@@ -156,6 +194,10 @@ export default function AddAreaPage(props) {
             }
         }
 
+        /**
+         * Select the index in the corresponding list
+         * @function selectedIndex
+         */
         function selectIndex() {
             var newSelectedIndex = pageInfo.selectedIndex
             newSelectedIndex[pageInfo.index] = props.index
@@ -182,6 +224,12 @@ export default function AddAreaPage(props) {
         )
     }
 
+    /**
+     * Return the html page of the selection block
+     * @function SelectionBlock
+     * @param {*} props All properties needed by selectionBlock
+     * @returns the HTML page
+     */
     function SelectionBlock(props) {
         const style = {
             block: {
@@ -209,6 +257,11 @@ export default function AddAreaPage(props) {
         )
     }
 
+    /**
+     * Return the html page of the areaResume
+     * @function AreaResume
+     * @returns the html page
+     */
     function AreaResume() {
         const style = {
             global: {
@@ -236,6 +289,12 @@ export default function AddAreaPage(props) {
             )
         }
     }
+
+    /**
+     * The html body page
+     * @function Body
+     * @returns the html of the body page
+     */
     function Body() {
         const style = {
             body: {
@@ -274,6 +333,12 @@ export default function AddAreaPage(props) {
             </div>
         )
     }
+
+    /**
+     * The html header page
+     * @function Header
+     * @returns the html header page
+     */
     function Header() {
         const style = {
             global: {
