@@ -4,7 +4,6 @@ import { Globals } from "../Common/Globals";
 import Geolocation from 'react-native-geolocation-service';
 import { SettingsProps } from "../Common/Interfaces";
 import { firebase } from "@react-native-firebase/auth";
-import { locationURL } from 'location-href';
 
 interface Location {
     latitude: number
