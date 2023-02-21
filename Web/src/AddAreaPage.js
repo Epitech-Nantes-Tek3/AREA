@@ -23,7 +23,7 @@ export default function AddAreaPage(props) {
     const navigate = useNavigate();
 
     const [pageInfo, setPageInfo] = useState({
-        title: ["Selectionne une action", "Selectionne une réaction", "Choisie le titre de ton area"],
+        title: ["Sélectionne une action", "Sélectionne une réaction", "Choisis le titre de ton area"],
         list: [ACTIONS, REACTIONS, []],
         selectedIndex: [0, 0, 0],
         next: [goSelectReaction, goResume, sendArea],
