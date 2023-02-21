@@ -133,6 +133,7 @@ function AuthPage(props) {
     async function onSubmit(event) {
         event.preventDefault();
         if (authMode === "signup") {
+            setIsBadPassword(false);
             if (password !== confirmPassword) {
                 setIsPasswordDifferent(true);
                 return;
@@ -221,7 +222,7 @@ function AuthPage(props) {
                                 onChange={handleChange}
                             />
                         </div>
-                        <div>{(isBadPassord) ? "bad password" : ""}</div>
+                        <div className="error-text">{(isBadPassord) ? "L'utilisateur ou le mot de passe est invalide." : ""}</div>
                         <CenterButton text="Se connecter" />
                         <div className="text-center" style={{ marginTop: 20 }}>
                             Pas encore de compte ?  {"  "}
@@ -275,7 +276,7 @@ function AuthPage(props) {
                                 onChange={handleChange}
                             />
                         </div>
-                        <div>{(isPasswordDifferent) ? "Password are differents." : ""}</div>
+                        <div className="error-text">{(isPasswordDifferent) ? "Les mots de passes sont différents." : ""}</div>
                         <CenterButton text="S'inscrire" />
                         <div className="text-center">
                             Déjà un compte ?{" "}
