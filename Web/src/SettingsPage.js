@@ -222,25 +222,42 @@ export default function SettingsPage(props) {
     }
 
     /**
-         * Authenticates the user with Twitch API.
-         * @async
-         * @function twitchConnexion
-        */ 
-        function twitchConnexion() {
-                const scopes = [
-                    "analytics:read:extensions",
-                    "analytics:read:games",
-                    "moderator:read:followers",
-                    "channel:manage:moderators",
-                    "channel:manage:predictions",
-                    "channel:manage:polls",
-                    "user:manage:whispers"
-                ].join(" ");
-                const twitch_oauth_url = "https://id.twitch.tv/oauth2/authorize"
-                const response_type = "token"
-        
-                twitchAuth(scopes, twitch_oauth_url, response_type)
+     * Authenticates the user with Twitch API.
+     * @async
+     * @function twitchConnexion
+    */
+    function twitchConnexion() {
+            const scopes = [
+                "analytics:read:extensions",
+                "analytics:read:games",
+                "moderator:read:followers",
+                "channel:manage:moderators",
+                "channel:manage:predictions",
+                "channel:manage:polls",
+                "user:manage:whispers"
+            ].join(" ");
+            const twitch_oauth_url = "https://id.twitch.tv/oauth2/authorize"
+            const response_type = "token"
+
+            twitchAuth(scopes, twitch_oauth_url, response_type)
+        }
+
+         /**
+         * Encode Uri
+         * @function encodeQueryString
+         * @param {*} params contains the elements to be added to the url.
+         */
+        function encodeUrlScope(params)
+        {
+            let items = []
+            for (let key in params) {
+                let value = encodeURIComponent(params[key])
+                items.push(`${key}=${value}`)
             }
+            return items.join("&")
+        }
+
+
         /**
          * Authenticates the user with Twitch OAuth and send an access token to the back.
          * @async
@@ -248,7 +265,7 @@ export default function SettingsPage(props) {
          * @param {string} scopes - The list of scopes to be authorized by the user.
          * @param {string} twitch_oauth_url - The URL for the Twitch OAuth endpoint.
          * @param {string} response_type - The response type for the authorization request.
-        */    
+        */
         async function twitchAuth(scopes, twitch_oauth_url, response_type) {
             var url = "";
             try {
@@ -281,7 +298,7 @@ export default function SettingsPage(props) {
             } catch (error) {
                 console.log(error);
             }
-            
+
         }
 
     /**
