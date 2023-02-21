@@ -204,7 +204,6 @@ app.get('/twitch/auth/', function (req, res) {
     if(req.session && req.session.passport && req.session.passport.user) {
       twhtokens.accessToken = req.session.passport.user.accessToken
       twhtokens.refreshToken = req.session.passport.user.refreshToken
-      console.log(twhtokens)
       TwitchService.setUserData(twhtokens)
       res.send("BACK TO THE APP NOW")
     } else {
