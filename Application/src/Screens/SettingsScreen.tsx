@@ -3,7 +3,6 @@ import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSou
 import { Globals } from "../Common/Globals";
 import Geolocation from 'react-native-geolocation-service';
 import { SettingsProps } from "../Common/Interfaces";
-import { firebase } from "@react-native-firebase/auth";
 
 interface Location {
     latitude: number
