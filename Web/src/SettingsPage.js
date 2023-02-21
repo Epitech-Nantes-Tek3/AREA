@@ -213,13 +213,77 @@ export default function SettingsPage(props) {
      */
     function Service(props) {
         return (
-            <div id={props.service} style={styles.service} onMouseOver={updateCursor} onMouseOut={updateCursor}>
+            <div id={props.service} style={styles.service} onMouseOver={updateCursor} onMouseOut={updateCursor} onClick={props.onPress}>
                 <img src={props.image} style={styles.serviceImage}></img>
                 <p style={styles.serviceText}>Connexion à {props.service}</p>
                 <img src={ArrowRight} style={styles.serviceArrow}></img>
             </div>
         )
     }
+
+    /**
+         * Authenticates the user with Twitch API.
+         * @async
+         * @function twitchConnexion
+        */ 
+        function twitchConnexion() {
+                const scopes = [
+                    "analytics:read:extensions",
+                    "analytics:read:games",
+                    "moderator:read:followers",
+                    "channel:manage:moderators",
+                    "channel:manage:predictions",
+                    "channel:manage:polls",
+                    "user:manage:whispers"
+                ].join(" ");
+                const twitch_oauth_url = "https://id.twitch.tv/oauth2/authorize"
+                const response_type = "token"
+        
+                twitchAuth(scopes, twitch_oauth_url, response_type)
+            }
+        /**
+         * Authenticates the user with Twitch OAuth and send an access token to the back.
+         * @async
+         * @function twitchAuth
+         * @param {string} scopes - The list of scopes to be authorized by the user.
+         * @param {string} twitch_oauth_url - The URL for the Twitch OAuth endpoint.
+         * @param {string} response_type - The response type for the authorization request.
+        */    
+        async function twitchAuth(scopes, twitch_oauth_url, response_type) {
+            var url = "";
+            try {
+                await fetch(ip + "/twitch/get").then(response => {
+                    response.json().then(async data => {
+                        const params = {
+                            client_id: data.clientId,
+                            redirect_uri: data.redirect_url,
+                            scope : scopes,
+                            response_type: response_type
+                        }
+                        url = `${twitch_oauth_url}?${encodeUrlScope(params)}`
+                        await Linking.openURL(url).catch((err) => console.log('An error occurred', err))
+                        const requestOptions = {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({uid: props.userInfo.id})
+                        }
+                        const uid = props.userInfo.id
+                        fetch(ip + "/twitch/post/", requestOptions)
+                        .then(response => {
+                                response.json().then(data => {
+
+                            })
+                        })
+                    })
+                }).catch(error => {
+                    console.log(error)
+                })
+            } catch (error) {
+                console.log(error);
+            }
+            
+        }
+
     /**
      * It returns a div with a style of connexionServices, which contains 5
      * Service components
@@ -230,10 +294,10 @@ export default function SettingsPage(props) {
     function ServicesAuth() {
         return (
             <div style={styles.connexionServices}>
-                <Service image={GoogleImage} service="Google" />
+                <Service image={GoogleImage} service="Google"/>
                 <Service image={SpotifyImage} service="Spotify" />
                 <Service image={TwitterImage} service="Twitter" />
-                <Service image={TwitchImage} service="Twitch" />
+                <Service image={TwitchImage} service="Twitch" onPress={twitchConnexion} />
                 <Service image={StravaImage} service="Strava" />
             </div>
         )
