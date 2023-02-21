@@ -18,7 +18,7 @@ import DeconnexionImage from './assets/deconnexion.png';
 import ArrowRight from './assets/arrowRight.png';
 import { addDataIntoCache } from './Common/CacheManagement'
 import { authWithCache } from './Common/Login';
-import { Client, Token } from 'strava-oauth2';
+import { useLocation } from 'react-router-dom';
 
 /**
  * @description Styles of the page
@@ -167,6 +167,8 @@ const styles = {
  */
 export default function SettingsPage(props) {
     const navigate = useNavigate();
+    const location = useLocation();
+    var stravaCode = '';
 
     useEffect(() => {
         try {
@@ -176,6 +178,17 @@ export default function SettingsPage(props) {
             console.log("Unable to login" + error);
             navigate("/auth")
         }
+
+        try {
+            const queryParams = new URLSearchParams(location.search);
+            const stravaCode = queryParams.get('code');
+            if (stravaCode != null) {
+                getStravaAccessToken(stravaCode);
+            }
+        } catch (error) {
+            console.log('error');
+        }
+
     }, [])
     /**
      * It returns a div with a profile picture and an email address
@@ -222,29 +235,53 @@ export default function SettingsPage(props) {
         )
     }
 
-    const configStrava = {
-        client_id: 102338,
-        client_secret: "3473daba0cfd3917a58553295664d5e9d0c09476",
-        redirect_uri: 'http://localhost:8081/home',
-        scope: 'read,activity:read_all'
-    };
-
-    function stravaConnection() {
-        console.log('strava connection');
-        window.location.replace('http://localhost:8080/auth');
-        /*const requestOptions = {
+    async function getStravaAccessToken(stravaCode) {
+        var client_id = '';
+        var client_secret = '';
+        await fetch('http://localhost:8080/strava', {
             method: 'GET',
-            mode: 'cors',
             headers: {
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': '*'
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
             }
+        }).then((response) => {
+            response.json().then(async (data) => {
+                console.log(data);
+                client_id = data.client_id;
+                client_secret = data.client_secret;
+                await fetch('https://www.strava.com/oauth/token?client_id=' + data.client_id + '&client_secret=' + data.client_secret + '&code=' + stravaCode + '&grant_type=authorization_code', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then((response) => {
+                    response.json().then(async (data) => {
+                        console.log(data.access_token);
+                        window.location.replace('http://localhost:3000/settings');
+                    });
+                });
+            });
+        });
+    }
+
+    async function stravaConnection() {
+        console.log('strava connection');
+        await fetch('http://localhost:8080/auth', {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         }
-        fetch('http://localhost:8080/auth', requestOptions)
-        /*var client = new Client(configStrava);
-        const url = client.getAuthorizationUri();
-        console.log(url);
-        window.location.replace('https://www.npmjs.com/package/strava-v3');*/
+    })
+    .then((response) => {
+        response.json().then(async (data) => {
+            window.location.replace(data);
+            //console.log(data);
+            //stravaClient = new stravaApi.client(data.access_token);
+        });
+    });
     }
 
     /**
