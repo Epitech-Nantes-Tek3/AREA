@@ -217,7 +217,7 @@ function AuthPage(props) {
         try {
             fetchWithTimeout(event.target.value + "/testConnexion", { timeout: 500 }).then(response => {
                 if (response.status == 200) {
-                    setColor("green")
+                    setColor("#5281B7")
                 } else {
                     setColor("red")
                 }

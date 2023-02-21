@@ -4,7 +4,7 @@
  * @module SettingsPage
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom"
 import ProfileImage from './assets/avatar.png';
 import GoogleImage from './assets/google.png';
@@ -18,7 +18,7 @@ import ArrowRight from './assets/arrowRight.png';
 import { addDataIntoCache } from './Common/CacheManagement'
 import { authWithCache } from './Common/Login';
 
-const querystring  = require('querystring-es3');
+const querystring = require('querystring-es3');
 const locationURL = require('location-href')
 
 /**
@@ -177,6 +177,7 @@ export default function SettingsPage(props) {
             console.log("Unable to login" + error);
             navigate("/auth")
         }
+        updateIP({target:{value: props.userInformation.ip}})
     }, [])
     /**
      * It returns a div with a profile picture and an email address
@@ -200,15 +201,15 @@ export default function SettingsPage(props) {
      * @param  {number} length The length of the string
      * @return {string} The generated string
      */
-    var generateRandomString = function(length) {
+    var generateRandomString = function (length) {
         var text = '';
         var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
         for (var i = 0; i < length; i++) {
-          text += possible.charAt(Math.floor(Math.random() * possible.length));
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
         return text;
-      };
+    };
 
     /**
      * It returns a div with an image and a text element
@@ -253,7 +254,7 @@ export default function SettingsPage(props) {
                 'user-read-recently-played',
                 'user-follow-read',
                 'user-follow-modify'
-              ].join(' ');
+            ].join(' ');
 
             try {
                 await fetch(props.userInformation.ip + "/spotify").then(response => {
@@ -262,13 +263,13 @@ export default function SettingsPage(props) {
 
                         const url = 'https://accounts.spotify.com/authorize?' +
                             querystring.stringify({
-                            response_type: 'code',
-                            client_id: clientID,
-                            scope: scopes,
-                            show_dialog : true,
-                            redirect_uri: 'http://localhost:8080/spotify/callback',
-                            state : generateRandomString(16)
-                        })
+                                response_type: 'code',
+                                client_id: clientID,
+                                scope: scopes,
+                                show_dialog: true,
+                                redirect_uri: 'http://localhost:8080/spotify/callback',
+                                state: generateRandomString(16)
+                            })
 
                         window.open(url, 'popup', 'width=600,height=800')
                     })
@@ -288,7 +289,7 @@ export default function SettingsPage(props) {
      */
     function Service(props) {
         return (
-            <div id={props.service} style={styles.service} onMouseOver={updateCursor} onMouseOut={updateCursor} onClick={()=> LogWith(props.service)}>
+            <div id={props.service} style={styles.service} onMouseOver={updateCursor} onMouseOut={updateCursor} onClick={() => LogWith(props.service)}>
                 <img src={props.image} style={styles.serviceImage}></img>
                 <p style={styles.serviceText}>Connexion à {props.service}</p>
                 <img src={ArrowRight} style={styles.serviceArrow}></img>
@@ -320,7 +321,7 @@ export default function SettingsPage(props) {
      */
     function Deconnexion() {
         return (
-            <div style={styles.deconnexion} onClick={() => {addDataIntoCache("area", {}); navigate('/auth')}} onMouseOver={updateCursor} onMouseOut={updateCursor}>
+            <div style={styles.deconnexion} onClick={() => { addDataIntoCache("area", {}); navigate('/auth') }} onMouseOver={updateCursor} onMouseOut={updateCursor}>
                 <img src={DeconnexionImage}></img>
                 <p>Deconnexion</p>
                 <p></p>
@@ -366,10 +367,99 @@ export default function SettingsPage(props) {
             </div>
         )
     }
+
+    const [color, setColor] = useState('black')
+
+    /**
+     * It fetches a resource, but if the fetch takes longer than the timeout, it
+     * aborts the fetch
+     * @function fetchWithTimeout
+     * @param {string} resource - The URL to fetch.
+     * @param {*} [options] - An object containing any custom settings that you want
+     * to apply to the request.
+     * @returns A function that takes two parameters, resource and options.
+     */
+    async function fetchWithTimeout(resource, options = {}) {
+        const { timeout = 8000 } = options;
+
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+        const response = await fetch(resource, {
+            ...options,
+            signal: controller.signal
+        });
+        clearTimeout(id);
+        return response;
+    }
+
+    /**
+     * It updates the IP address of the user in the state of the application
+     * @function updateIP
+     * @param event - the event that triggered the function
+     */
+    function updateIP(event) {
+        setColor("black")
+        console.log(event.target.value)
+        try {
+            fetchWithTimeout(event.target.value + "/testConnexion", { timeout: 500 }).then(response => {
+                if (response.status == 200) {
+                    setColor("#5281B7")
+                } else {
+                    setColor("red")
+                }
+                console.log(response)
+            }).catch(error => {
+                setColor("red")
+                console.log(error)
+            })
+        } catch (error) {
+            setColor("red")
+            console.log(error)
+        }
+        props.setUserInformation({
+            mail: props.userInformation.mail,
+            locationAccept: props.userInformation.locationAccept,
+            coord: {
+                latitude: props.userInformation.coord.latitude,
+                longitude: props.userInformation.coord.longitude,
+                city: props.userInformation.coord.city
+            },
+            id: props.userInformation.id,
+            services: {
+                spotifyId: props.userInformation.spotifyId,
+                googleId: props.userInformation.googleId,
+                twitterId: props.userInformation.twitterId,
+                twitchId: props.userInformation.twitchId,
+                stravaId: props.userInformation.stravaId
+            },
+            ip: event.target.value
+        })
+    }
+
+    const ipStyle = {
+        ip: {
+            position: 'relative',
+            backgroundColor: color,
+            width: "20%",
+            height: 50,
+            left: "40%",
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            borderRadius: 15,
+            marginBottom: 10
+        },
+    }
     return (
-        <div id='global' style={{textAlign:'center'}}>
+        <div id='global' style={{ textAlign: 'center' }}>
             <Header />
             <Profile />
+            <div style={ipStyle.ip}>
+                <div>
+                    {props.userInformation.ip}
+                </div>
+            </div>
             <Location />
             <ServicesAuth />
             <Deconnexion />
