@@ -10,36 +10,6 @@
  */
 const firebaseFunctions = require('../firebaseFunctions')
 
-
-/**
- * Scopes requires for actions reactions.
- * @constant scopes
- * @requires scopes
- */
-const scopes = [
-    "analytics:read:extensions",
-    "analytics:read:games",
-    "moderator:read:followers",
-    "channel:manage:moderators",
-    "channel:manage:predictions",
-    "channel:manage:polls",
-    "user:manage:whispers"
-].join(" ");
-
-/**
- * Required variable use in authentification
- * @constant response_type
- * @requires response_type
- */
-const response_type = "token"
-
-/**
- * Required url, given by dev.twitch.tv
- * @constant twitch_oauth_url
- * @requires twitch_oauth_url
- */
-const twitch_oauth_url = "https://id.twitch.tv/oauth2/authorize"
-
 /**
  * Gets the elements of the url and encodes them to work with "éàè..." characters
  * @function encodeQueryString
@@ -51,16 +21,6 @@ function encodeQueryString(params) {
         queryString.append(paramName, params[paramName]);
     }
     return queryString.toString();
-}
-
-function encodeUrlScope(params) 
-{
-    let items = []
-    for (let key in params) {
-        let value = encodeURIComponent(params[key])
-        items.push(`${key}=${value}`)
-    }
-    return items.join("&")
 }
 
 /**
@@ -168,22 +128,6 @@ function checkVierwers(uid , streamerName__nbViewers) {
 }
 
 module.exports = {
-    getTwitchAuthorization: function(req, res) {
-        return firebaseFunctions.getDataFromFireBaseServer("Twitch")
-        .then(token => {
-            const params = {
-                client_id: token.clientId,
-                redirect_uri: token.redirect_url,
-                scope : scopes,
-                response_type: response_type
-            }
-            const url = `${twitch_oauth_url}?${encodeUrlScope(params)}`
-            res.redirect(url);
-        })
-        .catch(error => {
-            console.error(error)
-        })
-    },
     /**
      * function tree which allows you to choose the right function
      * @param {string} func function chosen by the user
@@ -198,6 +142,11 @@ module.exports = {
         else if (func == "game")
             checkTopGames(uid, param)
     },
+    /**
+     * Sets the user data in the Firebase database.
+     * @function setUserData
+     * @param {Object} twhtokens - An object containing the Twitch API access and refresh tokens, as well as the user ID.
+     */
     setUserData: function(twhtokens) {
         token_type = "bearer"
         token_type = token_type.substring(0, 1).toUpperCase() + token_type.substring(1, token_type.length);
@@ -207,7 +156,6 @@ module.exports = {
             refreshToken : twhtokens.refreshToken,
             authorization : authorization
         }
-        console.log(tokens)
         firebaseFunctions.setDataInDb(`USERS/${twhtokens.uid}/TwitchService`, tokens)
     }
 }   
