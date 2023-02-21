@@ -57,6 +57,17 @@ function AuthPage(props) {
         }
     }
 
+    /* Checking if the user is already logged in. If he is, it redirects him to
+    the home page. */
+    auth.onAuthStateChanged(user => {
+        auth.getRedirectResult().then((result) => {
+            console.log(result);
+            if (result.user !== null) {
+                navigate('/home');
+            }
+        });
+    })
+
     /**
      * The function is called when the user clicks on the Facebook login button.
      * It prevents the default action of the button, and then sets the persistence
@@ -193,6 +204,24 @@ function AuthPage(props) {
      * @param event - the event that triggered the function
      */
     function updateIP(event) {
+        setColor("black")
+        console.log(event.target.value)
+        try {
+            fetchWithTimeout(event.target.value + "/testConnexion", {timeout: 500}).then(response => {
+                if (response.status == 200) {
+                    setColor("green")
+                } else {
+                    setColor("red")
+                }
+                console.log(response)
+            }).catch(error => {
+                setColor("red")
+                console.log(error)
+            })
+        } catch (error) {
+            setColor("red")
+            console.log(error)
+        }
         props.setUserInformation({
             mail: props.userInformation.mail,
             locationAccept: props.userInformation.locationAccept,
@@ -211,23 +240,6 @@ function AuthPage(props) {
             },
             ip: event.target.value
         })
-        console.log(event.target.value)
-        try {
-            fetchWithTimeout(event.target.value + "/testConnexion", {timeout: 500}).then(response => {
-                if (response.status == 200) {
-                    setColor("green")
-                } else {
-                    setColor("red")
-                }
-                console.log(response)
-            }).catch(error => {
-                setColor("red")
-                console.log(error)
-            })
-        } catch (error) {
-            setColor("red")
-            console.log(error)
-        }
     }
 
     /**
@@ -244,7 +256,7 @@ function AuthPage(props) {
                     <div className="Form-content">
                         <img src={AreaLogo} style={{ width: 150, height: 150, display: "block", margin: "auto" }} alt="logo" />
                         <h3 className="Title">Se connecter</h3>
-                        <input style={{ backgroundColor: color, display: "block", margin: "auto" }} type="text" defaultValue={props.userInformation.ip} placeholder="IP du server" onChange={updateIP} />
+                        <input style={{ color: color, display: "block", margin: "auto" }} type="text" defaultValue={props.userInformation.ip} placeholder="IP du server" onChange={updateIP} />
                         <div className="form-group">
                             <input
                                 type="email"
@@ -289,7 +301,7 @@ function AuthPage(props) {
                 <form className="Form" onSubmit={onSubmit}>
                     <div className="Form-content">
                         <img src={AreaLogo} style={{ width: 150, height: 150, display: "block", margin: "auto" }} alt="logo" />
-                        <input style={{ backgroundColor: color, display: "block", margin: "auto" }} type="text" defaultValue={props.userInformation.ip} placeholder="IP du server" onChange={updateIP} />
+                        <input style={{ color: color, display: "block", margin: "auto" }} type="text" defaultValue={props.userInformation.ip} placeholder="IP du server" onChange={updateIP} />
                         <h3 className="Title">S'inscrire</h3>
                         <div className="form-group">
                             <input
