@@ -111,7 +111,7 @@ app.get('/about.json', (req, res) => {
                 "current_time": Date.now(),
                 "services": obj
             }
-        }
+        }, null, 2
     )
     res.send(about)
 })
