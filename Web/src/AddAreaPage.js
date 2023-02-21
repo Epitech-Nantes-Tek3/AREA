@@ -11,7 +11,6 @@ import { useEffect, useState } from 'react';
 import { ACTIONS, REACTIONS } from "./Common/Areas"
 import { useNavigate } from "react-router-dom"
 import { authWithCache } from './Common/Login';
-import { ip } from "./env"
 import uuid from 'react-native-uuid';
 
 /**
@@ -36,7 +35,7 @@ export default function AddAreaPage(props) {
 
     useEffect(() => {
         try {
-            authWithCache(props.setUserInformation, props, ip);
+            authWithCache(props.setUserInformation, props, props.userInformation.ip);
             console.log("Already logged in")
         } catch (error) {
             console.log("Unable to login" + error);
@@ -62,7 +61,7 @@ export default function AddAreaPage(props) {
             })
         }
         try {
-            await fetch(ip + "/register/areas", requestOptions).then(response => {
+            await fetch(props.userInformation.ip + "/register/areas", requestOptions).then(response => {
                 navigate('/home', {state : { newArea : area}})
             }).catch(error => {
                 console.log(error)

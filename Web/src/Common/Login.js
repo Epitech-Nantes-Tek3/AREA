@@ -44,7 +44,8 @@ export function authWithCache(setUserInformation, props, ip) {
                 twitterId: props.userInformation.services.twitterId,
                 twitchId: props.userInformation.services.twitchId,
                 stravaId: props.userInformation.services.stravaId
-            }
+            },
+            ip: cacheData.ip
         }
         )
     } else {
