@@ -4,16 +4,7 @@ export let ACTIONS = [
             name: "twitch",
             needsConnexion: true
         },
-        description: "Quand {config} est en live",
-        config: [
-            "terasgul",
-            "krl_stream",
-            "domingo",
-            "manuellferraraTV",
-            "amouranth",
-            "pekeasmr",
-            "brucegrannec"
-        ]
+        description: "Quand Kameto est en live",
     },
     {
         service: {
@@ -34,15 +25,7 @@ export let ACTIONS = [
             name: "spotify",
             needsConnexion: true
         },
-        description: "Si l'utilisateur suit {config}",
-        config: [
-            "jul",
-            "avicii",
-            "an'om",
-            "sebastien patoche",
-            "bilal hassani",
-            "theo lavabo"
-        ]
+        description: "Si l'utilisateur suit Jul",
     },
     {
         service: {
@@ -56,14 +39,7 @@ export let ACTIONS = [
             name: "spotify",
             needsConnexion: true
         },
-        description: "Si l'utilisateur écoute {config}",
-        config: [
-            "let you down",
-            "as it was",
-            "ambiance à l'africaine",
-            "butterflies and haurricanes",
-            "logobitombo"
-        ]
+        description: "Si l'utilisateur écoute as it was",
     },
 ]
 
@@ -80,15 +56,7 @@ export let REACTIONS = [
             name: "twitter",
             needsConnexion: true
         },
-        description: "Retweet #{config}",
-        config: [
-            "elonmusk",
-            "hashtag",
-            "psg",
-            "lgbtq",
-            "cgt",
-            "ratio"
-        ]
+        description: "Retweet #hashtag",
     },
     {
         service: {
