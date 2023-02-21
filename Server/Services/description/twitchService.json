@@ -1,0 +1,31 @@
+{
+    "name": "TwitchService",
+    "actions": [
+        {
+            "name": "Check the best game",
+            "description": "Compares the game number 1 on twitch to the game chosen by the user, and return true if it is the same, otherwise false."
+        },
+        {
+            "name": "Streamer by username",
+            "description": "Checks if the streamer selects and live, if yes return true, otherwise false."
+        },
+        {
+            "name": "Check the number of viewers",
+            "description": "Check if the chosen streamer has more than **SELECTED NUMBER** viewers, if yes return true, otherwise false."
+        }
+    ],
+    "reactions": [
+        {
+            "name": "none",
+            "description": "none"
+        },
+        {
+            "name": "none",
+            "description": "none"
+        },
+        {
+            "name": "none",
+            "description": "none"
+        }
+    ]
+}
