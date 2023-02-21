@@ -14,8 +14,6 @@ import { useNavigate } from "react-router-dom"
 import { authWithCache } from './Common/Login';
 import { ip } from "./env"
 import uuid from 'react-native-uuid';
-import Popup from "reactjs-popup";
-import react from 'react';
 
 /**
  * @brief Return the AddArea page for AREA
@@ -107,25 +105,6 @@ export default function AddAreaPage(props) {
             alert("Une erreur est survenu.")
             navigate('/home')
         }
-    }
-
-    function ButtonValidate(props) {
-        const style = {
-            position: "relative",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 50,
-            width: 50,
-            height: 50,
-            cursor: "pointer"
-
-        }
-        return (
-            <div style={style} onClick={props.action}>
-                <img src={CheckCircle} alt={"Validation check"} style={{ position: "relative", width: 50, height: 50 }} />
-            </div>
-        )
     }
 
     function InfoBlock(props) {
