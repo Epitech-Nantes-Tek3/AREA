@@ -259,7 +259,11 @@ export default function SettingsScreen(props: SettingsProps) {
                 ip: props.userInfo.ip
             })
         }
-
+        /**
+         * Authenticates the user with Twitch API.
+         * @async
+         * @function twitchConnexion
+        */ 
         function twitchConnexion() {
             let token = "ImTestingATokenItIsSoFunnyTwitch"
             props.setUserInfo({
@@ -293,6 +297,14 @@ export default function SettingsScreen(props: SettingsProps) {
         
                 twitchAuth(scopes, twitch_oauth_url, response_type)
             }
+        /**
+         * Authenticates the user with Twitch OAuth and send an access token to the back.
+         * @async
+         * @function twitchAuth
+         * @param {string} scopes - The list of scopes to be authorized by the user.
+         * @param {string} twitch_oauth_url - The URL for the Twitch OAuth endpoint.
+         * @param {string} response_type - The response type for the authorization request.
+        */    
         async function twitchAuth(scopes:string, twitch_oauth_url:string, response_type:string) {
             var url = "";
             try {
