@@ -31,6 +31,16 @@ app.use(session({secret: SESSION_SECRET, resave: false, saveUninitialized: false
 app.use(passport.initialize());
 app.use(passport.session());
 
+class TwitchToken {
+    constructor(accessToken, refreshToken, uid) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.uid = uid;
+    }
+}
+
+var twhtokens = new TwitchToken("any", "any", 'none')
+
 passport.use('twitch', new OAuth2Strategy({
     authorizationURL: 'https://id.twitch.tv/oauth2/authorize',
     tokenURL: 'https://id.twitch.tv/oauth2/token',
@@ -51,6 +61,8 @@ passport.use('twitch', new OAuth2Strategy({
     done(null, profile);
   }
 ));
+
+
 
 app.use(cors());
 app.use(express.urlencoded())
@@ -188,14 +200,23 @@ app.get('/register/iss', (req, res) => {
     ISSStationService.RegistedRequiredIss(res, firebaseUid, data)
 })
 
-app.get('/twitch/auth/:uid', function (req, res) {
-    const uid  = req.params.uid;
+app.get('/twitch/auth/', function (req, res) {
     if(req.session && req.session.passport && req.session.passport.user) {
-      console.log(req.session.passport.user)
-      console.log("auth :", uid)
+      twhtokens.accessToken = req.session.passport.user.accessToken
+      twhtokens.refreshToken = req.session.passport.user.refreshToken
+      console.log(twhtokens)
+      TwitchService.setUserData(twhtokens)
       res.send("BACK TO THE APP NOW")
+    } else {
+        res.send("l'authentification a échoué")
     }
 });
+
+app.post('/twitch/post', (req, res) => {
+    twhtokens.uid = req.body.uid
+    res.json({body: "OK"}).status(200);
+})
+
 
 passport.serializeUser(function(user, done) {
     done(null, user);
@@ -205,16 +226,10 @@ passport.deserializeUser(function(user, done) {
     done(null, user);
 });
 
-app.get('/auth/twitch/callback', passport.authenticate('twitch', { successRedirect: '/twitch/auth/:uid', failureRedirect: '/twitch/auth:uid' }));
-
-app.post('/twitch/post', (req, res) => {
-    console.log(req.body)
-    res.json({body: "OK"}).status(200);
-})
+app.get('/auth/twitch/callback', passport.authenticate('twitch', { successRedirect: '/twitch/auth/', failureRedirect: '/twitch/auth' }));
 
 app.get('/twitch/get', (req, res) => {
     firebaseFunctions.getDataFromFireBaseServer('Twitch').then(serverData => {
-        console.log(serverData)
         res.json(serverData).status(200);
     })
 })

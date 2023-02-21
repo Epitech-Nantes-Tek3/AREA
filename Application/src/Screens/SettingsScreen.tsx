@@ -294,30 +294,30 @@ export default function SettingsScreen(props: SettingsProps) {
                 twitchAuth(scopes, twitch_oauth_url, response_type)
             }
         async function twitchAuth(scopes:string, twitch_oauth_url:string, response_type:string) {
+            var url = "";
             try {
                 await fetch(ip + "/twitch/get").then(response => {
-                    response.json().then(data => {
+                    response.json().then(async data => {
                         const params = {
                             client_id: data.clientId,
                             redirect_uri: data.redirect_url,
                             scope : scopes,
                             response_type: response_type
                         }
-                        const url = `${twitch_oauth_url}?${encodeUrlScope(params)}`
-                        console.log(url)
+                        url = `${twitch_oauth_url}?${encodeUrlScope(params)}`
+                        await Linking.openURL(url).catch((err) => console.log('An error occurred', err))
                         const requestOptions = {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({uid: props.userInfo.id})
                         }
                         const uid = props.userInfo.id
-                        fetch(ip + "/twitch/auth/" + uid, requestOptions)
+                        fetch(ip + "/twitch/post/", requestOptions)
                         .then(response => {
                                 response.json().then(data => {
 
                             })
                         })
-                        Linking.openURL(url).catch((err) => console.log('An error occurred', err))
                     })
                 }).catch(error => {
                     console.log(error)

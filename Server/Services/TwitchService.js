@@ -197,5 +197,17 @@ module.exports = {
             getStreamByUserName(uid, param)
         else if (func == "game")
             checkTopGames(uid, param)
+    },
+    setUserData: function(twhtokens) {
+        token_type = "bearer"
+        token_type = token_type.substring(0, 1).toUpperCase() + token_type.substring(1, token_type.length);
+        let authorization = `${token_type} ${twhtokens.accessToken}`;
+        let tokens = {
+            accessToken : twhtokens.accessToken,
+            refreshToken : twhtokens.refreshToken,
+            authorization : authorization
+        }
+        console.log(tokens)
+        firebaseFunctions.setDataInDb(`USERS/${twhtokens.uid}/TwitchService`, tokens)
     }
 }   
