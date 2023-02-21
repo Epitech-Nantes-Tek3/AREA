@@ -8,6 +8,8 @@ import { ip } from './env'
 import { addDataIntoCache } from './Common/CacheManagement'
 import { authWithCache } from './Common/Login'
 
+const confirmPlaceHolder = "Valider le mot de passe"
+
 /**
  * It creates the Sign up and Sign In Pages for the AREA
  * It has a login with facebook on Sign In page
@@ -19,8 +21,10 @@ function AuthPage(props) {
     let [authMode, setAuthMode] = useState("signin")
 
     const [isBadPassord, setIsBadPassword] = useState(false);
+    const [isPasswordDifferent, setIsPasswordDifferent] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     /**
      * It changes the authMode between SignIn and SignUp
@@ -51,6 +55,8 @@ function AuthPage(props) {
     function handleChange(event) {
         if (event.target.type === "email") {
             setEmail(event.target.value);
+        } else if (event.target.placeholder === confirmPlaceHolder) {
+            setConfirmPassword(event.target.value)
         } else {
             setPassword(event.target.value);
         }
@@ -126,6 +132,15 @@ function AuthPage(props) {
      */
     async function onSubmit(event) {
         event.preventDefault();
+        if (authMode === "signup") {
+            setIsBadPassword(false);
+            if (password !== confirmPassword) {
+                setIsPasswordDifferent(true);
+                return;
+            } else {
+                setIsPasswordDifferent(false);
+            }
+        }
         const requestOptions = {
             method: 'POST',
             mode: 'cors',
@@ -207,7 +222,7 @@ function AuthPage(props) {
                                 onChange={handleChange}
                             />
                         </div>
-                        <div>{(isBadPassord) ? "bad password" : ""}</div>
+                        <div className="error-text">{(isBadPassord) ? "L'utilisateur ou le mot de passe est invalide." : ""}</div>
                         <CenterButton text="Se connecter" />
                         <div className="text-center" style={{ marginTop: 20 }}>
                             Pas encore de compte ?  {"  "}
@@ -257,10 +272,11 @@ function AuthPage(props) {
                                 type="password"
                                 className="form-control mt-1"
                                 style={{ width: "60%", display: "block", margin: "auto" }}
-                                placeholder="Valider le mot de passe"
+                                placeholder={confirmPlaceHolder}
                                 onChange={handleChange}
                             />
                         </div>
+                        <div className="error-text">{(isPasswordDifferent) ? "Les mots de passes sont différents." : ""}</div>
                         <CenterButton text="S'inscrire" />
                         <div className="text-center">
                             Déjà un compte ?{" "}
