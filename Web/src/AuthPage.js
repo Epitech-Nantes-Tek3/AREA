@@ -21,6 +21,7 @@ function AuthPage(props) {
     let [authMode, setAuthMode] = useState("signin")
 
     const [isBadPassord, setIsBadPassword] = useState(false);
+    const [isPasswordDifferent, setIsPasswordDifferent] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -132,7 +133,12 @@ function AuthPage(props) {
     async function onSubmit(event) {
         event.preventDefault();
         if (authMode === "signup") {
-            console.log('check password')
+            if (password !== confirmPassword) {
+                setIsPasswordDifferent(true);
+                return;
+            } else {
+                setIsPasswordDifferent(false);
+            }
         }
         const requestOptions = {
             method: 'POST',
@@ -269,6 +275,7 @@ function AuthPage(props) {
                                 onChange={handleChange}
                             />
                         </div>
+                        <div>{(isPasswordDifferent) ? "Password are differents." : ""}</div>
                         <CenterButton text="S'inscrire" />
                         <div className="text-center">
                             Déjà un compte ?{" "}
