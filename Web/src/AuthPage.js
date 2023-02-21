@@ -10,6 +10,7 @@ import { authWithCache } from './Common/Login'
 /**
  * It creates the Sign up and Sign In Pages for the AREA
  * It has a login with facebook on Sign In page
+ * @function AuthPage
  * @param props the props of the page (userInformation and allAreas)
  * @returns the page corresponding to the current authMode
  */
@@ -24,6 +25,7 @@ function AuthPage(props) {
 
     /**
      * It changes the authMode between SignIn and SignUp
+     * @function changeAuthMode
      */
     function changeAuthMode() {
         setAuthMode(authMode === "signin" ? "signup" : "signin")
@@ -34,7 +36,7 @@ function AuthPage(props) {
      * If he is, it redirects him to the home page.
      */
     useEffect(() => {
-        updateIP({target:{value: props.userInformation.ip}})
+        updateIP({ target: { value: props.userInformation.ip } })
         try {
             authWithCache(props.setUserInformation, props, props.userInformation.ip);
             console.log("Already logged in")
@@ -47,6 +49,7 @@ function AuthPage(props) {
     /**
      * If the event target type is email, set the email state to the event target
      * value. Otherwise, set the password state to the event target value
+     * @function handleChange
      * @param event - The event that triggered the function.
      */
     function handleChange(event) {
@@ -73,6 +76,7 @@ function AuthPage(props) {
      * It prevents the default action of the button, and then sets the persistence
      * of the user to none. This means that the user will not be remembered by the
      * browser. Then, the user is redirected to the Facebook login page
+     * @function onLoginFacebook
      * @param event - The event that triggered the function.
      */
     async function onLoginFacebook(event) {
@@ -90,6 +94,7 @@ function AuthPage(props) {
     /**
      * It sends a request to the server, and if the server returns a userUid, it
      * adds the user's information into the cache and navigates to the home page
+     * @function requestServer
      * @param endpoint - the endpoint of the server you want to request
      * @param requestOptions - A request to the server.
      */
@@ -123,6 +128,7 @@ function AuthPage(props) {
      * containing the email and password of the user. The function then checks if
      * the authMode is signup or login, and sends the request to the appropriate
      * endpoint
+     * @function onSubmit
      * @param event - the event that triggered the function
      */
     async function onSubmit(event) {
@@ -145,6 +151,7 @@ function AuthPage(props) {
 
     /**
      * It returns a button with the text props.
+     * @function CenterButton
      * @param {string} props - the props of the button (text)
      * @returns the button div with the props
      */
@@ -161,9 +168,10 @@ function AuthPage(props) {
 
     /**
      * It returns a button with the text and action props.
+     * @function AuthButton
      * @param {text: string, action: function} props - the props of the button (text, action)
-                            * @returns the button div with the props
-                            */
+     * @returns the button div with the props
+     */
     function AuthButton(props) {
         return (
             <div className="form-group">
@@ -207,7 +215,7 @@ function AuthPage(props) {
         setColor("black")
         console.log(event.target.value)
         try {
-            fetchWithTimeout(event.target.value + "/testConnexion", {timeout: 500}).then(response => {
+            fetchWithTimeout(event.target.value + "/testConnexion", { timeout: 500 }).then(response => {
                 if (response.status == 200) {
                     setColor("green")
                 } else {
@@ -245,6 +253,7 @@ function AuthPage(props) {
     /**
      * It returns a form with an email input, a password input, a button to submit
      * the form, and a link to change the authentication mode
+     * @function signInPage
      * @returns A form with a title, an email input, a password input, a button to
      * submit the form, and a link to the sign up page.
      */
@@ -292,6 +301,7 @@ function AuthPage(props) {
     /**
      * It returns a form with a logo, a title, three inputs, a button and a link
      * to the login page
+     * @function signUpPage
      * @returns A form with a logo, a title, 3 inputs, a button and a link to the
      * login page.
      */
