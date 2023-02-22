@@ -83,6 +83,9 @@ module.exports = {
             res.json({userUid: 'error'}).status(400);
         })
     },
+    /**
+     * UNDOCUMENTED
+     */
     register: function(req, res) {
         const { email, password } = req.body;
         console.log(email, password);
