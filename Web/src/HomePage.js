@@ -14,7 +14,6 @@ import SettingsImage from "./assets/avatar.png";
 import { useNavigate } from "react-router-dom"
 import { authWithCache } from './Common/Login'
 import Popup from 'reactjs-popup';
-import { ip } from './env'
 
 /**
  * @brief Return the Home page for AREA
@@ -46,7 +45,7 @@ export default function HomePage(props) {
 
     useEffect(() => {
         try {
-            authWithCache(props.setUserInformation, props, ip);
+            authWithCache(props.setUserInformation, props, props.userInformation.ip);
             console.log("Already logged in")
         } catch (error) {
             console.log("Unable to login" + error);
@@ -54,7 +53,7 @@ export default function HomePage(props) {
         }
         const fetchData = () => {
             console.log(props.userInformation.id)
-            fetch(ip + "/getAreas/" + props.userInformation.id)
+            fetch(props.userInformation.ip + "/getAreas/" + props.userInformation.id)
                 .then(response => {
                     response.json().then(data => {
                         let areaArray = []
@@ -92,7 +91,8 @@ export default function HomePage(props) {
                         twitterId: props.userInformation.services.twitterId,
                         twitchId: props.userInformation.services.twitchId,
                         stravaId: props.userInformation.services.stravaId
-                    }
+                    },
+                    ip: props.userInformation.ip
                 })
                 setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude, city: props.userInformation.coord.city })
             })
@@ -132,7 +132,8 @@ export default function HomePage(props) {
                     twitterId: props.userInformation.services.twitterId,
                     twitchId: props.userInformation.services.twitchId,
                     stravaId: props.userInformation.services.stravaId
-                }
+                },
+                ip: props.userInformation.ip
             })
         }
 
@@ -151,7 +152,7 @@ export default function HomePage(props) {
                     body: JSON.stringify({ uid: props.userInformation.id, id: props.allAreas[index].id })
                 }
 
-                await fetch(ip + "/remove/area", requestOptions).then(response => {
+                await fetch(props.userInformation.ip + "/remove/area", requestOptions).then(response => {
                     console.log(response)
                     if (response.status === 200) {
                         let copyAreas = [...props.allAreas]
