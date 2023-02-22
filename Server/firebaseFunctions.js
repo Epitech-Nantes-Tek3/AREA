@@ -20,8 +20,12 @@ var database = firebase.database();
 
 module.exports = {
     /**
-     * UNDOCUMENTED
-     */
+     * Returns an object containing the user's data
+     * @function getDataFromFireBase
+     * @param {String} uid uid of the user
+     * @param {String} service Service where the desired data is stored.
+     * @returns return a promise of an object containing the user's data
+    */
     getDataFromFireBase: function(uid, service) {
         return new Promise((resolve, reject) => {
             database.ref(`USERS/${uid}/${service}`).on('value', (snapshot) => {
@@ -32,8 +36,10 @@ module.exports = {
         });
     },
     /**
-     * UNDOCUMENTED
-     */
+     * Returns an object containing the all user
+     * @function getDataFromFireBase
+     * @returns return a promise of an object containing the all user
+    */
     getAllUsersFromFireBase: function() {
         return new Promise((resolve, reject) => {
             database.ref(`USERS/`).on('value', (snapshot) => {
@@ -44,8 +50,11 @@ module.exports = {
         });
     },
     /**
-     * UNDOCUMENTED
-     */
+     * Returns an object containing the server data
+     * @function getDataFromFireBase
+     * @param {String} service Service where the desired data is stored.
+     * @returns return a promise of an object containing the server data
+    */
     getDataFromFireBaseServer: function(service) {
         return new Promise((resolve, reject) => {
             database.ref(`SERVER/${service}/`).on('value', (snapshot) => {
@@ -71,8 +80,11 @@ module.exports = {
     },
 
     /**
-     * UNDOCUMENTED
-     */
+    * Firebase function which allows the user to login.
+    * @function login
+    * @param {Object} req - Express request object
+    * @param {Object} res - Express response object
+    */
     login: function(req, res) {
         const {email, password} = req.body;
         firebase.auth().signInWithEmailAndPassword(email, password).then((userCredential) => {
@@ -84,8 +96,11 @@ module.exports = {
         })
     },
     /**
-     * UNDOCUMENTED
-     */
+    * Firebase function which allows the user to register.
+    * @function login
+    * @param {Object} req - Express request object
+    * @param {Object} res - Express response object
+    */
     register: function(req, res) {
         const { email, password } = req.body;
         console.log(email, password);
@@ -129,8 +144,11 @@ module.exports = {
       });
     },
     /**
-     * UNDOCUMENTED
-     */
+    * Firebase function that allows the user to reset the password.
+    * @function login
+    * @param {Object} req - Express request object
+    * @param {Object} res - Express response object
+    */
     resetPassword: function(req, res) {
         const { email } = req.body;
         console.log(email)
