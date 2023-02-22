@@ -43,6 +43,7 @@ export default function SettingsScreen(props: SettingsProps) {
      * Gets the elements of the url and encodes them to work with "éàè..." characters
      * @function encodeQueryString
      * @param {*} params contains the elements to be added to the url.
+     * @returns return an encode string.
      */
     function encodeQueryString(params) {
         const queryString = new URLSearchParams();
@@ -56,6 +57,7 @@ export default function SettingsScreen(props: SettingsProps) {
      * Encode Uri 
      * @function encodeQueryString
      * @param {*} params contains the elements to be added to the url.
+     * @returns a string separated by an "&".
      */
     function encodeUrlScope(params) 
     {
