@@ -39,7 +39,36 @@ export default function SettingsScreen(props: SettingsProps) {
         getIpStatus()
         // getAddressFromCoordinates(props.userInfo.coord.latitude, props.userInfo.coord.longitude)
     }, [])
+    /**
+     * Gets the elements of the url and encodes them to work with "éàè..." characters
+     * @function encodeQueryString
+     * @param {*} params contains the elements to be added to the url.
+     * @returns return an encode string.
+     */
+    function encodeQueryString(params) {
+        const queryString = new URLSearchParams();
+        for (let paramName in params) {
+            queryString.append(paramName, params[paramName]);
+        }
+        return queryString.toString();
+    }
 
+    /**
+     * Encode Uri 
+     * @function encodeQueryString
+     * @param {*} params contains the elements to be added to the url.
+     * @returns a string separated by an "&".
+     */
+    function encodeUrlScope(params) 
+    {
+        let items = []
+        for (let key in params) {
+            let value = encodeURIComponent(params[key])
+            items.push(`${key}=${value}`)
+        }
+        return items.join("&")
+    }
+        
     // Get the city of the user with Reverse Geocoding from Google
     async function getAddressFromCoordinates(lat: number, long: number) {
         fetch("https://api-adresse.data.gouv.fr/reverse/?lon=" + long + "&lat=" + lat)
@@ -296,7 +325,11 @@ export default function SettingsScreen(props: SettingsProps) {
                 ip: props.userInfo.ip
             })
         }
-
+        /**
+         * Authenticates the user with Twitch API.
+         * @async
+         * @function twitchConnexion
+        */ 
         function twitchConnexion() {
             let token = "ImTestingATokenItIsSoFunnyTwitch"
             props.setUserInfo({
@@ -316,6 +349,61 @@ export default function SettingsScreen(props: SettingsProps) {
                 },
                 ip: props.userInfo.ip
             })
+                const scopes = [
+                    "analytics:read:extensions",
+                    "analytics:read:games",
+                    "moderator:read:followers",
+                    "channel:manage:moderators",
+                    "channel:manage:predictions",
+                    "channel:manage:polls",
+                    "user:manage:whispers"
+                ].join(" ");
+                const twitch_oauth_url = "https://id.twitch.tv/oauth2/authorize"
+                const response_type = "token"
+        
+                twitchAuth(scopes, twitch_oauth_url, response_type)
+            }
+        /**
+         * Authenticates the user with Twitch OAuth and send an access token to the back.
+         * @async
+         * @function twitchAuth
+         * @param {string} scopes - The list of scopes to be authorized by the user.
+         * @param {string} twitch_oauth_url - The URL for the Twitch OAuth endpoint.
+         * @param {string} response_type - The response type for the authorization request.
+        */    
+        async function twitchAuth(scopes:string, twitch_oauth_url:string, response_type:string) {
+            var url = "";
+            try {
+                await fetch(ip + "/twitch/get").then(response => {
+                    response.json().then(async data => {
+                        const params = {
+                            client_id: data.clientId,
+                            redirect_uri: data.redirect_url,
+                            scope : scopes,
+                            response_type: response_type
+                        }
+                        url = `${twitch_oauth_url}?${encodeUrlScope(params)}`
+                        await Linking.openURL(url).catch((err) => console.log('An error occurred', err))
+                        const requestOptions = {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({uid: props.userInfo.id})
+                        }
+                        const uid = props.userInfo.id
+                        fetch(ip + "/twitch/post/", requestOptions)
+                        .then(response => {
+                                response.json().then(data => {
+
+                            })
+                        })
+                    })
+                }).catch(error => {
+                    console.log(error)
+                })
+            } catch (error) {
+                console.log(error);
+            }
+            
         }
 
         function stravaConnexion() {

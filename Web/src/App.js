@@ -26,7 +26,7 @@ function App() {
         twitchId: "",
         stravaId: ""
     },
-    ip: "http://localhost:8080/"
+    ip: "http://localhost:8080"
   });
 
   const [allAreas, setAllAreas] = useState([])

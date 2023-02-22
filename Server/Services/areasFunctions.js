@@ -22,6 +22,12 @@ const openMeteoService = require('./openMeteoService');
 const twitterService = require('./twitterService');
 
 /**
+ * @constant TwitchService
+ * @requires TwitchService
+ */
+const TwitchService = require('./TwitchService');
+
+/**
  * @constant googleService
  * @requires googleService
  */
@@ -44,6 +50,7 @@ let areas = [
     { name: "twitter", function:  twitterService.ActionTw},
     { name: "google", function:  googleService.send_mail},
     { name: "iss", function:  ISSService.checkISSPosition },
+    { name: "twitch", function:  TwitchService.actionTwitch},
 ]
 
 module.exports = {

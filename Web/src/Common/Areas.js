@@ -41,6 +41,27 @@ export let ACTIONS = [
         },
         description: "Si l'utilisateur écoute une musique spécifique"
     },
+    {
+        service: {
+            name: "twitch",
+            needsConnexion: true
+        },
+        description: "Si le jeu est le plus regardé sur Twitch"
+    },
+    {
+        service: {
+            name: "twitch",
+            needsConnexion: true
+        },
+        description: "Si le streamer est en live"
+    },
+    {
+        service: {
+            name: "twitch",
+            needsConnexion: true
+        },
+        description: "Si le steamer à plus de 1000 viewers"
+    }
 ]
 
 export let REACTIONS = [

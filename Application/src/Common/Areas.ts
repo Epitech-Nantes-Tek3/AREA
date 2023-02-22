@@ -36,6 +36,69 @@ export let ACTIONS: InfoArea[] = [
         text: undefined,
         subject : undefined
     },
+    {
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si Rocket League est le jeu le plus regardé sur Twitch",
+        text: "Rocket League",
+        subject : undefined
+    },
+    {
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si Counter-Strike: Global Offensive est le jeu le plus regardé sur Twitch",
+        text: "Counter-Strike: Global Offensive",
+        subject : undefined
+    },
+    {
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si Just Chatting est la catégorie la plus regardée sur Twitch",
+        text: "Just Chatting",
+        subject : undefined
+    },
+    {
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si krl_stream est en live",
+        text: "krl_stream",
+        subject : undefined
+    },
+    {
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si manuellferraraTV est en live",
+        text: "manuellferraraTV",
+        subject : undefined
+    },
+    {
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si amouranth est en live",
+        text: "amouranth",
+        subject : undefined
+    },
+    {
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si amouranth à plus de 10000 viewers",
+        text: "amouranth__10000",
+        subject : undefined
+    },
+    {
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si gotaga à plus de 20000 viewers",
+        text: "gotaga_20000",
+        subject : undefined
+    },
+    {
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si krl à plus de 1000 viewers",
+        text: "krl_stream__1000",
+        subject : undefined
+    }
 ]
 
 export let REACTIONS: InfoArea[] = [
