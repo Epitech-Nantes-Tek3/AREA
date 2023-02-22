@@ -22,7 +22,7 @@ export default function AddAreaPage(props) {
     const navigate = useNavigate();
 
     const [pageInfo, setPageInfo] = useState({
-        title: ["Sélectionne une action", "Sélectionne une réaction", "Choisis le titre de ton area"],
+        title: ["Sélectionne une action", "Sélectionne une réaction", "Résumé de ton Area"],
         list: [ACTIONS, REACTIONS, []],
         selectedIndex: [0, 0, 0],
         next: [goSelectReaction, goResume, sendArea],
@@ -326,8 +326,8 @@ export default function AddAreaPage(props) {
                 <SelectionBlock title={pageInfo.title[pageInfo.index]} list={pageInfo.list[pageInfo.index]} selectedBlock={pageInfo.selectedIndex[pageInfo.index]} />
                 <AreaResume />
                 <div style={style.bottomButtons}>
-                    <div style={style.button} onClick={pageInfo.prev[pageInfo.index]}>{"<= previous"}</div>
-                    <div style={style.button} onClick={pageInfo.next[pageInfo.index]}>{"next =>"}</div>
+                    <div style={style.button} onClick={pageInfo.prev[pageInfo.index]}>{"<= précédent"}</div>
+                    <div style={style.button} onClick={pageInfo.next[pageInfo.index]}>{(pageInfo.index === 2) ? "Créer l'Area" : "suivant =>"}</div>
                 </div>
             </div>
         )
