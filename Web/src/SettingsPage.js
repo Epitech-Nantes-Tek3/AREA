@@ -230,6 +230,7 @@ export default function SettingsPage(props) {
     /**
      * Ensure the log in of the user on Spotify
      * @function spotifyConnexion
+     * @async
      */
     async function spotifyConnexion() {
         const scopes = [
