@@ -72,8 +72,11 @@ module.exports = {
         });
     },
     /**
-     * UNDOCUMENTED
-     */
+     * Saves the data from google service to the user in the database.
+     * @function RegistedRequiredGoogle
+     * @param {string} uid - user id
+     * @param {Object} res - Express response object
+    */
     RegistedRequiredGoogle: function(uid, res) {
         firebaseFunctions.getDataFromFireBaseServer('GoogleService')
         .then(data => {
@@ -96,8 +99,11 @@ module.exports = {
 }
 
 /**
- * UNDOCUMENTED
- */
+ * function called which returns the content of the message in html format.
+ * @function get_html_message
+ * @param {string} mailContent mailContent is the content of the mail sent.
+ * @returns {*} return string message in htlm format.
+*/
 function get_html_message(mailContent) {
     return `${mailContent}`
 }
