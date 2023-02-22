@@ -3,35 +3,35 @@ export let ACTIONS = [
         serviceName: "iss",
         trigger: true,
         description: "Quand l'ISS passe au dessus de chez moi",
-        text: undefined,
+        text: "undefined",
         subject: undefined
     },
     {
         serviceName: "météo",
         trigger: true,
         description: "Quand il fait beau chez moi",
-        text: undefined,
+        text: "undefined",
         subject: undefined
     },
     {
         serviceName : "spotify",
         trigger: true,
         description: "Si l'utilisateur suit un artiste sélectionné",
-        text: undefined,
+        text: "undefined",
         subject : undefined
     },
     {
         serviceName : "spotify",
         trigger: true,
         description: "Si l'utilisateur écoute de la musique",
-        text: undefined,
+        text: "undefined",
         subject : undefined
     },
     {
         serviceName : "spotify",
         trigger: true,
         description: "Si l'utilisateur écoute une musique spécifique",
-        text: undefined,
+        text: "undefined",
         subject : undefined
     },
     {
@@ -132,14 +132,14 @@ export let REACTIONS = [
         serviceName: "spotify",
         trigger: undefined,
         description: 'Pause la musique en cours',
-        text: undefined,
+        text: "undefined",
         subject: undefined,
     },
     {
         serviceName: "spotify",
         trigger: undefined,
         description: 'Met en aléatoire la file d\'attente de l\'utilisateur',
-        text: undefined,
+        text: "undefined",
         subject: undefined,
     },
     {
