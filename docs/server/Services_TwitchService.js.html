@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Services/TwitchService.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Services/TwitchService.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Twitch module
+ * @module Twitch
+ */
+
+/**
+ * It allows to communicate with the firebase DB.
+ * @constant firebaseFunctions
+ * @requires firebaseFunctions
+ */
+const firebaseFunctions = require('../firebaseFunctions')
+
+/**
+ * Gets the elements of the url and encodes them to work with "éàè..." characters
+ * @function encodeQueryString
+ * @param {*} params params contains the elements to be added to the url.
+ */
+function encodeQueryString(params) {
+    const queryString = new URLSearchParams();
+    for (let paramName in params) {
+        queryString.append(paramName, params[paramName]);
+    }
+    return queryString.toString();
+}
+
+/**
+ * Check if the Top Twich game is the same as the one selected by the user
+ * @function checkTopGames
+ * @param {String} uid uid of the user
+ * @param {String} game Game selected by the user
+ * @returns returns a bool true condition is true otherwise returns false
+ */
+
+function checkTopGames(uid, game) {
+    firebaseFunctions.getDataFromFireBase(uid, "Twitch")
+    .then(async clientToken => {
+        let headers = {
+            "Authorization": clientToken.authorization,
+            "Client-Id": clientToken.ClientId,
+        };
+        OriginUrl = "https://api.twitch.tv/helix/games/top"
+        const res = await fetch(OriginUrl, { headers });
+        const dataTwitch = await res.json();
+        if (dataTwitch.data[0].name == game) {
+            console.log("true top games is", game);
+            return true;
+        } else {
+            console.log("false top game is", dataTwitch.data[0].name);
+            return false;
+        }
+    })
+    .catch(error => {
+        console.log(error);
+    });
+}
+
+/**
+ * See if the chosen streamer is live or not.
+ * @function getStreamByUserName
+ * @param {String} uid uid of the user
+ * @param {String} streamerName streamerName of the person the user has chosen
+ * @returns returns a bool true condition is true otherwise returns false
+ */
+function getStreamByUserName(uid, streamerName) {
+    firebaseFunctions.getDataFromFireBase(uid, "Twitch")
+    .then(async clientToken => {
+        let headers = {
+            "Authorization": clientToken.authorization,
+            "Client-Id": clientToken.ClientId,
+        };
+        params = {
+            user_login: streamerName,
+        }
+        OriginUrl = "https://api.twitch.tv/helix/streams"
+        url = `${OriginUrl}?${encodeQueryString(params)}`
+        const res = await fetch(url, { headers });
+        const dataTwitch = await res.json();
+        if (dataTwitch.data[0]) {
+            console.log("true", streamerName, "is on live.")
+            return true;
+        } else {
+            console.log("false", streamerName, "does not stream.")
+            return false;
+        }
+    })
+    .catch(error => {
+        console.log(error);
+    });
+}
+
+/**
+ * See if the chosen streamer is live or not and have more than viewer number choose.
+ * @function checkVierwers
+ * @param {String} uid uid of the user
+ * @param {String} streamerName__nbViewers streamer name than the user has chosen and Number of viewers required
+ * @returns returns a bool true condition is true otherwise returns false
+ */
+function checkVierwers(uid , streamerName__nbViewers) {
+    const myArray = streamerName__nbViewers.split("__");
+    const streamerName = myArray[0];
+    const nbViewer = myArray[1];
+    firebaseFunctions.getDataFromFireBase(uid, "Twitch")
+    .then(async clientToken => {
+        let headers = {
+            "Authorization": clientToken.authorization,
+            "Client-Id": clientToken.ClientId,
+        };
+        params = {
+            user_login: streamerName,
+        }
+        OriginUrl = "https://api.twitch.tv/helix/streams"
+        url = `${OriginUrl}?${encodeQueryString(params)}`
+        const res = await fetch(url, { headers });
+        const dataTwitch = await res.json();
+        if (dataTwitch.data[0]) {
+            if (dataTwitch.data[0].viewer_count > nbViewer) {
+                console.log("true", streamerName, "got ", dataTwitch.data[0].viewer_count, ".")
+                return true;
+            } else {
+                console.log("false", streamerName, "does not have", nbViewer ,"viewer.")
+                return false;
+            }
+        } else {
+            console.log("false", streamerName, "does not stream.")
+            return false;
+        }
+    })
+    .catch(error => {
+        console.log(error);
+    });
+}
+
+module.exports = {
+    /**
+     * function tree which allows you to choose the right function
+     * @param {string} func function chosen by the user
+     * @param {string} uid uid of the user
+     * @param {string} param It can be the name of a streamer, the name of a streamer &amp; the number of viewers required or the name of a game.
+     */
+    actionTwitch: function(func, uid, param) {
+        if (func == "viewers")
+            checkVierwers(uid, param)
+        else if (func == "stream")
+            getStreamByUserName(uid, param)
+        else if (func == "game")
+            checkTopGames(uid, param)
+    },
+    /**
+     * Sets the user data in the Firebase database.
+     * @function setUserData
+     * @param {Object} twhtokens - An object containing the Twitch API access and refresh tokens, as well as the user ID.
+     */
+    setUserData: function(twhtokens) {
+        token_type = "bearer"
+        token_type = token_type.substring(0, 1).toUpperCase() + token_type.substring(1, token_type.length);
+        let authorization = `${token_type} ${twhtokens.accessToken}`;
+        let tokens = {
+            accessToken : twhtokens.accessToken,
+            refreshToken : twhtokens.refreshToken,
+            authorization : authorization
+        }
+        firebaseFunctions.setDataInDb(`USERS/${twhtokens.uid}/TwitchService`, tokens)
+    }
+}   </code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-areasFunctions.html">areasFunctions</a></li><li><a href="module-firebaseFunctions.html">firebaseFunctions</a></li><li><a href="module-GoogleService.html">GoogleService</a></li><li><a href="module-IssStationService.html">IssStationService</a></li><li><a href="module-OpenMeteoService.html">OpenMeteoService</a></li><li><a href="module-SpotifyService.html">SpotifyService</a></li><li><a href="module-Twitch.html">Twitch</a></li><li><a href="module-Twitter.html">Twitter</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Feb 22 2023 09:02:39 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
