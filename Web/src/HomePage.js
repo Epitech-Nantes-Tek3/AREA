@@ -45,12 +45,15 @@ export default function HomePage(props) {
 
     useEffect(() => {
         try {
-            authWithCache(props.setUserInformation, props, props.userInformation.ip);
+            authWithCache(props.setUserInformation, props);
             console.log("Already logged in")
         } catch (error) {
             console.log("Unable to login" + error);
             navigate("/auth")
         }
+    }, [])
+
+    useEffect(() => {
         const fetchData = () => {
             console.log(props.userInformation.id)
             fetch(props.userInformation.ip + "/getAreas/" + props.userInformation.id)
@@ -97,7 +100,7 @@ export default function HomePage(props) {
                 setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude, city: props.userInformation.coord.city })
             })
         }
-    }, [])
+    }, [props.userInformation.id])
 
     useEffect(() => {
         if (asked === false) {
@@ -107,10 +110,9 @@ export default function HomePage(props) {
                         .then((jsonRes) => {
                             if (jsonRes && jsonRes.features && jsonRes.features[0] && jsonRes.features[0].properties) {
                                 setLocation({ latitude: location.latitude, longitude: location.longitude, city: jsonRes.features[0].properties.city });
-                            }
-                            else {
+                            } else {
                                 setLocation({ latitude: location.latitude, longitude: location.longitude, city: location.city });
-                                alert("Une erreur a été rencontrée en essayant de trouver votre ville à partir de votre localisation. Vos données ont tout de même été mises à jour.")
+                                console.log("Une erreur a été rencontrée en essayant de trouver votre ville à partir de votre localisation. Vos données ont tout de même été mises à jour.")
                             }
                         })
                 }).catch((err) => {
@@ -153,7 +155,6 @@ export default function HomePage(props) {
                 }
 
                 await fetch(props.userInformation.ip + "/remove/area", requestOptions).then(response => {
-                    console.log(response)
                     if (response.status === 200) {
                         let copyAreas = [...props.allAreas]
                         copyAreas.splice(index, 1)
