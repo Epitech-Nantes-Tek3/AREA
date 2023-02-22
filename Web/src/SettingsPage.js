@@ -177,8 +177,10 @@ export default function SettingsPage(props) {
             console.log("Unable to login" + error);
             navigate("/auth")
         }
-        updateIP({target:{value: props.userInformation.ip}})
     }, [])
+    useEffect(() => {
+        updateIP({target:{value: props.userInformation.ip}})
+    }, [props.userInformation.id])
     /**
      * It returns a div with a profile picture and an email address
      * @function Profile - The profile div
