@@ -45,7 +45,7 @@ export default function SettingsScreen(props: SettingsProps) {
      * @param {*} params contains the elements to be added to the url.
      * @returns return an encode string.
      */
-    function encodeQueryString(params) {
+    function encodeQueryString(params: any) {
         const queryString = new URLSearchParams();
         for (let paramName in params) {
             queryString.append(paramName, params[paramName]);
@@ -59,7 +59,7 @@ export default function SettingsScreen(props: SettingsProps) {
      * @param {*} params contains the elements to be added to the url.
      * @returns a string separated by an "&".
      */
-    function encodeUrlScope(params) 
+    function encodeUrlScope(params: any) 
     {
         let items = []
         for (let key in params) {

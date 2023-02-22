@@ -5,7 +5,8 @@ import LogoTwitch from './assets/twitch.png';
 import LogoTwitter from './assets/twitter.png';
 import LogoGoogle from './assets/google.png';
 import LogoMeteo from './assets/meteo.png';
-import LogoNasa from './assets/nasa.png'
+import LogoNasa from './assets/nasa.png';
+import LogoArea from './assets/logo.png';
 import CheckCircle from './assets/checkCircle.png'
 import { useEffect, useState } from 'react';
 import { ACTIONS, REACTIONS } from "./Common/Areas"
@@ -18,9 +19,16 @@ import uuid from 'react-native-uuid';
  * This page will be updated soon
  */
 export default function AddAreaPage(props) {
-    const [selectedActionIndex, setSelectedActionIndex] = useState(0)
-    const [selectedReactionIndex, setSelectedReactionIndex] = useState(0)
     const navigate = useNavigate();
+
+    const [pageInfo, setPageInfo] = useState({
+        title: ["Sélectionne une action", "Sélectionne une réaction", "Résumé de ton Area"],
+        list: [ACTIONS, REACTIONS, []],
+        selectedIndex: [0, 0, 0],
+        next: [goSelectReaction, goResume, sendArea],
+        prev: [goHome, goSelectAction, goSelectReaction],
+        index: 0,
+    })
 
     let logo = {
         "spotify": LogoSpotify,
@@ -43,123 +51,329 @@ export default function AddAreaPage(props) {
         }
     }, [])
 
-    const sendArea = async () => {
-        let area = {
-            action: ACTIONS[selectedActionIndex],
-            reaction: REACTIONS[selectedReactionIndex],
-            id: uuid.v4().toString()
-        }
-        props.setAllAreas([...props.allAreas, area])
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                action: area.action,
-                reaction: area.reaction,
-                id: area.id,
-                uid: props.userInformation.id
-            })
-        }
-        try {
-            await fetch(props.userInformation.ip + "/register/areas", requestOptions).then(response => {
-                navigate('/home', {state : { newArea : area}})
-            }).catch(error => {
-                console.log(error)
-            })
-        } catch (error) {
-            console.log(error);
+    /**
+     * Navigate to home page
+     * @function goHome
+     */
+    function goHome() {
+        navigate("/home")
+    }
+
+    /**
+     * Update the page index in userInformation
+     * @function updatePageIndex
+     * @param {number} index The new page index
+     */
+    function updatePageIndex(index) {
+        setPageInfo({
+            title: pageInfo.title,
+            list: pageInfo.list,
+            selectedIndex: pageInfo.selectedIndex,
+            next: pageInfo.next,
+            prev: pageInfo.prev,
+            index: index,
+        })
+    }
+
+    /**
+     * Update the index page to 0
+     * @function goSelectAction
+     */
+    function goSelectAction() {
+        updatePageIndex(0)
+    }
+
+    /**
+     * Update the index page to 1
+     * @function goSelectReaction
+     */
+    function goSelectReaction() {
+        updatePageIndex(1)
+    }
+
+    /**
+     * Update the index page to 2
+     * @function goResume
+     */
+    function goResume() {
+        updatePageIndex(2)
+    }
+
+    /**
+     * Send the new area to the server.
+     * @async
+     * @function sendArea
+     */
+    async function sendArea() {
+        if (props.userInformation.id !== "") {
+            let area = {
+                action: ACTIONS[pageInfo.selectedIndex[0]],
+                reaction: REACTIONS[pageInfo.selectedIndex[1]],
+                id: uuid.v4().toString()
+            }
+            props.setAllAreas([...props.allAreas, area])
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: area.action,
+                    reaction: area.reaction,
+                    id: area.id,
+                    uid: props.userInformation.id,
+                })
+            }
+            console.log(requestOptions.body.title)
+            try {
+                await fetch(props.userInformation.ip + "/register/areas", requestOptions).then(response => {
+                    navigate('/home', { state: { newArea: area } })
+                }).catch(error => {
+                    console.log(error)
+                })
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+            alert("Une erreur est survenu.")
+            navigate('/home')
         }
     }
 
-    function ButtonValidate () {
-
-        return (
-            <div style={{borderRadius: 50, width: 60, height: 60, justifySelf: "center"}} onClick={sendArea}>
-                <img src={CheckCircle} alt={"Validation check"} style={{width: 60, height: 60}}/>
-            </div>
-        )
-    }
-
+    /**
+     * Return the html info block
+     * @function InfoBlock
+     * @param {*} props All properties needed for this function
+     * @returns html info block
+     */
     function InfoBlock(props) {
-        let color = props.selectedIndex === props.index ? "#392D37" : "#D7D7FF";
-        let textColor = props.selectedIndex === props.index ? "#D7D7FF" : "#392D37";
+        let border = props.selectedIndex === props.index ? "solid 2px darkblue" : "none";
 
-        function selectIndex() {
-            props.setIndex(props.index)
-        }
+        const style = {
+            block: {
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                backgroundColor: "lightgrey",
+                width: "300px",
+                height: "150px",
+                borderRadius: "20px",
+                margin: "10px",
+                cursor: "pointer",
+                border: border,
 
-        return (
-            <div style={{
-                    backgroundColor: color,
-                    height: 125,
-                    minWidth: 250,
-                    maxWidth: 250,
-                    borderRadius: 20,
-                    marginRight: 16,
-                    padding: 10,
+                image: {
+                    position: "relative",
+                    width: "30px",
+                    height: "30px",
+                    margin: "5px"
+                },
+                title: {
+                    position: "relative",
+                    fontSize: "18px",
+                    margin: "5px"
+                },
+                titleblock: {
+                    position: "relative",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                    alignItems: "center",
+                },
+                content: {
+                    position: "relative",
                     display: "flex",
                     flexDirection: "column",
-                }}
+                    justifyContent: "space-around",
+                    alignItems: "center",
+                    backgroundColor: "#5281B7",
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "20px",
+                }
+            }
+        }
+
+        /**
+         * Select the index in the corresponding list
+         * @function selectedIndex
+         */
+        function selectIndex() {
+            var newSelectedIndex = pageInfo.selectedIndex
+            newSelectedIndex[pageInfo.index] = props.index
+            setPageInfo({
+                title: pageInfo.title,
+                list: pageInfo.list,
+                selectedIndex: newSelectedIndex,
+                next: pageInfo.next,
+                prev: pageInfo.prev,
+                index: pageInfo.index,
+            })
+        }
+        return (
+            <div style={style.block}
                 onClick={selectIndex}>
 
-                <div style={{ display: "flex", alignContent: "center", justifyContent: "center"}}>
-                    <div style={{ flex: 1, marginBottom: 16, justifyContent: "center", alignContent: "center" }}>
-                        <img
-                            src={logo[props.area.service.name]}
-                            alt={props.area.service.name + "logo"}
-                            style={{ width: 50, height: 50, display: "block", margin: "auto" }}
-                        />
-                    </div>
-                    <div style={{ flex: 2 }}>
-                        <label style={{marginTop: 10, color: textColor, textTransform: "capitalize", fontSize: 25, display: "block", textAlign: "center"}}> {props.area.service.name} </label>
-                    </div>
+                <div style={style.block.titleblock}>
+                    <img src={logo[props.area.serviceName]} style={style.block.image} />
+                    <div style={style.block.title}>{props.area.serviceName}</div>
                 </div>
-
-                <div style={{
-                    flex: 1,
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center"
-                }}>
-                    <label style={{color: textColor, textAlign: "center", fontSize: 18, overflow: "scroll"}}> {props.area.description} </label>
+                <div style={style.block.content}>{props.area.description}
                 </div>
             </div>
         )
     }
 
+    /**
+     * Return the html page of the selection block
+     * @function SelectionBlock
+     * @param {*} props All properties needed by selectionBlock
+     * @returns the HTML page
+     */
     function SelectionBlock(props) {
+        const style = {
+            block: {
+                position: "relative",
+                display: "grid",
+                gridTemplateColumns: "repeat(3, auto)",
+                justifyContent: "space-around",
+                alignItems: "center",
+                width: "minmax(300px, 100%)",
+                height: "100%",
+                padding: "10px",
+            }
+        }
         return (
-            <div style={{flex: 1, display: "flex", flexDirection: "column", marginTop: 40,
-            overflowX: 'scroll',
-            whiteSpace: "nowrap", paddingRight: 10, marginLeft: 20}}>
-                <span style={{fontSize: 25, marginLeft: 16, marginBottom: 16}}>{props.title}</span>
-                <div style={{flexDirection: "row", display: "flex"}}>
-                    {
-                        props.list.map((item, index) => {
-                            return (
-                                <InfoBlock area={item} index={index} selectedIndex={props.selectedIndex} setIndex={props.setSelected}/>
-                            )}
+            <div style={style.block}>
+                {
+                    props.list.map((item, index) => {
+                        return (
+                            <InfoBlock area={item} index={index} selectedIndex={props.selectedBlock} />
                         )
                     }
+                    )
+                }
+            </div>
+        )
+    }
+
+    /**
+     * Return the html page of the areaResume
+     * @function AreaResume
+     * @returns the html page
+     */
+    function AreaResume() {
+        const style = {
+            global: {
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+            },
+            actionTitle: {
+                position: "relative"
+            },
+            reactionTitle: {
+                position: "relative"
+            }
+        }
+        if (pageInfo.index === 2) {
+            return (
+                <div style={style.global}>
+                    <div style={style.actionTitle}>ACTION</div>
+                    <InfoBlock area={ACTIONS[pageInfo.selectedIndex[0]]} index={-1} selectedIndex={0} />
+                    <div style={style.reactionTitle}>REACTION</div>
+                    <InfoBlock area={REACTIONS[pageInfo.selectedIndex[1]]} index={-1} selectedIndex={0} />
+                </div>
+            )
+        }
+    }
+
+    /**
+     * The html body page
+     * @function Body
+     * @returns the html of the body page
+     */
+    function Body() {
+        const style = {
+            body: {
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+                alignItems: "center",
+            },
+            bottomButtons: {
+                position: "relative",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-around",
+                alignItems: "center",
+                width: "100%"
+            },
+            button: {
+                position: "relative",
+                border: "solid 1px",
+                borderRadius: "10px",
+                cursor: "pointer",
+                padding: "5px",
+                backgroundColor: "lightgrey"
+            }
+        }
+        return (
+            <div style={style.body}>
+                <h2>{pageInfo.title[pageInfo.index]}</h2>
+                <SelectionBlock title={pageInfo.title[pageInfo.index]} list={pageInfo.list[pageInfo.index]} selectedBlock={pageInfo.selectedIndex[pageInfo.index]} />
+                <AreaResume />
+                <div style={style.bottomButtons}>
+                    <div style={style.button} onClick={pageInfo.prev[pageInfo.index]}>{"<= précédent"}</div>
+                    <div style={style.button} onClick={pageInfo.next[pageInfo.index]}>{(pageInfo.index === 2) ? "Créer l'Area" : "suivant =>"}</div>
                 </div>
             </div>
         )
     }
 
-    return (
-        <div style={{
-            display: "flex",
-            flexDirection: "column",
-        }}>
-            <h1 style={{fontSize: 50, textAlign: "center"}}>ADD AN AREA</h1>
-            <SelectionBlock title={"Actions"} list={ACTIONS} selectedIndex={selectedActionIndex} setSelected={setSelectedActionIndex} />
-            <SelectionBlock title={"Réactions"} list={REACTIONS} selectedIndex={selectedReactionIndex} setSelected={setSelectedReactionIndex} />
-            <div style={{display: "flex", alignItems: "center", width: "100%", marginLeft: 50, marginTop: 30, marginBottom: 50}}>
-                <span style={{width: "50%", fontSize: 25}}>
-                    {ACTIONS[selectedActionIndex].description + ". " + REACTIONS[selectedReactionIndex].description + "."}
-                </span>
-            <ButtonValidate/>
+    /**
+     * The html header page
+     * @function Header
+     * @returns the html header page
+     */
+    function Header() {
+        const style = {
+            global: {
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                height: "50px",
+                padding: "10px",
+            },
+            title: {
+                position: "relative",
+                marginLeft: "10px"
+            },
+            image: {
+                position: "relative",
+                width: "50px",
+                height: "50px",
+                cursor: "pointer"
+            }
+        }
+
+        return (
+            <div style={style.global}>
+                <img src={LogoArea} style={style.image} onClick={() => { navigate("/home") }} />
+                <h1 style={style.title}>Ici, tu peux créer ton area !</h1>
             </div>
+        )
+    }
+    const globalStyle = {
+        position: "relative",
+    }
+    return (
+        <div style={globalStyle}>
+            <Header />
+            <Body />
         </div>
     );
 }
