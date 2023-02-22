@@ -264,7 +264,7 @@
     
 
     
-    <h4 class="name" id=".RegistedRequiredGoogle"><span class="type-signature">(static) </span>RegistedRequiredGoogle<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~get_html_message"><span class="type-signature">(inner) </span>get_html_message<span class="signature">(mailContent)</span><span class="type-signature"> &rarr; {*}</span></h4>
     
 
     
@@ -272,7 +272,7 @@
 
 
 <div class="description">
-    UNDOCUMENTED
+    function called which returns the content of the message in html format.
 </div>
 
 
@@ -283,92 +283,53 @@
 
 
 
-
-
-
-
-<dl class="details">
-
+    <h5>Parameters:</h5>
     
 
-    
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_googleService.js.html">Services/googleService.js</a>, <a href="Services_googleService.js.html#line77">line 77</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        <th>Type</th>
 
         
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>mailContent</code></td>
             
 
-    
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">mailContent is the content of the mail sent.</td>
+        </tr>
 
     
-    <h4 class="name" id="~get_html_message"><span class="type-signature">(inner) </span>get_html_message<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    UNDOCUMENTED
-</div>
-
-
-
-
-
-
-
+    </tbody>
+</table>
 
 
 
@@ -405,6 +366,188 @@
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
         <a href="Services_googleService.js.html">Services/googleService.js</a>, <a href="Services_googleService.js.html#line101">line 101</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    return string message in html format.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~RegistedRequiredGoogle"><span class="type-signature">(inner) </span>RegistedRequiredGoogle<span class="signature">(uid, res)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Saves the data from google service to the user in the database.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>uid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">user id</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>res</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Express response object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Services_googleService.js.html">Services/googleService.js</a>, <a href="Services_googleService.js.html#line74">line 74</a>
     </li></ul></dd>
     
 
@@ -636,13 +779,13 @@ Nodemailer library to send the email.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-areasFunctions.html">areasFunctions</a></li><li><a href="module-firebaseFunctions.html">firebaseFunctions</a></li><li><a href="module-GoogleService.html">GoogleService</a></li><li><a href="module-IssStationService.html">IssStationService</a></li><li><a href="module-OpenMeteoService.html">OpenMeteoService</a></li><li><a href="module-SpotifyService.html">SpotifyService</a></li><li><a href="module-Twitch.html">Twitch</a></li><li><a href="module-Twitter.html">Twitter</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-APP.html">APP</a></li><li><a href="module-areasFunctions.html">areasFunctions</a></li><li><a href="module-firebaseFunctions.html">firebaseFunctions</a></li><li><a href="module-GoogleService.html">GoogleService</a></li><li><a href="module-IssStationService.html">IssStationService</a></li><li><a href="module-OpenMeteoService.html">OpenMeteoService</a></li><li><a href="module-SpotifyService.html">SpotifyService</a></li><li><a href="module-Twitch.html">Twitch</a></li><li><a href="module-Twitter.html">Twitter</a></li></ul><h3>Classes</h3><ul><li><a href="module-APP-TwitchToken.html">TwitchToken</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Feb 22 2023 13:36:54 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Feb 22 2023 15:06:11 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
