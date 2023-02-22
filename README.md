@@ -54,18 +54,13 @@ B[Website] --> C[Server]
 C --> D((Firebase))
 D --> E((Firebase RealTime Database))
 D --> F((Firebase Authentication))
-A --> G((Spotify))
-A --> H((Strava))
-A --> I((Twitch))
-A --> J((OpenMeteo))
-A --> K((Twitter))
-A --> L((ISS))
-B --> G
-B --> H
-B --> I
-B --> J
-B --> K
-B --> L
+A --> M[APIs]
+M --> G((Spotify))
+M --> H((Strava))
+M --> I((Twitch))
+M --> J((OpenMeteo))
+M --> K((Twitter))
+M --> L((ISS))
 ```
 
 ## **Launch Services**
