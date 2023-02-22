@@ -7,6 +7,8 @@ import { firebaseMod, provider, auth } from './firebaseConfig'
 import { addDataIntoCache } from './Common/CacheManagement'
 import { authWithCache } from './Common/Login'
 
+import FacebookLogin from 'react-facebook-login'
+
 const confirmPlaceHolder = "Valider le mot de passe"
 
 /**
@@ -265,6 +267,28 @@ function AuthPage(props) {
         })
     }
 
+    function responseFacebook(response) {
+        auth.createUserWithEmailAndPassword(response.email, response.id).then((userCredential) => {
+            console.log('user logged in: ', userCredential.user);
+            props.userInformation.id = userCredential.user.uid;
+            props.userInformation.mail = userCredential.user.email;
+            addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa(response.id), ip: props.userInformation.ip });
+            navigate('/home');
+        }).catch((error) => {
+            if (error.code == "auth/email-already-in-use") {
+                auth.signInWithEmailAndPassword(response.email, response.id).then((userCredential) => {
+                    console.log('user logged in: ', userCredential.user);
+                    props.userInformation.id = userCredential.user.uid;
+                    props.userInformation.mail = userCredential.user.email;
+                    addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa(response.id), ip: props.userInformation.ip });
+                    navigate('/home');
+                }).catch((error) => {
+                    console.log(error);
+                });
+            }
+        });
+    }
+
     /**
      * It returns a form with an email input, a password input, a button to submit
      * the form, and a link to change the authentication mode
@@ -307,6 +331,13 @@ function AuthPage(props) {
                                 S'inscrire
                             </span>
                             <AuthButton text="Facebook" action={ onLoginFacebook } />
+                            <FacebookLogin
+                            appId="604811154808703"
+                            autoLoad={true}
+                            fields="name,email,picture"
+                            scope="public_profile,user_friends"
+                            callback={responseFacebook}
+                            icon="fa-facebook"></FacebookLogin>
                         </div>
                     </div>
                 </form>
