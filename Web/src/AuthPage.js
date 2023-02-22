@@ -306,7 +306,7 @@ function AuthPage(props) {
                             <span className="link-primary" onClick={changeAuthMode}>
                                 S'inscrire
                             </span>
-                            <AuthButton text="Facebook" action={{ onLoginFacebook }} />
+                            <AuthButton text="Facebook" action={ onLoginFacebook } />
                         </div>
                     </div>
                 </form>
@@ -326,8 +326,8 @@ function AuthPage(props) {
                 <form className="Form" onSubmit={onSubmit}>
                     <div className="Form-content">
                         <img src={AreaLogo} style={{ width: 150, height: 150, display: "block", margin: "auto" }} alt="logo" />
-                        <input style={{ color: color, display: "block", margin: "auto" }} type="text" defaultValue={props.userInformation.ip} placeholder="IP du server" onChange={updateIP} />
                         <h3 className="Title">S'inscrire</h3>
+                        <input style={{ color: color, display: "block", margin: "auto" }} type="text" defaultValue={props.userInformation.ip} placeholder="IP du server" onChange={updateIP} />
                         <div className="form-group">
                             <input
                                 type="email"
