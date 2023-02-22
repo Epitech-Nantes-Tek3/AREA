@@ -47,8 +47,10 @@ Also, do not forget to start the docker service with
 systemctl start docker
 ```
 
+## **Graph of technical environment**
+
 ```mermaid
-graph LR
+graph TD
 A[Application] --> C[Server]
 B[Website] --> C[Server]
 C --> D((Firebase))
@@ -56,12 +58,12 @@ D --> E((Firebase RealTime Database))
 D --> F((Firebase Authentication))
 A --> M[APIs]
 B --> M
-M --> G(([Spotify](https://developer.spotify.com/documentation/)))
-M --> H(([Strava](https://developers.strava.com/docs/reference/)))
-M --> I(([Twitch](https://dev.twitch.tv/docs/api/)))
-M --> J(([OpenMeteo](https://open-meteo.com)))
-M --> K(([Twitter](https://developer.twitter.com/en/docs)))
-M --> L(([ISS](http://open-notify.org/Open-Notify-API/ISS-Location-Now/)))
+M --> G((Spotify))
+M --> H((Strava))
+M --> I((Twitch))
+M --> J((OpenMeteo))
+M --> K((Twitter))
+M --> L((ISS))
 ```
 
 ## **Launch Services**
