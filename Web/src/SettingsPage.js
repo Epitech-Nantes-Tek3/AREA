@@ -335,6 +335,17 @@ export default function SettingsPage(props) {
                 .then((response) => {
                     response.json().then(async (data) => {
                         console.log(data.access_token);
+                        await fetch('http://localhost:8080/strava/add-token', {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                data: data.access_token,
+                                userId: props.userInformation.id
+                            })
+                        })
                         window.location.replace('http://localhost:3000/settings');
                     });
                 });

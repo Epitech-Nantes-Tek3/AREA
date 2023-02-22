@@ -277,6 +277,19 @@ app.get('/strava', async (req, res) => {
     res.json(stravaClientData);
 });
 
+app.get('/strava/add-token', async (req, res) => {
+    console.log(req.body.data.access_token);
+    stravaClient = new stravaApi.client(req.body.data.access_token);
+    var athlete = await stravaClient.athlete.get();
+    console.log(athlete.id);
+    data = JSON.stringify({
+        access_token: req.body.data,
+        athleteId: athlete.id
+    });
+    await firebaseFunctions.setDataInDb('USERS/' + req.body.userId + 'StravaService', data);
+    res.json('ok');
+});
+
 app.get('/auth/callback', async (req, res) => {
     const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
 
