@@ -102,7 +102,7 @@ module.exports = {
  * function called which returns the content of the message in html format.
  * @function get_html_message
  * @param {string} mailContent mailContent is the content of the mail sent.
- * @returns {*} return string message in htlm format.
+ * @returns {*} return string message in html format.
 */
 function get_html_message(mailContent) {
     return `${mailContent}`
