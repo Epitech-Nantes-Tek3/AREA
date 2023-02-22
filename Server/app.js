@@ -57,8 +57,6 @@ passport.use('twitch', new OAuth2Strategy({
   }
 ));
 
-
-
 app.use(cors());
 app.use(express.urlencoded())
 //temporaire
