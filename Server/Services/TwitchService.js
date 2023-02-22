@@ -28,6 +28,7 @@ function encodeQueryString(params) {
  * @function checkTopGames
  * @param {String} uid uid of the user
  * @param {String} game Game selected by the user
+ * @returns returns a bool true condition is true otherwise returns false
  */
 
 function checkTopGames(uid, game) {
@@ -58,6 +59,7 @@ function checkTopGames(uid, game) {
  * @function getStreamByUserName
  * @param {String} uid uid of the user
  * @param {String} streamerName streamerName of the person the user has chosen
+ * @returns returns a bool true condition is true otherwise returns false
  */
 function getStreamByUserName(uid, streamerName) {
     firebaseFunctions.getDataFromFireBase(uid, "Twitch")
@@ -91,6 +93,7 @@ function getStreamByUserName(uid, streamerName) {
  * @function checkVierwers
  * @param {String} uid uid of the user
  * @param {String} streamerName__nbViewers streamer name than the user has chosen and Number of viewers required
+ * @returns returns a bool true condition is true otherwise returns false
  */
 function checkVierwers(uid , streamerName__nbViewers) {
     const myArray = streamerName__nbViewers.split("__");
