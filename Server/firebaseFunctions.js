@@ -91,16 +91,26 @@ module.exports = {
         console.log(email, password);
         firebase.auth()
         .createUserWithEmailAndPassword(email, password).then((userCredential) => {
-          const db = firebase.database().ref(`USERS/${userCredential.user.uid}/`);
-          db.set({
-            areaNumber: 0,
-            email: email
-          })
-          console.log('Successfully created new user:', userCredential.user.uid)
-          res.json({userUid: userCredential.user.uid});
+            const db = firebase.database().ref(`USERS/${userCredential.user.uid}/`);
+            db.set({
+                email: email,
+            })
+            const dbIss = firebase.database().ref(`USERS/${userCredential.user.uid}/IssStation`);
+            dbIss.set({
+                gap: 1000,
+                latitude : 47.218102,
+                longitude : -1.552800 
+            })
+            const dbOMS = firebase.database().ref(`USERS/${userCredential.user.uid}/OpenMeteoService`);
+            dbOMS.set({
+                latitude : 47.218102,
+                longitude : -1.552800 
+            })
+            console.log('Successfully created new user:', userCredential.user.uid)
+            res.json({userUid: userCredential.user.uid});
         }).catch((error) => {
-          console.log('Error creating new user:', error);
-          res.json({userUid: 'error'}).status(400);
+            console.log('Error creating new user:', error);
+            res.json({userUid: 'error'}).status(400);
         });
     },
     /**
