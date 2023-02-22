@@ -42,7 +42,7 @@ function AuthPage(props) {
     useEffect(() => {
         updateIP({ target: { value: props.userInformation.ip } })
         try {
-            authWithCache(props.setUserInformation, props, props.userInformation.ip);
+            authWithCache(props.setUserInformation, props);
             console.log("Already logged in")
             navigate("/home");
         } catch (error) {

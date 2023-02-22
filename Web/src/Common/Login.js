@@ -7,7 +7,7 @@ import { getDataFromCache } from './CacheManagement'
  * @param props - The props of the page you're on.
  * @returns The page that the user is on.
  */
-export function authWithCache(setUserInformation, props, ip) {
+export function authWithCache(setUserInformation, props) {
     var cacheData = getDataFromCache("area");
     if (cacheData !== undefined && cacheData.mail !== undefined && cacheData.id !== undefined && cacheData.password !== undefined) {
         const requestOptions = {

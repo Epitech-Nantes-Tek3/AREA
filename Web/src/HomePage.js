@@ -45,7 +45,7 @@ export default function HomePage(props) {
 
     useEffect(() => {
         try {
-            authWithCache(props.setUserInformation, props, props.userInformation.ip);
+            authWithCache(props.setUserInformation, props);
             console.log("Already logged in")
         } catch (error) {
             console.log("Unable to login" + error);
@@ -155,7 +155,6 @@ export default function HomePage(props) {
                 }
 
                 await fetch(props.userInformation.ip + "/remove/area", requestOptions).then(response => {
-                    console.log(response)
                     if (response.status === 200) {
                         let copyAreas = [...props.allAreas]
                         copyAreas.splice(index, 1)
