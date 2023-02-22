@@ -47,6 +47,15 @@ Also, do not forget to start the docker service with
 systemctl start docker
 ```
 
+```mermaid
+graph LR
+A[Application] --> C[Server]
+B[Website] --> C[Server]
+C --> D((Firebase))
+D --> E((Firebase RealTime Database))
+D --> F((Firebase Authentication))
+```
+
 ## **Launch Services**
 
 To launch our services (described below), you may run the command :
