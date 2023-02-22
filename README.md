@@ -55,6 +55,7 @@ C --> D((Firebase))
 D --> E((Firebase RealTime Database))
 D --> F((Firebase Authentication))
 A --> M[APIs]
+B --> M
 M --> G((Spotify))
 M --> H((Strava))
 M --> I((Twitch))
