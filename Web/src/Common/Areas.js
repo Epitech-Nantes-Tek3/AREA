@@ -1,103 +1,153 @@
 export let ACTIONS = [
     {
-        service: {
-            name: "twitch",
-            needsConnexion: true
-        },
-        description: "Quand Kameto est en live",
+        serviceName: "iss",
+        trigger: true,
+        description: "Quand l'ISS passe au dessus de chez moi",
+        text: undefined,
+        subject: undefined
     },
     {
-        service: {
-            name: "iss",
-            needsConnexion: false
-        },
-        description: "Quand l'ISS passe au \n dessus de chez moi"
+        serviceName: "météo",
+        trigger: true,
+        description: "Quand il fait beau chez moi",
+        text: undefined,
+        subject: undefined
     },
     {
-        service: {
-            name: "météo",
-            needsConnexion: false
-        },
-        description: "Quand il pleut chez moi"
+        serviceName : "spotify",
+        trigger: true,
+        description: "Si l'utilisateur suit un artiste sélectionné",
+        text: undefined,
+        subject : undefined
     },
     {
-        service: {
-            name: "spotify",
-            needsConnexion: true
-        },
-        description: "Si l'utilisateur suit Elvis Presley",
+        serviceName : "spotify",
+        trigger: true,
+        description: "Si l'utilisateur écoute de la musique",
+        text: undefined,
+        subject : undefined
     },
     {
-        service: {
-            name: "spotify",
-            needsConnexion: true
-        },
-        description: "Si l'utilisateur écoute de la musique"
+        serviceName : "spotify",
+        trigger: true,
+        description: "Si l'utilisateur écoute une musique spécifique",
+        text: undefined,
+        subject : undefined
     },
     {
-        service: {
-            name: "spotify",
-            needsConnexion: true
-        },
-        description: "Si l'utilisateur écoute Butterflies and Hurricanes",
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si Rocket League est le jeu le plus regardé sur Twitch",
+        text: "Rocket League",
+        subject : undefined
     },
     {
-        service: {
-            name: "twitch",
-            needsConnexion: true
-        },
-        description: "Si Rocket League est le plus regardé sur Twitch"
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si Counter-Strike: Global Offensive est le jeu le plus regardé sur Twitch",
+        text: "Counter-Strike: Global Offensive",
+        subject : undefined
     },
     {
-        service: {
-            name: "twitch",
-            needsConnexion: true
-        },
-        description: "Si Kameto à plus de 1000 viewers"
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si Just Chatting est la catégorie la plus regardée sur Twitch",
+        text: "Just Chatting",
+        subject : undefined
+    },
+    {
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si krl_stream est en live",
+        text: "krl_stream",
+        subject : undefined
+    },
+    {
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si manuellferraraTV est en live",
+        text: "manuellferraraTV",
+        subject : undefined
+    },
+    {
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si amouranth est en live",
+        text: "amouranth",
+        subject : undefined
+    },
+    {
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si amouranth à plus de 10000 viewers",
+        text: "amouranth__10000",
+        subject : undefined
+    },
+    {
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si gotaga à plus de 20000 viewers",
+        text: "gotaga_20000",
+        subject : undefined
+    },
+    {
+        serviceName : "twitch",
+        trigger: true,
+        description: "Si krl à plus de 1000 viewers",
+        text: "krl_stream__1000",
+        subject : undefined
     }
 ]
 
 export let REACTIONS = [
     {
-        service: {
-            name: "twitter",
-            needsConnexion: true
-        },
-        description: "Retweet Elon Musk"
+        serviceName: "twitter",
+        trigger: undefined,
+        description: "Retweet Elon Musk",
+        text: "ElonMusk",
+        subject: "retweet"
     },
     {
-        service: {
-            name: "twitter",
-            needsConnexion: true
-        },
-        description: "Retweet #hashtag",
+        serviceName: "twitter",
+        trigger: undefined,
+        description: "Liker le dernier tweet sur Elon Musk",
+        text: "ElonMusk",
+        subject: "like"
     },
     {
-        service: {
-            name: "google",
-            needsConnexion: true
-        },
-        description: "M'envoyer un mail avec les infos"
+        serviceName: "twitter",
+        trigger: undefined,
+        description: "Poster un tweet",
+        text: "Yo Elon",
+        subject: "tweet"
     },
     {
-        service: {
-            name: "spotify",
-            needsConnexion: true
-        },
-        description: "Pause la musique en cours"
+        serviceName: "google",
+        trigger: undefined,
+        description: "M'envoyer un mail avec les infos",
+        text: "Pense au rendez-vous du 09/02",
+        subject: "Area Info"
     },
     {
-        service: {
-            name: "spotify",
-            needsConnexion: true
-        },
-        description: "Met en aléatoire la file d\'attente"
+        serviceName: "spotify",
+        trigger: undefined,
+        description: 'Pause la musique en cours',
+        text: undefined,
+        subject: undefined,
     },
     {
-        service: {
-            name: "spotify",
-            needsConnexion: true
-        },
-        description: "Crée une playlist"
-    }
+        serviceName: "spotify",
+        trigger: undefined,
+        description: 'Met en aléatoire la file d\'attente de l\'utilisateur',
+        text: undefined,
+        subject: undefined,
+    },
+    {
+        serviceName: "spotify",
+        trigger: undefined,
+        description: 'Crée une playlist',
+        text: 'NomDeLaPlaylist',
+        subject: 'playlist creation',
+    },
+
 ]
