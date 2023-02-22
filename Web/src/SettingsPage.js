@@ -242,57 +242,55 @@ export default function SettingsPage(props) {
 
 
     /**
-     * Ensure the log in of the user in the services
-     * @function LogWith
-     * @param {string} serviceName the name of the service where you want to register
+     * Ensure the log in of the user on Spotify
+     * @function spotifyConnexion
+     * @async
      */
-    async function LogWith(serviceName) {
-        if (serviceName === 'Spotify') {
-            const scopes = [
-                'ugc-image-upload',
-                'user-read-playback-state',
-                'user-modify-playback-state',
-                'user-read-currently-playing',
-                'streaming',
-                'app-remote-control',
-                'user-read-email',
-                'user-read-private',
-                'playlist-read-collaborative',
-                'playlist-modify-public',
-                'playlist-read-private',
-                'playlist-modify-private',
-                'user-library-modify',
-                'user-library-read',
-                'user-top-read',
-                'user-read-playback-position',
-                'user-read-recently-played',
-                'user-follow-read',
-                'user-follow-modify'
-            ].join(' ');
+    async function spotifyConnexion() {
+        const scopes = [
+            'ugc-image-upload',
+            'user-read-playback-state',
+            'user-modify-playback-state',
+            'user-read-currently-playing',
+            'streaming',
+            'app-remote-control',
+            'user-read-email',
+            'user-read-private',
+            'playlist-read-collaborative',
+            'playlist-modify-public',
+            'playlist-read-private',
+            'playlist-modify-private',
+            'user-library-modify',
+            'user-library-read',
+            'user-top-read',
+            'user-read-playback-position',
+            'user-read-recently-played',
+            'user-follow-read',
+            'user-follow-modify'
+        ].join(' ');
 
-            try {
-                await fetch(props.userInformation.ip + "/spotify").then(response => {
-                    response.json().then(data => {
-                        var clientID = data
+        try {
+            await fetch(props.userInformation.ip + "/spotify").then(response => {
+                response.json().then(data => {
+                    var clientID = data
 
-                        const url = 'https://accounts.spotify.com/authorize?' +
-                            querystring.stringify({
-                                response_type: 'code',
-                                client_id: clientID,
-                                scope: scopes,
-                                show_dialog: true,
-                                redirect_uri: 'http://localhost:8080/spotify/callback',
-                                state: generateRandomString(16)
-                            })
-
-                        window.open(url, 'popup', 'width=600,height=800')
-                    })
-                }).catch(error => {
-                    console.log(error)
+                    const url = 'https://accounts.spotify.com/authorize?' +
+                        querystring.stringify({
+                            response_type: 'code',
+                            client_id: clientID,
+                            scope: scopes,
+                            show_dialog: true,
+                            redirect_uri: 'http://localhost:8080/spotify/callback',
+                            state: generateRandomString(16)
+                        })
+                    console.log(url)
+                    window.open(url, 'popup', 'width=600,height=800')
                 })
-            } catch (error) {
-                console.log(error);
-            }
+            }).catch(error => {
+                console.log(error)
+            })
+        } catch (error) {
+            console.log(error);
         }
     }
     /**
@@ -303,7 +301,7 @@ export default function SettingsPage(props) {
      */
     function Service(props) {
         return (
-            <div id={props.service} style={styles.service} onMouseOver={updateCursor} onMouseOut={updateCursor} onClick={() => LogWith(props.service)}>
+            <div id={props.service} style={styles.service} onMouseOver={updateCursor} onMouseOut={updateCursor} onClick={props.onPress}>
                 <img src={props.image} style={styles.serviceImage}></img>
                 <p style={styles.serviceText}>Connexion à {props.service}</p>
                 <img src={ArrowRight} style={styles.serviceArrow}></img>
@@ -356,20 +354,101 @@ export default function SettingsPage(props) {
     async function stravaConnection() {
         console.log('strava connection');
         await fetch('http://localhost:8080/auth', {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        }
-    })
-    .then((response) => {
-        response.json().then(async (data) => {
-            window.location.replace(data);
-            //console.log(data);
-            //stravaClient = new stravaApi.client(data.access_token);
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response) => {
+            response.json().then(async (data) => {
+                window.location.replace(data);
+                //console.log(data);
+                //stravaClient = new stravaApi.client(data.access_token);
+            });
         });
-    });
     }
+
+    /**
+     * Authenticates the user with Twitch API.
+     * @function twitchConnexion
+    */
+    function twitchConnexion() {
+        const scopes = [
+            "analytics:read:extensions",
+            "analytics:read:games",
+            "moderator:read:followers",
+            "channel:manage:moderators",
+            "channel:manage:predictions",
+            "channel:manage:polls",
+            "user:manage:whispers"
+        ].join(" ");
+        const twitch_oauth_url = "https://id.twitch.tv/oauth2/authorize"
+        const response_type = "token"
+
+        twitchAuth(scopes, twitch_oauth_url, response_type)
+    }
+
+    /**
+     * Encode Uri
+     * @function encodeQueryString
+     * @param {*} params contains the elements to be added to the url.
+     * @returns a string separated by an "&".
+     */
+    function encodeUrlScope(params)
+    {
+        let items = []
+        for (let key in params) {
+            let value = encodeURIComponent(params[key])
+            items.push(`${key}=${value}`)
+        }
+        return items.join("&")
+    }
+
+
+    /**
+     * Authenticates the user with Twitch OAuth and send an access token to the back.
+     * @async
+     * @function twitchAuth
+     * @param {string} scopes - The list of scopes to be authorized by the user.
+     * @param {string} twitch_oauth_url - The URL for the Twitch OAuth endpoint.
+     * @param {string} response_type - The response type for the authorization request.
+    */
+    async function twitchAuth(scopes, twitch_oauth_url, response_type) {
+        var url = "";
+        try {
+            await fetch(props.userInformation.ip + "/twitch/get").then(response => {
+                response.json().then(async data => {
+                    const params = {
+                        client_id: data.clientId,
+                        redirect_uri: data.redirect_url,
+                        scope : scopes,
+                        response_type: response_type
+                    }
+                    console.log(props.userInformation.id)
+                    url = `${twitch_oauth_url}?${encodeUrlScope(params)}`
+                    window.open(url, 'popup', 'width=600,height=800')
+                    // await Linking.openURL(url).catch((err) => console.log('An error occurred', err))
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({uid: props.userInformation.id})
+                    }
+                    fetch(props.userInformation.ip + "/twitch/post/", requestOptions)
+                    .then(response => {
+                            response.json().then(data => {
+
+                        })
+                    })
+                })
+            }).catch(error => {
+                console.log(error)
+            })
+        } catch (error) {
+            console.log(error);
+        }
+
+        }
 
     /**
      * It returns a div with a style of connexionServices, which contains 5
@@ -381,16 +460,35 @@ export default function SettingsPage(props) {
     function ServicesAuth() {
         return (
             <div style={styles.connexionServices}>
-                <Service image={GoogleImage} service="Google" />
-                <Service image={SpotifyImage} service="Spotify" />
-                <Service image={TwitterImage} service="Twitter" />
-                <Service image={TwitchImage} service="Twitch" />
-                <div onClick={stravaConnection}>
-                    <Service image={StravaImage} service="Strava" />
-                </div>
+                <Service image={GoogleImage} service="Google"onPress={googleConnexion}/>
+                <Service image={SpotifyImage} service="Spotify" onPress={spotifyConnexion} />
+                <Service image={TwitterImage} service="Twitter" onPress={twitterConnexion}/>
+                <Service image={TwitchImage} service="Twitch" onPress={twitchConnexion} />
+                <Service image={StravaImage} service="Strava" onPress={stravaConnexion}/>
             </div>
         )
     }
+    /**
+     * Empty for the moment
+     * @function stravaConnexion
+    */
+    function stravaConnexion() {
+    }
+
+    /**
+     * Empty for the moment
+     * @function twitterConnexion
+    */
+    function twitterConnexion() {
+    }
+
+    /**
+     * Empty for the moment
+     * @function googleConnexion
+    */
+    function googleConnexion() {
+    }
+
     /**
      * It returns a div with a clickable image and a text
      * @function Deconnexion - The deconnexion div

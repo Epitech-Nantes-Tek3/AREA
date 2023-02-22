@@ -15,9 +15,11 @@
     "nodemailer": "^6.9.0",
     "strava-oauth2": "^1.1.0",
     "strava-v3": "^2.1.0",
+    "passport": "^0.6.0",
+    "passport-oauth": "^1.0.0",
     "request": "^2.88.2",
     "spotify-web-api-node": "^5.0.2",
-    "twitter-api-v2": "^1.14.0"
+    "twitch": "^4.6.7"
   },
   "scripts": {
     "dev": "npm install && node app.js"

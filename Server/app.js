@@ -6,6 +6,7 @@ var bodyParser = require('body-parser')
 const fs = require('fs');
 const openMeteoService = require('./Services/openMeteoService');
 const twitterService = require('./Services/twitterService');
+const TwitchService = require('./Services/TwitchService');
 const firebaseFunctions = require('./firebaseFunctions');
 const ISSStationService = require('./Services/ISSStationService');
 const areasFunctions = require('./Services/areasFunctions');
@@ -16,19 +17,55 @@ var stravaApi = require('strava-v3');
 const { Client, Token } = require('strava-oauth2');
 const spotifyService = require('./Services/spotifyServices')
 
+var passport = require('passport');
+
+const url = require('url');
+
 const session = require('express-session')
+var OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
+
+const TWITCH_CLIENT_ID = '1ikfbd316i8dggr27rtl8t9x3qrhvf';
+const TWITCH_SECRET    = 'je4r7zf1rwv6jn3q8g0fis4lxrgvc0';
+const SESSION_SECRET   = '<YOUR CLIENT SECRET HERE>';
+const CALLBACK_URL     = 'http://localhost:8080/auth/twitch/callback';
+
+app.use(session({secret: SESSION_SECRET, resave: false, saveUninitialized: false}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+class TwitchToken {
+    constructor(accessToken, refreshToken, uid) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.uid = uid;
+    }
+}
+
+var twhtokens = new TwitchToken("any", "any", 'none')
+
+passport.use('twitch', new OAuth2Strategy({
+    authorizationURL: 'https://id.twitch.tv/oauth2/authorize',
+    tokenURL: 'https://id.twitch.tv/oauth2/token',
+    clientID: TWITCH_CLIENT_ID,
+    clientSecret: TWITCH_SECRET,
+    callbackURL: CALLBACK_URL,
+    state: true
+  },
+  function(accessToken, refreshToken, profile, done) {
+    profile.accessToken = accessToken;
+    profile.refreshToken = refreshToken;
+
+    done(null, profile);
+  }
+));
 
 app.use(cors());
-
-app.use(session({
-    secret:'tmp',
-    cookie:{}
-}))
 app.use(express.urlencoded())
 //temporaire
 const ejs = require('ejs');
 const googleService = require('./Services/googleService');
 const { ActionTw } = require('./Services/twitterService');
+const { Z_FIXED } = require('zlib');
 app.set('view engine', 'ejs');
 
 // parse application/x-www-form-urlencoded
@@ -158,13 +195,46 @@ app.get('/register/iss', (req, res) => {
     ISSStationService.RegistedRequiredIss(res, firebaseUid, data)
 })
 
+app.get('/twitch/auth/', function (req, res) {
+    if(req.session && req.session.passport && req.session.passport.user) {
+      twhtokens.accessToken = req.session.passport.user.accessToken
+      twhtokens.refreshToken = req.session.passport.user.refreshToken
+      TwitchService.setUserData(twhtokens)
+      res.send("BACK TO THE APP NOW")
+    } else {
+        res.send("l'authentification a échoué")
+    }
+});
+
+app.post('/twitch/post', (req, res) => {
+    twhtokens.uid = req.body.uid
+    res.json({body: "OK"}).status(200);
+})
+
+
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+    done(null, user);
+});
+
+app.get('/auth/twitch/callback', passport.authenticate('twitch', { successRedirect: '/twitch/auth/', failureRedirect: '/twitch/auth' }));
+
+app.get('/twitch/get', (req, res) => {
+    firebaseFunctions.getDataFromFireBaseServer('Twitch').then(serverData => {
+        res.json(serverData).status(200);
+    })
+})
+
+app.get('/twitch/doAct', (req, res) => {
+    TwitchService.actionTwitch("stream", firebaseUid, "krl_stream")
+    res.send("TWITCH ACT");
+})
 
 app.get('/twitter', (req, res) => {
     res.render('index')
-})
-
-app.get('/tw', (req, res) => {
-    twitterService.ActionTw('like', 'chelsea', firebaseUid, req, res)
 })
 
 app.get('/twitter/login', (req, res) => {
