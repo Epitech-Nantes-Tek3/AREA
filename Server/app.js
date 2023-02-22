@@ -531,7 +531,6 @@ app.post('/register/areas', (req, res) => {
 */
 app.post('/remove/area', (req, res) => {
     const { uid, id } = req.body;
-    console.log(uid, id)
     firebaseFunctions.removeDataFromFireBase(`USERS/${uid}/AREAS/${id}`)
     .then(() => {
         res.json({body: "Success"}).status(200);
