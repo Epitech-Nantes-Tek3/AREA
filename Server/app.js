@@ -180,8 +180,8 @@ app.post('/register/position', (req, res) => {
         latitude: latitude,
         longitude: longitude
     }
-    openMeteoService.RegistedRequiredOpenMeteo(res, uid, position)
-    ISSStationService.RegistedRequiredIss(res, uid, position)
+    openMeteoService.RegistedRequiredOpenMeteo(uid, position)
+    ISSStationService.RegistedRequiredIss(uid, position)
 })
 
 app.post('/register/google', (req, res) => {
@@ -190,7 +190,7 @@ app.post('/register/google', (req, res) => {
 })
 
 app.get('/register/iss', (req, res) => {
-    ISSStationService.RegistedRequiredIss(res, firebaseUid, data)
+    ISSStationService.RegistedRequiredIss(firebaseUid, data)
 })
 
 app.get('/twitch/auth/', function (req, res) {
