@@ -537,7 +537,7 @@ app.post('/remove/area', (req, res) => {
         res.json({body: "Success"}).status(200);
     })
     .catch(error => {
-        console.log(error);
+        console.log(error)
         res.json(error).status(400);
     })
 })
