@@ -81,3 +81,8 @@
     display: "block";
     margin: "auto";
 }
+
+.error-text {
+    color : #FF0000;
+    text-align: center;
+}
