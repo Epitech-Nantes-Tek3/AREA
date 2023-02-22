@@ -80,22 +80,22 @@ app.get("/testConnexion", (req, res) => {
     res.send("Connexion established").status(200);
 })
 
-nodeCron.schedule("*/10 * * * * *", () => {
-    try {
-        firebaseFunctions.getAllUsersFromFireBase().then(data => {
+// nodeCron.schedule("*/10 * * * * *", () => {
+//     try {
+//         firebaseFunctions.getAllUsersFromFireBase().then(data => {
 
-            for (const uid in data) {
-                try {
-                    areasFunctions.areaLoop(uid);
-                } catch (err) {
-                    console.log(err);
-                }
-            }
-        })
-    } catch (err) {
-        console.log(err)
-    }
-})
+//             for (const uid in data) {
+//                 try {
+//                     areasFunctions.areaLoop(uid);
+//                 } catch (err) {
+//                     console.log(err);
+//                 }
+//             }
+//         })
+//     } catch (err) {
+//         console.log(err)
+//     }
+// })
 
 
 //FIREBASE FUNCTIONS
