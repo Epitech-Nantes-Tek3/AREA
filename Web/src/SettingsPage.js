@@ -296,7 +296,6 @@ export default function SettingsPage(props) {
 
     /**
      * Authenticates the user with Twitch API.
-     * @async
      * @function twitchConnexion
     */
     function twitchConnexion() {
