@@ -107,7 +107,8 @@ module.exports = {
  * @function Radiant
  * @param1 degrees to be converted in radiant
  * @return {number} the converted value
- * */
+ * 
+*/
 function Radiant(degrees)
 {
   var pi = Math.PI;
