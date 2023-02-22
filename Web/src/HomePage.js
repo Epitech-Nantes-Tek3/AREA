@@ -73,7 +73,6 @@ export default function HomePage(props) {
                     console.error(error);
                 })
         };
-        console.log("fetching data")
         fetchData();
         if (props.userInformation.locationAccept === false && navigator.geolocation) {
             props.userInformation.locationAccept = true
@@ -109,7 +108,6 @@ export default function HomePage(props) {
                 .then((res) => {
                     res.json()
                         .then((jsonRes) => {
-                            console.log(jsonRes)
                             if (jsonRes && jsonRes.features && jsonRes.features[0] && jsonRes.features[0].properties) {
                                 setLocation({ latitude: location.latitude, longitude: location.longitude, city: jsonRes.features[0].properties.city });
                             } else {

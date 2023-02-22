@@ -51,9 +51,6 @@ export default function AddAreaPage(props) {
         }
     }, [])
 
-    useEffect(() => {
-        console.log("=> " + JSON.stringify(props.userInformation))
-    }, [pageInfo])
     /**
      * Navigate to home page
      * @function goHome
