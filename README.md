@@ -50,7 +50,7 @@ systemctl start docker
 ## **Graph of technical environment**
 
 ```mermaid
-graph TD
+graph LR
 A[Application] --> C[Server]
 B[Website] --> C[Server]
 C --> D((Firebase))
