@@ -54,8 +54,8 @@ graph LR
 A[Application] --> C[Server]
 B[Website] --> C[Server]
 C --> D((Firebase))
-D --> E((Firebase RealTime Database))
-D --> F((Firebase Authentication))
+D --> E((RealTime Database))
+D --> F((Authentication))
 ```
 
 ## **Launch Services**
