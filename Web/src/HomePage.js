@@ -51,6 +51,9 @@ export default function HomePage(props) {
             console.log("Unable to login" + error);
             navigate("/auth")
         }
+    }, [])
+
+    useEffect(() => {
         const fetchData = () => {
             console.log(props.userInformation.id)
             fetch(props.userInformation.ip + "/getAreas/" + props.userInformation.id)
@@ -70,6 +73,7 @@ export default function HomePage(props) {
                     console.error(error);
                 })
         };
+        console.log("fetching data")
         fetchData();
         if (props.userInformation.locationAccept === false && navigator.geolocation) {
             props.userInformation.locationAccept = true
@@ -97,7 +101,7 @@ export default function HomePage(props) {
                 setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude, city: props.userInformation.coord.city })
             })
         }
-    }, [])
+    }, [props.userInformation.id])
 
     useEffect(() => {
         if (asked === false) {
@@ -105,12 +109,12 @@ export default function HomePage(props) {
                 .then((res) => {
                     res.json()
                         .then((jsonRes) => {
+                            console.log(jsonRes)
                             if (jsonRes && jsonRes.features && jsonRes.features[0] && jsonRes.features[0].properties) {
                                 setLocation({ latitude: location.latitude, longitude: location.longitude, city: jsonRes.features[0].properties.city });
-                            }
-                            else {
+                            } else {
                                 setLocation({ latitude: location.latitude, longitude: location.longitude, city: location.city });
-                                alert("Une erreur a été rencontrée en essayant de trouver votre ville à partir de votre localisation. Vos données ont tout de même été mises à jour.")
+                                console.log("Une erreur a été rencontrée en essayant de trouver votre ville à partir de votre localisation. Vos données ont tout de même été mises à jour.")
                             }
                         })
                 }).catch((err) => {

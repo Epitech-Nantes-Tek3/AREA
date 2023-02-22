@@ -20,7 +20,54 @@ export function authWithCache(setUserInformation, props, ip) {
             body: JSON.stringify({ email: cacheData.mail, password: cacheData.password })
         }
         try {
-            fetch(ip + "/login", requestOptions).then(response => {
+            fetch(cacheData.ip + "/login", requestOptions).then(response => {
+                response.json().then(data => {
+                    console.log(data);
+                    setUserInformation({
+                        mail: cacheData.mail,
+                        locationAccept: props.userInformation.locationAccept,
+                        coord: {
+                            latitude: props.userInformation.coord.latitude,
+                            longitude: props.userInformation.coord.longitude,
+                            city: props.userInformation.coord.city
+                        },
+                        id: data.userUid,
+                        services: {
+                            spotifyId: props.userInformation.services.spotifyId,
+                            googleId: props.userInformation.services.googleId,
+                            twitterId: props.userInformation.services.twitterId,
+                            twitchId: props.userInformation.services.twitchId,
+                            stravaId: props.userInformation.services.stravaId
+                        },
+                        ip: cacheData.ip
+                    }
+                    )
+                })
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    } else {
+        console.log("no cache");
+        throw new Error("no cache");
+    }
+    console.log("cache loaded")
+}
+
+export function authWithCache2(setUserInformation, userInformation) {
+    var cacheData = getDataFromCache("area");
+    if (cacheData !== undefined && cacheData.mail !== undefined && cacheData.id !== undefined && cacheData.password !== undefined) {
+        const requestOptions = {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            },
+            body: JSON.stringify({ email: cacheData.mail, password: cacheData.password })
+        }
+        try {
+            fetch(userInformation.ip + "/login", requestOptions).then(response => {
                 response.json().then(data => {
                     console.log(data);
                 })
@@ -31,19 +78,19 @@ export function authWithCache(setUserInformation, props, ip) {
 
         setUserInformation({
             mail: cacheData.mail,
-            locationAccept: props.userInformation.locationAccept,
+            locationAccept: userInformation.locationAccept,
             coord: {
-                latitude: props.userInformation.coord.latitude,
-                longitude: props.userInformation.coord.longitude,
-                city: props.userInformation.coord.city
+                latitude: userInformation.coord.latitude,
+                longitude: userInformation.coord.longitude,
+                city: userInformation.coord.city
             },
             id: cacheData.id,
             services: {
-                spotifyId: props.userInformation.services.spotifyId,
-                googleId: props.userInformation.services.googleId,
-                twitterId: props.userInformation.services.twitterId,
-                twitchId: props.userInformation.services.twitchId,
-                stravaId: props.userInformation.services.stravaId
+                spotifyId: userInformation.services.spotifyId,
+                googleId: userInformation.services.googleId,
+                twitterId: userInformation.services.twitterId,
+                twitchId: userInformation.services.twitchId,
+                stravaId: userInformation.services.stravaId
             },
             ip: cacheData.ip
         }
