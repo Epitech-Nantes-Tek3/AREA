@@ -25,7 +25,7 @@ export let ACTIONS = [
             name: "spotify",
             needsConnexion: true
         },
-        description: "Si l'utilisateur suit Jul",
+        description: "Si l'utilisateur suit Elvis Presley",
     },
     {
         service: {
@@ -39,28 +39,21 @@ export let ACTIONS = [
             name: "spotify",
             needsConnexion: true
         },
-        description: "Si l'utilisateur écoute as it was",
+        description: "Si l'utilisateur écoute Butterflies and Hurricanes",
     },
     {
         service: {
             name: "twitch",
             needsConnexion: true
         },
-        description: "Si le jeu est le plus regardé sur Twitch"
+        description: "Si Rocket League est le plus regardé sur Twitch"
     },
     {
         service: {
             name: "twitch",
             needsConnexion: true
         },
-        description: "Si le streamer est en live"
-    },
-    {
-        service: {
-            name: "twitch",
-            needsConnexion: true
-        },
-        description: "Si le steamer à plus de 1000 viewers"
+        description: "Si Kameto à plus de 1000 viewers"
     }
 ]
 
