@@ -318,6 +318,7 @@ export default function SettingsPage(props) {
      * Encode Uri
      * @function encodeQueryString
      * @param {*} params contains the elements to be added to the url.
+     * @returns a string separated by an "&".
      */
     function encodeUrlScope(params)
     {
