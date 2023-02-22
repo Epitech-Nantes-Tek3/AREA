@@ -254,29 +254,32 @@ app.get('/getPosition/:uid', (req, res) => {
 const configStrava = {
     client_id: 0,
     client_secret: "",
-    redirect_uri: 'http://localhost:8080/auth/callback',
+    redirect_uri: 'http://localhost:3000/settings',
     scope: 'read,activity:read_all'
 };
 
 var stravaClient = '';
+var client = '';
 
-app.get('/auth', async (req, res) => {
+app.get('/auth/', async (req, res) => {
     const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
 
     configStrava.client_id = stravaClientData.client_id;
     configStrava.client_secret = stravaClientData.client_secret;
-    var client = new Client(configStrava);
-    res.redirect(client.getAuthorizationUri());
+    client = new Client(configStrava);
+    var test = client.getAuthorizationUri();
+    test += ',activity:read';
+    res.json(test);
 });
 
-// Must be the same as the redirect_uri specified in the config
+app.get('/strava', async (req, res) => {
+    const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
+    res.json(stravaClientData);
+});
+
 app.get('/auth/callback', async (req, res) => {
     const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
-    res.redirect('http://www.strava.com/oauth/authorize?client_id=' + stravaClientData.client_id + '&response_type=code&redirect_uri=http://localhost:8080/auth/callback2/&approval_prompt=force&scope=read,activity:read_all');
-});
 
-app.get('/auth/callback2', async (req, res) => {
-    const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
     await fetch('https://www.strava.com/oauth/token?client_id=' + stravaClientData.client_id + '&client_secret=' + stravaClientData.client_secret + '&code=' + req.query.code + '&grant_type=authorization_code', {
         method: 'POST',
         headers: {
@@ -286,10 +289,12 @@ app.get('/auth/callback2', async (req, res) => {
     })
     .then((response) => {
         response.json().then(async (data) => {
+            console.log(data.access_token);
             stravaClient = new stravaApi.client(data.access_token);
         });
     });
-    res.redirect('/');
+    res.send('ok');
+    //res.redirect('http://www.strava.com/oauth/authorize?client_id=' + stravaClientData.client_id + '&response_type=code&redirect_uri=http://localhost:8080/auth/callback2/&approval_prompt=force&scope=read,activity:read_all');
 });
 
 app.get('/strava/activities', async (req, res) => {
