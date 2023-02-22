@@ -268,8 +268,8 @@ export default function HomePage(props) {
                 <div style={style.areaBlock}>
                     <p style={style.areaBlock.title}>{title}</p>
                     <div style={style.areaBlock.content}>
-                        <img src={logo[props.area.action.service.name]} alt={"Logo de l'action"} style={{width: "30px", height: "30px"}} />
-                        <img src={logo[props.area.reaction.service.name]} alt={"Logo de la réaction"} style={{width: "30px", height: "30px"}} />
+                        <img src={logo[props.area.action.serviceName]} alt={"Logo de l'action"} style={{width: "30px", height: "30px"}} />
+                        <img src={logo[props.area.reaction.serviceName]} alt={"Logo de la réaction"} style={{width: "30px", height: "30px"}} />
                     </div>
                 </div>
             } modal>

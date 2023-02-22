@@ -214,8 +214,8 @@ export default function AddAreaPage(props) {
                 onClick={selectIndex}>
 
                 <div style={style.block.titleblock}>
-                    <img src={logo[props.area.service.name]} style={style.block.image} />
-                    <div style={style.block.title}>{props.area.service.name}</div>
+                    <img src={logo[props.area.serviceName]} style={style.block.image} />
+                    <div style={style.block.title}>{props.area.serviceName}</div>
                 </div>
                 <div style={style.block.content}>{props.area.description}
                 </div>
