@@ -3,6 +3,7 @@ import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSou
 import { Globals } from "../Common/Globals";
 import Geolocation from 'react-native-geolocation-service';
 import { SettingsProps } from "../Common/Interfaces";
+import { authorize } from 'react-native-app-auth';
 
 interface Location {
     latitude: number
@@ -45,7 +46,7 @@ export default function SettingsScreen(props: SettingsProps) {
      * @param {*} params contains the elements to be added to the url.
      * @returns return an encode string.
      */
-    function encodeQueryString(params) {
+    function encodeQueryString(params: any) {
         const queryString = new URLSearchParams();
         for (let paramName in params) {
             queryString.append(paramName, params[paramName]);
@@ -59,7 +60,7 @@ export default function SettingsScreen(props: SettingsProps) {
      * @param {*} params contains the elements to be added to the url.
      * @returns a string separated by an "&".
      */
-    function encodeUrlScope(params) 
+    function encodeUrlScope(params: any) 
     {
         let items = []
         for (let key in params) {
@@ -406,8 +407,24 @@ export default function SettingsScreen(props: SettingsProps) {
             
         }
 
-        function stravaConnexion() {
+        async function stravaConnexion() {
             let token = "ImTestingATokenItIsSoFunnyStrava"
+            console.log(token);
+            const config = {
+                clientId: '102338',
+                clientSecret: '3473daba0cfd3917a58553295664d5e9d0c09476',
+                redirectUrl: 'http://localhost:8080/strava',
+                serviceConfiguration: {
+                  authorizationEndpoint: 'https://www.strava.com/oauth/mobile/authorize',
+                  tokenEndpoint:
+                    'https://www.strava.com/oauth/token?client_id=102338>&client_secret=3473daba0cfd3917a58553295664d5e9d0c09476',
+                },
+                scopes: ['activity:read_all'],
+              };
+              
+              const authState = await authorize(config);
+              console.log(authState);
+              
             props.setUserInfo({
                 mail: props.userInfo.mail,
                 coord: {
