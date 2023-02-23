@@ -71,12 +71,13 @@ function AuthPage(props) {
     /* Checking if the user is already logged in. If he is, it redirects him to
     the home page. */
     auth.onAuthStateChanged(user => {
-        auth.getRedirectResult().then((result) => {
-            console.log(result);
-            if (result.user !== null) {
-                navigate('/home');
-            }
-        });
+        console.log('user', user);
+        if (user !== null) {
+            props.userInformation.id = user.uid;
+            props.userInformation.mail = user.email;
+            addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa('facebook-auth'), ip: props.userInformation.ip });
+            navigate("/home");
+        }
     })
 
     /**
