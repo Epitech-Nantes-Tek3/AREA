@@ -26,8 +26,10 @@ function encodeQueryString(params) {
 /**
  * Check if the Top Twich game is the same as the one selected by the user
  * @function checkTopGames
+ * @async
  * @param {String} uid uid of the user
  * @param {String} game Game selected by the user
+ * @param {String} clientID clientID token of the twitch developer account
  * @returns returns a bool true condition is true otherwise returns false
  */
 async function checkTopGames(uid, game, clientID) {
@@ -55,9 +57,11 @@ async function checkTopGames(uid, game, clientID) {
 
 /**
  * See if the chosen streamer is live or not.
+ * @async
  * @function getStreamByUserName
  * @param {String} uid uid of the user
  * @param {String} streamerName streamerName of the person the user has chosen
+ * @param {String} clientID clientID token of the twitch developer account
  * @returns returns a bool true condition is true otherwise returns false
  */
 async function getStreamByUserName(uid, streamerName, clientID) {
@@ -89,9 +93,11 @@ async function getStreamByUserName(uid, streamerName, clientID) {
 
 /**
  * See if the chosen streamer is live or not and have more than viewer number choose.
+ * @async
  * @function checkViewers
  * @param {String} uid uid of the user
  * @param {String} streamerName__nbViewers streamer name than the user has chosen and Number of viewers required
+ * @param {String} clientID clientID token of the twitch developer account
  * @returns returns a bool true condition is true otherwise returns false
  */
 async function checkViewers(uid , streamerName__nbViewers, clientID) {
@@ -131,6 +137,8 @@ async function checkViewers(uid , streamerName__nbViewers, clientID) {
 module.exports = {
     /**
      * function tree which allows you to choose the right function
+     * @async
+     * @function actionTwitch
      * @param {string} func function chosen by the user
      * @param {string} uid uid of the user
      * @param {string} param It can be the name of a streamer, the name of a streamer & the number of viewers required or the name of a game.
