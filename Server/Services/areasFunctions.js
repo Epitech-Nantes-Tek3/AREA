@@ -62,37 +62,33 @@ module.exports = {
     * @param {Object} res - Express response object
     * @param {string} uid - User Id
     */
-    areaLoop: function(uid) {
-        firebaseFunctions.getDataFromFireBase(uid, 'AREAS')
-        .then(data => {
+    areaLoop: async function(uid) {
+        try {
+            const data = await firebaseFunctions.getDataFromFireBase(uid, 'AREAS');
             for (const area in data) {
                 const ActionName = data[area].Action.serviceName;
                 const Actiontrigger = data[area].Action.trigger;
+                const ActionText = data[area].Action.text;
+                const ActionFunc = data[area].Action.subject;
                 const ReactionName = data[area].Reaction.serviceName;
                 const ReactionSubject = data[area].Reaction.subject;
                 const Reactiontext = data[area].Reaction.text;
-                areas.forEach((action) => {
+                for (const action of areas) {
                     if (action.name == ActionName) {
-                        action.function(uid)
-                        .then(data => {
-                            if (data == Actiontrigger) {
-                                areas.forEach((reaction) => {
-                                    if (reaction.name == ReactionName) {
-                                        reaction.function(ReactionSubject, Reactiontext, uid)
-                                    }
-                                })
-                            } 
-                        })
-                        .catch(error => {
-                            console.log(error);
-                        });
+                        const data = await action.function(uid, ActionFunc,ActionText);
+                        if (data == Actiontrigger) {
+                            for (const reaction of areas) {
+                                if (reaction.name == ReactionName) {
+                                    reaction.function(ReactionSubject, Reactiontext, uid);
+                                }
+                            }
+                        } 
                     }
-                });
+                }
             }
-        })
-        .catch(error => {
+        } catch (error) {
             console.log(error);
-        });
+        }
     },
     /**
     * areaRegister - function that stores the provided area data in the firebase database under the specified user id

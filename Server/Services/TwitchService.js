@@ -30,13 +30,12 @@ function encodeQueryString(params) {
  * @param {String} game Game selected by the user
  * @returns returns a bool true condition is true otherwise returns false
  */
-
-function checkTopGames(uid, game) {
-    firebaseFunctions.getDataFromFireBase(uid, "Twitch")
-    .then(async clientToken => {
+async function checkTopGames(uid, game, clientID) {
+    try {
+        const clientToken = await firebaseFunctions.getDataFromFireBase(uid, "TwitchService");
         let headers = {
             "Authorization": clientToken.authorization,
-            "Client-Id": clientToken.ClientId,
+            "Client-Id": clientID,
         };
         OriginUrl = "https://api.twitch.tv/helix/games/top"
         const res = await fetch(OriginUrl, { headers });
@@ -48,10 +47,10 @@ function checkTopGames(uid, game) {
             console.log("false top game is", dataTwitch.data[0].name);
             return false;
         }
-    })
-    .catch(error => {
+    } catch (error) {
         console.log(error);
-    });
+        throw error;
+    }
 }
 
 /**
@@ -61,12 +60,12 @@ function checkTopGames(uid, game) {
  * @param {String} streamerName streamerName of the person the user has chosen
  * @returns returns a bool true condition is true otherwise returns false
  */
-function getStreamByUserName(uid, streamerName) {
-    firebaseFunctions.getDataFromFireBase(uid, "Twitch")
-    .then(async clientToken => {
+async function getStreamByUserName(uid, streamerName, clientID) {
+    try {
+        const clientToken = await firebaseFunctions.getDataFromFireBase(uid, "TwitchService")
         let headers = {
             "Authorization": clientToken.authorization,
-            "Client-Id": clientToken.ClientId,
+            "Client-Id": clientID,
         };
         params = {
             user_login: streamerName,
@@ -82,28 +81,28 @@ function getStreamByUserName(uid, streamerName) {
             console.log("false", streamerName, "does not stream.")
             return false;
         }
-    })
-    .catch(error => {
+    }
+    catch(error) {
         console.log(error);
-    });
+    };
 }
 
 /**
  * See if the chosen streamer is live or not and have more than viewer number choose.
- * @function checkVierwers
+ * @function checkViewers
  * @param {String} uid uid of the user
  * @param {String} streamerName__nbViewers streamer name than the user has chosen and Number of viewers required
  * @returns returns a bool true condition is true otherwise returns false
  */
-function checkVierwers(uid , streamerName__nbViewers) {
-    const myArray = streamerName__nbViewers.split("__");
-    const streamerName = myArray[0];
-    const nbViewer = myArray[1];
-    firebaseFunctions.getDataFromFireBase(uid, "Twitch")
-    .then(async clientToken => {
+async function checkViewers(uid , streamerName__nbViewers, clientID) {
+    try {
+        const myArray = streamerName__nbViewers.split("__");
+        const streamerName = myArray[0];
+        const nbViewer = myArray[1];
+        const clientToken = await firebaseFunctions.getDataFromFireBase(uid, "TwitchService")
         let headers = {
             "Authorization": clientToken.authorization,
-            "Client-Id": clientToken.ClientId,
+            "Client-Id": clientID,
         };
         params = {
             user_login: streamerName,
@@ -124,10 +123,9 @@ function checkVierwers(uid , streamerName__nbViewers) {
             console.log("false", streamerName, "does not stream.")
             return false;
         }
-    })
-    .catch(error => {
+    } catch (error) {
         console.log(error);
-    });
+    };
 }
 
 module.exports = {
@@ -136,14 +134,32 @@ module.exports = {
      * @param {string} func function chosen by the user
      * @param {string} uid uid of the user
      * @param {string} param It can be the name of a streamer, the name of a streamer & the number of viewers required or the name of a game.
+     * @returns returns a bool true condition is true otherwise returns false
      */
-    actionTwitch: function(func, uid, param) {
-        if (func == "viewers")
-            checkVierwers(uid, param)
-        else if (func == "stream")
-            getStreamByUserName(uid, param)
-        else if (func == "game")
-            checkTopGames(uid, param)
+    actionTwitch: async function(uid, func, param) {
+        return new Promise((resolve, reject) => {
+            firebaseFunctions.getDataFromFireBaseServer('Twitch')
+                .then(async token => {
+                    if (func == "game") {
+                        const result = await checkTopGames(uid, param, token.clientId);
+                        console.log(result)
+                        resolve(result);
+                    } else if (func == "viewers") {
+                        const result = await checkViewers(uid, param, token.clientId);
+                        console.log(result)
+                        resolve(result);
+                    } else if (func == "stream") {
+                        const result = await getStreamByUserName(uid, param, token.clientId);
+                        console.log(result)
+                        resolve(result);
+                    } else {
+                        reject(new Error(`Invalid function name: ${func}`));
+                    }
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
     },
     /**
      * Sets the user data in the Firebase database.
