@@ -57,9 +57,8 @@ module.exports = {
     /**
     * areaLoop - This function is used to loop through the areas and perform corresponding actions and reactions
     * based on the data retrieved from Firebase for a specific user id.
+    * @async
     * @function areaLoop
-    * @param {Object} req - Express request object
-    * @param {Object} res - Express response object
     * @param {string} uid - User Id
     */
     areaLoop: async function(uid) {
