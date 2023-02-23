@@ -20,7 +20,6 @@ import { authWithCache } from './Common/Login';
 import { useLocation } from 'react-router-dom';
 
 const querystring = require('querystring-es3');
-const locationURL = require('location-href')
 
 /**
  * @description Styles of the page
@@ -174,7 +173,7 @@ export default function SettingsPage(props) {
 
     useEffect(() => {
         try {
-            authWithCache(props.setUserInformation, props, props.userInformation.ip);
+            authWithCache(props.setUserInformation, props);
             console.log("Already logged in")
         } catch (error) {
             console.log("Unable to login" + error);
@@ -193,6 +192,9 @@ export default function SettingsPage(props) {
 
         updateIP({target:{value: props.userInformation.ip}})
     }, [])
+    useEffect(() => {
+        updateIP({target:{value: props.userInformation.ip}})
+    }, [props.userInformation.id])
     /**
      * It returns a div with a profile picture and an email address
      * @function Profile - The profile div
@@ -425,7 +427,6 @@ export default function SettingsPage(props) {
                         scope : scopes,
                         response_type: response_type
                     }
-                    console.log(props.userInformation.id)
                     url = `${twitch_oauth_url}?${encodeUrlScope(params)}`
                     window.open(url, 'popup', 'width=600,height=800')
                     // await Linking.openURL(url).catch((err) => console.log('An error occurred', err))

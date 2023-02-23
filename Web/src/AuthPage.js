@@ -7,6 +7,8 @@ import { firebaseMod, provider, auth } from './firebaseConfig'
 import { addDataIntoCache } from './Common/CacheManagement'
 import { authWithCache } from './Common/Login'
 
+import FacebookLogin from 'react-facebook-login'
+
 const confirmPlaceHolder = "Valider le mot de passe"
 
 /**
@@ -42,7 +44,7 @@ function AuthPage(props) {
     useEffect(() => {
         updateIP({ target: { value: props.userInformation.ip } })
         try {
-            authWithCache(props.setUserInformation, props, props.userInformation.ip);
+            authWithCache(props.setUserInformation, props);
             console.log("Already logged in")
             navigate("/home");
         } catch (error) {
@@ -69,12 +71,13 @@ function AuthPage(props) {
     /* Checking if the user is already logged in. If he is, it redirects him to
     the home page. */
     auth.onAuthStateChanged(user => {
-        auth.getRedirectResult().then((result) => {
-            console.log(result);
-            if (result.user !== null) {
-                navigate('/home');
-            }
-        });
+        console.log('user', user);
+        if (user !== null) {
+            props.userInformation.id = user.uid;
+            props.userInformation.mail = user.email;
+            addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa('facebook-auth'), ip: props.userInformation.ip });
+            navigate("/home");
+        }
     })
 
     /**
@@ -306,7 +309,7 @@ function AuthPage(props) {
                             <span className="link-primary" onClick={changeAuthMode}>
                                 S'inscrire
                             </span>
-                            <AuthButton text="Facebook" action={{ onLoginFacebook }} />
+                            <AuthButton text="Facebook" action={ onLoginFacebook } />
                         </div>
                     </div>
                 </form>
@@ -326,8 +329,8 @@ function AuthPage(props) {
                 <form className="Form" onSubmit={onSubmit}>
                     <div className="Form-content">
                         <img src={AreaLogo} style={{ width: 150, height: 150, display: "block", margin: "auto" }} alt="logo" />
-                        <input style={{ color: color, display: "block", margin: "auto" }} type="text" defaultValue={props.userInformation.ip} placeholder="IP du server" onChange={updateIP} />
                         <h3 className="Title">S'inscrire</h3>
+                        <input style={{ color: color, display: "block", margin: "auto" }} type="text" defaultValue={props.userInformation.ip} placeholder="IP du server" onChange={updateIP} />
                         <div className="form-group">
                             <input
                                 type="email"
