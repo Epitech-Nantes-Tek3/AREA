@@ -210,7 +210,7 @@
     
 
     
-    <h4 class="name" id=".actionTwitch"><span class="type-signature">(static) </span>actionTwitch<span class="signature">(func, uid, param)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~actionTwitch"><span class="type-signature">(async, inner) </span>actionTwitch<span class="signature">(func, uid, param)</span><span class="type-signature"></span></h4>
     
 
     
@@ -357,7 +357,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_TwitchService.js.html">Services/TwitchService.js</a>, <a href="Services_TwitchService.js.html#line140">line 140</a>
+        <a href="Services_TwitchService.js.html">Services/TwitchService.js</a>, <a href="Services_TwitchService.js.html#line138">line 138</a>
     </li></ul></dd>
     
 
@@ -382,6 +382,16 @@
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    returns a bool true condition is true otherwise returns false
+</div>
+
+
+
+    
 
 
 
@@ -393,7 +403,7 @@
     
 
     
-    <h4 class="name" id="~checkTopGames"><span class="type-signature">(inner) </span>checkTopGames<span class="signature">(uid, game)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~checkTopGames"><span class="type-signature">(async, inner) </span>checkTopGames<span class="signature">(uid, game, clientID)</span><span class="type-signature"></span></h4>
     
 
     
@@ -480,6 +490,29 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>clientID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">clientID token of the twitch developer account</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -563,7 +596,7 @@
     
 
     
-    <h4 class="name" id="~checkVierwers"><span class="type-signature">(inner) </span>checkVierwers<span class="signature">(uid, streamerName__nbViewers)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~checkViewers"><span class="type-signature">(async, inner) </span>checkViewers<span class="signature">(uid, streamerName__nbViewers, clientID)</span><span class="type-signature"></span></h4>
     
 
     
@@ -650,6 +683,29 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>clientID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">clientID token of the twitch developer account</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -687,7 +743,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_TwitchService.js.html">Services/TwitchService.js</a>, <a href="Services_TwitchService.js.html#line91">line 91</a>
+        <a href="Services_TwitchService.js.html">Services/TwitchService.js</a>, <a href="Services_TwitchService.js.html#line94">line 94</a>
     </li></ul></dd>
     
 
@@ -870,7 +926,7 @@
     
 
     
-    <h4 class="name" id="~getStreamByUserName"><span class="type-signature">(inner) </span>getStreamByUserName<span class="signature">(uid, streamerName)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~getStreamByUserName"><span class="type-signature">(async, inner) </span>getStreamByUserName<span class="signature">(uid, streamerName, clientID)</span><span class="type-signature"></span></h4>
     
 
     
@@ -957,6 +1013,29 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>clientID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">clientID token of the twitch developer account</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -994,7 +1073,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_TwitchService.js.html">Services/TwitchService.js</a>, <a href="Services_TwitchService.js.html#line57">line 57</a>
+        <a href="Services_TwitchService.js.html">Services/TwitchService.js</a>, <a href="Services_TwitchService.js.html#line58">line 58</a>
     </li></ul></dd>
     
 
@@ -1141,7 +1220,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_TwitchService.js.html">Services/TwitchService.js</a>, <a href="Services_TwitchService.js.html#line148">line 148</a>
+        <a href="Services_TwitchService.js.html">Services/TwitchService.js</a>, <a href="Services_TwitchService.js.html#line172">line 172</a>
     </li></ul></dd>
     
 
@@ -1193,7 +1272,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Feb 22 2023 22:45:06 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Feb 23 2023 13:43:25 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
