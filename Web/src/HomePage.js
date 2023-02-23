@@ -2,6 +2,14 @@ import React, { useState, useEffect } from 'react';
 import TrashImage from './assets/trash.png';
 import AddAreaImage from "./assets/add.png";
 import LogoImage from "./assets/logo.png";
+import LogoSpotify from "./assets/spotify.png"
+import LogoIss from "./assets/iss.png"
+import LogoStrava from './assets/strava.png';
+import LogoTwitch from './assets/twitch.png';
+import LogoTwitter from './assets/twitter.png';
+import LogoGoogle from './assets/google.png';
+import LogoMeteo from './assets/meteo.png';
+import LogoNasa from './assets/nasa.png';
 import SettingsImage from "./assets/avatar.png";
 import { useNavigate } from "react-router-dom"
 import { authWithCache } from './Common/Login'
@@ -16,6 +24,17 @@ export default function HomePage(props) {
     const [location, setLocation] = useState({ latitude: props.userInformation.coord.latitude, longitude: props.userInformation.coord.longitude, city: props.userInformation.coord.city })
     const navigate = useNavigate();
 
+    let logo = {
+        "spotify": LogoSpotify,
+        "iss": LogoIss,
+        "nasa": LogoNasa,
+        "twitter": LogoTwitter,
+        "google": LogoGoogle,
+        "météo": LogoMeteo,
+        "twitch": LogoTwitch,
+        "strava": LogoStrava
+    }
+
     const addArea = () => {
         navigate('/addArea')
     }
@@ -26,12 +45,15 @@ export default function HomePage(props) {
 
     useEffect(() => {
         try {
-            authWithCache(props.setUserInformation, props, props.userInformation.ip);
+            authWithCache(props.setUserInformation, props);
             console.log("Already logged in")
         } catch (error) {
             console.log("Unable to login" + error);
             navigate("/auth")
         }
+    }, [])
+
+    useEffect(() => {
         const fetchData = () => {
             console.log(props.userInformation.id)
             fetch(props.userInformation.ip + "/getAreas/" + props.userInformation.id)
@@ -78,7 +100,7 @@ export default function HomePage(props) {
                 setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude, city: props.userInformation.coord.city })
             })
         }
-    }, [])
+    }, [props.userInformation.id])
 
     useEffect(() => {
         if (asked === false) {
@@ -88,10 +110,9 @@ export default function HomePage(props) {
                         .then((jsonRes) => {
                             if (jsonRes && jsonRes.features && jsonRes.features[0] && jsonRes.features[0].properties) {
                                 setLocation({ latitude: location.latitude, longitude: location.longitude, city: jsonRes.features[0].properties.city });
-                            }
-                            else {
+                            } else {
                                 setLocation({ latitude: location.latitude, longitude: location.longitude, city: location.city });
-                                alert("Une erreur a été rencontrée en essayant de trouver votre ville à partir de votre localisation. Vos données ont tout de même été mises à jour.")
+                                console.log("Une erreur a été rencontrée en essayant de trouver votre ville à partir de votre localisation. Vos données ont tout de même été mises à jour.")
                             }
                         })
                 }).catch((err) => {
@@ -134,7 +155,6 @@ export default function HomePage(props) {
                 }
 
                 await fetch(props.userInformation.ip + "/remove/area", requestOptions).then(response => {
-                    console.log(response)
                     if (response.status === 200) {
                         let copyAreas = [...props.allAreas]
                         copyAreas.splice(index, 1)
@@ -249,8 +269,8 @@ export default function HomePage(props) {
                 <div style={style.areaBlock}>
                     <p style={style.areaBlock.title}>{title}</p>
                     <div style={style.areaBlock.content}>
-                        <img src={actionLogo} alt={"Logo de l'action"} />
-                        <img src={reactionLogo} alt={"Logo de la réaction"} />
+                        <img src={logo[props.area.action.serviceName]} alt={"Logo de l'action"} style={{width: "30px", height: "30px"}} />
+                        <img src={logo[props.area.reaction.serviceName]} alt={"Logo de la réaction"} style={{width: "30px", height: "30px"}} />
                     </div>
                 </div>
             } modal>

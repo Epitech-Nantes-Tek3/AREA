@@ -170,14 +170,16 @@ export default function SettingsPage(props) {
 
     useEffect(() => {
         try {
-            authWithCache(props.setUserInformation, props, props.userInformation.ip);
+            authWithCache(props.setUserInformation, props);
             console.log("Already logged in")
         } catch (error) {
             console.log("Unable to login" + error);
             navigate("/auth")
         }
-        updateIP({target:{value: props.userInformation.ip}})
     }, [])
+    useEffect(() => {
+        updateIP({target:{value: props.userInformation.ip}})
+    }, [props.userInformation.id])
     /**
      * It returns a div with a profile picture and an email address
      * @function Profile - The profile div

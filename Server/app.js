@@ -1,36 +1,150 @@
+/**
+ * APP module
+ * @module APP
+ */
+
+/**
+ * @constant express
+ * @requires express
+*/
 const express = require('express');
+
+/**
+ * @constant app
+ * @requires app
+*/
 const app = express();
+
+/**
+ * @constant config
+ * @requires config
+*/
 const config = require('./config');
+
+/**
+ * @constant cors
+ * @requires cors
+*/
 const cors = require('cors');
+
+/**
+ * @constant bodyParser
+ * @requires bodyParser
+*/
 var bodyParser = require('body-parser')
+
+/**
+ * @constant fs
+ * @requires fs
+*/
 const fs = require('fs');
+
+/**
+ * @constant openMeteoService
+ * @requires openMeteoService
+*/
 const openMeteoService = require('./Services/openMeteoService');
+
+/**
+ * @constant twitterService
+ * @requires twitterService
+*/
 const twitterService = require('./Services/twitterService');
+
+/**
+ * @constant TwitchService
+ * @requires TwitchService
+*/
 const TwitchService = require('./Services/TwitchService');
+
+/**
+ * @constant firebaseFunctions
+ * @requires firebaseFunctions
+*/
 const firebaseFunctions = require('./firebaseFunctions');
+
+/**
+ * @constant ISSStationService
+ * @requires ISSStationService
+*/
 const ISSStationService = require('./Services/ISSStationService');
+
+/**
+ * @constant areasFunctions
+ * @requires areasFunctions
+*/
 const areasFunctions = require('./Services/areasFunctions');
-const firebaseUid = 'leMgZPp8sfe2l06b6TU330bahJz2';
+
+/**
+ * @constant port
+ * @requires config.port
+*/
 const port = config.port;
+
+/**
+ * @constant nodeCron
+ * @requires node-cron
+*/
 const nodeCron = require("node-cron")
+
+/**
+ * @constant spotifyServices
+ * @requires spotifyServices
+*/
 const spotifyService = require('./Services/spotifyServices')
 
+/**
+ * @constant passport
+ * @requires passport
+*/
 var passport = require('passport');
 
-const url = require('url');
-
+/**
+ * @constant session
+ * @requires session
+*/
 const session = require('express-session')
+
+/**
+ * @constant session
+ * @requires (passport-oauth').OAuth2Strategy
+*/
 var OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 
+/**
+ * @constant TWITCH_CLIENT_ID
+ * @requires TWITCH_CLIENT_ID
+*/
 const TWITCH_CLIENT_ID = '1ikfbd316i8dggr27rtl8t9x3qrhvf';
+
+/**
+ * @constant TWITCH_SECRET
+ * @requires TWITCH_SECRET
+*/
 const TWITCH_SECRET    = 'je4r7zf1rwv6jn3q8g0fis4lxrgvc0';
+
+/**
+ * @constant SESSION_SECRET
+ * @requires SESSION_SECRET
+*/
 const SESSION_SECRET   = '<YOUR CLIENT SECRET HERE>';
+
+/**
+ * @constant CALLBACK_URL
+ * @requires CALLBACK_URL
+*/
 const CALLBACK_URL     = 'http://localhost:8080/auth/twitch/callback';
 
+/**
+ * session & passport required for twitch service
+*/
 app.use(session({secret: SESSION_SECRET, resave: false, saveUninitialized: false}));
 app.use(passport.initialize());
 app.use(passport.session());
 
+/**
+ * @class class qui contient l'access token & le refresh token, ainsi que l'uid de l'utilisateur.
+ */
 class TwitchToken {
     constructor(accessToken, refreshToken, uid) {
         this.accessToken = accessToken;
@@ -39,8 +153,15 @@ class TwitchToken {
     }
 }
 
+/**
+ * @var twhtokens
+ * @requires TwitchToken()
+*/
 var twhtokens = new TwitchToken("any", "any", 'none')
 
+/**
+ * passport required for twitch service
+*/
 passport.use('twitch', new OAuth2Strategy({
     authorizationURL: 'https://id.twitch.tv/oauth2/authorize',
     tokenURL: 'https://id.twitch.tv/oauth2/token',
@@ -57,29 +178,67 @@ passport.use('twitch', new OAuth2Strategy({
   }
 ));
 
+
+/**
+ * initialisation of cors in app.
+*/
 app.use(cors());
+/**
+ * initialisation of express.urlencoded() in app. 
+*/
 app.use(express.urlencoded())
+
 //temporaire
+/**
+ * @constant ejs
+ * @requires ejs
+*/
 const ejs = require('ejs');
+/**
+ * @constant googleService
+ * @requires googleService
+*/
 const googleService = require('./Services/googleService');
-const { ActionTw } = require('./Services/twitterService');
-const { Z_FIXED } = require('zlib');
+
+/**
+ * initialisation of ejs for twitch authentification.
+*/
 app.set('view engine', 'ejs');
 
-// parse application/x-www-form-urlencoded
+
+/**
+ * parse application/x-www-form-urlencoded
+*/
 app.use(bodyParser.urlencoded({ extended: false }))
 
-// parse application/json
+/**
+ * parse application/json
+*/
 app.use(bodyParser.json())
 
+/**
+ * @method get
+ * @function '/' Server HomePage
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/', (req, res) => {
-    res.send('Hello world !')
+    res.send('Server HomePage')
 })
 
+/**
+ * @method get
+ * @function '/testConnexion' Server HomePage
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get("/testConnexion", (req, res) => {
     res.send("Connexion established").status(200);
 })
 
+/**
+ * @function nodeCron.schedule nodeCron.schedule("*10 * * * * *")
+*/
 nodeCron.schedule("*/10 * * * * *", () => {
     try {
         firebaseFunctions.getAllUsersFromFireBase().then(data => {
@@ -97,23 +256,42 @@ nodeCron.schedule("*/10 * * * * *", () => {
     }
 })
 
-
-//FIREBASE FUNCTIONS
-
+/**
+ * @method post
+ * @function '/register' Server register page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.post('/register', (req, res) => {
     firebaseFunctions.register(req, res);
 })
 
+/**
+ * @method post
+ * @function '/login' Server login page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.post('/login', (req, res) => {
     firebaseFunctions.login(req, res);
 })
 
+/**
+ * @method post
+ * @function '/resetPassword' Server reset password page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.post('/resetPassword', (req, res) => {
     firebaseFunctions.resetPassword(req, res)
 })
 
-//ABOUT
-
+/**
+ * @method get
+ * @function '/about.json' Server about page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/about.json', (req, res) => {
 
     var obj = new Array();
@@ -153,46 +331,42 @@ app.get('/about.json', (req, res) => {
     res.send(about)
 })
 
-app.get('/weather', (req, res) => {
-    openMeteoService.GetLocation(firebaseUid)
-    .then(data => {
-        openMeteoService.WeatherisFineOrNot(data.latitude, data.longitude)
-        .then(weatherIsFine => {
-            if (weatherIsFine === true)
-                console.log('weather is Fine');
-            else {
-                console.log('weather is Bad');
-            }
-        })
-        .catch(error => {
-            console.log(error);
-        });
-    })
-    .catch(error => {
-        console.log(error);
-    });
-    res.send('Weather Info')
-})
-
+/**
+ * call the RegistedRequiredOpenMeteo & RegistedRequiredIss to register OpenMétéo & Iss data for the user.
+ * @method post
+ * @function '/register/position' Server register position page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.post('/register/position', (req, res) => {
     const { latitude, longitude, uid } = req.body;
     var position = {
         latitude: latitude,
         longitude: longitude
     }
-    openMeteoService.RegistedRequiredOpenMeteo(res, uid, position)
-    ISSStationService.RegistedRequiredIss(res, uid, position)
+    openMeteoService.RegistedRequiredOpenMeteo(uid, position)
+    ISSStationService.RegistedRequiredIss(uid, position)
 })
 
+/**
+ * call the RegistedRequiredGoogle to register google data for the user.
+ * @method post
+ * @function '/register/google' Server register google page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.post('/register/google', (req, res) => {
     const { uid } = req.body;
     googleService.RegistedRequiredGoogle(uid, res)
 })
 
-app.get('/register/iss', (req, res) => {
-    ISSStationService.RegistedRequiredIss(res, firebaseUid, data)
-})
-
+/**
+ * Set twitch user data to passport and setUserData to DB.
+ * @method get
+ * @function '/twitch/auth/' Server twitch authentification page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/twitch/auth/', function (req, res) {
     if(req.session && req.session.passport && req.session.passport.user) {
       twhtokens.accessToken = req.session.passport.user.accessToken
@@ -204,84 +378,157 @@ app.get('/twitch/auth/', function (req, res) {
     }
 });
 
+/**
+ * Get the user id and set in the class twhtokens.
+ * @method post
+ * @function '/twitch/post/' Server twitch post page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.post('/twitch/post', (req, res) => {
     twhtokens.uid = req.body.uid
     res.json({body: "OK"}).status(200);
 })
 
-
+/**
+ * call serializeUser from the passport.
+*/
 passport.serializeUser(function(user, done) {
     done(null, user);
 });
 
+/**
+ * call deserializeUser from the passport.
+*/
 passport.deserializeUser(function(user, done) {
     done(null, user);
 });
 
+/**
+ * Get the callback from twitch API and redirect to /twitch/auth/
+ * @method get
+ * @function '/auth/twitch/callback'' Server twitch callback page
+*/
 app.get('/auth/twitch/callback', passport.authenticate('twitch', { successRedirect: '/twitch/auth/', failureRedirect: '/twitch/auth' }));
 
+/**
+ * return twitch information to the front.
+ * @method get
+ * @function '/twitch/get' Server twitch get page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/twitch/get', (req, res) => {
     firebaseFunctions.getDataFromFireBaseServer('Twitch').then(serverData => {
         res.json(serverData).status(200);
     })
 })
 
-app.get('/twitch/doAct', (req, res) => {
-    TwitchService.actionTwitch("stream", firebaseUid, "krl_stream")
-    res.send("TWITCH ACT");
-})
-
+/**
+ * Draw a button, and redirect to oAuth twitter.
+ * @method get
+ * @function '/twitch/get' Server twitter page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/twitter', (req, res) => {
     res.render('index')
 })
 
+/**
+ * Twitter login page use loginTwitter
+ * @method get
+ * @function '/twitter/login' Server twitter login page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/twitter/login', (req, res) => {
     twitterService.loginTwitter(req, res)
 })
 
+/**
+ * Twitter sign page use signTwitter
+ * @method get
+ * @function '/twitter/sign' Server twitter sign page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/twitter/sign', (req, res) => {
     twitterService.signTwitter(req, res)
 })
 
+/**
+ * Twitter dash page use dashTwitter
+ * @method get
+ * @function '/twitter/dash' Server twitter dash page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/twitter/dash', (req, res) => {
     twitterService.dashTwitter(req, res)
 })
 
+/**
+ * Twitter postTweet page use sendTweet
+ * @method post
+ * @function '/twitter/postTweet' Server twitter postTweet page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.post("/twitter/postTweet", (req, res) => {
     twitterService.sendTweet(req, res)
 })
 
+/**
+ * Twitter like page use putlike
+ * @method post
+ * @function '/twitter/like' Server twitter like page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.post("/twitter/like", (req, res) => {
     twitterService.putlike(req, res)
 })
 
+/**
+ * Twitter retweet page use putRetweet
+ * @method post
+ * @function '/twitter/retweet' Server twitter retweet page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.post("/twitter/retweet", (req, res) => {
     twitterService.putRetweet(req, res)
 })
 
+/**
+ * listening on port
+ * @method listen
+*/
 app.listen(port, () => {
     console.log(`AREA app server listening on port ${port}!`)
 })
 
-app.get('/issStation', (req, res) => {
-    if (ISSStationService.checkISSPosition(res, firebaseUid, 1000.0) === true)
-        console.log('true');
-    else
-        console.log('false')
-    res.redirect('/')
-})
-
-app.get('/areas', (req, res) => {
-    areasFunctions.areaLoop(firebaseUid)
-    res.send("AREAS")
-})
-
+/**
+ * register areas page use areaRegister
+ * @method post
+ * @function '/register/areas' Server register areas page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.post('/register/areas', (req, res) => {
     const { action, reaction, uid, id } = req.body;
     areasFunctions.areaRegister(uid, action, reaction, id)
     res.send('Area registered')
 })
 
+/**
+ * remove areas page use removeDataFromFireBase
+ * @method post
+ * @function '/register/areas' Server remove areas page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.post('/remove/area', (req, res) => {
     const { uid, id } = req.body;
     console.log(uid, id)
@@ -290,11 +537,18 @@ app.post('/remove/area', (req, res) => {
         res.json({body: "Success"}).status(200);
     })
     .catch(error => {
-        console.log(error);
+        console.log(error)
         res.json(error).status(400);
     })
 })
 
+/**
+ * Send areas for 1 uid to the front.
+ * @method get
+ * @function '/getAreas/:uid' Server getAreas page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/getAreas/:uid', (req, res) => {
     const uid  = req.params.uid;
     firebaseFunctions.getDataFromFireBase(uid, 'AREAS')
@@ -307,6 +561,13 @@ app.get('/getAreas/:uid', (req, res) => {
         })
 })
 
+/**
+ * Send position for 1 uid to the front.
+ * @method get
+ * @function '/getPosition/:uid' Server getPosition page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/getPosition/:uid', (req, res) => {
     const uid  = req.params.uid;
     firebaseFunctions.getDataFromFireBase(uid, 'IssStation')
@@ -323,46 +584,94 @@ app.get('/getPosition/:uid', (req, res) => {
 /// SPOTIFY SERVICES
 // CURRENTLY LOGGED WITH Nathan Rousseau Account
 
-// Login
+/**
+ * Login Page
+ * @method get
+ * @function '/spotify' Server spotify page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/spotify', (req, res) => {
     firebaseFunctions.getDataFromFireBaseServer('Spotify').then(serverData => {
         res.json(serverData.clientID).status(200);
     })
 })
 
-// Redirect Uri
+/**
+ * Spotify callback page use callBack function.
+ * @method get
+ * @function '/spotify/callback' Server spotify callback page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/spotify/callback', (req, res) => {
     firebaseFunctions.getDataFromFireBaseServer('Spotify').then(serverData => {
         spotifyService.callBack(req, res, serverData)
     })
 })
 
-/// Check if the logged user follow Elvis presley
+/**
+ * Check if the logged user follow Elvis presley
+ * @method get
+ * @function '/spotify/isfollowing' Server spotify isfollowing page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/spotify/isfollowing', (req, res) => {
     spotifyService.isfollowing(req, res, ['43ZHCT0cAZBISjO8DG9PnE'])
 })
 
-/// Check if the logged user is currently listening some music
+/**
+ * Check if the logged user is currently listening some music
+ * @method get
+ * @function '/spotify/islistening' Server spotify islistening page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/spotify/islistening', (req, res) => {
     spotifyService.isListening(req, res)
 })
 
-/// Check if the user is listening to a specific music (by his name)
+/**
+ * Check if the user is listening to a specific music (by his name)
+ * @method get
+ * @function '/spotify/islisteningto' Server spotify islisteningto page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/spotify/islisteningto', (req, res) => {
     spotifyService.isListeningTo(req, res, 'Butterflies and Hurricanes')
 })
 
-/// Pause the current music
+/**
+ * Pause the current music.
+ * @method get
+ * @function '/spotify/pause' Server spotify pause page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/spotify/pause', (req, res) => {
     spotifyService.pauseMusic(req, res)
 })
 
-/// Shuffle the playlist or not of the user
+/**
+ * Shuffle the playlist or not of the user.
+ * @method get
+ * @function '/spotify/wantshuffle' Server spotify wantshuffle page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/spotify/wantshuffle', (req, res) => {
     spotifyService.setShuffle(req, res, false)
 })
 
-/// Create a new playlist on the logged user
+/**
+ * Create a new playlist on the logged user
+ * @method get
+ * @function '/spotify/createplaylist' Server spotify createplaylist page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
 app.get('/spotify/createplaylist', (req, res) => {
     spotifyService.createPlaylist(req, res, 'AreaPlaylist')
 })
