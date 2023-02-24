@@ -111,6 +111,35 @@ async function isListening(uid) {
 
 }
 
+/**
+ * Checks if the logged user is listening to a specific music searched by the music name
+ * @function isListeningTo
+ * @param {*} uid the uid of the spotify user
+ * @param {*} musicName the name of the music we're looking for
+ * @returns True if the user is listening to musicName, false otherwise
+ */
+async function isListeningTo(uid, musicName) {
+    /// Changer les tokens de spotify API en fonction de l'uid
+    /// BONUS : Refresh le token s'il est plus valide (durée 1h)
+    spotifyApi.getMyCurrentPlaybackState().then(function(data) {
+        if (data.body && data.body.is_playing) {
+            var currMusic = data.body.item.name
+            if (currMusic === musicName)
+                return true;
+            else {
+                console.log("User is not listening to " + musicName + ", User is listening to " + currMusic)
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }, function(err) {
+        console.log('Something went wrong!', err);
+        return false;
+    });
+
+}
+
 module.exports = {
     /**
      * Callback linked to redirect URI for Spotify
@@ -188,7 +217,7 @@ module.exports = {
                 console.log(result)
                 resolve(result)
             } else if (func === "listento") {
-                const result = true
+                const result = isListeningTo(uid, param)
                 console.log(result)
                 resolve(result)
             } else {
@@ -215,30 +244,6 @@ module.exports = {
                 reject(new Error(`Invalid function name: ${func}`));
             }
         })
-    },
-
-    /**
-     * Checks if the logged user is listening to a specific music searched by the music name
-     * @function isListeningTo
-     * @param {*} req the request
-     * @param {*} res the request's result
-     * @param {*} musicName the name of the music we're looking for
-     */
-    isListeningTo : function (req, res, musicName) {
-        spotifyApi.getMyCurrentPlaybackState().then(function(data) {
-            if (data.body && data.body.is_playing) {
-                var currMusic = data.body.item.name
-                if (currMusic === musicName)
-                    res.send("User is listening to : " + musicName)
-                else
-                    res.send("User is not listening to " + musicName + ", User is listening to " + currMusic)
-            } else {
-                res.send("User is not playing anything, or doing so in private.");
-            }
-        }, function(err) {
-            console.log('Something went wrong!', err);
-        });
-
     },
 
     /**
