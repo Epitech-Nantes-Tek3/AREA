@@ -154,6 +154,22 @@ class TwitchToken {
 }
 
 /**
+ * @class class qui contient l'access token & le refresh token, ainsi que l'uid de l'utilisateur pour l'api spotify.
+ */
+class SpotifyToken {
+    constructor(accessToken, refreshToken, uid) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.uid = uid;
+    }
+}
+/**
+* @var SpotifyTokens
+* @requires SpotifyToken()
+*/
+var SpotifyTokens = new SpotifyToken("any", "any", 'none')
+
+/**
  * @var twhtokens
  * @requires TwitchToken()
 */
@@ -596,6 +612,18 @@ app.get('/spotify', (req, res) => {
 })
 
 /**
+ * Get the user id and set in the class SpotifyTokens.
+ * @method post
+ * @function '/twitch/post/' Server Spotify post page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
+app.post('/spotify/post', (req, res) => {
+    SpotifyTokens.uid = req.body.uid
+    res.json({body: "OK"}).status(200);
+})
+
+/**
  * Spotify callback page use callBack function.
  * @method get
  * @function '/spotify/callback' Server spotify callback page
@@ -604,6 +632,6 @@ app.get('/spotify', (req, res) => {
 */
 app.get('/spotify/callback', (req, res) => {
     firebaseFunctions.getDataFromFireBaseServer('Spotify').then(serverData => {
-        spotifyService.callBack(req, res, serverData)
+        spotifyService.callBack(req, res, serverData, SpotifyTokens)
     })
 })

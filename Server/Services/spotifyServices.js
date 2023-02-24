@@ -177,6 +177,19 @@ async function setShuffle(uid) {
 }
 
 /**
+     * Sets the user data in the Firebase database.
+     * @function setUserDataSpotify
+     * @param {Object} SpotifyTokens - An object containing the Spotify API access and refresh tokens, as well as the user ID.
+     */
+function setUserDataSpotify(SpotifyTokens) {
+    let tokens = {
+        accessToken : SpotifyTokens.accessToken,
+        refreshToken : SpotifyTokens.refreshToken,
+    }
+    firebaseFunctions.setDataInDb(`USERS/${SpotifyTokens.uid}/SpotifyService`, tokens)
+}
+
+/**
  * Create a new playlist for the logged user
  * @function createPlaylist
  * @param {*} uid the uid of the spotify user
@@ -207,7 +220,7 @@ module.exports = {
      * @param {*} res the request's result
      * @param {*} serverData client credentials of the developper account
      */
-    callBack : function (req, res, serverData) {
+    callBack : function (req, res, serverData, SpotifyTokens) {
         var code = req.query.code || null;
         var state = req.query.state || null;
 
@@ -235,7 +248,9 @@ module.exports = {
 
             var access_token = body.access_token,
                 refresh_token = body.refresh_token;
-
+            SpotifyTokens.accessToken = access_token
+            SpotifyTokens.refreshToken = refresh_token
+            setUserDataSpotify(SpotifyTokens)
             spotifyApi.setAccessToken(access_token)
             spotifyApi.setRefreshToken(refresh_token)
 
