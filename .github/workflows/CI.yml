@@ -49,10 +49,10 @@ jobs:
         run: echo "${{ secrets.ENV_server }}" >> ./Server/firebaseConfig.js
       - name: Write env file for application
         if: matrix.type == 'client_mobile'
-        run: echo '${{ secrets.ENV_client_mobile }}' > ./Application/env.ts
+        run: echo '${{ secrets.ENV_client_mobile }}' >> ./Application/env.ts
       - name: Write env file for web
         if: matrix.type == 'client_web'
-        run: echo '${{ secrets.ENV_client_web }}' > ./Web/src/firebaseConfig.js
+        run: echo '${{ secrets.ENV_client_web }}' >> ./Web/src/firebaseConfig.js
       - name: Run docker-compose up --build -d -t 10 ${{ matrix.type }}
         run: docker-compose up --build -d -t 10 ${{ matrix.type }}
 
