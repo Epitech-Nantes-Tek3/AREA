@@ -184,7 +184,7 @@ passport.use('twitch', new OAuth2Strategy({
 */
 app.use(cors());
 /**
- * initialisation of express.urlencoded() in app. 
+ * initialisation of express.urlencoded() in app.
 */
 app.use(express.urlencoded())
 
@@ -581,7 +581,6 @@ app.get('/getPosition/:uid', (req, res) => {
 })
 
 /// SPOTIFY SERVICES
-// CURRENTLY LOGGED WITH Nathan Rousseau Account
 
 /**
  * Login Page
@@ -607,70 +606,4 @@ app.get('/spotify/callback', (req, res) => {
     firebaseFunctions.getDataFromFireBaseServer('Spotify').then(serverData => {
         spotifyService.callBack(req, res, serverData)
     })
-})
-
-/**
- * Check if the logged user follow Elvis presley
- * @method get
- * @function '/spotify/isfollowing' Server spotify isfollowing page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.get('/spotify/isfollowing', (req, res) => {
-    spotifyService.isfollowing(req, res, ['43ZHCT0cAZBISjO8DG9PnE'])
-})
-
-/**
- * Check if the logged user is currently listening some music
- * @method get
- * @function '/spotify/islistening' Server spotify islistening page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.get('/spotify/islistening', (req, res) => {
-    spotifyService.isListening(req, res)
-})
-
-/**
- * Check if the user is listening to a specific music (by his name)
- * @method get
- * @function '/spotify/islisteningto' Server spotify islisteningto page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.get('/spotify/islisteningto', (req, res) => {
-    spotifyService.isListeningTo(req, res, 'Butterflies and Hurricanes')
-})
-
-/**
- * Pause the current music.
- * @method get
- * @function '/spotify/pause' Server spotify pause page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.get('/spotify/pause', (req, res) => {
-    spotifyService.pauseMusic(req, res)
-})
-
-/**
- * Shuffle the playlist or not of the user.
- * @method get
- * @function '/spotify/wantshuffle' Server spotify wantshuffle page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.get('/spotify/wantshuffle', (req, res) => {
-    spotifyService.setShuffle(req, res, false)
-})
-
-/**
- * Create a new playlist on the logged user
- * @method get
- * @function '/spotify/createplaylist' Server spotify createplaylist page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.get('/spotify/createplaylist', (req, res) => {
-    spotifyService.createPlaylist(req, res, 'AreaPlaylist')
 })
