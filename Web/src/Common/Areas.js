@@ -14,23 +14,23 @@ export let ACTIONS = [
         subject: undefined
     },
     {
-        serviceName : "spotify action",
+        serviceName : "spotify",
         trigger: true,
         description: "Si l'utilisateur suit Jul",
         text: "Jul",
         subject : "follows"
     },
     {
-        serviceName : "spotify action",
+        serviceName : "spotify",
         trigger: true,
         description: "Si l'utilisateur écoute de la musique",
         text: undefined,
         subject : "listen"
     },
     {
-        serviceName : "spotify action",
+        serviceName : "spotify",
         trigger: true,
-        description: "Si l'utilisateur écoute Tchikita",
+        description: "Si l'utilisateur écoute Tchikita de Jul",
         text: "Tchikita",
         subject : "listento"
     },
@@ -129,21 +129,21 @@ export let REACTIONS = [
         subject: "Area Info"
     },
     {
-        serviceName: "spotify reaction",
+        serviceName: "spotify",
         trigger: undefined,
         description: 'Pause la musique en cours',
         text: undefined,
         subject: "pause",
     },
     {
-        serviceName: "spotify reaction",
+        serviceName: "spotify",
         trigger: undefined,
         description: 'Met en aléatoire la file d\'attente de l\'utilisateur',
         text: undefined,
         subject: "shuffle",
     },
     {
-        serviceName: "spotify reaction",
+        serviceName: "spotify",
         trigger: undefined,
         description: 'Crée une playlist',
         text: 'Area',

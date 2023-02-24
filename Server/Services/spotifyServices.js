@@ -263,15 +263,14 @@ module.exports = {
             return serverData;
         })
     },
-
     /**
-     * @function actionSpotify
+     * @function SpotifyLoop
      * @param {*} uid uid of the user
      * @param {*} func function chosen by the user
-     * @param {*} param it can be artists uid in an array, or a music name
-     * @returns return the boolean result of the chosen function
+     * @param {*} param playlist name and description on an array or empty string
+     * @returns the boolean result of the chosen function
      */
-    actionSpotify : async function(uid, func, param) {
+    SpotifyLoop : async function(uid, func, param) {
         return new Promise((resolve, reject) => {
             if (func === "follows") {
                 const result = isfollowing(uid, param)
@@ -285,22 +284,8 @@ module.exports = {
                 const result = isListeningTo(uid, param)
                 console.log(result)
                 resolve(result)
-            } else {
-                reject(new Error(`Invalid function name: ${func}`));
             }
-        })
-    },
-
-    /**
-     * @function reactSpotify
-     * @param {*} uid uid of the user
-     * @param {*} func function chosen by the user
-     * @param {*} param playlist name and description on an array or empty string
-     * @returns the boolean result of the chosen function
-     */
-    reactSpotify : async function(uid, func, param) {
-        return new Promise((resolve, reject) => {
-            if (func === "createplaylist") {
+            else if (func === "createplaylist") {
                 const result = createPlaylist(uid, param)
                 console.log(result)
                 resolve(result)

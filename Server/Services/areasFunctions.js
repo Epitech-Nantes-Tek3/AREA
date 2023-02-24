@@ -57,8 +57,7 @@ let areas = [
     { name: "google", function:  googleService.send_mail},
     { name: "iss", function:  ISSService.checkISSPosition },
     { name: "twitch", function:  TwitchService.actionTwitch},
-    { name: "spotify action", function:  spotifyServices.actionSpotify},
-    { name: "spotify reaction", function:  spotifyServices.reactSpotify},
+    { name: "spotify", function:  spotifyServices.SpotifyLoop},
 ]
 
 module.exports = {
