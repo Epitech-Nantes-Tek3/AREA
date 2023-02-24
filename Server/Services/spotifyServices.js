@@ -176,6 +176,27 @@ async function setShuffle(uid) {
    });
 }
 
+/**
+ * Create a new playlist for the logged user
+ * @function createPlaylist
+ * @param {*} uid the uid of the spotify user
+ * @param {*} playlistName__playlistDesc the name and the description of the playlist
+ * @returns true if the playlist has been created false otherwise
+ */
+async function createPlaylist (uid, playlistName__playlistDesc) {
+    /// Changer les tokens de spotify API en fonction de l'uid
+    /// BONUS : Refresh le token s'il est plus valide (durée 1h)
+    const paramArray = playlistName__playlistDesc.split("__")
+    const playlistName = paramArray[0];
+    const playlistDesc = paramArray[1];
+    spotifyApi.createPlaylist(playlistName, { 'description': playlistDesc, 'public': true }).then(function(data) {
+        console.log('Created playlist ', playlistName);
+        return true;
+    }, function(err) {
+        console.log('Something went wrong!', err);
+        return false;
+    });
+}
 
 module.exports = {
     /**
@@ -273,7 +294,7 @@ module.exports = {
     reactSpotify : async function(uid, func, param) {
         return new Promise((resolve, reject) => {
             if (func === "createplaylist") {
-                const result = true
+                const result = createPlaylist(uid, param)
                 console.log(result)
                 resolve(result)
             } else if (func === "shuffle") {
@@ -288,22 +309,5 @@ module.exports = {
                 reject(new Error(`Invalid function name: ${func}`));
             }
         })
-    },
-
-    /**
-     * Create a new playlist for the logged user
-     * @function createPlaylist
-     * @param {*} req the request
-     * @param {*} res the request's result
-     * @param {*} playlistName the name of the playlist
-     * @param {*} isPublic define whereas the playlist is public or not
-     * @param {*} playlistDesc the description of the playlist
-     */
-    createPlaylist : function(req, res, playlistName, isPublic=true, playlistDesc='') {
-        spotifyApi.createPlaylist(playlistName, { 'description': playlistDesc, 'public': isPublic }).then(function(data) {
-            console.log('Created playlist ', playlistName);
-        }, function(err) {
-            console.log('Something went wrong!', err);
-        });
     }
 }
