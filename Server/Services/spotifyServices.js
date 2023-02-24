@@ -61,6 +61,7 @@ var request = require('request');
  * @requires querystring
  */
 const querystring  = require('querystring');
+const { resolve } = require('path');
 
 module.exports = {
     /**
@@ -125,6 +126,46 @@ module.exports = {
     registerUser : function (req, res) {
         firebaseFunctions.getDataFromFireBaseServer('Spotify').then(serverData => {
             return serverData;
+        })
+    },
+
+    actionSpotify : async function(uid, func, param) {
+        return new Promise((resolve, reject) => {
+            if (func === "follow") {
+                const result = true
+                console.log(result)
+                resolve(result)
+            } else if (func === "listen") {
+                const result = true
+                console.log(result)
+                resolve(result)
+            } else if (func === "listento") {
+                const result = true
+                console.log(result)
+                resolve(result)
+            } else {
+                reject(new Error(`Invalid function name: ${func}`));
+            }
+        })
+    },
+
+    reactSpotify : async function(uid, func, param) {
+        return new Promise((resolve, reject) => {
+            if (func === "createplaylist") {
+                const result = true
+                console.log(result)
+                resolve(result)
+            } else if (func === "shuffle") {
+                const result = true
+                console.log(result)
+                resolve(result)
+            } else if (func === "pause") {
+                const result = true
+                console.log(result)
+                resolve(result)
+            } else {
+                reject(new Error(`Invalid function name: ${func}`));
+            }
         })
     },
 
