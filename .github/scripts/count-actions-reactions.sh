@@ -15,6 +15,7 @@ function a() {
     done
     echo "| | | |"
     echo "| Total Action| $nbActions | $nbReactions |"
+    echo ""
     echo "Total actions-reactions: $(($nbActions + $nbReactions))"
     if (( $nbActions + $nbReactions < 15 )); then
         echo "Not enought actions-reactions: $(($nbActions + $nbReactions)) < 15"
