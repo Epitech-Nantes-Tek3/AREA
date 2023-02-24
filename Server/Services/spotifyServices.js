@@ -68,6 +68,7 @@ const { resolve } = require('path');
  * @function isfollowing
  * @param {*} uid the uid of the spotify user
  * @param {*} artistUids the spotify uid of the searched artists (is given as an array for multiples follows)
+ * @returns True if the user follows the given artists, False Otherwise
  */
 async function isfollowing(uid, artistUids) {
     /// Changer les tokens de spotify API en fonction de l'uid
@@ -84,6 +85,30 @@ async function isfollowing(uid, artistUids) {
         console.log('Something went wrong!', err);
         return false
     });
+}
+
+/**
+ * Checks if the logged user is currently listening to some music
+ * @function isListening
+ * @param {*} uid the uid of the spotify user
+ * @returns True if the user is listening music, False otherwise
+ */
+async function isListening(uid) {
+    /// Changer les tokens de spotify API en fonction de l'uid
+    /// BONUS : Refresh le token s'il est plus valide (durée 1h)
+    spotifyApi.getMyCurrentPlaybackState().then(function(data) {
+        if (data.body && data.body.is_playing) {
+            console.log("User is currently playing something!");
+            return true;
+        } else {
+            console.log("User is not playing anything, or doing so in private.");
+            return false;
+        }
+    }, function(err) {
+        console.log('Something went wrong!', err);
+        return false;
+    });
+
 }
 
 module.exports = {
@@ -159,7 +184,7 @@ module.exports = {
                 console.log(result)
                 resolve(result)
             } else if (func === "listen") {
-                const result = true
+                const result = isListening(uid)
                 console.log(result)
                 resolve(result)
             } else if (func === "listento") {
@@ -192,24 +217,6 @@ module.exports = {
         })
     },
 
-    /**
-     * Checks if the logged user is currently listening to some music
-     * @function isListening
-     * @param {*} req the request
-     * @param {*} res the request's result
-     */
-    isListening : function (req, res) {
-        spotifyApi.getMyCurrentPlaybackState().then(function(data) {
-            if (data.body && data.body.is_playing) {
-                res.send("User is currently playing something!");
-            } else {
-                res.send("User is not playing anything, or doing so in private.");
-            }
-        }, function(err) {
-            console.log('Something went wrong!', err);
-        });
-
-    },
     /**
      * Checks if the logged user is listening to a specific music searched by the music name
      * @function isListeningTo
