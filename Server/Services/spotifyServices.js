@@ -206,6 +206,13 @@ module.exports = {
         })
     },
 
+    /**
+     * @function actionSpotify
+     * @param {*} uid uid of the user
+     * @param {*} func function chosen by the user
+     * @param {*} param it can be artists uid in an array, or a music name
+     * @returns return the boolean result of the chosen function
+     */
     actionSpotify : async function(uid, func, param) {
         return new Promise((resolve, reject) => {
             if (func === "follows") {
