@@ -269,8 +269,8 @@ export default function HomePage(props) {
                 <div style={style.areaBlock}>
                     <p style={style.areaBlock.title}>{title}</p>
                     <div style={style.areaBlock.content}>
-                        <img src={logo[props.area.action.serviceName]} alt={"Logo de l'action"} style={{width: "30px", height: "30px"}} />
-                        <img src={logo[props.area.reaction.serviceName]} alt={"Logo de la réaction"} style={{width: "30px", height: "30px"}} />
+                        <img src={logo[props.area.action.serviceName]} alt={"Logo de l'action"} style={{ width: "30px", height: "30px" }} />
+                        <img src={logo[props.area.reaction.serviceName]} alt={"Logo de la réaction"} style={{ width: "30px", height: "30px" }} />
                     </div>
                 </div>
             } modal>
@@ -358,10 +358,15 @@ export default function HomePage(props) {
         }
 
         return (
-            <div style={style.header}>
-                <img src={LogoImage} style={style.header.logo} alt="logo" />
-                <h1 style={style.header.title}>Re-Bonjour, {(mail) ? mail : "MAIL UNDEFINED"} !</h1>
-                <img src={SettingsImage} style={style.header.settings} onClick={goSettings} alt="settings" />
+            <div style={{position: "relative"}}>
+                <div style={style.header}>
+                    <img src={LogoImage} style={style.header.logo} alt="logo" />
+                    <h1 style={style.header.title}>Re-Bonjour, {(mail) ? mail : "MAIL UNDEFINED"} !</h1>
+                    <img src={SettingsImage} style={style.header.settings} onClick={goSettings} alt="settings" />
+                </div>
+                <div style={{position: "relative", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                    <button><a href='client.apk'>Télécharger client.apk</a></button>
+                </div>
             </div>
         )
     }
