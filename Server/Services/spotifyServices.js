@@ -73,7 +73,11 @@ const { resolve } = require('path');
 async function isfollowing(uid, artistUids) {
     /// Changer les tokens de spotify API en fonction de l'uid
     /// BONUS : Refresh le token s'il est plus valide (durée 1h)
-    spotifyApi.isFollowingArtists(artistUids).then(function(data) {
+    firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
+    .then(data => {
+        SpotifyWebApi.setAccessToken(data.accessToken)
+        SpotifyWebApi.setRefreshToken(data.refreshToken)
+        spotifyApi.isFollowingArtists(artistUids).then(function(data) {
         let isFollowing = data.body;
 
         for (let index = 0; index < artistUidx.length; index++) {
@@ -81,10 +85,14 @@ async function isfollowing(uid, artistUids) {
         }
 
         return isFollowing.find(false) === undefined
-    }, function(err) {
-        console.log('Something went wrong!', err);
-        return false
-    });
+        }, function(err) {
+            console.log('Something went wrong!', err);
+            return false
+        });
+    })
+    .catch(error =>{
+        console.error(error)
+    })
 }
 
 /**
@@ -96,18 +104,26 @@ async function isfollowing(uid, artistUids) {
 async function isListening(uid) {
     /// Changer les tokens de spotify API en fonction de l'uid
     /// BONUS : Refresh le token s'il est plus valide (durée 1h)
-    spotifyApi.getMyCurrentPlaybackState().then(function(data) {
-        if (data.body && data.body.is_playing) {
-            console.log("User is currently playing something!");
-            return true;
-        } else {
-            console.log("User is not playing anything, or doing so in private.");
+    firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
+    .then(data => {
+        SpotifyWebApi.setAccessToken(data.accessToken)
+        SpotifyWebApi.setRefreshToken(data.refreshToken)
+        spotifyApi.getMyCurrentPlaybackState().then(function(data) {
+            if (data.body && data.body.is_playing) {
+                console.log("User is currently playing something!");
+                return true;
+            } else {
+                console.log("User is not playing anything, or doing so in private.");
+                return false;
+            }
+        }, function(err) {
+            console.log('Something went wrong!', err);
             return false;
-        }
-    }, function(err) {
-        console.log('Something went wrong!', err);
-        return false;
-    });
+        });
+    })
+    .catch(error =>{
+        console.error(error)
+    })
 
 }
 
@@ -121,22 +137,30 @@ async function isListening(uid) {
 async function isListeningTo(uid, musicName) {
     /// Changer les tokens de spotify API en fonction de l'uid
     /// BONUS : Refresh le token s'il est plus valide (durée 1h)
-    spotifyApi.getMyCurrentPlaybackState().then(function(data) {
-        if (data.body && data.body.is_playing) {
-            var currMusic = data.body.item.name
-            if (currMusic === musicName)
-                return true;
-            else {
-                console.log("User is not listening to " + musicName + ", User is listening to " + currMusic)
+    firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
+    .then(data => {
+        SpotifyWebApi.setAccessToken(data.accessToken)
+        SpotifyWebApi.setRefreshToken(data.refreshToken)
+        spotifyApi.getMyCurrentPlaybackState().then(function(data) {
+            if (data.body && data.body.is_playing) {
+                var currMusic = data.body.item.name
+                if (currMusic === musicName)
+                    return true;
+                else {
+                    console.log("User is not listening to " + musicName + ", User is listening to " + currMusic)
+                    return false;
+                }
+            } else {
                 return false;
             }
-        } else {
+        }, function(err) {
+            console.log('Something went wrong!', err);
             return false;
-        }
-    }, function(err) {
-        console.log('Something went wrong!', err);
-        return false;
-    });
+        });
+    })
+    .catch(error =>{
+        console.error(error)
+    })
 }
 
 /**
@@ -148,13 +172,21 @@ async function isListeningTo(uid, musicName) {
 async function pauseMusic(uid) {
     /// Changer les tokens de spotify API en fonction de l'uid
     /// BONUS : Refresh le token s'il est plus valide (durée 1h)
-    spotifyApi.pause().then(function() {
-        console.log("Music Paused !")
-        return true;
-    }, function(err) {
-        console.log('Something went wrong!', err)
-        return false;
-    });
+    firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
+    .then(data => {
+        SpotifyWebApi.setAccessToken(data.accessToken)
+        SpotifyWebApi.setRefreshToken(data.refreshToken)
+        spotifyApi.pause().then(function() {
+            console.log("Music Paused !")
+            return true;
+        }, function(err) {
+            console.log('Something went wrong!', err)
+            return false;
+        });
+    })
+    .catch(error =>{
+        console.error(error)
+    })
 }
 
 /**
@@ -167,13 +199,21 @@ async function pauseMusic(uid) {
 async function setShuffle(uid) {
     /// Changer les tokens de spotify API en fonction de l'uid
     /// BONUS : Refresh le token s'il est plus valide (durée 1h)
-   spotifyApi.setShuffle(true).then(function() {
-     console.log('Succes')
-     return true;
-   }, function  (err) {
-     console.log('Something went wrong!', err);
-     return false;
-   });
+    firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
+    .then(data => {
+        SpotifyWebApi.setAccessToken(data.accessToken)
+        SpotifyWebApi.setRefreshToken(data.refreshToken)
+        spotifyApi.setShuffle(true).then(function() {
+            console.log('Succes')
+            return true;
+        }, function  (err) {
+            console.log('Something went wrong!', err);
+            return false;
+        });
+    })
+    .catch(error =>{
+        console.error(error)
+    })
 }
 
 /**
@@ -199,16 +239,24 @@ function setUserDataSpotify(SpotifyTokens) {
 async function createPlaylist (uid, playlistName__playlistDesc) {
     /// Changer les tokens de spotify API en fonction de l'uid
     /// BONUS : Refresh le token s'il est plus valide (durée 1h)
-    const paramArray = playlistName__playlistDesc.split("__")
-    const playlistName = paramArray[0];
-    const playlistDesc = paramArray[1];
-    spotifyApi.createPlaylist(playlistName, { 'description': playlistDesc, 'public': true }).then(function(data) {
-        console.log('Created playlist ', playlistName);
-        return true;
-    }, function(err) {
-        console.log('Something went wrong!', err);
-        return false;
-    });
+    firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
+    .then(data => {
+        SpotifyWebApi.setAccessToken(data.accessToken)
+        SpotifyWebApi.setRefreshToken(data.refreshToken)
+        const paramArray = playlistName__playlistDesc.split("__")
+        const playlistName = paramArray[0];
+        const playlistDesc = paramArray[1];
+        spotifyApi.createPlaylist(playlistName, { 'description': playlistDesc, 'public': true }).then(function(data) {
+            console.log('Created playlist ', playlistName);
+            return true;
+        }, function(err) {
+            console.log('Something went wrong!', err);
+            return false;
+        });
+    })
+    .catch(error =>{
+        console.error(error)
+    })
 }
 
 module.exports = {
