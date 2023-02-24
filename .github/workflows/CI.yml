@@ -20,6 +20,19 @@ jobs:
       - name: Check docker-file consistancy
         run: .github/scripts/docker-compose-consistancy.sh >> $GITHUB_STEP_SUMMARY
 
+  count-service-number:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Count service
+        run: |
+          echo "Number of services: $($(ls -1 ./Server/Services/description | wc -l)-1)" >> $GITHUB_STEP_SUMMARY
+      - name: Count action-reaction
+        run: |
+          .github/scripts/count-action-reaction.sh >> $GITHUB_STEP_SUMMARY
+
   run-docker-compose:
     needs: ["docker-compose-validity"]
     runs-on: ubuntu-22.04
