@@ -326,6 +326,7 @@ export default function HomePage(props) {
      */
     function Header() {
         const mail = props.userInformation.mail;
+        const [buttonHoverState, setButtonHoverState] = useState(false);
         const style = {
             header: {
                 position: "relative",
@@ -354,9 +355,26 @@ export default function HomePage(props) {
                     borderRadius: "50%",
                     cursor: "pointer",
                 },
+                button: {
+                    all: "unset",
+                    position: "relative",
+                    border: "1px solid black",
+                    padding: "10px",
+                    borderRadius: "10px",
+                    cursor: "pointer",
+                    backgroundColor: buttonHoverState ? "lightgrey" : "transparent",
+                }
             },
         }
 
+        function mouseEnterButton() {
+            setButtonHoverState(true);
+            console.log("mouse enter");
+        }
+        function mouseLeaveButton() {
+            setButtonHoverState(false);
+            console.log("mouse leave");
+        }
         return (
             <div style={{position: "relative"}}>
                 <div style={style.header}>
@@ -365,7 +383,7 @@ export default function HomePage(props) {
                     <img src={SettingsImage} style={style.header.settings} onClick={goSettings} alt="settings" />
                 </div>
                 <div style={{position: "relative", display: "flex", alignItems: "center", justifyContent: "center"}}>
-                    <button><a href='client.apk'>Télécharger client.apk</a></button>
+                    <a style={style.header.button} onMouseEnter={mouseEnterButton} onMouseLeave={mouseLeaveButton} href='client.apk'>Télécharger client.apk</a>
                 </div>
             </div>
         )
