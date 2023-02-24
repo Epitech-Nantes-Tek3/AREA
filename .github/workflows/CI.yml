@@ -36,31 +36,31 @@ jobs:
   run-docker-compose:
     needs: ["docker-compose-validity"]
     runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Run docker-compose up --build -d -t 10
-        run: docker-compose up --build -d -t 10
-    # strategy:
-    #   fail-fast: true
-    #   matrix:
-    #     type: ["server", "client_mobile", "client_web"]
     # steps:
     #   - uses: actions/checkout@v3
     #     with:
     #       fetch-depth: 0
-    #   - name: Write env file for server
-    #     if: matrix.type == 'server'
-    #     run: echo "${{ secrets.ENV_server }}" >> ./Server/firebaseConfig.js
-    #   - name: Write env file for application
-    #     if: matrix.type == 'client_mobile'
-    #     run: echo '${{ secrets.ENV_client_mobile }}' >> ./Application/env.ts
-    #   - name: Write env file for web
-    #     if: matrix.type == 'client_web'
-    #     run: echo '${{ secrets.ENV_client_web }}' >> ./Web/src/firebaseConfig.js
-    #   - name: Run docker-compose up --build -d -t 10 ${{ matrix.type }}
-    #     run: docker-compose up --build -d -t 10 ${{ matrix.type }}
+    #   - name: Run docker-compose up --build -d -t 10
+    #     run: docker-compose up --build -d -t 10
+    strategy:
+      fail-fast: true
+      matrix:
+        type: ["server", "client_mobile", "client_web"]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Write env file for server
+        if: matrix.type == 'server'
+        run: echo "${{ secrets.ENV_server }}" >> ./Server/firebaseConfig.js
+      - name: Write env file for application
+        if: matrix.type == 'client_mobile'
+        run: echo '${{ secrets.ENV_client_mobile }}' >> ./Application/env.ts
+      - name: Write env file for web
+        if: matrix.type == 'client_web'
+        run: echo '${{ secrets.ENV_client_web }}' >> ./Web/src/firebaseConfig.js
+      - name: Run docker-compose up --build -d -t 10 ${{ matrix.type }}
+        run: docker-compose up --build -d -t 10 --force-recreate ${{ matrix.type }}
 
   mirroring:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
