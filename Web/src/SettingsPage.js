@@ -314,6 +314,7 @@ export default function SettingsPage(props) {
     async function getStravaAccessToken(stravaCode) {
         var client_id = '';
         var client_secret = '';
+        console.log(props);
         await fetch('http://localhost:8080/strava', {
             method: 'GET',
             headers: {
@@ -336,7 +337,7 @@ export default function SettingsPage(props) {
                     response.json().then(async (data) => {
                         console.log(data.access_token);
                         await fetch('http://localhost:8080/strava/add-token', {
-                            method: 'GET',
+                            method: 'POST',
                             headers: {
                                 'Accept': 'application/json',
                                 'Content-Type': 'application/json',
@@ -465,7 +466,7 @@ export default function SettingsPage(props) {
                 <Service image={SpotifyImage} service="Spotify" onPress={spotifyConnexion} />
                 <Service image={TwitterImage} service="Twitter" onPress={twitterConnexion}/>
                 <Service image={TwitchImage} service="Twitch" onPress={twitchConnexion} />
-                <Service image={StravaImage} service="Strava" onPress={stravaConnexion}/>
+                <Service image={StravaImage} service="Strava" onPress={stravaConnection}/>
             </div>
         )
     }

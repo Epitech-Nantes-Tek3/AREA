@@ -617,17 +617,25 @@ app.get('/strava', async (req, res) => {
     res.json(stravaClientData);
 });
 
-app.get('/strava/add-token', async (req, res) => {
-    console.log(req.body.data.access_token);
-    stravaClient = new stravaApi.client(req.body.data.access_token);
-    var athlete = await stravaClient.athlete.get();
-    console.log(athlete.id);
-    data = JSON.stringify({
-        access_token: req.body.data,
-        athleteId: athlete.id
-    });
-    await firebaseFunctions.setDataInDb('USERS/' + req.body.userId + 'StravaService', data);
-    res.json('ok');
+app.post('/strava/add-token', async (req, res) => {
+    console.log(req.body.data);
+    console.log(req.body.userId);
+    try {
+        stravaClient = new stravaApi.client(req.body.data);
+        var athlete = await stravaClient.athlete.get();
+        console.log(athlete.id);
+        data = {
+            StravaService: {
+                access_token: req.body.data,
+                athleteId: athlete.id
+            }
+        };
+        if (req.body.userId !== undefined && req.body.userId !== '')
+        await firebaseFunctions.setDataInDb('USERS/' + req.body.userId, data);
+        res.json('SUCCESS You can now go back to the app');
+    } catch (error) {
+        res.json('error');
+    }
 });
 
 app.get('/auth/callback', async (req, res) => {
@@ -647,12 +655,56 @@ app.get('/auth/callback', async (req, res) => {
         });
     });
     res.send('ok');
-    //res.redirect('http://www.strava.com/oauth/authorize?client_id=' + stravaClientData.client_id + '&response_type=code&redirect_uri=http://localhost:8080/auth/callback2/&approval_prompt=force&scope=read,activity:read_all');
 });
 
-app.get('/strava/activities', async (req, res) => {
-    const activities = await stravaClient.athlete.listActivities({});
+app.get('/strava/activities/:uid', async (req, res) => {
+    const userCred = await firebaseFunctions.getDataFromFireBase(req.query.uid, 'StravaService');
+    if (stravaClient === '') {
+        stravaClient = new stravaApi.client(userCred.access_token);
+    }
+    const activities = await stravaClient.athlete.listActivities({id: userCred.athleteId});
     res.json(activities).status(200);
+});
+
+app.get('/strava/club/:uid', async (req, res) => {
+    //const userCred = await firebaseFunctions.getDataFromFireBase(req.query.uid, 'StravaService');
+    const userCred = await firebaseFunctions.getDataFromFireBase('', 'StravaService');
+    if (stravaClient === '') {
+        stravaClient = new stravaApi.client(userCred.access_token);
+    }
+    const clubs = await stravaClient.athlete.listClubs({id: userCred.athleteId});
+    const announcements = await stravaClient.clubs.listActivities({id: clubs[0].id});
+    res.json(announcements).status(200);
+});
+
+app.get('/strava/kudo/:uid', async (req, res) => {
+    //const userCred = await firebaseFunctions.getDataFromFireBase(req.query.uid, 'StravaService');
+    const userCred = await firebaseFunctions.getDataFromFireBase('', 'StravaService');
+    if (stravaClient === '') {
+        stravaClient = new stravaApi.client(userCred.access_token);
+    }
+    const activities = await stravaClient.athlete.listActivities({id: userCred.athleteId});
+    const kudos = await stravaClient.activities.listKudos({id: activities[0].id});
+    res.json(kudos.length).status(200);
+});
+
+app.get('/strava/segments/:uid', async (req, res) => {
+    const userCred = await firebaseFunctions.getDataFromFireBase(req.query.uid, 'StravaService');
+    if (stravaClient === '') {
+        stravaClient = new stravaApi.client(userCred.access_token);
+    }
+    const segments = await stravaClient.segments.listStarred({id: userCred.athleteId});
+    const leaderboard = await stravaClient.segments.get({id: segments[0].id})
+    res.json(leaderboard).status(200);
+});
+
+app.get('/strava/stats/:uid', async (req, res) => {
+    const userCred = await firebaseFunctions.getDataFromFireBase(req.query.uid, 'StravaService');
+    if (stravaClient === '') {
+        stravaClient = new stravaApi.client(userCred.access_token);
+    }
+    const stats = await stravaClient.athletes.stats({id: userCred.athleteId});
+    res.json(stats).status(200);
 });
 
 /// SPOTIFY SERVICES

@@ -413,7 +413,7 @@ export default function SettingsScreen(props: SettingsProps) {
             const config = {
                 clientId: '102338',
                 clientSecret: '3473daba0cfd3917a58553295664d5e9d0c09476',
-                redirectUrl: 'http://localhost:8080/strava',
+                redirectUrl: 'http://localhost:8080/strava/add-token',
                 serviceConfiguration: {
                   authorizationEndpoint: 'https://www.strava.com/oauth/mobile/authorize',
                   tokenEndpoint:
