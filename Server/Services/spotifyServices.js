@@ -137,8 +137,45 @@ async function isListeningTo(uid, musicName) {
         console.log('Something went wrong!', err);
         return false;
     });
-
 }
+
+/**
+ * If ther is a music playing, pause it
+ * @function pauseMusic
+ * @param {*} uid the uid of the spotify user
+ * @returns true if the music has been paused, false otherwise
+ */
+async function pauseMusic(uid) {
+    /// Changer les tokens de spotify API en fonction de l'uid
+    /// BONUS : Refresh le token s'il est plus valide (durée 1h)
+    spotifyApi.pause().then(function() {
+        console.log("Music Paused !")
+        return true;
+    }, function(err) {
+        console.log('Something went wrong!', err)
+        return false;
+    });
+}
+
+/**
+* Set the shuffle mode to on or off, corresponding to want shuffle
+* The logged user should listen to music, or it can lead to undefined behavior
+* @function setShuffle
+* @param {*} uid the uid of the spotify user
+* @returns true if the user track has been shuffled, false otherwise
+*/
+async function setShuffle(uid) {
+    /// Changer les tokens de spotify API en fonction de l'uid
+    /// BONUS : Refresh le token s'il est plus valide (durée 1h)
+   spotifyApi.setShuffle(true).then(function() {
+     console.log('Succes')
+     return true;
+   }, function  (err) {
+     console.log('Something went wrong!', err);
+     return false;
+   });
+}
+
 
 module.exports = {
     /**
@@ -240,47 +277,17 @@ module.exports = {
                 console.log(result)
                 resolve(result)
             } else if (func === "shuffle") {
-                const result = true
+                const result = setShuffle(uid)
                 console.log(result)
                 resolve(result)
             } else if (func === "pause") {
-                const result = true
+                const result = pauseMusic(uid)
                 console.log(result)
                 resolve(result)
             } else {
                 reject(new Error(`Invalid function name: ${func}`));
             }
         })
-    },
-
-    /**
-     * If ther is a music playing, pause it
-     * @function pause
-     * @param {*} req the request
-     * @param {*} res the request's result
-     */
-    pauseMusic : function (req, res) {
-        spotifyApi.pause().then(function() {
-            res.send("Music Paused !")
-        }, function(err) {
-            console.log('Something went wrong!', err)
-        });
-    },
-
-    /**
-     * Set the shuffle mode to on or off, corresponding to want shuffle
-     * The logged user should listen to music, or it can lead to undefined behavior
-     * @function setShuffle
-     * @param {*} req the request
-     * @param {*} res the request's result
-     * @param {*} wantShuffle if true, the shuffle will be on, otherwise it will be off
-     */
-    setShuffle : function(req, res, wantShuffle) {
-        spotifyApi.setShuffle(wantShuffle).then(function() {
-          res.send('Succes')
-        }, function  (err) {
-          console.log('Something went wrong!', err);
-        });
     },
 
     /**
