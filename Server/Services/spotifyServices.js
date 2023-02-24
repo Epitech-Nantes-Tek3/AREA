@@ -63,6 +63,29 @@ var request = require('request');
 const querystring  = require('querystring');
 const { resolve } = require('path');
 
+/**
+ * Checks if the logged user follows some artists
+ * @function isfollowing
+ * @param {*} uid the uid of the spotify user
+ * @param {*} artistUids the spotify uid of the searched artists (is given as an array for multiples follows)
+ */
+async function isfollowing(uid, artistUids) {
+    /// Changer les tokens de spotify API en fonction de l'uid
+    /// BONUS : Refresh le token s'il est plus valide (durée 1h)
+    spotifyApi.isFollowingArtists(artistUids).then(function(data) {
+        let isFollowing = data.body;
+
+        for (let index = 0; index < artistUidx.length; index++) {
+            console.log(artistUids[index] + ':' + isFollowing[index])
+        }
+
+        return isFollowing.find(false) === undefined
+    }, function(err) {
+        console.log('Something went wrong!', err);
+        return false
+    });
+}
+
 module.exports = {
     /**
      * Callback linked to redirect URI for Spotify
@@ -131,8 +154,8 @@ module.exports = {
 
     actionSpotify : async function(uid, func, param) {
         return new Promise((resolve, reject) => {
-            if (func === "follow") {
-                const result = true
+            if (func === "follows") {
+                const result = isfollowing(uid, param)
                 console.log(result)
                 resolve(result)
             } else if (func === "listen") {
@@ -169,26 +192,6 @@ module.exports = {
         })
     },
 
-    /**
-     * Checks if the logged user follows some artists
-     * @function isfollowing
-     * @param {*} req the request
-     * @param {*} res the request's result
-     * @param {*} artistUid the spotify uid of the searched artists
-     */
-    isfollowing : function (req, res, artistUid) {
-        spotifyApi.isFollowingArtists(artistUid).then(function(data) {
-            let isFollowing = data.body;
-
-            for (let index = 0; index < artistUid.length; index++) {
-                console.log(artistUid[index] + ':' + isFollowing[index])
-            }
-
-            res.send(isFollowing)
-        }, function(err) {
-            console.log('Something went wrong!', err);
-        });
-    },
     /**
      * Checks if the logged user is currently listening to some music
      * @function isListening
