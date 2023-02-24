@@ -50,8 +50,8 @@ jobs:
       - name: Write env file for application
         if: matrix.type == 'client_mobile'
         run: echo '${{ secrets.MOBILE_APP_ENV_JS }}' > ./Application/env.ts
-      - name: Run docker-compose up --build -d -t ${{ matrix.type }}
-        run: docker-compose up --build -d -t ${{ matrix.type }}
+      - name: Run docker-compose up --build -d -t 10 ${{ matrix.type }}
+        run: docker-compose up --build -d -t 10 ${{ matrix.type }}
 
   mirroring:
     if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'

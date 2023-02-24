@@ -14,7 +14,7 @@ function a() {
         echo "| $file | $a | $b |"
     done
     echo "| | | |"
-    echo "| Total Action| $nbActions | $nbReactions |"
+    echo "| Total | $nbActions | $nbReactions |"
     echo ""
     echo "Total actions-reactions: $(($nbActions + $nbReactions))"
     if (( $nbActions + $nbReactions < 15 )); then
