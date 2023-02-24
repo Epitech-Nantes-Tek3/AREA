@@ -18,23 +18,23 @@ export let ACTIONS: InfoArea[] = [
     {
         serviceName : "spotify action",
         trigger: true,
-        description: "Si l'utilisateur suit un artiste sélectionné",
-        text: undefined,
-        subject : undefined
+        description: "Si l'utilisateur suit Jul",
+        text: "Jul",
+        subject : "follows"
     },
     {
         serviceName : "spotify action",
         trigger: true,
         description: "Si l'utilisateur écoute de la musique",
         text: undefined,
-        subject : undefined
+        subject : "listen"
     },
     {
         serviceName : "spotify action",
         trigger: true,
-        description: "Si l'utilisateur écoute une musique spécifique",
-        text: undefined,
-        subject : undefined
+        description: "Si l'utilisateur écoute Tchikita",
+        text: "Tchikita",
+        subject : "listento"
     },
     {
         serviceName : "twitch",
@@ -135,21 +135,21 @@ export let REACTIONS: InfoArea[] = [
         trigger: undefined,
         description: 'Pause la musique en cours',
         text: undefined,
-        subject: undefined,
+        subject: "pause",
     },
     {
         serviceName: "spotify reaction",
         trigger: undefined,
         description: 'Met en aléatoire la file d\'attente de l\'utilisateur',
         text: undefined,
-        subject: undefined,
+        subject: "shuffle",
     },
     {
         serviceName: "spotify reaction",
         trigger: undefined,
         description: 'Crée une playlist',
-        text: 'NomDeLaPlaylist',
-        subject: 'playlist creation',
+        text: 'Area',
+        subject: 'createplaylist',
     },
 
 ]
