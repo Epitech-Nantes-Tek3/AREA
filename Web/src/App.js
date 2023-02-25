@@ -7,7 +7,6 @@ import { useState } from 'react';
 
 /**
  * @brief Main Function for AREA App
- * @returns
  */
 function App() {
   const [userInformation, setUserInformation] = useState({
