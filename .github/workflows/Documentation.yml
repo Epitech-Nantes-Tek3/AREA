@@ -11,10 +11,12 @@ on:
         type: choice
         options:
           - "server"
+          - "web"
           - "all"
 
 jobs:
-  documentation:
+  server-documentation:
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && (github.event.inputs.parts == 'all' || github.event.inputs.parts == 'server'))
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
@@ -32,3 +34,22 @@ jobs:
         with:
           folder: server-docs
           target-folder: docs/server
+  web-documentation:
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && (github.event.inputs.parts == 'all' || github.event.inputs.parts == 'web'))
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Create web documentation
+        uses: andstor/jsdoc-action@v1
+        with:
+          source_dir: ./Web/src
+          recurse: true
+          output_dir: ./web-docs
+          front_page: ./Web/readme.md
+      - name: Upload web documentation
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: web-docs
+          target-folder: docs/web

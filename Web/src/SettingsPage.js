@@ -19,7 +19,6 @@ import { addDataIntoCache } from './Common/CacheManagement'
 import { authWithCache } from './Common/Login';
 
 const querystring = require('querystring-es3');
-const locationURL = require('location-href')
 
 /**
  * @description Styles of the page
@@ -259,6 +258,18 @@ export default function SettingsPage(props) {
 
         try {
             await fetch(props.userInformation.ip + "/spotify").then(response => {
+                const requestOptions = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({uid: props.userInfo.id})
+                }
+                const uid = props.userInfo.id
+                fetch(ip + "/spotify/post/", requestOptions)
+                .then(response => {
+                        response.json().then(data => {
+
+                    })
+                })
                 response.json().then(data => {
                     var clientID = data
 
@@ -353,7 +364,6 @@ export default function SettingsPage(props) {
                         scope : scopes,
                         response_type: response_type
                     }
-                    console.log(props.userInformation.id)
                     url = `${twitch_oauth_url}?${encodeUrlScope(params)}`
                     window.open(url, 'popup', 'width=600,height=800')
                     // await Linking.openURL(url).catch((err) => console.log('An error occurred', err))

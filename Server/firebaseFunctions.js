@@ -71,10 +71,9 @@ module.exports = {
     removeDataFromFireBase: function(path) {
         return new Promise((resolve, reject) => {
             database.ref(path).on('value', (snapshot) => {
-                if (snapshot.val()) {
-                    resolve(snapshot.ref.remove());
-                }
-                reject("Data not found");
+                snapshot.ref.remove()
+                    .then(resolve('Data removed'))
+                    .catch(reject('Error removing data'));
             });
         });
     },

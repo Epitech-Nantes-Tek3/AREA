@@ -154,6 +154,22 @@ class TwitchToken {
 }
 
 /**
+ * @class class containing the access token and refresh token, with the user uid for spotify api
+ */
+class SpotifyToken {
+    constructor(accessToken, refreshToken, uid) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.uid = uid;
+    }
+}
+/**
+* @var SpotifyTokens
+* @requires SpotifyToken()
+*/
+var SpotifyTokens = new SpotifyToken("any", "any", 'none')
+
+/**
  * @var twhtokens
  * @requires TwitchToken()
 */
@@ -184,7 +200,7 @@ passport.use('twitch', new OAuth2Strategy({
 */
 app.use(cors());
 /**
- * initialisation of express.urlencoded() in app. 
+ * initialisation of express.urlencoded() in app.
 */
 app.use(express.urlencoded())
 
@@ -532,13 +548,12 @@ app.post('/register/areas', (req, res) => {
 */
 app.post('/remove/area', (req, res) => {
     const { uid, id } = req.body;
-    console.log(uid, id)
     firebaseFunctions.removeDataFromFireBase(`USERS/${uid}/AREAS/${id}`)
     .then(() => {
         res.json({body: "Success"}).status(200);
     })
     .catch(error => {
-        console.log(error);
+        console.log(error)
         res.json(error).status(400);
     })
 })
@@ -583,7 +598,6 @@ app.get('/getPosition/:uid', (req, res) => {
 })
 
 /// SPOTIFY SERVICES
-// CURRENTLY LOGGED WITH Nathan Rousseau Account
 
 /**
  * Login Page
@@ -599,6 +613,18 @@ app.get('/spotify', (req, res) => {
 })
 
 /**
+ * Get the user id and set in the class SpotifyTokens.
+ * @method post
+ * @function '/twitch/post/' Server Spotify post page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
+app.post('/spotify/post', (req, res) => {
+    SpotifyTokens.uid = req.body.uid
+    res.json({body: "OK"}).status(200);
+})
+
+/**
  * Spotify callback page use callBack function.
  * @method get
  * @function '/spotify/callback' Server spotify callback page
@@ -607,72 +633,6 @@ app.get('/spotify', (req, res) => {
 */
 app.get('/spotify/callback', (req, res) => {
     firebaseFunctions.getDataFromFireBaseServer('Spotify').then(serverData => {
-        spotifyService.callBack(req, res, serverData)
+        spotifyService.callBack(req, res, serverData, SpotifyTokens)
     })
-})
-
-/**
- * Check if the logged user follow Elvis presley
- * @method get
- * @function '/spotify/isfollowing' Server spotify isfollowing page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.get('/spotify/isfollowing', (req, res) => {
-    spotifyService.isfollowing(req, res, ['43ZHCT0cAZBISjO8DG9PnE'])
-})
-
-/**
- * Check if the logged user is currently listening some music
- * @method get
- * @function '/spotify/islistening' Server spotify islistening page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.get('/spotify/islistening', (req, res) => {
-    spotifyService.isListening(req, res)
-})
-
-/**
- * Check if the user is listening to a specific music (by his name)
- * @method get
- * @function '/spotify/islisteningto' Server spotify islisteningto page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.get('/spotify/islisteningto', (req, res) => {
-    spotifyService.isListeningTo(req, res, 'Butterflies and Hurricanes')
-})
-
-/**
- * Pause the current music.
- * @method get
- * @function '/spotify/pause' Server spotify pause page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.get('/spotify/pause', (req, res) => {
-    spotifyService.pauseMusic(req, res)
-})
-
-/**
- * Shuffle the playlist or not of the user.
- * @method get
- * @function '/spotify/wantshuffle' Server spotify wantshuffle page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.get('/spotify/wantshuffle', (req, res) => {
-    spotifyService.setShuffle(req, res, false)
-})
-
-/**
- * Create a new playlist on the logged user
- * @method get
- * @function '/spotify/createplaylist' Server spotify createplaylist page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.get('/spotify/createplaylist', (req, res) => {
-    spotifyService.createPlaylist(req, res, 'AreaPlaylist')
 })
