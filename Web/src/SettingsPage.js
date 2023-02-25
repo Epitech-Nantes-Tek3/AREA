@@ -261,10 +261,10 @@ export default function SettingsPage(props) {
                 const requestOptions = {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({uid: props.userInfo.id})
+                    body: JSON.stringify({uid: props.userInformation.id})
                 }
-                const uid = props.userInfo.id
-                fetch(ip + "/spotify/post/", requestOptions)
+                const uid = props.userInformation.id
+                fetch(props.userInformation.ip + "/spotify/post/", requestOptions)
                 .then(response => {
                         response.json().then(data => {
 
