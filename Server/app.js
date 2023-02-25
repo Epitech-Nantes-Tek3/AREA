@@ -333,18 +333,19 @@ app.get('/about.json', (req, res) => {
         obj[i] = JSON.parse(data);
     }
 
+    const d = new Date()
     const about = JSON.stringify(
         {
             "client": {
                 "host": req.ip
             },
             "server": {
-                "current_time": Date.now(),
+                "current_time": d.toString(),
                 "services": obj
             }
-        }, null, 2
+        }
     )
-    res.send(about)
+    res.send(JSON.parse(about))
 })
 
 /**
