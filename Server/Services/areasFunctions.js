@@ -40,6 +40,12 @@ const googleService = require('./googleService');
 const ISSService = require('././ISSStationService');
 
 /**
+ * @constant spotifyServices
+ * @requires spotifyServices
+ */
+const spotifyServices = require('././spotifyServices');
+
+/**
  * Contains all area.
  * @type {{name, function}}
  * @property {string} name Name
@@ -51,6 +57,7 @@ let areas = [
     { name: "google", function:  googleService.send_mail},
     { name: "iss", function:  ISSService.checkISSPosition },
     { name: "twitch", function:  TwitchService.actionTwitch},
+    { name: "spotify", function:  spotifyServices.SpotifyLoop},
 ]
 
 module.exports = {
