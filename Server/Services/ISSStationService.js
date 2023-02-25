@@ -22,7 +22,18 @@ const http  = require('http');
  */
 const firebaseFunctions = require('../firebaseFunctions');
 
+/**
+ * url of the API
+ * @constant url
+ * @requires "http://api.open-notify.org/iss-now.json"
+ */
 const url = 'http://api.open-notify.org/iss-now.json';
+
+/**
+ * Earth Radius
+ * @constant EarthRadius
+ * @requires 6374
+ */
 const EarthRadius = 6374
 
 module.exports = {
@@ -76,10 +87,12 @@ module.exports = {
         });
     },
     /**
-     * UNDOCUMENTED
-     * UNUSED PARAMETER: res
+     * Register the user data in the db.
+     * @function RegistedRequiredIss
+     * @param {string} uid user id
+     * @param {Object} data data is an object containing the latitude & longitude
      */
-    RegistedRequiredIss: function(res, uid, data) {
+    RegistedRequiredIss: function(uid, data) {
         var informations = {
             gap: 1000,
             latitude: data.latitude,
@@ -94,7 +107,8 @@ module.exports = {
  * @function Radiant
  * @param1 degrees to be converted in radiant
  * @return {number} the converted value
- * */
+ * 
+*/
 function Radiant(degrees)
 {
   var pi = Math.PI;

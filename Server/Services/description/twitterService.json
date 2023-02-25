@@ -1,10 +1,6 @@
 {
     "name": "TwitterService",
     "actions": [
-        {
-            "name": "none",
-            "description": "none"
-        }
     ],
     "reactions": [
         {

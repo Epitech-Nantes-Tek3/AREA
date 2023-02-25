@@ -45,12 +45,15 @@ export default function HomePage(props) {
 
     useEffect(() => {
         try {
-            authWithCache(props.setUserInformation, props, props.userInformation.ip);
+            authWithCache(props.setUserInformation, props);
             console.log("Already logged in")
         } catch (error) {
             console.log("Unable to login" + error);
             navigate("/auth")
         }
+    }, [])
+
+    useEffect(() => {
         const fetchData = () => {
             console.log(props.userInformation.id)
             fetch(props.userInformation.ip + "/getAreas/" + props.userInformation.id)
@@ -97,7 +100,7 @@ export default function HomePage(props) {
                 setLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude, city: props.userInformation.coord.city })
             })
         }
-    }, [])
+    }, [props.userInformation.id])
 
     useEffect(() => {
         if (asked === false) {
@@ -107,10 +110,9 @@ export default function HomePage(props) {
                         .then((jsonRes) => {
                             if (jsonRes && jsonRes.features && jsonRes.features[0] && jsonRes.features[0].properties) {
                                 setLocation({ latitude: location.latitude, longitude: location.longitude, city: jsonRes.features[0].properties.city });
-                            }
-                            else {
+                            } else {
                                 setLocation({ latitude: location.latitude, longitude: location.longitude, city: location.city });
-                                alert("Une erreur a été rencontrée en essayant de trouver votre ville à partir de votre localisation. Vos données ont tout de même été mises à jour.")
+                                console.log("Une erreur a été rencontrée en essayant de trouver votre ville à partir de votre localisation. Vos données ont tout de même été mises à jour.")
                             }
                         })
                 }).catch((err) => {
@@ -153,7 +155,6 @@ export default function HomePage(props) {
                 }
 
                 await fetch(props.userInformation.ip + "/remove/area", requestOptions).then(response => {
-                    console.log(response)
                     if (response.status === 200) {
                         let copyAreas = [...props.allAreas]
                         copyAreas.splice(index, 1)
@@ -268,8 +269,8 @@ export default function HomePage(props) {
                 <div style={style.areaBlock}>
                     <p style={style.areaBlock.title}>{title}</p>
                     <div style={style.areaBlock.content}>
-                        <img src={logo[props.area.action.serviceName]} alt={"Logo de l'action"} style={{width: "30px", height: "30px"}} />
-                        <img src={logo[props.area.reaction.serviceName]} alt={"Logo de la réaction"} style={{width: "30px", height: "30px"}} />
+                        <img src={logo[props.area.action.serviceName]} alt={"Logo de l'action"} style={{ width: "30px", height: "30px" }} />
+                        <img src={logo[props.area.reaction.serviceName]} alt={"Logo de la réaction"} style={{ width: "30px", height: "30px" }} />
                     </div>
                 </div>
             } modal>
@@ -325,6 +326,7 @@ export default function HomePage(props) {
      */
     function Header() {
         const mail = props.userInformation.mail;
+        const [buttonHoverState, setButtonHoverState] = useState(false);
         const style = {
             header: {
                 position: "relative",
@@ -353,14 +355,36 @@ export default function HomePage(props) {
                     borderRadius: "50%",
                     cursor: "pointer",
                 },
+                button: {
+                    all: "unset",
+                    position: "relative",
+                    border: "1px solid black",
+                    padding: "10px",
+                    borderRadius: "10px",
+                    cursor: "pointer",
+                    backgroundColor: buttonHoverState ? "lightgrey" : "transparent",
+                }
             },
         }
 
+        function mouseEnterButton() {
+            setButtonHoverState(true);
+            console.log("mouse enter");
+        }
+        function mouseLeaveButton() {
+            setButtonHoverState(false);
+            console.log("mouse leave");
+        }
         return (
-            <div style={style.header}>
-                <img src={LogoImage} style={style.header.logo} alt="logo" />
-                <h1 style={style.header.title}>Re-Bonjour, {(mail) ? mail : "MAIL UNDEFINED"} !</h1>
-                <img src={SettingsImage} style={style.header.settings} onClick={goSettings} alt="settings" />
+            <div style={{position: "relative"}}>
+                <div style={style.header}>
+                    <img src={LogoImage} style={style.header.logo} alt="logo" />
+                    <h1 style={style.header.title}>Re-Bonjour, {(mail) ? mail : "MAIL UNDEFINED"} !</h1>
+                    <img src={SettingsImage} style={style.header.settings} onClick={goSettings} alt="settings" />
+                </div>
+                <div style={{position: "relative", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                    <a style={style.header.button} onMouseEnter={mouseEnterButton} onMouseLeave={mouseLeaveButton} href='client.apk'>Télécharger client.apk</a>
+                </div>
             </div>
         )
     }
