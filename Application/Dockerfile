@@ -9,8 +9,7 @@ RUN yarn
 # Copy project
 COPY . /app/
 
-# Create android releasec
-RUN npx react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle
+# Create android release
 RUN cd android && ./gradlew assembleRelease
 
 # Move apk file to common volume
