@@ -154,7 +154,7 @@ class TwitchToken {
 }
 
 /**
- * @class class qui contient l'access token & le refresh token, ainsi que l'uid de l'utilisateur pour l'api spotify.
+ * @class class containing the access token and refresh token, with the user uid for spotify api
  */
 class SpotifyToken {
     constructor(accessToken, refreshToken, uid) {

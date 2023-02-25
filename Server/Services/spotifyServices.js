@@ -61,18 +61,16 @@ var request = require('request');
  * @requires querystring
  */
 const querystring  = require('querystring');
-const { resolve } = require('path');
 
 /**
- * Checks if the logged user follows some artists
+ * Checks if the logged user follows some
+ * @async
  * @function isfollowing
  * @param {*} uid the uid of the spotify user
  * @param {*} artistUids the spotify uid of the searched artists (is given as an array for multiples follows)
  * @returns True if the user follows the given artists, False Otherwise
  */
 async function isfollowing(uid, artistUids) {
-    /// Changer les tokens de spotify API en fonction de l'uid
-    /// BONUS : Refresh le token s'il est plus valide (durée 1h)
     firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
     .then(data => {
         SpotifyWebApi.setAccessToken(data.accessToken)
@@ -97,13 +95,12 @@ async function isfollowing(uid, artistUids) {
 
 /**
  * Checks if the logged user is currently listening to some music
+ * @async
  * @function isListening
  * @param {*} uid the uid of the spotify user
  * @returns True if the user is listening music, False otherwise
  */
 async function isListening(uid) {
-    /// Changer les tokens de spotify API en fonction de l'uid
-    /// BONUS : Refresh le token s'il est plus valide (durée 1h)
     firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
     .then(data => {
         SpotifyWebApi.setAccessToken(data.accessToken)
@@ -129,14 +126,13 @@ async function isListening(uid) {
 
 /**
  * Checks if the logged user is listening to a specific music searched by the music name
+ * @async
  * @function isListeningTo
  * @param {*} uid the uid of the spotify user
  * @param {*} musicName the name of the music we're looking for
  * @returns True if the user is listening to musicName, false otherwise
  */
 async function isListeningTo(uid, musicName) {
-    /// Changer les tokens de spotify API en fonction de l'uid
-    /// BONUS : Refresh le token s'il est plus valide (durée 1h)
     firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
     .then(data => {
         SpotifyWebApi.setAccessToken(data.accessToken)
@@ -164,14 +160,13 @@ async function isListeningTo(uid, musicName) {
 }
 
 /**
- * If ther is a music playing, pause it
+ * If ther is a music playing, pause
+ * @async
  * @function pauseMusic
  * @param {*} uid the uid of the spotify user
  * @returns true if the music has been paused, false otherwise
  */
 async function pauseMusic(uid) {
-    /// Changer les tokens de spotify API en fonction de l'uid
-    /// BONUS : Refresh le token s'il est plus valide (durée 1h)
     firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
     .then(data => {
         SpotifyWebApi.setAccessToken(data.accessToken)
@@ -192,13 +187,12 @@ async function pauseMusic(uid) {
 /**
 * Set the shuffle mode to on or off, corresponding to want shuffle
 * The logged user should listen to music, or it can lead to undefined behavior
+* @async
 * @function setShuffle
 * @param {*} uid the uid of the spotify user
 * @returns true if the user track has been shuffled, false otherwise
 */
 async function setShuffle(uid) {
-    /// Changer les tokens de spotify API en fonction de l'uid
-    /// BONUS : Refresh le token s'il est plus valide (durée 1h)
     firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
     .then(data => {
         SpotifyWebApi.setAccessToken(data.accessToken)
@@ -217,10 +211,10 @@ async function setShuffle(uid) {
 }
 
 /**
-     * Sets the user data in the Firebase database.
-     * @function setUserDataSpotify
-     * @param {Object} SpotifyTokens - An object containing the Spotify API access and refresh tokens, as well as the user ID.
-     */
+ * Sets the user data in the Firebase database.
+ * @function setUserDataSpotify
+ * @param {Object} SpotifyTokens - An object containing the Spotify API access and refresh tokens, as well as the user ID.
+ */
 function setUserDataSpotify(SpotifyTokens) {
     let tokens = {
         accessToken : SpotifyTokens.accessToken,
@@ -231,14 +225,13 @@ function setUserDataSpotify(SpotifyTokens) {
 
 /**
  * Create a new playlist for the logged user
+ * @async
  * @function createPlaylist
  * @param {*} uid the uid of the spotify user
  * @param {*} playlistName__playlistDesc the name and the description of the playlist
  * @returns true if the playlist has been created false otherwise
  */
 async function createPlaylist (uid, playlistName__playlistDesc) {
-    /// Changer les tokens de spotify API en fonction de l'uid
-    /// BONUS : Refresh le token s'il est plus valide (durée 1h)
     firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
     .then(data => {
         SpotifyWebApi.setAccessToken(data.accessToken)
@@ -266,7 +259,8 @@ module.exports = {
      * @function callBack
      * @param {*} req the request
      * @param {*} res the request's result
-     * @param {*} serverData client credentials of the developper account
+     * @param {*} serverData client credentials of the developper
+     * @param {*} SpotifyTokens object containing the tokens and the uid of the user
      */
     callBack : function (req, res, serverData, SpotifyTokens) {
         var code = req.query.code || null;
@@ -327,6 +321,7 @@ module.exports = {
         })
     },
     /**
+     * @async
      * @function SpotifyLoop
      * @param {*} uid uid of the user
      * @param {*} func function chosen by the user
