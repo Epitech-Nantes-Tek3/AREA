@@ -454,7 +454,7 @@
     
 
     
-    <h4 class="name" id="~callBack"><span class="type-signature">(inner) </span>callBack<span class="signature">(req, res, serverData)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~callBack"><span class="type-signature">(inner) </span>callBack<span class="signature">(req, res, serverData, SpotifyTokens)</span><span class="type-signature"></span></h4>
     
 
     
@@ -561,7 +561,30 @@ Will set the access token and refresh token with the given authorizations
 
             
 
-            <td class="description last">client credentials of the developper account</td>
+            <td class="description last">client credentials of the developper</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>SpotifyTokens</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">object containing the tokens and the uid of the user</td>
         </tr>
 
     
@@ -602,7 +625,7 @@ Will set the access token and refresh token with the given authorizations
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line66">line 66</a>
+        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line256">line 256</a>
     </li></ul></dd>
     
 
@@ -638,7 +661,7 @@ Will set the access token and refresh token with the given authorizations
     
 
     
-    <h4 class="name" id="~createPlaylist"><span class="type-signature">(inner) </span>createPlaylist<span class="signature">(req, res, playlistName, isPublic, playlistDesc)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~createPlaylist"><span class="type-signature">(async, inner) </span>createPlaylist<span class="signature">(uid, playlistName__playlistDesc)</span><span class="type-signature"></span></h4>
     
 
     
@@ -682,7 +705,7 @@ Will set the access token and refresh token with the given authorizations
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>uid</code></td>
             
 
             <td class="type">
@@ -698,14 +721,14 @@ Will set the access token and refresh token with the given authorizations
 
             
 
-            <td class="description last">the request</td>
+            <td class="description last">the uid of the spotify user</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>res</code></td>
+                <td class="name"><code>playlistName__playlistDesc</code></td>
             
 
             <td class="type">
@@ -721,76 +744,7 @@ Will set the access token and refresh token with the given authorizations
 
             
 
-            <td class="description last">the request's result</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>playlistName</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the name of the playlist</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>isPublic</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">define whereas the playlist is public or not</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>playlistDesc</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the description of the playlist</td>
+            <td class="description last">the name and the description of the playlist</td>
         </tr>
 
     
@@ -831,7 +785,7 @@ Will set the access token and refresh token with the given authorizations
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line223">line 223</a>
+        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line226">line 226</a>
     </li></ul></dd>
     
 
@@ -856,6 +810,16 @@ Will set the access token and refresh token with the given authorizations
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    true if the playlist has been created false otherwise
+</div>
+
+
+
+    
 
 
 
@@ -867,7 +831,7 @@ Will set the access token and refresh token with the given authorizations
     
 
     
-    <h4 class="name" id="~isfollowing"><span class="type-signature">(inner) </span>isfollowing<span class="signature">(req, res, artistUid)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~isfollowing"><span class="type-signature">(async, inner) </span>isfollowing<span class="signature">(uid, artistUids)</span><span class="type-signature"></span></h4>
     
 
     
@@ -875,7 +839,7 @@ Will set the access token and refresh token with the given authorizations
 
 
 <div class="description">
-    Checks if the logged user follows some artists
+    Checks if the logged user follows some
 </div>
 
 
@@ -911,7 +875,7 @@ Will set the access token and refresh token with the given authorizations
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>uid</code></td>
             
 
             <td class="type">
@@ -927,14 +891,14 @@ Will set the access token and refresh token with the given authorizations
 
             
 
-            <td class="description last">the request</td>
+            <td class="description last">the uid of the spotify user</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>res</code></td>
+                <td class="name"><code>artistUids</code></td>
             
 
             <td class="type">
@@ -950,30 +914,7 @@ Will set the access token and refresh token with the given authorizations
 
             
 
-            <td class="description last">the request's result</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>artistUid</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the spotify uid of the searched artists</td>
+            <td class="description last">the spotify uid of the searched artists (is given as an array for multiples follows)</td>
         </tr>
 
     
@@ -1014,7 +955,7 @@ Will set the access token and refresh token with the given authorizations
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line131">line 131</a>
+        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line65">line 65</a>
     </li></ul></dd>
     
 
@@ -1039,6 +980,16 @@ Will set the access token and refresh token with the given authorizations
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    True if the user follows the given artists, False Otherwise
+</div>
+
+
+
+    
 
 
 
@@ -1050,7 +1001,7 @@ Will set the access token and refresh token with the given authorizations
     
 
     
-    <h4 class="name" id="~isListening"><span class="type-signature">(inner) </span>isListening<span class="signature">(req, res)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~isListening"><span class="type-signature">(async, inner) </span>isListening<span class="signature">(uid)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1094,7 +1045,7 @@ Will set the access token and refresh token with the given authorizations
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>uid</code></td>
             
 
             <td class="type">
@@ -1110,30 +1061,7 @@ Will set the access token and refresh token with the given authorizations
 
             
 
-            <td class="description last">the request</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the request's result</td>
+            <td class="description last">the uid of the spotify user</td>
         </tr>
 
     
@@ -1174,7 +1102,7 @@ Will set the access token and refresh token with the given authorizations
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line151">line 151</a>
+        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line96">line 96</a>
     </li></ul></dd>
     
 
@@ -1199,6 +1127,16 @@ Will set the access token and refresh token with the given authorizations
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    True if the user is listening music, False otherwise
+</div>
+
+
+
+    
 
 
 
@@ -1210,7 +1148,7 @@ Will set the access token and refresh token with the given authorizations
     
 
     
-    <h4 class="name" id="~isListeningTo"><span class="type-signature">(inner) </span>isListeningTo<span class="signature">(req, res, musicName)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~isListeningTo"><span class="type-signature">(async, inner) </span>isListeningTo<span class="signature">(uid, musicName)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1254,7 +1192,7 @@ Will set the access token and refresh token with the given authorizations
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>uid</code></td>
             
 
             <td class="type">
@@ -1270,30 +1208,7 @@ Will set the access token and refresh token with the given authorizations
 
             
 
-            <td class="description last">the request</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the request's result</td>
+            <td class="description last">the uid of the spotify user</td>
         </tr>
 
     
@@ -1357,7 +1272,7 @@ Will set the access token and refresh token with the given authorizations
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line169">line 169</a>
+        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line127">line 127</a>
     </li></ul></dd>
     
 
@@ -1382,6 +1297,16 @@ Will set the access token and refresh token with the given authorizations
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    True if the user is listening to musicName, false otherwise
+</div>
+
+
+
+    
 
 
 
@@ -1393,7 +1318,7 @@ Will set the access token and refresh token with the given authorizations
     
 
     
-    <h4 class="name" id="~pause"><span class="type-signature">(inner) </span>pause<span class="signature">(req, res)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~pauseMusic"><span class="type-signature">(async, inner) </span>pauseMusic<span class="signature">(uid)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1401,7 +1326,7 @@ Will set the access token and refresh token with the given authorizations
 
 
 <div class="description">
-    If ther is a music playing, pause it
+    If ther is a music playing, pause
 </div>
 
 
@@ -1437,7 +1362,7 @@ Will set the access token and refresh token with the given authorizations
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>uid</code></td>
             
 
             <td class="type">
@@ -1453,30 +1378,7 @@ Will set the access token and refresh token with the given authorizations
 
             
 
-            <td class="description last">the request</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the request's result</td>
+            <td class="description last">the uid of the spotify user</td>
         </tr>
 
     
@@ -1517,7 +1419,7 @@ Will set the access token and refresh token with the given authorizations
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line193">line 193</a>
+        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line162">line 162</a>
     </li></ul></dd>
     
 
@@ -1542,6 +1444,16 @@ Will set the access token and refresh token with the given authorizations
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    true if the music has been paused, false otherwise
+</div>
+
+
+
+    
 
 
 
@@ -1677,7 +1589,7 @@ Will set the access token and refresh token with the given authorizations
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line118">line 118</a>
+        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line311">line 311</a>
     </li></ul></dd>
     
 
@@ -1723,7 +1635,7 @@ Will set the access token and refresh token with the given authorizations
     
 
     
-    <h4 class="name" id="~setShuffle"><span class="type-signature">(inner) </span>setShuffle<span class="signature">(req, res, wantShuffle)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~setShuffle"><span class="type-signature">(async, inner) </span>setShuffle<span class="signature">(uid)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1768,7 +1680,7 @@ The logged user should listen to music, or it can lead to undefined behavior
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>uid</code></td>
             
 
             <td class="type">
@@ -1784,53 +1696,7 @@ The logged user should listen to music, or it can lead to undefined behavior
 
             
 
-            <td class="description last">the request</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the request's result</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>wantShuffle</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">if true, the shuffle will be on, otherwise it will be off</td>
+            <td class="description last">the uid of the spotify user</td>
         </tr>
 
     
@@ -1871,7 +1737,154 @@ The logged user should listen to music, or it can lead to undefined behavior
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line207">line 207</a>
+        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line187">line 187</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    true if the user track has been shuffled, false otherwise
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~setUserDataSpotify"><span class="type-signature">(inner) </span>setUserDataSpotify<span class="signature">(SpotifyTokens)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Sets the user data in the Firebase database.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>SpotifyTokens</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An object containing the Spotify API access and refresh tokens, as well as the user ID.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line213">line 213</a>
     </li></ul></dd>
     
 
@@ -1902,6 +1915,195 @@ The logged user should listen to music, or it can lead to undefined behavior
 
 
         
+            
+
+    
+
+    
+    <h4 class="name" id="~SpotifyLoop"><span class="type-signature">(async, inner) </span>SpotifyLoop<span class="signature">(uid, func, param)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>uid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">uid of the user</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>func</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">function chosen by the user</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>param</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">playlist name and description on an array or empty string</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Services_spotifyServices.js.html">Services/spotifyServices.js</a>, <a href="Services_spotifyServices.js.html#line323">line 323</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    the boolean result of the chosen function
+</div>
+
+
+
+    
+
+
+
+
+
+        
     
 
     
@@ -1917,13 +2119,13 @@ The logged user should listen to music, or it can lead to undefined behavior
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-APP.html">APP</a></li><li><a href="module-areasFunctions.html">areasFunctions</a></li><li><a href="module-firebaseFunctions.html">firebaseFunctions</a></li><li><a href="module-GoogleService.html">GoogleService</a></li><li><a href="module-IssStationService.html">IssStationService</a></li><li><a href="module-OpenMeteoService.html">OpenMeteoService</a></li><li><a href="module-SpotifyService.html">SpotifyService</a></li><li><a href="module-Twitch.html">Twitch</a></li><li><a href="module-Twitter.html">Twitter</a></li></ul><h3>Classes</h3><ul><li><a href="module-APP-TwitchToken.html">TwitchToken</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-APP.html">APP</a></li><li><a href="module-areasFunctions.html">areasFunctions</a></li><li><a href="module-firebaseFunctions.html">firebaseFunctions</a></li><li><a href="module-GoogleService.html">GoogleService</a></li><li><a href="module-IssStationService.html">IssStationService</a></li><li><a href="module-OpenMeteoService.html">OpenMeteoService</a></li><li><a href="module-SpotifyService.html">SpotifyService</a></li><li><a href="module-Twitch.html">Twitch</a></li><li><a href="module-Twitter.html">Twitter</a></li></ul><h3>Classes</h3><ul><li><a href="module-APP-SpotifyToken.html">SpotifyToken</a></li><li><a href="module-APP-TwitchToken.html">TwitchToken</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Feb 23 2023 14:36:41 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sat Feb 25 2023 16:05:44 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
