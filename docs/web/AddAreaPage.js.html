@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: AddAreaPage.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: AddAreaPage.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import LogoSpotify from "./assets/spotify.png"
+import LogoIss from "./assets/iss.png"
+import LogoStrava from './assets/strava.png';
+import LogoTwitch from './assets/twitch.png';
+import LogoTwitter from './assets/twitter.png';
+import LogoGoogle from './assets/google.png';
+import LogoMeteo from './assets/meteo.png';
+import LogoNasa from './assets/nasa.png';
+import LogoArea from './assets/logo.png';
+import CheckCircle from './assets/checkCircle.png'
+import { useEffect, useState } from 'react';
+import { ACTIONS, REACTIONS } from "./Common/Areas"
+import { useNavigate } from "react-router-dom"
+import { authWithCache } from './Common/Login';
+import uuid from 'react-native-uuid';
+
+/**
+ * @brief Return the AddArea page for AREA
+ * This page will be updated soon
+ */
+export default function AddAreaPage(props) {
+    const navigate = useNavigate();
+
+    const [pageInfo, setPageInfo] = useState({
+        title: ["Sélectionne une action", "Sélectionne une réaction", "Résumé de ton Area"],
+        list: [ACTIONS, REACTIONS, []],
+        selectedIndex: [0, 0, 0],
+        next: [goSelectReaction, goResume, sendArea],
+        prev: [goHome, goSelectAction, goSelectReaction],
+        index: 0,
+    })
+
+    let logo = {
+        "spotify": LogoSpotify,
+        "iss": LogoIss,
+        "nasa": LogoNasa,
+        "twitter": LogoTwitter,
+        "google": LogoGoogle,
+        "météo": LogoMeteo,
+        "twitch": LogoTwitch,
+        "strava": LogoStrava
+    }
+
+    useEffect(() => {
+        try {
+            authWithCache(props.setUserInformation, props);
+            console.log("Already logged in")
+        } catch (error) {
+            console.log("Unable to login" + error);
+            navigate("/auth")
+        }
+    }, [])
+
+    /**
+     * Navigate to home page
+     * @function goHome
+     */
+    function goHome() {
+        navigate("/home")
+    }
+
+    /**
+     * Update the page index in userInformation
+     * @function updatePageIndex
+     * @param {number} index The new page index
+     */
+    function updatePageIndex(index) {
+        setPageInfo({
+            title: pageInfo.title,
+            list: pageInfo.list,
+            selectedIndex: pageInfo.selectedIndex,
+            next: pageInfo.next,
+            prev: pageInfo.prev,
+            index: index,
+        })
+    }
+
+    /**
+     * Update the index page to 0
+     * @function goSelectAction
+     */
+    function goSelectAction() {
+        updatePageIndex(0)
+    }
+
+    /**
+     * Update the index page to 1
+     * @function goSelectReaction
+     */
+    function goSelectReaction() {
+        updatePageIndex(1)
+    }
+
+    /**
+     * Update the index page to 2
+     * @function goResume
+     */
+    function goResume() {
+        updatePageIndex(2)
+    }
+
+    /**
+     * Send the new area to the server.
+     * @async
+     * @function sendArea
+     */
+    async function sendArea() {
+        if (props.userInformation.id !== "") {
+            let area = {
+                action: ACTIONS[pageInfo.selectedIndex[0]],
+                reaction: REACTIONS[pageInfo.selectedIndex[1]],
+                id: uuid.v4().toString()
+            }
+            props.setAllAreas([...props.allAreas, area])
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: area.action,
+                    reaction: area.reaction,
+                    id: area.id,
+                    uid: props.userInformation.id,
+                })
+            }
+            console.log(requestOptions.body.title)
+            try {
+                await fetch(props.userInformation.ip + "/register/areas", requestOptions).then(response => {
+                    navigate('/home', { state: { newArea: area } })
+                }).catch(error => {
+                    console.log(error)
+                })
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+            alert("Une erreur est survenu.")
+            navigate('/home')
+        }
+    }
+
+    /**
+     * Return the html info block
+     * @function InfoBlock
+     * @param {*} props All properties needed for this function
+     * @returns html info block
+     */
+    function InfoBlock(props) {
+        let border = props.selectedIndex === props.index ? "solid 2px darkblue" : "none";
+
+        const style = {
+            block: {
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                backgroundColor: "lightgrey",
+                width: "300px",
+                height: "150px",
+                borderRadius: "20px",
+                margin: "10px",
+                cursor: "pointer",
+                border: border,
+
+                image: {
+                    position: "relative",
+                    width: "30px",
+                    height: "30px",
+                    margin: "5px"
+                },
+                title: {
+                    position: "relative",
+                    fontSize: "18px",
+                    margin: "5px"
+                },
+                titleblock: {
+                    position: "relative",
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                    alignItems: "center",
+                },
+                content: {
+                    position: "relative",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-around",
+                    alignItems: "center",
+                    backgroundColor: "#5281B7",
+                    width: "100%",
+                    height: "100%",
+                    borderRadius: "20px",
+                }
+            }
+        }
+
+        /**
+         * Select the index in the corresponding list
+         * @function selectedIndex
+         */
+        function selectIndex() {
+            var newSelectedIndex = pageInfo.selectedIndex
+            newSelectedIndex[pageInfo.index] = props.index
+            setPageInfo({
+                title: pageInfo.title,
+                list: pageInfo.list,
+                selectedIndex: newSelectedIndex,
+                next: pageInfo.next,
+                prev: pageInfo.prev,
+                index: pageInfo.index,
+            })
+        }
+        return (
+            &lt;div style={style.block}
+                onClick={selectIndex}>
+
+                &lt;div style={style.block.titleblock}>
+                    &lt;img src={logo[props.area.serviceName]} style={style.block.image} />
+                    &lt;div style={style.block.title}>{props.area.serviceName}&lt;/div>
+                &lt;/div>
+                &lt;div style={style.block.content}>{props.area.description}
+                &lt;/div>
+            &lt;/div>
+        )
+    }
+
+    /**
+     * Return the html page of the selection block
+     * @function SelectionBlock
+     * @param {*} props All properties needed by selectionBlock
+     * @returns the HTML page
+     */
+    function SelectionBlock(props) {
+        const style = {
+            block: {
+                position: "relative",
+                display: "grid",
+                gridTemplateColumns: "repeat(3, auto)",
+                justifyContent: "space-around",
+                alignItems: "center",
+                width: "minmax(300px, 100%)",
+                height: "100%",
+                padding: "10px",
+            }
+        }
+        return (
+            &lt;div style={style.block}>
+                {
+                    props.list.map((item, index) => {
+                        return (
+                            &lt;InfoBlock area={item} index={index} selectedIndex={props.selectedBlock} />
+                        )
+                    }
+                    )
+                }
+            &lt;/div>
+        )
+    }
+
+    /**
+     * Return the html page of the areaResume
+     * @function AreaResume
+     * @returns the html page
+     */
+    function AreaResume() {
+        const style = {
+            global: {
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+            },
+            actionTitle: {
+                position: "relative"
+            },
+            reactionTitle: {
+                position: "relative"
+            }
+        }
+        if (pageInfo.index === 2) {
+            return (
+                &lt;div style={style.global}>
+                    &lt;div style={style.actionTitle}>ACTION&lt;/div>
+                    &lt;InfoBlock area={ACTIONS[pageInfo.selectedIndex[0]]} index={-1} selectedIndex={0} />
+                    &lt;div style={style.reactionTitle}>REACTION&lt;/div>
+                    &lt;InfoBlock area={REACTIONS[pageInfo.selectedIndex[1]]} index={-1} selectedIndex={0} />
+                &lt;/div>
+            )
+        }
+    }
+
+    /**
+     * The html body page
+     * @function Body
+     * @returns the html of the body page
+     */
+    function Body() {
+        const style = {
+            body: {
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+                alignItems: "center",
+            },
+            bottomButtons: {
+                position: "relative",
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-around",
+                alignItems: "center",
+                width: "100%"
+            },
+            button: {
+                position: "relative",
+                border: "solid 1px",
+                borderRadius: "10px",
+                cursor: "pointer",
+                padding: "5px",
+                backgroundColor: "lightgrey"
+            }
+        }
+        return (
+            &lt;div style={style.body}>
+                &lt;h2>{pageInfo.title[pageInfo.index]}&lt;/h2>
+                &lt;SelectionBlock title={pageInfo.title[pageInfo.index]} list={pageInfo.list[pageInfo.index]} selectedBlock={pageInfo.selectedIndex[pageInfo.index]} />
+                &lt;AreaResume />
+                &lt;div style={style.bottomButtons}>
+                    &lt;div style={style.button} onClick={pageInfo.prev[pageInfo.index]}>{"&lt;= précédent"}&lt;/div>
+                    &lt;div style={style.button} onClick={pageInfo.next[pageInfo.index]}>{(pageInfo.index === 2) ? "Créer l'Area" : "suivant =>"}&lt;/div>
+                &lt;/div>
+            &lt;/div>
+        )
+    }
+
+    /**
+     * The html header page
+     * @function Header
+     * @returns the html header page
+     */
+    function Header() {
+        const style = {
+            global: {
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-start",
+                height: "50px",
+                padding: "10px",
+            },
+            title: {
+                position: "relative",
+                marginLeft: "10px"
+            },
+            image: {
+                position: "relative",
+                width: "50px",
+                height: "50px",
+                cursor: "pointer"
+            }
+        }
+
+        return (
+            &lt;div style={style.global}>
+                &lt;img src={LogoArea} style={style.image} onClick={() => { navigate("/home") }} />
+                &lt;h1 style={style.title}>Ici, tu peux créer ton area !&lt;/h1>
+            &lt;/div>
+        )
+    }
+    const globalStyle = {
+        position: "relative",
+    }
+    return (
+        &lt;div style={globalStyle}>
+            &lt;Header />
+            &lt;Body />
+        &lt;/div>
+    );
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-SettingsPage.html">SettingsPage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addDataIntoCache-Addsdataintothecache">addDataIntoCache - Adds data into the cache</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AreaResume">AreaResume</a></li><li><a href="global.html#AuthButton">AuthButton</a></li><li><a href="global.html#AuthPage">AuthPage</a></li><li><a href="global.html#authWithCache">authWithCache</a></li><li><a href="global.html#Body">Body</a></li><li><a href="global.html#CenterButton">CenterButton</a></li><li><a href="global.html#changeAuthMode">changeAuthMode</a></li><li><a href="global.html#DisplayArea">DisplayArea</a></li><li><a href="global.html#DisplayAreas">DisplayAreas</a></li><li><a href="global.html#fetchWithTimeout">fetchWithTimeout</a></li><li><a href="global.html#getDataFromCache-Getsdatafromthecache">getDataFromCache - Gets data from the cache</a></li><li><a href="global.html#goHome">goHome</a></li><li><a href="global.html#goResume">goResume</a></li><li><a href="global.html#goSelectAction">goSelectAction</a></li><li><a href="global.html#goSelectReaction">goSelectReaction</a></li><li><a href="global.html#handleChange">handleChange</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#InfoBlock">InfoBlock</a></li><li><a href="global.html#onLoginFacebook">onLoginFacebook</a></li><li><a href="global.html#onSubmit">onSubmit</a></li><li><a href="global.html#removeAreaFromList">removeAreaFromList</a></li><li><a href="global.html#requestServer">requestServer</a></li><li><a href="global.html#selectedIndex">selectedIndex</a></li><li><a href="global.html#SelectionBlock">SelectionBlock</a></li><li><a href="global.html#sendArea">sendArea</a></li><li><a href="global.html#signInPage">signInPage</a></li><li><a href="global.html#signUpPage">signUpPage</a></li><li><a href="global.html#updateIP">updateIP</a></li><li><a href="global.html#updatePageIndex">updatePageIndex</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sun Feb 26 2023 00:03:23 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

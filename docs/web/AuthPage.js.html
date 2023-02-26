@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: AuthPage.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: AuthPage.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
+import AreaLogo from './assets/logo.png'
+import "./AuthPage.css"
+import "./App.css"
+import { firebaseMod, provider, auth } from './firebaseConfig'
+import { addDataIntoCache } from './Common/CacheManagement'
+import { authWithCache } from './Common/Login'
+
+import FacebookLogin from 'react-facebook-login'
+
+const confirmPlaceHolder = "Valider le mot de passe"
+
+/**
+ * It creates the Sign up and Sign In Pages for the AREA
+ * It has a login with facebook on Sign In page
+ * @function AuthPage
+ * @param props the props of the page (userInformation and allAreas)
+ * @returns the page corresponding to the current authMode
+ */
+function AuthPage(props) {
+    const navigate = useNavigate();
+    let [authMode, setAuthMode] = useState("signin")
+    const [color, setColor] = useState("red");
+
+    const [isBadPassord, setIsBadPassword] = useState(false);
+    const [isPasswordDifferent, setIsPasswordDifferent] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    /**
+     * It changes the authMode between SignIn and SignUp
+     * @function changeAuthMode
+     */
+    function changeAuthMode() {
+        setAuthMode(authMode === "signin" ? "signup" : "signin")
+    }
+
+    /**
+     * It checks if the user is already logged in.
+     * If he is, it redirects him to the home page.
+     */
+    useEffect(() => {
+        updateIP({ target: { value: props.userInformation.ip } })
+        try {
+            authWithCache(props.setUserInformation, props);
+            console.log("Already logged in")
+            navigate("/home");
+        } catch (error) {
+            console.log("Unable to login" + error);
+        }
+    }, [])
+
+    /**
+     * If the event target type is email, set the email state to the event target
+     * value. Otherwise, set the password state to the event target value
+     * @function handleChange
+     * @param event - The event that triggered the function.
+     */
+    function handleChange(event) {
+        if (event.target.type === "email") {
+            setEmail(event.target.value);
+        } else if (event.target.placeholder === confirmPlaceHolder) {
+            setConfirmPassword(event.target.value)
+        } else {
+            setPassword(event.target.value);
+        }
+    }
+
+    /* Checking if the user is already logged in. If he is, it redirects him to
+    the home page. */
+    auth.onAuthStateChanged(user => {
+        console.log('user', user);
+        if (user !== null) {
+            props.userInformation.id = user.uid;
+            props.userInformation.mail = user.email;
+            addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa('facebook-auth'), ip: props.userInformation.ip });
+            navigate("/home");
+        }
+    })
+
+    /**
+     * The function is called when the user clicks on the Facebook login button.
+     * It prevents the default action of the button, and then sets the persistence
+     * of the user to none. This means that the user will not be remembered by the
+     * browser. Then, the user is redirected to the Facebook login page
+     * @function onLoginFacebook
+     * @param event - The event that triggered the function.
+     */
+    async function onLoginFacebook(event) {
+        event.preventDefault();
+        console.log('facebook')
+        try {
+            firebaseMod.auth().setPersistence(firebaseMod.auth.Auth.Persistence.NONE).then(async () => {
+                await auth.signInWithRedirect(provider);
+            })
+        } catch (err) {
+            console.log(err);
+        };
+    }
+
+    /**
+     * It sends a request to the server, and if the server returns a userUid, it
+     * adds the user's information into the cache and navigates to the home page
+     * @function requestServer
+     * @param endpoint - the endpoint of the server you want to request
+     * @param requestOptions - A request to the server.
+     */
+    async function requestServer(endpoint, requestOptions) {
+        try {
+            await fetch(props.userInformation.ip + endpoint, requestOptions).then(response => {
+                response.json().then(data => {
+                    console.log(data);
+                    if (data.userUid !== 'error') {
+                        setIsBadPassword(false);
+                        props.userInformation.id = data.userUid;
+                        props.userInformation.mail = email;
+                        addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa(JSON.parse(requestOptions.body).password), ip: props.userInformation.ip });
+                        navigate('/home');
+                    } else {
+                        setIsBadPassword(true);
+                    }
+                })
+            });
+        } catch (error) {
+            console.log(error);
+            setIsBadPassword(true);
+        }
+    }
+
+    /**
+     * The function is called when the user clicks the submit button. It prevents
+     * the default action of the submit button, which is to refresh the page. It
+     * then creates a requestOptions object, which contains the method, mode,
+     * headers, and body of the request. The body of the request is a JSON object
+     * containing the email and password of the user. The function then checks if
+     * the authMode is signup or login, and sends the request to the appropriate
+     * endpoint
+     * @function onSubmit
+     * @param event - the event that triggered the function
+     */
+    async function onSubmit(event) {
+        event.preventDefault();
+        if (authMode === "signup") {
+            setIsBadPassword(false);
+            if (password !== confirmPassword) {
+                setIsPasswordDifferent(true);
+                return;
+            } else {
+                setIsPasswordDifferent(false);
+            }
+        }
+        const requestOptions = {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            },
+            body: JSON.stringify({ email: email, password: password })
+        }
+        if (authMode === "signup") {
+            await requestServer("/register", requestOptions);
+        } else {
+            await requestServer("/login", requestOptions);
+        }
+    }
+
+    /**
+     * It returns a button with the text props.
+     * @function CenterButton
+     * @param {string} props - the props of the button (text)
+     * @returns the button div with the props
+     */
+    function CenterButton(props) {
+        return (
+            &lt;div className="form-group">
+                &lt;button className="button-center"
+                    style={{ width: "60%", display: "block", margin: "auto" }}>
+                    {props.text}
+                &lt;/button>
+            &lt;/div>
+        )
+    }
+
+    /**
+     * It returns a button with the text and action props.
+     * @function AuthButton
+     * @param {object} props - the props of the button (text, action)
+     * @returns the button div with the props
+     */
+    function AuthButton(props) {
+        return (
+            &lt;div className="form-group">
+                &lt;button className="button-center"
+                    style={{ width: "60%", display: "block", margin: "auto", backgroundColor: "#3b5998" }}
+                    onClick={props.action}>
+                    {props.text}
+                &lt;/button>
+            &lt;/div>
+        )
+    }
+
+    /**
+     * It fetches a resource, but if the fetch takes longer than the timeout, it
+     * aborts the fetch
+     * @function fetchWithTimeout
+     * @param {string} resource - The URL to fetch.
+     * @param {*} [options] - An object containing any custom settings that you want
+     * to apply to the request.
+     * @returns A function that takes two parameters, resource and options.
+     */
+    async function fetchWithTimeout(resource, options = {}) {
+        const { timeout = 8000 } = options;
+
+        const controller = new AbortController();
+        const id = setTimeout(() => controller.abort(), timeout);
+        const response = await fetch(resource, {
+            ...options,
+            signal: controller.signal
+        });
+        clearTimeout(id);
+        return response;
+    }
+
+    /**
+     * It updates the IP address of the user in the state of the application
+     * @function updateIP
+     * @param event - the event that triggered the function
+     */
+    function updateIP(event) {
+        setColor("black")
+        console.log(event.target.value)
+        try {
+            fetchWithTimeout(event.target.value + "/testConnexion", { timeout: 500 }).then(response => {
+                if (response.status == 200) {
+                    setColor("#5281B7")
+                } else {
+                    setColor("red")
+                }
+                console.log(response)
+            }).catch(error => {
+                setColor("red")
+                console.log(error)
+            })
+        } catch (error) {
+            setColor("red")
+            console.log(error)
+        }
+        props.setUserInformation({
+            mail: props.userInformation.mail,
+            locationAccept: props.userInformation.locationAccept,
+            coord: {
+                latitude: props.userInformation.coord.latitude,
+                longitude: props.userInformation.coord.longitude,
+                city: props.userInformation.coord.city
+            },
+            id: props.userInformation.id,
+            services: {
+                spotifyId: props.userInformation.spotifyId,
+                googleId: props.userInformation.googleId,
+                twitterId: props.userInformation.twitterId,
+                twitchId: props.userInformation.twitchId,
+                stravaId: props.userInformation.stravaId
+            },
+            ip: event.target.value
+        })
+    }
+
+    /**
+     * It returns a form with an email input, a password input, a button to submit
+     * the form, and a link to change the authentication mode
+     * @function signInPage
+     * @returns A form with a title, an email input, a password input, a button to
+     * submit the form, and a link to the sign up page.
+     */
+    function signInPage() {
+
+        return (
+            &lt;div className="Form-container">
+                &lt;form className="Form" onSubmit={onSubmit}>
+                    &lt;div className="Form-content">
+                        &lt;img src={AreaLogo} style={{ width: 150, height: 150, display: "block", margin: "auto" }} alt="logo" />
+                        &lt;h3 className="Title">Se connecter&lt;/h3>
+                        &lt;input style={{ color: color, display: "block", margin: "auto" }} type="text" defaultValue={props.userInformation.ip} placeholder="IP du server" onChange={updateIP} />
+                        &lt;div className="form-group">
+                            &lt;input
+                                type="email"
+                                className="form-control mt-1"
+                                style={{ width: "60%", display: "block", margin: "auto" }}
+                                placeholder="Adresse email"
+                                onChange={handleChange}
+                            />
+                        &lt;/div>
+                        &lt;div className="form-group">
+                            &lt;input
+                                type="password"
+                                className="form-control mt-1"
+                                style={{ width: "60%", display: "block", margin: "auto" }}
+                                placeholder="Mot de passe"
+                                onChange={handleChange}
+                            />
+                        &lt;/div>
+                        &lt;div className="error-text">{(isBadPassord) ? "L'utilisateur ou le mot de passe est invalide." : ""}&lt;/div>
+                        &lt;CenterButton text="Se connecter" />
+                        &lt;div className="text-center" style={{ marginTop: 20 }}>
+                            Pas encore de compte ?  {"  "}
+                            &lt;span className="link-primary" onClick={changeAuthMode}>
+                                S'inscrire
+                            &lt;/span>
+                            &lt;AuthButton text="Facebook" action={ onLoginFacebook } />
+                        &lt;/div>
+                    &lt;/div>
+                &lt;/form>
+            &lt;/div>
+        )
+    }
+    /**
+     * It returns a form with a logo, a title, three inputs, a button and a link
+     * to the login page
+     * @function signUpPage
+     * @returns A form with a logo, a title, 3 inputs, a button and a link to the
+     * login page.
+     */
+    function signUpPage() {
+        return (
+            &lt;div className="Form-container">
+                &lt;form className="Form" onSubmit={onSubmit}>
+                    &lt;div className="Form-content">
+                        &lt;img src={AreaLogo} style={{ width: 150, height: 150, display: "block", margin: "auto" }} alt="logo" />
+                        &lt;h3 className="Title">S'inscrire&lt;/h3>
+                        &lt;input style={{ color: color, display: "block", margin: "auto" }} type="text" defaultValue={props.userInformation.ip} placeholder="IP du server" onChange={updateIP} />
+                        &lt;div className="form-group">
+                            &lt;input
+                                type="email"
+                                className="form-control mt-1"
+                                style={{ width: "60%", display: "block", margin: "auto" }}
+                                placeholder="Adresse email"
+                                onChange={handleChange}
+                            />
+                        &lt;/div>
+                        &lt;div className="form-group">
+                            &lt;input
+                                type="password"
+                                className="form-control mt-1"
+                                style={{ width: "60%", display: "block", margin: "auto" }}
+                                placeholder="Mot de passe"
+                                onChange={handleChange}
+                            />
+                        &lt;/div>
+                        &lt;div className="form-group">
+                            &lt;input
+                                type="password"
+                                className="form-control mt-1"
+                                style={{ width: "60%", display: "block", margin: "auto" }}
+                                placeholder={confirmPlaceHolder}
+                                onChange={handleChange}
+                            />
+                        &lt;/div>
+                        &lt;div className="error-text">{(isPasswordDifferent) ? "Les mots de passes sont différents." : ""}&lt;/div>
+                        &lt;CenterButton text="S'inscrire" />
+                        &lt;div className="text-center">
+                            Déjà un compte ?{" "}
+                            &lt;span className="link-primary" onClick={changeAuthMode}>
+                                Se connecter
+                            &lt;/span>
+                        &lt;/div>
+                    &lt;/div>
+                &lt;/form>
+            &lt;/div>
+        )
+    }
+    if (authMode === "signin") {
+        return (signInPage())
+    }
+    return (signUpPage())
+}
+
+export default AuthPage;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-SettingsPage.html">SettingsPage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addDataIntoCache-Addsdataintothecache">addDataIntoCache - Adds data into the cache</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#AreaResume">AreaResume</a></li><li><a href="global.html#AuthButton">AuthButton</a></li><li><a href="global.html#AuthPage">AuthPage</a></li><li><a href="global.html#authWithCache">authWithCache</a></li><li><a href="global.html#Body">Body</a></li><li><a href="global.html#CenterButton">CenterButton</a></li><li><a href="global.html#changeAuthMode">changeAuthMode</a></li><li><a href="global.html#DisplayArea">DisplayArea</a></li><li><a href="global.html#DisplayAreas">DisplayAreas</a></li><li><a href="global.html#fetchWithTimeout">fetchWithTimeout</a></li><li><a href="global.html#getDataFromCache-Getsdatafromthecache">getDataFromCache - Gets data from the cache</a></li><li><a href="global.html#goHome">goHome</a></li><li><a href="global.html#goResume">goResume</a></li><li><a href="global.html#goSelectAction">goSelectAction</a></li><li><a href="global.html#goSelectReaction">goSelectReaction</a></li><li><a href="global.html#handleChange">handleChange</a></li><li><a href="global.html#Header">Header</a></li><li><a href="global.html#InfoBlock">InfoBlock</a></li><li><a href="global.html#onLoginFacebook">onLoginFacebook</a></li><li><a href="global.html#onSubmit">onSubmit</a></li><li><a href="global.html#removeAreaFromList">removeAreaFromList</a></li><li><a href="global.html#requestServer">requestServer</a></li><li><a href="global.html#selectedIndex">selectedIndex</a></li><li><a href="global.html#SelectionBlock">SelectionBlock</a></li><li><a href="global.html#sendArea">sendArea</a></li><li><a href="global.html#signInPage">signInPage</a></li><li><a href="global.html#signUpPage">signUpPage</a></li><li><a href="global.html#updateIP">updateIP</a></li><li><a href="global.html#updatePageIndex">updatePageIndex</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Sun Feb 26 2023 00:03:23 GMT+0000 (Coordinated Universal Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
