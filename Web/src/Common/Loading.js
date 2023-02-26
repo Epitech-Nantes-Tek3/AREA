@@ -1,3 +1,6 @@
+/**
+ * @module Loading
+ */
 import "./Loading.css";
 import LogoImage from "../Assets/logo.png";
 

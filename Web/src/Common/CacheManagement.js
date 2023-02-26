@@ -1,4 +1,7 @@
 /**
+ * @module CacheManagement
+ */
+/**
  * It takes a cache name as a parameter, gets the data from local storage, parses
  * it, and returns the data
  * @function getDataFromCache - Gets data from the cache
