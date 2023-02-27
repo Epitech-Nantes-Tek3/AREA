@@ -15,7 +15,7 @@ import StravaImage from './assets/strava.png';
 import LocationImage from './assets/locate.png';
 import DeconnexionImage from './assets/deconnexion.png';
 import ArrowRight from './assets/arrowRight.png';
-import { addDataIntoCache } from './Common/CacheManagement'
+import { addDataIntoCache, getDataFromCache } from './Common/CacheManagement'
 import { authWithCache } from './Common/Login';
 import { useLocation } from 'react-router-dom';
 
@@ -169,6 +169,7 @@ const styles = {
 export default function SettingsPage(props) {
     const navigate = useNavigate();
     const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
     var stravaCode = '';
 
     useEffect(() => {
@@ -180,21 +181,21 @@ export default function SettingsPage(props) {
             navigate("/auth")
         }
 
-        try {
-            const queryParams = new URLSearchParams(location.search);
+        /*try {
             const stravaCode = queryParams.get('code');
             if (stravaCode != null) {
                 getStravaAccessToken(stravaCode);
             }
         } catch (error) {
             console.log('error');
-        }
+        }*/
 
         updateIP({target:{value: props.userInformation.ip}})
     }, [])
     useEffect(() => {
         updateIP({target:{value: props.userInformation.ip}})
     }, [props.userInformation.id])
+
     /**
      * It returns a div with a profile picture and an email address
      * @function Profile - The profile div
@@ -323,10 +324,9 @@ export default function SettingsPage(props) {
         )
     }
 
-    async function getStravaAccessToken(stravaCode) {
+    /*async function getStravaAccessToken(stravaCode) {
         var client_id = '';
         var client_secret = '';
-        console.log(props);
         await fetch('http://localhost:8080/strava', {
             method: 'GET',
             headers: {
@@ -364,11 +364,11 @@ export default function SettingsPage(props) {
                 });
             });
         });
-    }
+    }*/
 
     async function stravaConnection() {
         console.log('strava connection');
-        await fetch('http://localhost:8080/auth', {
+        await fetch(props.userInformation.ip + '/strava/auth/' + props.userInformation.id, {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -377,7 +377,9 @@ export default function SettingsPage(props) {
         })
         .then((response) => {
             response.json().then(async (data) => {
+                console.log(data);
                 window.location.replace(data);
+                //window.open(data, 'popup', 'width=600,height=800');
                 //console.log(data);
                 //stravaClient = new stravaApi.client(data.access_token);
             });

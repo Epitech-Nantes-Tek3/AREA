@@ -267,8 +267,8 @@ app.get("/testConnexion", (req, res) => {
 /**
  * @function nodeCron.schedule nodeCron.schedule("*10 * * * * *")
 */
-nodeCron.schedule("*/10 * * * * *", () => {
-    try {
+//nodeCron.schedule("*/10 * * * * *", () => {
+/*    try {
         firebaseFunctions.getAllUsersFromFireBase().then(data => {
 
             for (const uid in data) {
@@ -282,7 +282,7 @@ nodeCron.schedule("*/10 * * * * *", () => {
     } catch (err) {
         console.log(err)
     }
-})
+})*/
 
 /**
  * @method post
@@ -611,16 +611,22 @@ app.get('/getPosition/:uid', (req, res) => {
 const configStrava = {
     client_id: 0,
     client_secret: "",
-    redirect_uri: 'http://localhost:3000/settings',
+    redirect_uri: 'http://localhost:8080/strava/callback',
     scope: 'read,activity:read_all'
 };
 
 var stravaClient = '';
 var client = '';
+var stravaToken = {
+    uid: "any",
+    access_token: "any"
+};
 
-app.get('/auth/', async (req, res) => {
+app.get('/strava/auth/:uid', async (req, res) => {
     const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
 
+    stravaToken.uid = req.params.uid;
+    console.log(req.params.uid)
     configStrava.client_id = stravaClientData.client_id;
     configStrava.client_secret = stravaClientData.client_secret;
     client = new Client(configStrava);
@@ -635,27 +641,23 @@ app.get('/strava', async (req, res) => {
 });
 
 app.post('/strava/add-token', async (req, res) => {
-    console.log(req.body.data);
-    console.log(req.body.userId);
     try {
         stravaClient = new stravaApi.client(req.body.data);
         var athlete = await stravaClient.athlete.get();
         console.log(athlete.id);
         data = {
-            StravaService: {
-                access_token: req.body.data,
-                athleteId: athlete.id
-            }
+            access_token: req.body.data,
+            athleteId: athlete.id
         };
         if (req.body.userId !== undefined && req.body.userId !== '')
-        await firebaseFunctions.setDataInDb('USERS/' + req.body.userId, data);
+            await firebaseFunctions.setDataInDb('USERS/' + req.body.userId + '/StravaService', data);
         res.json('SUCCESS You can now go back to the app');
     } catch (error) {
         res.json('error');
     }
 });
 
-app.get('/auth/callback', async (req, res) => {
+app.get('/strava/callback', async (req, res) => {
     const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
 
     await fetch('https://www.strava.com/oauth/token?client_id=' + stravaClientData.client_id + '&client_secret=' + stravaClientData.client_secret + '&code=' + req.query.code + '&grant_type=authorization_code', {
@@ -667,11 +669,17 @@ app.get('/auth/callback', async (req, res) => {
     })
     .then((response) => {
         response.json().then(async (data) => {
-            console.log(data.access_token);
             stravaClient = new stravaApi.client(data.access_token);
+            console.log(data.athlete.id);
+            data = {
+                access_token: data.access_token,
+                athleteId: data.athlete.id
+            };
+            if (stravaToken.uid !== "any")
+                await firebaseFunctions.setDataInDb('USERS/' + stravaToken.uid + '/StravaService', data);
+            res.send('SUCCESS You can now go back to the app');
         });
     });
-    res.send('ok');
 });
 
 app.get('/strava/activities/:uid', async (req, res) => {
