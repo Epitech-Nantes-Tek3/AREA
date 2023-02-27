@@ -172,9 +172,9 @@ export default function ConnexionScreen() {
         return (
             <View style={styles.socialContainer}>
                 <FacebookSocialButton onPress={connectWithFacebook} buttonViewStyle={[styles.socialButtons, {width: "80%"}]} buttonText="Se connecter avec Facebook" />
-                <GoogleSocialButton onPress={connectWithGoogle} buttonViewStyle={[styles.socialButtons, {width: "80%"}]} buttonText="Se connecter avec Google" />
+                {/* <GoogleSocialButton onPress={connectWithGoogle} buttonViewStyle={[styles.socialButtons, {width: "80%"}]} buttonText="Se connecter avec Google" />
                 {Platform.OS === "ios" &&
-                <AppleSocialButton onPress={connectWithApple} buttonViewStyle={[styles.socialButtons, {width: "80%"}]}  buttonText="Se connecter avec Apple" />}
+                <AppleSocialButton onPress={connectWithApple} buttonViewStyle={[styles.socialButtons, {width: "80%"}]}  buttonText="Se connecter avec Apple" />} */}
             </View>
         )
     }

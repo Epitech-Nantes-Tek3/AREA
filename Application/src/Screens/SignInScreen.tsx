@@ -141,9 +141,9 @@ export default function SignInScreen() {
         return (
             <View style={styles.socialContainer}>
                 <FacebookSocialButton onPress={connectWithFacebook} buttonViewStyle={[styles.socialButtons, {width: "80%"}]} buttonText="S'inscrire avec Facebook" />
-                <GoogleSocialButton onPress={connectWithGoogle} buttonViewStyle={[styles.socialButtons, {width: "80%"}]} buttonText="S'inscrire avec Google" />
+                {/* <GoogleSocialButton onPress={connectWithGoogle} buttonViewStyle={[styles.socialButtons, {width: "80%"}]} buttonText="S'inscrire avec Google" />
                 {Platform.OS === "ios" &&
-                <AppleSocialButton onPress={connectWithApple} buttonViewStyle={[styles.socialButtons, {width: "80%"}]}  buttonText="S'inscrire avec Apple" />}
+                <AppleSocialButton onPress={connectWithApple} buttonViewStyle={[styles.socialButtons, {width: "80%"}]}  buttonText="S'inscrire avec Apple" />} */}
             </View>
         )
     }
