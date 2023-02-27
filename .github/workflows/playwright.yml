@@ -17,6 +17,8 @@ jobs:
       run: cd Web && yarn
     - name: Install Playwright Browsers
       run: cd Web && yarn playwright install --with-deps
+    - name: Run web page
+      run: cd Web && yarn start &
     - name: Run Playwright tests
       run: cd Web && yarn playwright test
     - uses: actions/upload-artifact@v3
