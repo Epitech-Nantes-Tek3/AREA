@@ -133,13 +133,15 @@ export default function ConnexionScreen() {
         const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
 
         // Sign-in the user with the credential
-        auth().signInWithCredential(facebookCredential);
-        const props: HomeScreenProps = {
-            userMail: userMail,
-            userId: "idTest",
-            ip: ip
-        }
-        NavigatorPush("HomeScreen", "mainStack", options, props)
+        auth().signInWithCredential(facebookCredential).then((response) => {
+            let email = response.user.email || '';
+            const props: HomeScreenProps = {
+                userMail: email,
+                userId: response.user.uid,
+                ip: ip
+            }
+            NavigatorPush("HomeScreen", "mainStack", options, props)
+        });
 
     }
 
