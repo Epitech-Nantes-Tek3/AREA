@@ -45,7 +45,7 @@ export default function SettingsScreen(props: SettingsProps) {
      * @param {*} params contains the elements to be added to the url.
      * @returns return an encode string.
      */
-    function encodeQueryString(params) {
+    function encodeQueryString(params: any) {
         const queryString = new URLSearchParams();
         for (let paramName in params) {
             queryString.append(paramName, params[paramName]);
@@ -59,7 +59,7 @@ export default function SettingsScreen(props: SettingsProps) {
      * @param {*} params contains the elements to be added to the url.
      * @returns a string separated by an "&".
      */
-    function encodeUrlScope(params) 
+    function encodeUrlScope(params: any) 
     {
         let items = []
         for (let key in params) {
@@ -281,6 +281,18 @@ export default function SettingsScreen(props: SettingsProps) {
 
             try {
                 await fetch(ip + "/spotify").then(response => {
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({uid: props.userInfo.id})
+                    }
+                    const uid = props.userInfo.id
+                    fetch(ip + "/spotify/post/", requestOptions)
+                    .then(response => {
+                            response.json().then(data => {
+
+                        })
+                    })
                     response.json().then(data => {
                         console.log(data)
                         var clientID = data

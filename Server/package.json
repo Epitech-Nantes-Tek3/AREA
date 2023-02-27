@@ -17,7 +17,8 @@
     "passport-oauth": "^1.0.0",
     "request": "^2.88.2",
     "spotify-web-api-node": "^5.0.2",
-    "twitch": "^4.6.7"
+    "twitch": "^4.6.7",
+    "twitter-api-v2": "1.14.1"
   },
   "scripts": {
     "dev": "npm install && node app.js"

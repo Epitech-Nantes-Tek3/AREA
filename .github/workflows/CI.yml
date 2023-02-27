@@ -20,6 +20,19 @@ jobs:
       - name: Check docker-file consistancy
         run: .github/scripts/docker-compose-consistancy.sh >> $GITHUB_STEP_SUMMARY
 
+  services-validity:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Count services
+        run: |
+          .github/scripts/count-services.sh >> $GITHUB_STEP_SUMMARY
+      - name: Count actions-reactions
+        run: |
+          .github/scripts/count-actions-reactions.sh >> $GITHUB_STEP_SUMMARY
+
   run-docker-compose:
     needs: ["docker-compose-validity"]
     runs-on: ubuntu-22.04
@@ -33,10 +46,10 @@ jobs:
           fetch-depth: 0
       - name: Write env file for server
         if: matrix.type == 'server'
-        run: echo "${{ secrets.FIREBASE_CONFIG }}" >> ./Server/firebaseConfig.js
+        run: echo "${{ secrets.ENV_server }}" >> ./Server/firebaseConfig.js
       - name: Write env file for application
         if: matrix.type == 'client_mobile'
-        run: echo '${{ secrets.MOBILE_APP_ENV_JS }}' > ./Application/env.ts
+        run: echo '${{ secrets.ENV_client_mobile }}' > ./Application/env.ts
       - name: Run docker-compose build ${{ matrix.type }}
         run: docker-compose build ${{ matrix.type }}
 
