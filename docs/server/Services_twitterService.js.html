@@ -54,19 +54,19 @@ const { TwitterApi } = require('twitter-api-v2')
 
 
 /**
- * Uses the Twitter API to perform different actions depending on the action argument. Depending on 
+ * Uses the Twitter API to perform different actions depending on the action argument. Depending on
  * the value of action, the function can send a tweet, search for tweets and like or retweet them.
  * @function carryOutAnAction
  * @async
- * @param {*} appKey is an application key provided by Twitter to access their API. It is used to identify the 
+ * @param {*} appKey is an application key provided by Twitter to access their API. It is used to identify the
  * application making the request.
- * @param {*} appSecret is an application secret provided by Twitter to access their API. It is used to secure 
+ * @param {*} appSecret is an application secret provided by Twitter to access their API. It is used to secure
  * the requests made by the application.
  * @param {*} bearer is an access token that is used to access certain parts of the Twitter API that require
  *  additional authorization.
- * @param {*} hashtagOrMessage is an argument that can be a message or a hashtag depending on the value of the 
+ * @param {*} hashtagOrMessage is an argument that can be a message or a hashtag depending on the value of the
  * action argument. It is used to send a tweet or to search for tweets.
- * @param {*} action is an argument that determines what action should be performed by the function. It 
+ * @param {*} action is an argument that determines what action should be performed by the function. It
  * can take the values 'tweet', 'like' or 'retweet'.
  * @param {*} userData required data for TwitterApi
  */
@@ -148,8 +148,8 @@ function doAct(action, hashtagOrMessage, userData) {
 
 module.exports = {
     /**
-     * Uses an external "LoginWithTwitter" package to connect a user to their Twitter account.retrieves the 
-     * application key and application secret information from Firebase and uses it for "tw" of "LoginWithTwitter". 
+     * Uses an external "LoginWithTwitter" package to connect a user to their Twitter account.retrieves the
+     * application key and application secret information from Firebase and uses it for "tw" of "LoginWithTwitter".
      * Then, it uses the "login" function of "tw" to redirect the user to a Twitter authorization URL.
      * @function loginTwitter
      * @param {*} req is an object that contains information about the HTTP request that called this function
@@ -179,7 +179,7 @@ module.exports = {
         });
     },
     /**
-     * Makes sure the user is logged in by checking if "req.session.user" exists. If so, it renders 
+     * Makes sure the user is logged in by checking if "req.session.user" exists. If so, it renders
      * the "dash" view to display the dash page.
      * @function dashTwitter
      * @param {*} req is an object that contains information about the HTTP request that called this function
@@ -194,8 +194,8 @@ module.exports = {
         }
     },
     /**
-     * Is used to process Twitter information after the user has logged into their account. It retrieves the 
-     * parameters the tokens from the user's request, and those from the api on firebase. Use "tw" for the "callback" 
+     * Is used to process Twitter information after the user has logged into their account. It retrieves the
+     * parameters the tokens from the user's request, and those from the api on firebase. Use "tw" for the "callback"
      * function. If this function succeeds, it stores the user's information in the session, then redirects dash.
      * @function signTwitter
      * @param {*} req is an object that contains information about the HTTP request that called this function
@@ -243,7 +243,7 @@ module.exports = {
         }
     },
     /**
-     * Allows the user to retweet the most recent tweet of the hashtag pass parameter. It first checks 
+     * Allows the user to retweet the most recent tweet of the hashtag pass parameter. It first checks
      * if user exist then it uses  "carryOutAnAction" function to retweet newest tweet of the hashtag.
      * @function putLike
      * @param {*} req is an object that contains information about the HTTP request that called this function
@@ -263,7 +263,7 @@ module.exports = {
         }
     },
     /**
-     * Allows the user to like the most recent tweet of the hashtag pass parameter. It first checks 
+     * Allows the user to like the most recent tweet of the hashtag pass parameter. It first checks
      * if user exist then it uses  "carryOutAnAction" function to like newest tweet of the hashtag.
      * @function putRetweet
      * @param {*} req is an object that contains information about the HTTP request that called this function
@@ -290,7 +290,7 @@ module.exports = {
      * @param {string} hashtagOrMessage is a string representing the hashtag or message for the desired action.
      * @param {string} uid is the unique identifier for the user on the app.
      */
-    ActionTw: function(action, hashtagOrMessage, uid) {
+    ActionTw: function(uid, action, hashtagOrMessage) {
         GetIdTwitter(uid)
         .then(data => {
             doAct(action, hashtagOrMessage, data)
@@ -315,7 +315,7 @@ module.exports = {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon Feb 27 2023 07:38:16 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon Feb 27 2023 10:43:28 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
