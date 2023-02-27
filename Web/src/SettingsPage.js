@@ -417,7 +417,36 @@ export default function SettingsPage(props) {
      * Empty for the moment
      * @function twitterConnexion
     */
-    function twitterConnexion() {
+    async function twitterConnexion() {
+        try {
+            await fetch(ip + "/twitter/get").then(response => {
+                response.json().then(async data => {
+                    const params = {
+                        consumerKey: data.appKey,
+                        consumerSecret: data.appSecret,
+                        callbackUrl: 'http://localhost:8080/twitter/sign',
+                        uid: props.userInfo.id
+                    }
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({params: params})
+                    }
+                    await fetch(ip + "/twitter/login/", requestOptions)
+                    .then(response => {
+                        response.json().then(async data => {
+                            if (data) {
+                                 window.open(data.body, 'popup', 'width=600,height=800')
+                            }
+                        })
+                    })
+                })
+            }).catch(error => {
+                console.log(error)
+            })
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     /**

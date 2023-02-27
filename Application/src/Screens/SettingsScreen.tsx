@@ -345,7 +345,6 @@ export default function SettingsScreen(props: SettingsProps) {
          * @function twitterAuth
         */    
         async function twitterAuth() {
-            var url = "";
             try {
                 await fetch(ip + "/twitter/get").then(response => {
                     response.json().then(async data => {
@@ -360,12 +359,10 @@ export default function SettingsScreen(props: SettingsProps) {
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({params: params})
                         }
-                        console.log("params:", params)
                         await fetch(ip + "/twitter/login/", requestOptions)
                         .then(response => {
                             response.json().then(async data => {
                                 if (data) {
-                                    console.log("data:", data)
                                     await Linking.openURL(data.body).catch((err) => console.log('An error occurred', err))
                                 }
                             })
