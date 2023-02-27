@@ -71,25 +71,28 @@ const querystring  = require('querystring');
  * @returns True if the user follows the given artists, False Otherwise
  */
 async function isfollowing(uid, artistUids) {
-    firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
-    .then(data => {
-        SpotifyWebApi.setAccessToken(data.accessToken)
-        SpotifyWebApi.setRefreshToken(data.refreshToken)
-        spotifyApi.isFollowingArtists(artistUids).then(function(data) {
-        let isFollowing = data.body;
+    return new Promise ((resolve, reject) => {
+        firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
+        .then(data => {
+            spotifyApi.setAccessToken(data.accessToken)
+            spotifyApi.setRefreshToken(data.refreshToken)
+            spotifyApi.isFollowingArtists(artistUids).then(function(data) {
+            let isFollowing = data.body;
 
-        for (let index = 0; index < artistUidx.length; index++) {
-            console.log(artistUids[index] + ':' + isFollowing[index])
-        }
+            for (let index = 0; index < artistUidx.length; index++) {
+                console.log(artistUids[index] + ':' + isFollowing[index])
+            }
 
-        return isFollowing.find(false) === undefined
-        }, function(err) {
-            console.log('Something went wrong!', err);
-            return false
-        });
-    })
-    .catch(error =>{
-        console.error(error)
+            resolve(isFollowing.find(false) === undefined)
+            }, function(err) {
+                console.log('Something went wrong!', err);
+                resolve(false)
+            });
+        })
+        .catch(error =>{
+            console.error(error)
+            reject(error)
+        })
     })
 }
 
@@ -101,25 +104,28 @@ async function isfollowing(uid, artistUids) {
  * @returns True if the user is listening music, False otherwise
  */
 async function isListening(uid) {
-    firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
-    .then(data => {
-        SpotifyWebApi.setAccessToken(data.accessToken)
-        SpotifyWebApi.setRefreshToken(data.refreshToken)
-        spotifyApi.getMyCurrentPlaybackState().then(function(data) {
-            if (data.body && data.body.is_playing) {
-                console.log("User is currently playing something!");
-                return true;
-            } else {
-                console.log("User is not playing anything, or doing so in private.");
-                return false;
-            }
-        }, function(err) {
-            console.log('Something went wrong!', err);
-            return false;
-        });
-    })
-    .catch(error =>{
-        console.error(error)
+    return new Promise ((resolve, reject) => {
+         firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
+        .then(data => {
+            spotifyApi.setAccessToken(data.accessToken)
+            spotifyApi.setRefreshToken(data.refreshToken)
+            spotifyApi.getMyCurrentPlaybackState().then(function(data) {
+                if (data.body && data.body.is_playing) {
+                    console.log("User is currently playing something!");
+                    resolve(true);
+                } else {
+                    console.log("User is not playing anything, or doing so in private.");
+                    resolve(false);
+                }
+            }, function(err) {
+                console.log('Something went wrong!', err);
+                resolve(false);
+            });
+        })
+        .catch(error =>{
+            console.error(error)
+            reject(error)
+        })
     })
 
 }
@@ -133,29 +139,32 @@ async function isListening(uid) {
  * @returns True if the user is listening to musicName, false otherwise
  */
 async function isListeningTo(uid, musicName) {
-    firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
-    .then(data => {
-        SpotifyWebApi.setAccessToken(data.accessToken)
-        SpotifyWebApi.setRefreshToken(data.refreshToken)
-        spotifyApi.getMyCurrentPlaybackState().then(function(data) {
-            if (data.body && data.body.is_playing) {
-                var currMusic = data.body.item.name
-                if (currMusic === musicName)
-                    return true;
-                else {
-                    console.log("User is not listening to " + musicName + ", User is listening to " + currMusic)
-                    return false;
+    return new Promise ((resolve, reject) => {
+        firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
+        .then(data => {
+            spotifyApi.setAccessToken(data.accessToken)
+            spotifyApi.setRefreshToken(data.refreshToken)
+            spotifyApi.getMyCurrentPlaybackState().then(function(data) {
+                if (data.body && data.body.is_playing) {
+                    var currMusic = data.body.item.name
+                    if (currMusic === musicName)
+                        resolve(true);
+                    else {
+                        console.log("User is not listening to " + musicName + ", User is listening to " + currMusic)
+                        resolve(false);
+                    }
+                } else {
+                    resolve(false);
                 }
-            } else {
-                return false;
-            }
-        }, function(err) {
-            console.log('Something went wrong!', err);
-            return false;
-        });
-    })
-    .catch(error =>{
-        console.error(error)
+            }, function(err) {
+                console.log('Something went wrong!', err);
+                resolve(false);
+            });
+        })
+        .catch(error =>{
+            console.error(error)
+            reject(error)
+        })
     })
 }
 
@@ -169,8 +178,8 @@ async function isListeningTo(uid, musicName) {
 async function pauseMusic(uid) {
     firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
     .then(data => {
-        SpotifyWebApi.setAccessToken(data.accessToken)
-        SpotifyWebApi.setRefreshToken(data.refreshToken)
+        spotifyApi.setAccessToken(data.accessToken)
+        spotifyApi.setRefreshToken(data.refreshToken)
         spotifyApi.pause().then(function() {
             console.log("Music Paused !")
             return true;
@@ -195,8 +204,8 @@ async function pauseMusic(uid) {
 async function setShuffle(uid) {
     firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
     .then(data => {
-        SpotifyWebApi.setAccessToken(data.accessToken)
-        SpotifyWebApi.setRefreshToken(data.refreshToken)
+        spotifyApi.setAccessToken(data.accessToken)
+        spotifyApi.setRefreshToken(data.refreshToken)
         spotifyApi.setShuffle(true).then(function() {
             console.log('Succes')
             return true;
@@ -234,8 +243,8 @@ function setUserDataSpotify(SpotifyTokens) {
 async function createPlaylist (uid, playlistName__playlistDesc) {
     firebaseFunctions.getDataFromFireBase(uid, "SpotifyService")
     .then(data => {
-        SpotifyWebApi.setAccessToken(data.accessToken)
-        SpotifyWebApi.setRefreshToken(data.refreshToken)
+        spotifyApi.setAccessToken(data.accessToken)
+        spotifyApi.setRefreshToken(data.refreshToken)
         const paramArray = playlistName__playlistDesc.split("__")
         const playlistName = paramArray[0];
         const playlistDesc = paramArray[1];
@@ -329,30 +338,29 @@ module.exports = {
      * @returns the boolean result of the chosen function
      */
     SpotifyLoop : async function(uid, func, param) {
-        return new Promise((resolve, reject) => {
-            if (func === "follows") {
-                const result = isfollowing(uid, param)
+        return new Promise(async (resolve, reject) => {
+            if (func == "follows") {
+                const result = await isfollowing(uid, param)
                 console.log(result)
                 resolve(result)
-            } else if (func === "listen") {
-                const result = isListening(uid)
+            } else if (func == "listen") {
+                const result = await isListening(uid)
                 console.log(result)
                 resolve(result)
-            } else if (func === "listento") {
-                const result = isListeningTo(uid, param)
+            } else if (func == "listento") {
+                const result = await isListeningTo(uid, param)
                 console.log(result)
                 resolve(result)
-            }
-            else if (func === "createplaylist") {
-                const result = createPlaylist(uid, param)
+            } else if (func == "createplaylist") {
+                const result = await createPlaylist(uid, param)
                 console.log(result)
                 resolve(result)
-            } else if (func === "shuffle") {
-                const result = setShuffle(uid)
+            } else if (func == "shuffle") {
+                const result = await setShuffle(uid)
                 console.log(result)
                 resolve(result)
-            } else if (func === "pause") {
-                const result = pauseMusic(uid)
+            } else if (func == "pause") {
+                const result = await pauseMusic(uid)
                 console.log(result)
                 resolve(result)
             } else {
