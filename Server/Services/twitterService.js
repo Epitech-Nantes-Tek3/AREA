@@ -181,7 +181,6 @@ module.exports = {
             oauth_token: req.query.oauth_token,
             oauth_verifier: req.query.oauth_verifier
         }
-        console.log("twRedirect:", twRedirect)
         firebaseFunctions.getDataFromFireBaseServer('twitter')
         .then(data => {
             const tw = new LoginWithTwitter({
@@ -191,7 +190,6 @@ module.exports = {
             })
             tw.callback(params, twRedirect.tokenSecret, (err, user) => {
                 req.session.user = user
-                console.log("user", user)
                 setUserData(twRedirect.uid, user)
                 res.send("SUCCESS GO BACK TO THE APP")
             })
