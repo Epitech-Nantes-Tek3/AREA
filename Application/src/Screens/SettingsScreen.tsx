@@ -337,18 +337,14 @@ export default function SettingsScreen(props: SettingsProps) {
                 ip: props.userInfo.ip
             
             })
-            const callbackUrl = 'http://localhost:8080/twitter/sign'
-            twitterAuth(callbackUrl)
+            twitterAuth()
         }
         /**
-         * Authenticates the user with Twitch OAuth and send an access token to the back.
+         * Authenticates the user with Twitter OAuth.
          * @async
-         * @function twitchAuth
-         * @param {string} scopes - The list of scopes to be authorized by the user.
-         * @param {string} twitch_oauth_url - The URL for the Twitch OAuth endpoint.
-         * @param {string} response_type - The response type for the authorization request.
+         * @function twitterAuth
         */    
-        async function twitterAuth(callbackUrl:string) {
+        async function twitterAuth() {
             var url = "";
             try {
                 await fetch(ip + "/twitter/get").then(response => {
