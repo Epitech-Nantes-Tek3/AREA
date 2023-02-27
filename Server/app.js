@@ -442,9 +442,23 @@ app.get('/twitch/get', (req, res) => {
 })
 
 /**
+ * return twitter information to the front.
+ * @method get
+ * @function '/twitter/get' Server twitter get page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+*/
+app.get('/twitter/get', (req, res) => {
+    firebaseFunctions.getDataFromFireBaseServer('twitter').then(serverData => {
+        res.json(serverData).status(200);
+    })
+})
+
+
+/**
  * Draw a button, and redirect to oAuth twitter.
  * @method get
- * @function '/twitch/get' Server twitter page
+ * @function '/twitter' Server twitter page
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
 */
@@ -454,13 +468,13 @@ app.get('/twitter', (req, res) => {
 
 /**
  * Twitter login page use loginTwitter
- * @method get
+ * @method post
  * @function '/twitter/login' Server twitter login page
  * @param {Object} req - Express request object
- * @param {Object} res - Express response object
+ * @param {Object} res - Express response objectw
 */
-app.get('/twitter/login', (req, res) => {
-    twitterService.loginTwitter(req, res)
+app.post('/twitter/login', (req, res) => {
+    twitterService.loginTwitter(req, res, req.body.params)
 })
 
 /**

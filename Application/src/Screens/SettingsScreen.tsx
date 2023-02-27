@@ -335,8 +335,55 @@ export default function SettingsScreen(props: SettingsProps) {
                     stravaId: props.userInfo.services.stravaId
                 },
                 ip: props.userInfo.ip
+            
             })
+            const callbackUrl = 'http://localhost:8080/twitter/sign'
+            twitterAuth(callbackUrl)
         }
+        /**
+         * Authenticates the user with Twitch OAuth and send an access token to the back.
+         * @async
+         * @function twitchAuth
+         * @param {string} scopes - The list of scopes to be authorized by the user.
+         * @param {string} twitch_oauth_url - The URL for the Twitch OAuth endpoint.
+         * @param {string} response_type - The response type for the authorization request.
+        */    
+        async function twitterAuth(callbackUrl:string) {
+            var url = "";
+            try {
+                await fetch(ip + "/twitter/get").then(response => {
+                    response.json().then(async data => {
+                        const params = {
+                            consumerKey: data.appKey,
+                            consumerSecret: data.appSecret,
+                            callbackUrl: 'http://localhost:8080/twitter/sign',
+                            uid: props.userInfo.id
+                        }
+                        const requestOptions = {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({params: params})
+                        }
+                        console.log("params:", params)
+                        await fetch(ip + "/twitter/login/", requestOptions)
+                        .then(response => {
+                            response.json().then(async data => {
+                                if (data) {
+                                    console.log("data:", data)
+                                    await Linking.openURL(data.body).catch((err) => console.log('An error occurred', err))
+                                }
+                            })
+                        })
+                    })
+                }).catch(error => {
+                    console.log(error)
+                })
+            } catch (error) {
+                console.log(error);
+            }
+            
+        }
+
         /**
          * Authenticates the user with Twitch API.
          * @async

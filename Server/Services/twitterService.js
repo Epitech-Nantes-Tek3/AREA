@@ -24,6 +24,22 @@ const LoginWithTwitter = require('login-with-twitter');
  */
 const { TwitterApi } = require('twitter-api-v2')
 
+/**
+ * @class class qui contient l'access token & le refresh token, ainsi que l'uid de l'utilisateur.
+ */
+class TwitterRedirect {
+    constructor(url, tokenSecret, uid) {
+        this.url = url;
+        this.tokenSecret = tokenSecret;
+        this.uid = uid
+    }
+}
+
+/**
+ * @var twRedirect
+ * @requires TwitterRedirect()
+*/
+var twRedirect = new TwitterRedirect("any", "any", "any")
 
 /**
  * Uses the Twitter API to perform different actions depending on the action argument. Depending on
@@ -73,26 +89,16 @@ async function carryOutAnAction(appKey, appSecret, bearer, hashtagOrMessage, act
         }
     }
 }
+
 /**
- * PARAMETER UNUSED: uid
- * Allows the user to perform an action (retweet, like or tweet) on Twitter.
- * It first retrieves the Twitter API data from Firebase using "getDataFromFireBaseServer" function.
- * Then, depending on the action passed as a parameter, it calls "carryOutAnAction" function to carry out the specified action.
- * @function GetIdTwitter
- * @param {string} uid is the user id
- * @returns {Promise}
- */
-function GetIdTwitter(uid) {
-    return new Promise((resolve, reject) => {
-        firebaseFunctions.getDataFromFireBaseServer('twitterAccount')
-        .then(data => {
-            resolve(data);
-        })
-        .catch(error => {
-            console.log(error);
-        });
-    });
+     * Sets the user data in the Firebase database.
+     * @function setUserData
+     * @param {Object} twTokens - An object containing the Twitter API tokens, as well as the user ID.
+     */
+function setUserData(uid ,twTokens) {
+    firebaseFunctions.setDataInDb(`USERS/${uid}/twitterService`, twTokens)
 }
+
 /**
  * Allows the user to perform an action (retweet, like, or tweet) on Twitter. It retrieves the necessary information
  * from the Twitter API stored on Firebase. Depending on the action passed as a parameter, it calls the
@@ -127,28 +133,24 @@ module.exports = {
      * @param {*} req is an object that contains information about the HTTP request that called this function
      * @param {*} res is an object that handles the HTTP response that will be sent to the user.
      */
-    loginTwitter: function(req, res) {
-        firebaseFunctions.getDataFromFireBaseServer('twitter')
-        .then(data => {
-            console.log(data)
-            const tw = new LoginWithTwitter({
-                consumerKey: data.appKey,
-                consumerSecret: data.appSecret,
-                callbackUrl: 'http://localhost:8080/twitter/sign'
-            })
-            req.session.tw = tw
-            tw.login((err, tokenSecret, url) => {
-                if (err) {
-                    res.send('ERROR')
-                    console.log(err)
-                }
-                req.session.tokenSecret = tokenSecret
-                res.redirect(url)
-            })
+    loginTwitter: function(req, res, params) {
+        const tw = new LoginWithTwitter({
+            consumerKey: params.consumerKey,
+            consumerSecret: params.consumerSecret,
+            callbackUrl: params.callbackUrl
         })
-        .catch(error => {
-            console.log(error);
-        });
+        twRedirect.uid = params.uid
+        req.session.tw = tw
+        tw.login((err, tokenSecret, url) => {
+            if (err) {
+                res.send('ERROR')
+                console.log(err)
+            }
+            req.session.tokenSecret = tokenSecret
+            twRedirect.url = url
+            twRedirect.tokenSecret = tokenSecret
+            res.json({body: url}).status(200);
+        })
     },
     /**
      * Makes sure the user is logged in by checking if "req.session.user" exists. If so, it renders
@@ -178,6 +180,7 @@ module.exports = {
             oauth_token: req.query.oauth_token,
             oauth_verifier: req.query.oauth_verifier
         }
+        console.log("twRedirect:", twRedirect)
         firebaseFunctions.getDataFromFireBaseServer('twitter')
         .then(data => {
             const tw = new LoginWithTwitter({
@@ -185,9 +188,11 @@ module.exports = {
                 consumerSecret: data.appSecret,
                 callbackUrl: 'http://localhost:8080/twitter/sign'
             })
-            tw.callback(params, req.session.tokenSecret, (err, user) => {
+            tw.callback(params, twRedirect.tokenSecret, (err, user) => {
                 req.session.user = user
-                res.redirect('/twitter/dash')
+                console.log("user", user)
+                setUserData(twRedirect.uid, user)
+                res.send("SUCCESS GO BACK TO THE APP")
             })
         })
         .catch(error => {
@@ -256,19 +261,22 @@ module.exports = {
     },
     /**
      * ActionTw function is used to perform a specified action on the user's Twitter account. It first retrieves the Twitter UID
-     * of the user with the "GetIdTwitter" function, then it performs the specified action on the user's account with the "doAct" function.
+     * of the user with the "getDataFromFireBase" function, then it performs the specified action on the user's account with the "doAct" function.
      * @function ActionTw
      * @param {string} action is a string representing the desired action to be performed (e.g. retweet, like, tweet)
      * @param {string} hashtagOrMessage is a string representing the hashtag or message for the desired action.
      * @param {string} uid is the unique identifier for the user on the app.
      */
     ActionTw: function(uid, action, hashtagOrMessage) {
-        GetIdTwitter(uid)
+        firebaseFunctions.getDataFromFireBase(uid, "twitterService")
         .then(data => {
             doAct(action, hashtagOrMessage, data)
         })
         .catch(error => {
             console.log(error);
         });
+    },
+    getRedirect: function() {
+        return twRedirect;
     }
 }
