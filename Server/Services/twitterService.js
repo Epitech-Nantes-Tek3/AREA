@@ -25,7 +25,7 @@ const LoginWithTwitter = require('login-with-twitter');
 const { TwitterApi } = require('twitter-api-v2')
 
 /**
- * @class class qui contient l'access token & le refresh token, ainsi que l'uid de l'utilisateur.
+ * @class class which contains url and the tokenSecret, as well as the uid of the user.
  */
 class TwitterRedirect {
     constructor(url, tokenSecret, uid) {
