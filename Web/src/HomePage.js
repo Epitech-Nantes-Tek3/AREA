@@ -220,7 +220,7 @@ export default function HomePage(props) {
                 <div style={global.title}>{title}</div>
                 <div style={global.action}>{action.description}.</div>
                 <div style={global.reaction}>{reaction.description}.</div>
-                <img src={TrashImage} style={global.trash} onClick={() => removeAreaFromList(props.index)} />
+                <img src={TrashImage} alt={"trash image"} style={global.trash} onClick={() => removeAreaFromList(props.index)} />
             </div>
         )
     }
@@ -232,7 +232,7 @@ export default function HomePage(props) {
      * @returns The area block to display
      */
     function AreaBlock(props) {
-        const title = (props.area.title) ? props.area.title : "AREA " + props.index;
+        const title = (props.area.title) ? props.area.title : "AREA ";
         const actionLogo = (props.area.action.logo) ? props.area.action.logo : "https://www.flaticon.com/svg/static/icons/svg/25/25231.svg";
         const reactionLogo = (props.area.reaction.logo) ? props.area.reaction.logo : "https://www.flaticon.com/svg/static/icons/svg/25/25231.svg";
         const style = {
@@ -243,14 +243,15 @@ export default function HomePage(props) {
                 alignItems: "center",
                 backgroundColor: "lightgrey",
                 width: "300px",
-                height: "150px",
+                height: "400px",
+                // overflow: "scroll",
                 borderRadius: "20px",
                 margin: "10px",
                 cursor: "pointer",
 
                 title: {
                     position: "relative",
-                    fontSize: "18px",
+                    fontSize: "32px",
                     margin: "5px",
                 },
                 content: {
@@ -261,24 +262,38 @@ export default function HomePage(props) {
                     alignItems: "center",
                     backgroundColor: "#5281B7",
                     width: "100%",
-                    height: "100%",
+                    height: "150%",
                     borderRadius: "20px",
+                    paddingVertical: "10px",
                 },
+                trash: {
+                    position: "relative",
+                    width: "30px",
+                    height: "30px",
+                    cursor: "pointer",
+                    border: "1px solid black",
+                    borderRadius: "20%",
+                }
             }
         }
 
         return (
-            <Popup trigger={
-                <div style={style.areaBlock}>
+            <div style={style.areaBlock}>
+                <div style={{ display: "flex", justifyContent: "space-around", flexDirection: "row", width: "100%" }}>
+                    <img src={logo[props.area.action.serviceName]} alt={"Logo de l'action"} style={{ width: "30px", height: "30px", padding: "5px" }} />
                     <p style={style.areaBlock.title}>{title}</p>
-                    <div style={style.areaBlock.content}>
-                        <img src={logo[props.area.action.serviceName]} alt={"Logo de l'action"} style={{ width: "30px", height: "30px" }} />
-                        <img src={logo[props.area.reaction.serviceName]} alt={"Logo de la réaction"} style={{ width: "30px", height: "30px" }} />
-                    </div>
+                    <img src={logo[props.area.reaction.serviceName]} alt={"Logo de la réaction"} style={{ width: "30px", height: "30px", padding: "5px" }} />
                 </div>
-            } modal>
-                <DisplayArea area={props.area} index={props.index} />
-            </Popup>
+                <div style={style.areaBlock.content}>
+                    <div style={{ padding: "5px", height: "50px" }}>
+                        <p style={{ textAlign: "center", paddingLeft: "10px", paddingRight: "10px", fontSize: 24 }}>{props.area.action.description}</p>
+                    </div>
+                    <div style={{ padding: "5px", height: "50px" }}>
+                        <p style={{ textAlign: "center", paddingLeft: "10px", paddingRight: "10px", fontSize: 24 }}>{props.area.reaction.description}</p>
+                    </div>
+                    <img src={TrashImage} alt={"trash image"} style={style.areaBlock.trash} onClick={() => removeAreaFromList(props.index)} />
+                </div>
+            </div>
         )
     }
 
@@ -292,9 +307,10 @@ export default function HomePage(props) {
             displayAreas: {
                 position: "relative",
                 display: "grid",
+                gridAutoColumns: "3",
                 gridTemplateColumns: "repeat(3, auto)",
                 justifyContent: "space-around",
-                alignItems: "center",
+                alignItems: "safe center",
                 width: "minmax(300px, 100%)",
                 height: "100%",
                 padding: "10px",
@@ -379,13 +395,13 @@ export default function HomePage(props) {
             console.log("mouse leave");
         }
         return (
-            <div style={{position: "relative"}}>
+            <div style={{ position: "relative" }}>
                 <div style={style.header}>
                     <img src={LogoImage} style={style.header.logo} alt="logo" />
                     <h1 style={style.header.title}>Re-Bonjour, {(mail) ? mail : "MAIL UNDEFINED"} !</h1>
                     <img src={SettingsImage} style={style.header.settings} onClick={goSettings} alt="settings" />
                 </div>
-                <div style={{position: "relative", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                <div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <a style={style.header.button} onMouseEnter={mouseEnterButton} onMouseLeave={mouseLeaveButton} href='client.apk'>Télécharger client.apk</a>
                 </div>
             </div>
@@ -428,6 +444,7 @@ export default function HomePage(props) {
     }
     const globalStyle = {
         position: "relative",
+        fontFamily: "Avenir Next,Avenir Next W01, Avenir,helvetica,arial,sans-serif",
     }
     return (
         <div id="global" style={globalStyle}>
