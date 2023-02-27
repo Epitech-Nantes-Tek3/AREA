@@ -454,24 +454,12 @@ app.get('/twitter/get', (req, res) => {
     })
 })
 
-
-/**
- * Draw a button, and redirect to oAuth twitter.
- * @method get
- * @function '/twitter' Server twitter page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.get('/twitter', (req, res) => {
-    res.render('index')
-})
-
 /**
  * Twitter login page use loginTwitter
  * @method post
  * @function '/twitter/login' Server twitter login page
  * @param {Object} req - Express request object
- * @param {Object} res - Express response objectw
+ * @param {Object} res - Express response object
 */
 app.post('/twitter/login', (req, res) => {
     twitterService.loginTwitter(req, res, req.body.params)
@@ -486,50 +474,6 @@ app.post('/twitter/login', (req, res) => {
 */
 app.get('/twitter/sign', (req, res) => {
     twitterService.signTwitter(req, res)
-})
-
-/**
- * Twitter dash page use dashTwitter
- * @method get
- * @function '/twitter/dash' Server twitter dash page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.get('/twitter/dash', (req, res) => {
-    twitterService.dashTwitter(req, res)
-})
-
-/**
- * Twitter postTweet page use sendTweet
- * @method post
- * @function '/twitter/postTweet' Server twitter postTweet page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.post("/twitter/postTweet", (req, res) => {
-    twitterService.sendTweet(req, res)
-})
-
-/**
- * Twitter like page use putlike
- * @method post
- * @function '/twitter/like' Server twitter like page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.post("/twitter/like", (req, res) => {
-    twitterService.putlike(req, res)
-})
-
-/**
- * Twitter retweet page use putRetweet
- * @method post
- * @function '/twitter/retweet' Server twitter retweet page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.post("/twitter/retweet", (req, res) => {
-    twitterService.putRetweet(req, res)
 })
 
 /**

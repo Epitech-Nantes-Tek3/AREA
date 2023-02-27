@@ -155,21 +155,6 @@ module.exports = {
         })
     },
     /**
-     * Makes sure the user is logged in by checking if "req.session.user" exists. If so, it renders
-     * the "dash" view to display the dash page.
-     * @function dashTwitter
-     * @param {*} req is an object that contains information about the HTTP request that called this function
-     * @param {*} res is an object that handles the HTTP response that will be sent to the user.
-    */
-    dashTwitter: function(req, res) {
-        if (req.session.user) {
-            console.log(req.session)
-            res.render('dash')
-        } else {
-            res.redirect('/twitter')
-        }
-    },
-    /**
      * Is used to process Twitter information after the user has logged into their account. It retrieves the
      * parameters the tokens from the user's request, and those from the api on firebase. Use "tw" for the "callback"
      * function. If this function succeeds, it stores the user's information in the session, then redirects dash.
@@ -198,66 +183,6 @@ module.exports = {
         .catch(error => {
             console.log(error);
         });
-    },
-    /**
-     * Allows the user to post a tweet. It first checks if there is a "req.session.user".
-     * Then it uses the "carryOutAnAction" function to post a tweet with the message content.
-     * @function sendTweet
-     * @param {*} req is an object that contains information about the HTTP request that called this function
-     * @param {*} res is an object that handles the HTTP response that will be sent to the user.
-    */
-    sendTweet: function(req, res) {
-        if (req.session.user) {
-            firebaseFunctions.getDataFromFireBaseServer('twitter')
-            .then(data => {
-                carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, 'hi !', 'tweet');
-            })
-            .catch(error => {
-                console.log(error);
-            });
-        } else {
-            res.redirect('/twitter')
-        }
-    },
-    /**
-     * Allows the user to retweet the most recent tweet of the hashtag pass parameter. It first checks
-     * if user exist then it uses  "carryOutAnAction" function to retweet newest tweet of the hashtag.
-     * @function putLike
-     * @param {*} req is an object that contains information about the HTTP request that called this function
-     * @param {*} res is an object that handles the HTTP response that will be sent to the user.
-    */
-    putlike: function(req, res) {
-        if (req.session.user) {
-            firebaseFunctions.getDataFromFireBaseServer('twitter')
-            .then(data => {
-                carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, '#chelsea', 'like');
-            })
-            .catch(error => {
-                console.log(error);
-            });
-        } else {
-            res.redirect('/twitter')
-        }
-    },
-    /**
-     * Allows the user to like the most recent tweet of the hashtag pass parameter. It first checks
-     * if user exist then it uses  "carryOutAnAction" function to like newest tweet of the hashtag.
-     * @function putRetweet
-     * @param {*} req is an object that contains information about the HTTP request that called this function
-     * @param {*} res is an object that handles the HTTP response that will be sent to the user.
-     */
-    putRetweet: function(req, res) {
-        if (req.session.user) {
-            firebaseFunctions.getDataFromFireBaseServer('twitter')
-            .then(data => {
-                carryOutAnAction(req, res, data.appKey, data.appSecret, data.bearer, '#chelsea', 'retweet');
-            })
-            .catch(error => {
-                console.log(error);
-            });
-        } else {
-            res.redirect('/twitter')
-        }
     },
     /**
      * ActionTw function is used to perform a specified action on the user's Twitter account. It first retrieves the Twitter UID
