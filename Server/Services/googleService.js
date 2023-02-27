@@ -26,15 +26,15 @@ const OAuth2 = google.auth.OAuth2
 module.exports = {
     /**
      * UNUSED PARAMETER: subject
-     * Sends an email using Gmail with Nodemailer. It first reads in the Firebase database. Then it uses 
-     * an OAuth2 library to get an access token from Google. It configures the content of the email and uses the 
+     * Sends an email using Gmail with Nodemailer. It first reads in the Firebase database. Then it uses
+     * an OAuth2 library to get an access token from Google. It configures the content of the email and uses the
      * Nodemailer library to send the email.
      * @function send_mail
      * @param {*} subject Unnecessary but mandatory for areaLoop.
      * @param {*} mailContent Content of the mail
      * @param {*} uid The user's uid
      */
-    send_mail: function(subject, mailContent, uid) {
+    send_mail: function(uid, subject, mailContent) {
         firebaseFunctions.getDataFromFireBase(uid, 'GoogleService')
         .then(data => {
             const OAuth2_client = new OAuth2(data.clientId, data.clientSecret)
