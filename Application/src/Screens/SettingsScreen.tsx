@@ -3,6 +3,7 @@ import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSou
 import { Globals } from "../Common/Globals";
 import Geolocation from 'react-native-geolocation-service';
 import { SettingsProps } from "../Common/Interfaces";
+import { Navigation } from "react-native-navigation";
 
 interface Location {
     latitude: number
