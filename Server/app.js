@@ -143,7 +143,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 /**
- * @class class qui contient l'access token & le refresh token, ainsi que l'uid de l'utilisateur.
+ * @class class which contains the access token & refresh token, and the user's uid.
  */
 class TwitchToken {
     constructor(accessToken, refreshToken, uid) {
