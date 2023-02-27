@@ -439,6 +439,10 @@ export default function SettingsScreen(props: SettingsProps) {
             })
         }
 
+        async function removeAccount() {
+            Navigation.popToRoot("mainStack");
+        }
+
         return (
             <View style={styles.mainConnexion}>
                 <SingleConnexionBlock leftImage={require("../assets/logo/google.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Google"} onPress={googleConnexion} />
@@ -446,6 +450,7 @@ export default function SettingsScreen(props: SettingsProps) {
                 <SingleConnexionBlock leftImage={require("../assets/logo/twitter.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Twitter"} onPress={twitterConnexion} />
                 <SingleConnexionBlock leftImage={require("../assets/logo/strava.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Strava"} onPress={stravaConnexion} />
                 <SingleConnexionBlock leftImage={require("../assets/logo/twitch.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Twitch"} onPress={twitchConnexion} />
+                <SingleConnexionBlock leftImage={require("../assets/trash.png")} rightImage={require("../assets/arrowRight.png")} text={"Se déconnecter"} onPress={removeAccount} />
             </View>
         )
     }
