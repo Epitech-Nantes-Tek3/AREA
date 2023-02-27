@@ -68,7 +68,9 @@ To launch our services (described below), you may run the command :
 ```bash
 docker-compose up -d
 ```
+
 You can also run the following command to build and launch our services:
+
 ```bash
 docker-compose up --build -d
 ```
@@ -84,10 +86,22 @@ The http://localhost:8081/client.apk root should provide an APK, an Android vers
 The http://localhost:8080/about.json root should answer with the server service.
 
 ## **Stop services**
+
 To stop our services, you may run the command:
+
 ```bash
 docker-compose down -v
 ```
+
+## **Free space**
+
+To free space on your computer after havng runned our project, you can do
+
+```bash
+docker system prune
+```
+
+**BE CAREFUL** This will remove everything related to docker o your machine !
 
 ## **Launch Tests**
 
