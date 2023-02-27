@@ -91,10 +91,11 @@ async function carryOutAnAction(appKey, appSecret, bearer, hashtagOrMessage, act
 }
 
 /**
-     * Sets the user data in the Firebase database.
-     * @function setUserData
-     * @param {Object} twTokens - An object containing the Twitter API tokens, as well as the user ID.
-     */
+ * Sets the user data in the Firebase database.
+ * @function setUserData
+ * @param {Object} twTokens - An object containing the Twitter API tokens.
+ * @param {string} uid user ID.
+*/
 function setUserData(uid ,twTokens) {
     firebaseFunctions.setDataInDb(`USERS/${uid}/twitterService`, twTokens)
 }
