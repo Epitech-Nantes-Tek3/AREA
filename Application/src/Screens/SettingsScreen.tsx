@@ -421,21 +421,12 @@ export default function SettingsScreen(props: SettingsProps) {
 
         async function stravaConnexion() {
             let token = "ImTestingATokenItIsSoFunnyStrava"
-            console.log(token);
-            const config = {
-                clientId: '102338',
-                clientSecret: '3473daba0cfd3917a58553295664d5e9d0c09476',
-                redirectUrl: 'http://localhost:8080/strava/add-token',
-                serviceConfiguration: {
-                  authorizationEndpoint: 'https://www.strava.com/oauth/mobile/authorize',
-                  tokenEndpoint:
-                    'https://www.strava.com/oauth/token?client_id=102338>&client_secret=3473daba0cfd3917a58553295664d5e9d0c09476',
-                },
-                scopes: ['activity:read_all'],
-              };
-              
-              const authState = await authorize(config);
-              console.log(authState);
+            var params = {};
+            await fetch(ip + "/strava").then(response => {
+                response.json().then(async data => {
+                    await Linking.openURL(data).catch((err) => console.log('An error occurred', err))
+                });
+            });
               
             props.setUserInfo({
                 mail: props.userInfo.mail,
