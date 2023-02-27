@@ -418,21 +418,22 @@ export default function SettingsPage(props) {
      * @function twitterConnexion
     */
     async function twitterConnexion() {
+        console.log("TWITTER")
         try {
-            await fetch(ip + "/twitter/get").then(response => {
+            await fetch(props.userInformation.ip + "/twitter/get").then(response => {
                 response.json().then(async data => {
                     const params = {
                         consumerKey: data.appKey,
                         consumerSecret: data.appSecret,
                         callbackUrl: 'http://localhost:8080/twitter/sign',
-                        uid: props.userInfo.id
+                        uid: props.userInformation.id
                     }
                     const requestOptions = {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({params: params})
                     }
-                    await fetch(ip + "/twitter/login/", requestOptions)
+                    await fetch(props.userInformation.ip + "/twitter/login/", requestOptions)
                     .then(response => {
                         response.json().then(async data => {
                             if (data) {
