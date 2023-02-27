@@ -282,6 +282,18 @@ export default function SettingsScreen(props: SettingsProps) {
 
             try {
                 await fetch(ip + "/spotify").then(response => {
+                    const requestOptions = {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({uid: props.userInfo.id})
+                    }
+                    const uid = props.userInfo.id
+                    fetch(ip + "/spotify/post/", requestOptions)
+                    .then(response => {
+                            response.json().then(data => {
+
+                        })
+                    })
                     response.json().then(data => {
                         console.log(data)
                         var clientID = data

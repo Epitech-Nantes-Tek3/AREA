@@ -11,7 +11,7 @@ export interface AreaList {
 }
 
 export interface InfoArea {
-    serviceName: "spotify" | "google" | "twitter" | "twitch" | "iss" | "météo" | "nasa" | "strava"
+    serviceName:  "spotify"| "google" | "twitter" | "twitch" | "iss" | "météo" | "nasa" | "strava"
     description: string
     text: string | undefined
     trigger: boolean | undefined
