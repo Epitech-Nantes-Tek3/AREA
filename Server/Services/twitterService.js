@@ -133,6 +133,7 @@ module.exports = {
      * @function loginTwitter
      * @param {*} req is an object that contains information about the HTTP request that called this function
      * @param {*} res is an object that handles the HTTP response that will be sent to the user.
+     * @param {Object} params - An object containing the Twitter API tokens and the User ID.
      */
     loginTwitter: function(req, res, params) {
         const tw = new LoginWithTwitter({
