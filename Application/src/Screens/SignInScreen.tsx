@@ -64,6 +64,8 @@ export default function SignInScreen() {
                                         ip: ip
                                     }
                                     NavigatorPush("HomeScreen", "mainStack", options, props)
+                                    setUserMail("")
+                                    setUserPass("")
                                 }
                             })
                         })
