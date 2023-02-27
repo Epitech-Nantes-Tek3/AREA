@@ -93,6 +93,8 @@ export default function ConnexionScreen() {
                         setIsBadPassword(false)
                         console.log("Connect user", userMail, userPass)
                         NavigatorPush("HomeScreen", "mainStack", options, props)
+                        setUserMail("")
+                        setUserPass("")
                     } else {
                         setIsBadPassword(true)
                     }
