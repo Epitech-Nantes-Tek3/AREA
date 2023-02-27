@@ -1,3 +1,6 @@
+/**
+ * @module Login
+ */
 import { getDataFromCache } from './CacheManagement'
 
 /**

@@ -1,3 +1,6 @@
+/**
+ * @module AuthPage
+ */
 import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import AreaLogo from './assets/logo.png'
@@ -187,7 +190,7 @@ function AuthPage(props) {
     /**
      * It returns a button with the text and action props.
      * @function AuthButton
-     * @param {text: string, action: function} props - the props of the button (text, action)
+     * @param {object} props - the props of the button (text, action)
      * @returns the button div with the props
      */
     function AuthButton(props) {

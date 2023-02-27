@@ -1,3 +1,6 @@
+/**
+ * @module App
+ */
 import AddArea from './AddAreaPage';
 import AuthPage from './AuthPage';
 import HomePage from './HomePage';
@@ -7,7 +10,6 @@ import { useState } from 'react';
 
 /**
  * @brief Main Function for AREA App
- * @returns
  */
 function App() {
   const [userInformation, setUserInformation] = useState({

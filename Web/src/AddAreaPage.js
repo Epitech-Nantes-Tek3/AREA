@@ -1,3 +1,6 @@
+/**
+ * @module AddAreaPage
+ */
 import LogoSpotify from "./assets/spotify.png"
 import LogoIss from "./assets/iss.png"
 import LogoStrava from './assets/strava.png';

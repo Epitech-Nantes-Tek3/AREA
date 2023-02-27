@@ -1,3 +1,6 @@
+/**
+ * @module HomePage
+ */
 import React, { useState, useEffect } from 'react';
 import TrashImage from './assets/trash.png';
 import AddAreaImage from "./assets/add.png";
