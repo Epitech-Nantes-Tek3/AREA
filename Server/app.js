@@ -237,6 +237,9 @@ app.use(bodyParser.urlencoded({ extended: false }))
  * parse application/json
 */
 app.use(bodyParser.json())
+/**
+ * Set spaces for json object
+ */
 app.set('json spaces', 2)
 
 /**
