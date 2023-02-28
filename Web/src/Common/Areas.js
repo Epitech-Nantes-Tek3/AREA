@@ -96,6 +96,55 @@ export let ACTIONS = [
         description: "Si krl à plus de 1000 viewers",
         text: "krl_stream__1000",
         subject : "viewers"
+    },
+    {
+        serviceName : "strava",
+        trigger: true,
+        description: "Si une activité a était ajouté dans votre club.",
+        text: "",
+        subject : "clubActivity"
+    },
+    {
+        serviceName : "strava",
+        trigger: true,
+        description: "Si 1000km on était fait à vélo.",
+        text: "",
+        subject : "bikeStats"
+    },
+    {
+        serviceName : "strava",
+        trigger: true,
+        description: "Si 1000km on était fait à pied.",
+        text: "",
+        subject : "runStats"
+    },
+    {
+        serviceName : "strava",
+        trigger: true,
+        description: "Si 1000km on était fait à la nage.",
+        text: "",
+        subject : "swinStats"
+    },
+    {
+        serviceName : "strava",
+        trigger: true,
+        description: "Si une nouvelle activité est ajouté.",
+        text: "",
+        subject : "activty"
+    },
+    {
+        serviceName : "strava",
+        trigger: true,
+        description: "Si il y a un nouveau like sur votre dernière activité.",
+        text: "",
+        subject : "kudo"
+    },
+    {
+        serviceName : "strava",
+        trigger: true,
+        description: "Si il y a un nouveau commentaire sur votre dernière activité.",
+        text: "",
+        subject : "comment"
     }
 ]
 

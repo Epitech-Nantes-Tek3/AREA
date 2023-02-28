@@ -183,9 +183,6 @@ async function isNewClubActivity(uid) {
 
 }
 
-
-
-
 module.exports = {
     StravaLoop : async function(uid, func, param) {
         return new Promise(async (resolve, reject) => {
