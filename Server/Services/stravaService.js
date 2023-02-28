@@ -3,7 +3,7 @@ const firebaseFunctions = require('../firebaseFunctions');
 
 var stravaApi = require('strava-v3');
 
-async function isStatsOver(uid) {
+async function isBikeStatsOver(uid) {
     return new Promise ((resolve, reject) => {
         console.log(uid);
          firebaseFunctions.getDataFromFireBase(uid, "StravaService")
@@ -11,14 +11,58 @@ async function isStatsOver(uid) {
             console.log(data);
             var stravaClient = new stravaApi.client(data.access_token);
             const stats = await stravaClient.athletes.stats({id: data.athleteId});
-            
-            //console.log(stats);
 
-            console.log(stats.all_ride_totals.distance);
-            console.log(stats.all_swim_totals.distance);
-            console.log(stats.all_run_totals.distance);
+            if (stats.all_ride_totals.distance % 1000 == 0) {
+                resolve(true);
+            } else {
+                resolve(false);
+            }
+        })
+        .catch(error =>{
+            console.error(error)
+            reject(error)
+        })
+    })
 
-            resolve(true);
+}
+
+async function isRunStatsOver(uid) {
+    return new Promise ((resolve, reject) => {
+        console.log(uid);
+         firebaseFunctions.getDataFromFireBase(uid, "StravaService")
+        .then(async data => {
+            console.log(data);
+            var stravaClient = new stravaApi.client(data.access_token);
+            const stats = await stravaClient.athletes.stats({id: data.athleteId});
+
+            if (stats.all_run_totals.distance % 1000 == 0) {
+                resolve(true);
+            } else {
+                resolve(false);
+            }
+        })
+        .catch(error =>{
+            console.error(error)
+            reject(error)
+        })
+    })
+
+}
+
+async function isSwimStatsOver(uid) {
+    return new Promise ((resolve, reject) => {
+        console.log(uid);
+         firebaseFunctions.getDataFromFireBase(uid, "StravaService")
+        .then(async data => {
+            console.log(data);
+            var stravaClient = new stravaApi.client(data.access_token);
+            const stats = await stravaClient.athletes.stats({id: data.athleteId});
+
+            if (stats.all_swim_totals.distance % 1000 == 0) {
+                resolve(true);
+            } else {
+                resolve(false);
+            }
         })
         .catch(error =>{
             console.error(error)
@@ -62,8 +106,16 @@ module.exports = {
                 const result = await isNewClubActivity(uid);
                 console.log(result)
                 resolve(result)
-            } else if (func == "stats") {
-                const result = await isStatsOver(uid)
+            } else if (func == "bikeStats") {
+                const result = await isBikeStatsOver(uid)
+                console.log(result)
+                resolve(result)
+            } else if (func == "runStats") {
+                const result = await isRunStatsOver(uid)
+                console.log(result)
+                resolve(result)
+            } else if (func == "swinStats") {
+                const result = await isSwimStatsOver(uid)
                 console.log(result)
                 resolve(result)
             } else if (func == "activty") {
