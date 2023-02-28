@@ -76,14 +76,16 @@ async function isfollowing(uid, artistUids) {
         .then(data => {
             spotifyApi.setAccessToken(data.accessToken)
             spotifyApi.setRefreshToken(data.refreshToken)
+            if (typeof(artistUids) !== Array)
+                artistUids = [artistUids]
             spotifyApi.isFollowingArtists(artistUids).then(function(data) {
             let isFollowing = data.body;
 
-            for (let index = 0; index < artistUidx.length; index++) {
+            for (let index = 0; index < artistUids.length; index++) {
                 console.log(artistUids[index] + ':' + isFollowing[index])
             }
 
-            resolve(isFollowing.find(false) === undefined)
+            resolve(!isFollowing.includes(false))
             }, function(err) {
                 console.log('Something went wrong!', err);
                 resolve(false)
@@ -305,7 +307,7 @@ module.exports = {
             spotifyApi.setAccessToken(access_token)
             spotifyApi.setRefreshToken(refresh_token)
 
-            res.send("SUCCESS ! You can go back to the AREA Application.")
+            res.send("SUCCESS ! You can go back to the AREA Application.\n The access token will only last one hour.")
 
             } else {
             res.redirect('/#' +

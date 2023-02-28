@@ -368,6 +368,7 @@ function AuthPage(props) {
                             <span className="link-primary" onClick={changeAuthMode}>
                                 Se connecter
                             </span>
+                            <AuthButton text="Facebook" action={ onLoginFacebook } />
                         </div>
                     </div>
                 </form>

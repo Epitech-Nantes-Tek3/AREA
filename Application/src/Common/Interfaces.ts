@@ -13,7 +13,7 @@ export interface AreaList {
 export interface InfoArea {
     serviceName:  "spotify"| "google" | "twitter" | "twitch" | "iss" | "météo" | "nasa" | "strava"
     description: string
-    text: string | undefined
+    text: string | Array<string> | undefined
     trigger: boolean | undefined
     subject: string | undefined
 }
@@ -57,4 +57,4 @@ export interface AddAreaProps {
     setAllAreas: Dispatch<React.SetStateAction<Array<SingleArea>>>
     userInfo: UserInfo
     setUserInfo: Dispatch<React.SetStateAction<UserInfo>>
-}    
+}

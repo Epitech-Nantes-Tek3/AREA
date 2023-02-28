@@ -124,16 +124,22 @@ const session = require('express-session')
 var OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 
 /**
+ * @constant twitchConfig
+ * @requires './twitchConfig.js'
+ */
+const twitchConfig = require('./twitchConfig.js')
+
+/**
  * @constant TWITCH_CLIENT_ID
  * @requires TWITCH_CLIENT_ID
 */
-const TWITCH_CLIENT_ID = '1ikfbd316i8dggr27rtl8t9x3qrhvf';
+const TWITCH_CLIENT_ID = twitchConfig.twitchCliendID;
 
 /**
  * @constant TWITCH_SECRET
  * @requires TWITCH_SECRET
 */
-const TWITCH_SECRET    = 'je4r7zf1rwv6jn3q8g0fis4lxrgvc0';
+const TWITCH_SECRET    = twitchConfig.twitchSecret;
 
 /**
  * @constant SESSION_SECRET
@@ -265,6 +271,10 @@ app.use(bodyParser.urlencoded({ extended: false }))
  * parse application/json
 */
 app.use(bodyParser.json())
+/**
+ * Set spaces for json object
+ */
+app.set('json spaces', 2)
 
 /**
  * @method get
@@ -364,22 +374,19 @@ app.get('/about.json', (req, res) => {
                 return;
             }
         })
-        obj[i] = JSON.parse(data);
+        obj[i] = JSON.parse(data, null, 2);
     }
 
     const d = new Date()
-    const about = JSON.stringify(
-        {
-            "client": {
-                "host": req.ip
-            },
-            "server": {
-                "current_time": d.toString(),
-                "services": obj
-            }
-        }
-    )
-    res.send(JSON.parse(about))
+    const about = {}
+    about.client = {"host": req.ip}
+    about.server = {
+        current_time : d.toString(),
+        services : obj,
+    }
+    console.log(about)
+    res.header('Content-Type', 'application/json')
+    res.type('json').send(JSON.stringify(about, null, 2) + '\n');
 })
 
 /**
@@ -423,9 +430,9 @@ app.get('/twitch/auth/', function (req, res) {
       twhtokens.accessToken = req.session.passport.user.accessToken
       twhtokens.refreshToken = req.session.passport.user.refreshToken
       TwitchService.setUserData(twhtokens)
-      res.send("BACK TO THE APP NOW")
+      res.send("SUCCESS ! You can go back to the AREA Application.\n The access token will only last one hour.")
     } else {
-        res.send("l'authentification a échoué")
+        res.send("Authentification has failed. Please try again.")
     }
 });
 
