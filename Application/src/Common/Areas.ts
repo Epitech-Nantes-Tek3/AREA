@@ -19,7 +19,7 @@ export let ACTIONS: InfoArea[] = [
         serviceName : "spotify",
         trigger: true,
         description: "Si l'utilisateur suit Jul",
-        text: "Jul",
+        text: ['3IW7ScrzXmPvZhB27hmfgy'],
         subject : "follows"
     },
     {
@@ -32,8 +32,15 @@ export let ACTIONS: InfoArea[] = [
     {
         serviceName : "spotify",
         trigger: true,
-        description: "Si l'utilisateur écoute Tchikita de Jul",
-        text: "Tchikita",
+        description: "Si l'utilisateur écoute Butterflies and Hurricanes de Muse",
+        text: "Butterflies and Hurricanes",
+        subject : "listento"
+    },
+    {
+        serviceName : "spotify",
+        trigger: true,
+        description: "Si l'utilisateur écoute FLY HIGH!! (Haikyuu)",
+        text: "FLY HIGH!!",
         subject : "listento"
     },
     {
