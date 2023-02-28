@@ -650,7 +650,13 @@ app.get('/strava/callback', async (req, res) => {
         response.json().then(async (data) => {
             stravaClient = new stravaApi.client(data.access_token);
             console.log(data.athlete.id);
+            const activities = await stravaClient.athlete.listActivities({id: data.athlete.id});
             data = {
+                lastActivity: {
+                    id: activities[0].id,
+                    kudos: activities[0].kudos_count,
+                    comment: activities[0].comment_count
+                },
                 access_token: data.access_token,
                 athleteId: data.athlete.id
             };
@@ -678,7 +684,7 @@ app.get('/strava/club/:uid', async (req, res) => {
     }
     const clubs = await stravaClient.athlete.listClubs({id: userCred.athleteId});
     const announcements = await stravaClient.clubs.listActivities({id: clubs[0].id});*/
-    StravaLoop(req.params.uid, 'stats', '');
+    StravaLoop(req.params.uid, 'kudo', '');
     res.json('ok').status(200);
 });
 
