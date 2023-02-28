@@ -169,8 +169,6 @@ const styles = {
 export default function SettingsPage(props) {
     const navigate = useNavigate();
     const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    var stravaCode = '';
 
     useEffect(() => {
         try {
@@ -180,15 +178,6 @@ export default function SettingsPage(props) {
             console.log("Unable to login" + error);
             navigate("/auth")
         }
-
-        /*try {
-            const stravaCode = queryParams.get('code');
-            if (stravaCode != null) {
-                getStravaAccessToken(stravaCode);
-            }
-        } catch (error) {
-            console.log('error');
-        }*/
 
         updateIP({target:{value: props.userInformation.ip}})
     }, [])
