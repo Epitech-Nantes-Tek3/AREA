@@ -112,16 +112,22 @@ const session = require('express-session')
 var OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
 
 /**
+ * @constant twitchConfig
+ * @requires './twitchConfig.js'
+ */
+const twitchConfig = require('./twitchConfig.js')
+
+/**
  * @constant TWITCH_CLIENT_ID
  * @requires TWITCH_CLIENT_ID
 */
-const TWITCH_CLIENT_ID = '1ikfbd316i8dggr27rtl8t9x3qrhvf';
+const TWITCH_CLIENT_ID = twitchConfig.twitchCliendID;
 
 /**
  * @constant TWITCH_SECRET
  * @requires TWITCH_SECRET
 */
-const TWITCH_SECRET    = 'je4r7zf1rwv6jn3q8g0fis4lxrgvc0';
+const TWITCH_SECRET    = twitchConfig.twitchSecret;
 
 /**
  * @constant SESSION_SECRET
