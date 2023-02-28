@@ -691,7 +691,7 @@ app.get('/strava/club/:uid', async (req, res) => {
     }
     const clubs = await stravaClient.athlete.listClubs({id: userCred.athleteId});
     const announcements = await stravaClient.clubs.listActivities({id: clubs[0].id});*/
-    StravaLoop(req.params.uid, 'kudo', '');
+    StravaLoop(req.params.uid, 'comment', '');
     res.json('ok').status(200);
 });
 

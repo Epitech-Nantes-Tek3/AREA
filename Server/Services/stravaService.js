@@ -145,9 +145,19 @@ async function isNewActivity(uid) {
             var stravaClient = new stravaApi.client(data.access_token);
             const activities = await stravaClient.athlete.listActivities({id: data.athleteId});
             
-            console.log(activities[0]);
-
-            resolve(true);
+            try {
+                if (data.lastActivity.id != activities[0].id) {
+                    firebaseFunctions.setDataInDb('USERS/' + uid + '/StravaService/lastActivity/',{
+                        id: activities[0].id,
+                        kudos: activities[0].kudos_count,
+                        comments: activities[0].comment_count
+                    })
+                    resolve(true);
+                }
+            } catch (error) {
+                console.log(error);
+            }
+            resolve(false);
         })
         .catch(error =>{
             console.error(error)
@@ -202,8 +212,8 @@ module.exports = {
                 const result = await isSwimStatsOver(uid) //done
                 console.log(result)
                 resolve(result)
-            } else if (func == "activty") {
-                const result = await isNewActivity(uid, param) //to do
+            } else if (func == "activity") {
+                const result = await isNewActivity(uid) //done
                 console.log(result)
                 resolve(result)
             } else if (func == "kudo") {
