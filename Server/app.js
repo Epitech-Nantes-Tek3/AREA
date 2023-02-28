@@ -234,12 +234,12 @@ app.use(bodyParser.json())
 
 /**
  * @method get
- * @function '/' Server HomePage
+ * @function '/' Server HomePage redirect to about.json
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
 */
 app.get('/', (req, res) => {
-    res.send('Server HomePage')
+    res.redirect("/about.json")
 })
 
 /**
