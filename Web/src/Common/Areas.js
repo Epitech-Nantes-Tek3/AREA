@@ -137,7 +137,7 @@ export let ACTIONS = [
         trigger: true,
         description: "Si une nouvelle activité est ajouté.",
         text: "",
-        subject : "activty"
+        subject : "activity"
     },
     {
         serviceName : "strava",
