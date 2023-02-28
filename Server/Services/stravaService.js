@@ -136,6 +136,27 @@ async function isNewKudo(uid) {
 
 }
 
+async function isNewActivity(uid) {
+    return new Promise ((resolve, reject) => {
+        console.log(uid);
+         firebaseFunctions.getDataFromFireBase(uid, "StravaService")
+        .then(async data => {
+            console.log(data);
+            var stravaClient = new stravaApi.client(data.access_token);
+            const activities = await stravaClient.athlete.listActivities({id: data.athleteId});
+            
+            console.log(activities[0]);
+
+            resolve(true);
+        })
+        .catch(error =>{
+            console.error(error)
+            reject(error)
+        })
+    })
+
+}
+
 async function isNewClubActivity(uid) {
     return new Promise ((resolve, reject) => {
         console.log(uid);
@@ -185,7 +206,7 @@ module.exports = {
                 console.log(result)
                 resolve(result)
             } else if (func == "activty") {
-                const result = await isNewActivity(uid, param)
+                const result = await isNewActivity(uid, param) //to do
                 console.log(result)
                 resolve(result)
             } else if (func == "kudo") {
