@@ -336,8 +336,48 @@ export default function SettingsScreen(props: SettingsProps) {
                     stravaId: props.userInfo.services.stravaId
                 },
                 ip: props.userInfo.ip
+            
             })
+            twitterAuth()
         }
+        /**
+         * Authenticates the user with Twitter OAuth.
+         * @async
+         * @function twitterAuth
+        */    
+        async function twitterAuth() {
+            try {
+                await fetch(ip + "/twitter/get").then(response => {
+                    response.json().then(async data => {
+                        const params = {
+                            consumerKey: data.appKey,
+                            consumerSecret: data.appSecret,
+                            callbackUrl: 'http://localhost:8080/twitter/sign',
+                            uid: props.userInfo.id
+                        }
+                        const requestOptions = {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({params: params})
+                        }
+                        await fetch(ip + "/twitter/login/", requestOptions)
+                        .then(response => {
+                            response.json().then(async data => {
+                                if (data) {
+                                    await Linking.openURL(data.body).catch((err) => console.log('An error occurred', err))
+                                }
+                            })
+                        })
+                    })
+                }).catch(error => {
+                    console.log(error)
+                })
+            } catch (error) {
+                console.log(error);
+            }
+            
+        }
+
         /**
          * Authenticates the user with Twitch API.
          * @async
