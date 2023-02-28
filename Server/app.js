@@ -143,7 +143,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 /**
- * @class class qui contient l'access token & le refresh token, ainsi que l'uid de l'utilisateur.
+ * @class class which contains the access token & refresh token, and the user's uid.
  */
 class TwitchToken {
     constructor(accessToken, refreshToken, uid) {
@@ -442,25 +442,27 @@ app.get('/twitch/get', (req, res) => {
 })
 
 /**
- * Draw a button, and redirect to oAuth twitter.
+ * return twitter information to the front.
  * @method get
- * @function '/twitch/get' Server twitter page
+ * @function '/twitter/get' Server twitter get page
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
 */
-app.get('/twitter', (req, res) => {
-    res.render('index')
+app.get('/twitter/get', (req, res) => {
+    firebaseFunctions.getDataFromFireBaseServer('twitter').then(serverData => {
+        res.json(serverData).status(200);
+    })
 })
 
 /**
  * Twitter login page use loginTwitter
- * @method get
+ * @method post
  * @function '/twitter/login' Server twitter login page
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
 */
-app.get('/twitter/login', (req, res) => {
-    twitterService.loginTwitter(req, res)
+app.post('/twitter/login', (req, res) => {
+    twitterService.loginTwitter(req, res, req.body.params)
 })
 
 /**
@@ -472,50 +474,6 @@ app.get('/twitter/login', (req, res) => {
 */
 app.get('/twitter/sign', (req, res) => {
     twitterService.signTwitter(req, res)
-})
-
-/**
- * Twitter dash page use dashTwitter
- * @method get
- * @function '/twitter/dash' Server twitter dash page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.get('/twitter/dash', (req, res) => {
-    twitterService.dashTwitter(req, res)
-})
-
-/**
- * Twitter postTweet page use sendTweet
- * @method post
- * @function '/twitter/postTweet' Server twitter postTweet page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.post("/twitter/postTweet", (req, res) => {
-    twitterService.sendTweet(req, res)
-})
-
-/**
- * Twitter like page use putlike
- * @method post
- * @function '/twitter/like' Server twitter like page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.post("/twitter/like", (req, res) => {
-    twitterService.putlike(req, res)
-})
-
-/**
- * Twitter retweet page use putRetweet
- * @method post
- * @function '/twitter/retweet' Server twitter retweet page
- * @param {Object} req - Express request object
- * @param {Object} res - Express response object
-*/
-app.post("/twitter/retweet", (req, res) => {
-    twitterService.putRetweet(req, res)
 })
 
 /**
