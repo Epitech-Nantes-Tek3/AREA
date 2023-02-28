@@ -248,6 +248,7 @@ const ejs = require('ejs');
  * @requires googleService
 */
 const googleService = require('./Services/googleService');
+const { StravaLoop } = require('./Services/stravaService');
 
 /**
  * initialisation of ejs for twitch authentification.
@@ -670,14 +671,15 @@ app.get('/strava/activities/:uid', async (req, res) => {
 });
 
 app.get('/strava/club/:uid', async (req, res) => {
-    //const userCred = await firebaseFunctions.getDataFromFireBase(req.query.uid, 'StravaService');
+    /*const userCred = await firebaseFunctions.getDataFromFireBase(req.query.uid, 'StravaService');
     const userCred = await firebaseFunctions.getDataFromFireBase('', 'StravaService');
     if (stravaClient === '') {
         stravaClient = new stravaApi.client(userCred.access_token);
     }
     const clubs = await stravaClient.athlete.listClubs({id: userCred.athleteId});
-    const announcements = await stravaClient.clubs.listActivities({id: clubs[0].id});
-    res.json(announcements).status(200);
+    const announcements = await stravaClient.clubs.listActivities({id: clubs[0].id});*/
+    StravaLoop(req.params.uid, 'stats', '');
+    res.json('ok').status(200);
 });
 
 app.get('/strava/kudo/:uid', async (req, res) => {
