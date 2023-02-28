@@ -244,7 +244,6 @@ export default function HomePage(props) {
                 backgroundColor: "lightgrey",
                 width: "300px",
                 height: "400px",
-                // overflow: "scroll",
                 borderRadius: "20px",
                 margin: "10px",
                 cursor: "pointer",
