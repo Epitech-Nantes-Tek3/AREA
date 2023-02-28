@@ -167,61 +167,31 @@ async function isNewActivity(uid) {
 
 }
 
-async function isNewClubActivity(uid) {
-    return new Promise ((resolve, reject) => {
-        console.log(uid);
-         firebaseFunctions.getDataFromFireBase(uid, "StravaService")
-        .then(async data => {
-            console.log(data);
-            var stravaClient = new stravaApi.client(data.access_token);
-            const clubs = await stravaClient.athlete.listClubs({id: data.athleteId});
-            
-            for (let i = 0; i < clubs.length; i++) {
-                const club = clubs[i];
-                const activities = await stravaClient.clubs.listActivities({id: club.id, per_page: 100});
-                console.log(activities.length);
-                console.log(activities[0]);
-            }
-
-            resolve(true);
-        })
-        .catch(error =>{
-            console.error(error)
-            reject(error)
-        })
-    })
-
-}
-
 module.exports = {
     StravaLoop : async function(uid, func, param) {
         return new Promise(async (resolve, reject) => {
-            if (func == "clubActivity") {                
-                const result = await isNewClubActivity(uid); // check how to retrieve time
-                console.log(result)
-                resolve(result)
-            } else if (func == "bikeStats") {
-                const result = await isBikeStatsOver(uid) //done
+            if (func == "bikeStats") {
+                const result = await isBikeStatsOver(uid)
                 console.log(result)
                 resolve(result)
             } else if (func == "runStats") {
-                const result = await isRunStatsOver(uid) //done
+                const result = await isRunStatsOver(uid)
                 console.log(result)
                 resolve(result)
             } else if (func == "swinStats") {
-                const result = await isSwimStatsOver(uid) //done
+                const result = await isSwimStatsOver(uid)
                 console.log(result)
                 resolve(result)
             } else if (func == "activity") {
-                const result = await isNewActivity(uid) //done
+                const result = await isNewActivity(uid)
                 console.log(result)
                 resolve(result)
             } else if (func == "kudo") {
-                const result = await isNewKudo(uid, param) //done
+                const result = await isNewKudo(uid, param)
                 console.log(result)
                 resolve(result)
             } else if (func == "comment") {
-                const result = await isNewComment(uid) //done
+                const result = await isNewComment(uid)
                 console.log(result)
                 resolve(result)
             } else {
