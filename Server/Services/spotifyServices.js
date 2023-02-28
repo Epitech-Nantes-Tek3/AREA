@@ -305,7 +305,7 @@ module.exports = {
             spotifyApi.setAccessToken(access_token)
             spotifyApi.setRefreshToken(refresh_token)
 
-            res.send("SUCCESS ! You can go back to the AREA Application.")
+            res.send("SUCCESS ! You can go back to the AREA Application.\n The access token will only last one hour.")
 
             } else {
             res.redirect('/#' +

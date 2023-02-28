@@ -177,7 +177,7 @@ module.exports = {
             tw.callback(params, twRedirect.tokenSecret, (err, user) => {
                 req.session.user = user
                 setUserData(twRedirect.uid, user)
-                res.send("SUCCESS GO BACK TO THE APP")
+                res.send("SUCCESS ! You can go back to the AREA Application.\n The access token will only last one hour.")
             })
         })
         .catch(error => {
