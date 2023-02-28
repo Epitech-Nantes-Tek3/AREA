@@ -643,7 +643,7 @@ const configStrava = {
  * @param {Object} req - Express request object
  * @param {Object} res - Express response object
  */
-app.get('/strava/auth/:uid/:ip', async (req, res) => {
+app.get('/strava/auth/:uid', async (req, res) => {
     const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
 
     stravaToken.uid = req.params.uid;

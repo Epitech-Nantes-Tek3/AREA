@@ -324,48 +324,6 @@ export default function SettingsPage(props) {
         )
     }
 
-    /*async function getStravaAccessToken(stravaCode) {
-        var client_id = '';
-        var client_secret = '';
-        await fetch('http://localhost:8080/strava', {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => {
-            response.json().then(async (data) => {
-                console.log(data);
-                client_id = data.client_id;
-                client_secret = data.client_secret;
-                await fetch('https://www.strava.com/oauth/token?client_id=' + data.client_id + '&client_secret=' + data.client_secret + '&code=' + stravaCode + '&grant_type=authorization_code', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then((response) => {
-                    response.json().then(async (data) => {
-                        console.log(data.access_token);
-                        await fetch('http://localhost:8080/strava/add-token', {
-                            method: 'POST',
-                            headers: {
-                                'Accept': 'application/json',
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                data: data.access_token,
-                                userId: props.userInformation.id
-                            })
-                        })
-                        window.location.replace('http://localhost:3000/settings');
-                    });
-                });
-            });
-        });
-    }*/
-
     async function stravaConnection() {
         console.log('strava connection');
         await fetch(props.userInformation.ip + '/strava/auth/' + props.userInformation.id, {
@@ -377,11 +335,7 @@ export default function SettingsPage(props) {
         })
         .then((response) => {
             response.json().then(async (data) => {
-                console.log(data);
-                window.location.replace(data);
-                //window.open(data, 'popup', 'width=600,height=800');
-                //console.log(data);
-                //stravaClient = new stravaApi.client(data.access_token);
+                window.open(data, 'popup', 'width=600,height=800')
             });
         });
     }
