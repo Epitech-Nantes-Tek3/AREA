@@ -18,7 +18,7 @@ jobs:
     - name: Install Playwright Browsers
       run: cd Web && yarn playwright install --with-deps
     - name: Run Playwright tests
-      run: cd Web && echo '${{ secrets.ENV_client_web }}'' >> ./src/firebaseConfig.js && (yarn start &) && yarn playwright test
+      run: cd Web && echo '${{ secrets.ENV_client_web }}' >> ./src/firebaseConfig.js && (yarn start &) && yarn playwright test
     - uses: actions/upload-artifact@v3
       if: always()
       with:
