@@ -152,12 +152,14 @@ async function isNewActivity(uid) {
                         kudos: activities[0].kudos_count,
                         comments: activities[0].comment_count
                     })
+                    console.log('new activity');
                     resolve(true);
+                } else {
+                    resolve(false);
                 }
             } catch (error) {
                 console.log(error);
             }
-            resolve(false);
         })
         .catch(error =>{
             console.error(error)
@@ -184,7 +186,7 @@ module.exports = {
                 resolve(result)
             } else if (func == "activity") {
                 const result = await isNewActivity(uid)
-                console.log(result)
+                console.log('activity:', result);
                 resolve(result)
             } else if (func == "kudo") {
                 const result = await isNewKudo(uid, param)
