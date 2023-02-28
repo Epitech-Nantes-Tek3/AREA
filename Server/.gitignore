@@ -4,6 +4,7 @@ yarn.lock
 .env
 # Config
 firebaseConfig.js
+twitchConfig.js
 
 # Service
 configGmail.js
