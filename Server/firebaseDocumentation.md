@@ -7,7 +7,7 @@
 					+ serviceName (string)
 					+ subject (string)
 					+ text (string)
-					+ trigger (true / false)
+					+ trigger (boolean)
 				+ Reaction
 					+  Description (string)
 					+ serviceName (string)
