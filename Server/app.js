@@ -239,7 +239,7 @@ app.use(bodyParser.json())
  * @param {Object} res - Express response object
 */
 app.get('/', (req, res) => {
-    res.send('Server HomePage')
+    res.redirect("/about.json")
 })
 
 /**
