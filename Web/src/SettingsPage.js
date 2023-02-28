@@ -416,9 +416,9 @@ export default function SettingsPage(props) {
     /**
      * Empty for the moment
      * @function twitterConnexion
+     * @async
     */
     async function twitterConnexion() {
-        console.log("TWITTER")
         try {
             await fetch(props.userInformation.ip + "/twitter/get").then(response => {
                 response.json().then(async data => {
