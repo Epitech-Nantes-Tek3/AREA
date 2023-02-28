@@ -396,9 +396,9 @@ app.get('/twitch/auth/', function (req, res) {
       twhtokens.accessToken = req.session.passport.user.accessToken
       twhtokens.refreshToken = req.session.passport.user.refreshToken
       TwitchService.setUserData(twhtokens)
-      res.send("BACK TO THE APP NOW")
+      res.send("SUCCESS ! You can go back to the AREA Application.\n The access token will only last one hour.")
     } else {
-        res.send("l'authentification a échoué")
+        res.send("Authentification has failed. Please try again.")
     }
 });
 
