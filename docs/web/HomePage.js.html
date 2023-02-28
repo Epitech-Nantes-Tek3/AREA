@@ -248,7 +248,7 @@ export default function HomePage(props) {
                 &lt;div style={global.title}>{title}&lt;/div>
                 &lt;div style={global.action}>{action.description}.&lt;/div>
                 &lt;div style={global.reaction}>{reaction.description}.&lt;/div>
-                &lt;img src={TrashImage} alt={"trash image"} style={global.trash} onClick={() => removeAreaFromList(props.index)} />
+                &lt;img src={TrashImage} style={global.trash} onClick={() => removeAreaFromList(props.index)} />
             &lt;/div>
         )
     }
@@ -260,7 +260,7 @@ export default function HomePage(props) {
      * @returns The area block to display
      */
     function AreaBlock(props) {
-        const title = (props.area.title) ? props.area.title : "AREA ";
+        const title = (props.area.title) ? props.area.title : "AREA " + props.index;
         const actionLogo = (props.area.action.logo) ? props.area.action.logo : "https://www.flaticon.com/svg/static/icons/svg/25/25231.svg";
         const reactionLogo = (props.area.reaction.logo) ? props.area.reaction.logo : "https://www.flaticon.com/svg/static/icons/svg/25/25231.svg";
         const style = {
@@ -271,15 +271,14 @@ export default function HomePage(props) {
                 alignItems: "center",
                 backgroundColor: "lightgrey",
                 width: "300px",
-                height: "400px",
-                // overflow: "scroll",
+                height: "150px",
                 borderRadius: "20px",
                 margin: "10px",
                 cursor: "pointer",
 
                 title: {
                     position: "relative",
-                    fontSize: "32px",
+                    fontSize: "18px",
                     margin: "5px",
                 },
                 content: {
@@ -290,38 +289,24 @@ export default function HomePage(props) {
                     alignItems: "center",
                     backgroundColor: "#5281B7",
                     width: "100%",
-                    height: "150%",
+                    height: "100%",
                     borderRadius: "20px",
-                    paddingVertical: "10px",
                 },
-                trash: {
-                    position: "relative",
-                    width: "30px",
-                    height: "30px",
-                    cursor: "pointer",
-                    border: "1px solid black",
-                    borderRadius: "20%",
-                }
             }
         }
 
         return (
-            &lt;div style={style.areaBlock}>
-                &lt;div style={{ display: "flex", justifyContent: "space-around", flexDirection: "row", width: "100%" }}>
-                    &lt;img src={logo[props.area.action.serviceName]} alt={"Logo de l'action"} style={{ width: "30px", height: "30px", padding: "5px" }} />
+            &lt;Popup trigger={
+                &lt;div style={style.areaBlock}>
                     &lt;p style={style.areaBlock.title}>{title}&lt;/p>
-                    &lt;img src={logo[props.area.reaction.serviceName]} alt={"Logo de la réaction"} style={{ width: "30px", height: "30px", padding: "5px" }} />
-                &lt;/div>
-                &lt;div style={style.areaBlock.content}>
-                    &lt;div style={{ padding: "5px", height: "50px" }}>
-                        &lt;p style={{ textAlign: "center", paddingLeft: "10px", paddingRight: "10px", fontSize: 24 }}>{props.area.action.description}&lt;/p>
+                    &lt;div style={style.areaBlock.content}>
+                        &lt;img src={logo[props.area.action.serviceName]} alt={"Logo de l'action"} style={{ width: "30px", height: "30px" }} />
+                        &lt;img src={logo[props.area.reaction.serviceName]} alt={"Logo de la réaction"} style={{ width: "30px", height: "30px" }} />
                     &lt;/div>
-                    &lt;div style={{ padding: "5px", height: "50px" }}>
-                        &lt;p style={{ textAlign: "center", paddingLeft: "10px", paddingRight: "10px", fontSize: 24 }}>{props.area.reaction.description}&lt;/p>
-                    &lt;/div>
-                    &lt;img src={TrashImage} alt={"trash image"} style={style.areaBlock.trash} onClick={() => removeAreaFromList(props.index)} />
                 &lt;/div>
-            &lt;/div>
+            } modal>
+                &lt;DisplayArea area={props.area} index={props.index} />
+            &lt;/Popup>
         )
     }
 
@@ -335,10 +320,9 @@ export default function HomePage(props) {
             displayAreas: {
                 position: "relative",
                 display: "grid",
-                gridAutoColumns: "3",
                 gridTemplateColumns: "repeat(3, auto)",
                 justifyContent: "space-around",
-                alignItems: "safe center",
+                alignItems: "center",
                 width: "minmax(300px, 100%)",
                 height: "100%",
                 padding: "10px",
@@ -423,13 +407,13 @@ export default function HomePage(props) {
             console.log("mouse leave");
         }
         return (
-            &lt;div style={{ position: "relative" }}>
+            &lt;div style={{position: "relative"}}>
                 &lt;div style={style.header}>
                     &lt;img src={LogoImage} style={style.header.logo} alt="logo" />
                     &lt;h1 style={style.header.title}>Re-Bonjour, {(mail) ? mail : "MAIL UNDEFINED"} !&lt;/h1>
                     &lt;img src={SettingsImage} style={style.header.settings} onClick={goSettings} alt="settings" />
                 &lt;/div>
-                &lt;div style={{ position: "relative", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                &lt;div style={{position: "relative", display: "flex", alignItems: "center", justifyContent: "center"}}>
                     &lt;a style={style.header.button} onMouseEnter={mouseEnterButton} onMouseLeave={mouseLeaveButton} href='client.apk'>Télécharger client.apk&lt;/a>
                 &lt;/div>
             &lt;/div>
@@ -472,7 +456,6 @@ export default function HomePage(props) {
     }
     const globalStyle = {
         position: "relative",
-        fontFamily: "Avenir Next,Avenir Next W01, Avenir,helvetica,arial,sans-serif",
     }
     return (
         &lt;div id="global" style={globalStyle}>
@@ -496,7 +479,7 @@ export default function HomePage(props) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Feb 28 2023 09:32:20 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Feb 28 2023 09:33:30 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
