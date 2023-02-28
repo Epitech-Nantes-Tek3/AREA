@@ -237,6 +237,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
  * parse application/json
 */
 app.use(bodyParser.json())
+app.set('json spaces', 2)
 
 /**
  * @method get
@@ -336,22 +337,19 @@ app.get('/about.json', (req, res) => {
                 return;
             }
         })
-        obj[i] = JSON.parse(data);
+        obj[i] = JSON.parse(data, null, 2);
     }
 
     const d = new Date()
-    const about = JSON.stringify(
-        {
-            "client": {
-                "host": req.ip
-            },
-            "server": {
-                "current_time": d.toString(),
-                "services": obj
-            }
-        }
-    )
-    res.send(JSON.parse(about))
+    const about = {}
+    about.client = {"host": req.ip}
+    about.server = {
+        current_time : d.toString(),
+        services : obj,
+    }
+    console.log(about)
+    res.header('Content-Type', 'application/json')
+    res.type('json').send(JSON.stringify(about, null, 2) + '\n');
 })
 
 /**
