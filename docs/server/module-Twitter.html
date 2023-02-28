@@ -126,6 +126,13 @@
     
 
     
+        <h3 class="subsection-title">Classes</h3>
+
+        <dl>
+            <dt><a href="module-Twitter-TwitterRedirect.html">TwitterRedirect</a></dt>
+            <dd></dd>
+        </dl>
+    
 
     
 
@@ -261,6 +268,64 @@
 
 
         
+            
+<h4 class="name" id="~twRedirect"><span class="type-signature">(inner) </span>twRedirect<span class="type-signature"></span></h4>
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line38">line 38</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
     
 
     
@@ -281,7 +346,7 @@
 
 <div class="description">
     ActionTw function is used to perform a specified action on the user's Twitter account. It first retrieves the Twitter UID
-of the user with the "GetIdTwitter" function, then it performs the specified action on the user's account with the "doAct" function.
+of the user with the "getDataFromFireBase" function, then it performs the specified action on the user's account with the "doAct" function.
 </div>
 
 
@@ -420,7 +485,7 @@ of the user with the "GetIdTwitter" function, then it performs the specified act
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line257">line 257</a>
+        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line187">line 187</a>
     </li></ul></dd>
     
 
@@ -678,168 +743,7 @@ can take the values 'tweet', 'like' or 'retweet'.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line28">line 28</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="~dashTwitter"><span class="type-signature">(inner) </span>dashTwitter<span class="signature">(req, res)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Makes sure the user is logged in by checking if "req.session.user" exists. If so, it renders
-the "dash" view to display the dash page.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>req</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is an object that contains information about the HTTP request that called this function</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is an object that handles the HTTP response that will be sent to the user.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line153">line 153</a>
+        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line44">line 44</a>
     </li></ul></dd>
     
 
@@ -1024,7 +928,7 @@ from the Twitter API stored on Firebase. Depending on the action passed as a par
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line96">line 96</a>
+        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line103">line 103</a>
     </li></ul></dd>
     
 
@@ -1060,165 +964,7 @@ from the Twitter API stored on Firebase. Depending on the action passed as a par
     
 
     
-    <h4 class="name" id="~GetIdTwitter"><span class="type-signature">(inner) </span>GetIdTwitter<span class="signature">(uid)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    PARAMETER UNUSED: uid
-Allows the user to perform an action (retweet, like or tweet) on Twitter.
-It first retrieves the Twitter API data from Firebase using "getDataFromFireBaseServer" function.
-Then, depending on the action passed as a parameter, it calls "carryOutAnAction" function to carry out the specified action.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>uid</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is the user id</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line76">line 76</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-    </dd>
-</dl>
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="~loginTwitter"><span class="type-signature">(inner) </span>loginTwitter<span class="signature">(req, res)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~loginTwitter"><span class="type-signature">(inner) </span>loginTwitter<span class="signature">(req, res, params)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1307,6 +1053,29 @@ Then, it uses the "login" function of "tw" to redirect the user to a Twitter aut
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An object containing the Twitter API tokens and the User ID.</td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -1344,7 +1113,7 @@ Then, it uses the "login" function of "tw" to redirect the user to a Twitter aut
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line122">line 122</a>
+        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line129">line 129</a>
     </li></ul></dd>
     
 
@@ -1380,7 +1149,7 @@ Then, it uses the "login" function of "tw" to redirect the user to a Twitter aut
     
 
     
-    <h4 class="name" id="~putLike"><span class="type-signature">(inner) </span>putLike<span class="signature">(req, res)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~setUserData"><span class="type-signature">(inner) </span>setUserData<span class="signature">(twTokens, uid)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1388,8 +1157,7 @@ Then, it uses the "login" function of "tw" to redirect the user to a Twitter aut
 
 
 <div class="description">
-    Allows the user to retweet the most recent tweet of the hashtag pass parameter. It first checks
-if user exist then it uses  "carryOutAnAction" function to retweet newest tweet of the hashtag.
+    Sets the user data in the Firebase database.
 </div>
 
 
@@ -1425,13 +1193,13 @@ if user exist then it uses  "carryOutAnAction" function to retweet newest tweet 
 
         <tr>
             
-                <td class="name"><code>req</code></td>
+                <td class="name"><code>twTokens</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">*</span>
+<span class="param-type">Object</span>
 
 
             
@@ -1441,20 +1209,20 @@ if user exist then it uses  "carryOutAnAction" function to retweet newest tweet 
 
             
 
-            <td class="description last">is an object that contains information about the HTTP request that called this function</td>
+            <td class="description last">An object containing the Twitter API tokens.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>res</code></td>
+                <td class="name"><code>uid</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">*</span>
+<span class="param-type">string</span>
 
 
             
@@ -1464,7 +1232,7 @@ if user exist then it uses  "carryOutAnAction" function to retweet newest tweet 
 
             
 
-            <td class="description last">is an object that handles the HTTP response that will be sent to the user.</td>
+            <td class="description last">user ID.</td>
         </tr>
 
     
@@ -1505,329 +1273,7 @@ if user exist then it uses  "carryOutAnAction" function to retweet newest tweet 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line217">line 217</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="~putRetweet"><span class="type-signature">(inner) </span>putRetweet<span class="signature">(req, res)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Allows the user to like the most recent tweet of the hashtag pass parameter. It first checks
-if user exist then it uses  "carryOutAnAction" function to like newest tweet of the hashtag.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>req</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is an object that contains information about the HTTP request that called this function</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is an object that handles the HTTP response that will be sent to the user.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line237">line 237</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="~sendTweet"><span class="type-signature">(inner) </span>sendTweet<span class="signature">(req, res)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Allows the user to post a tweet. It first checks if there is a "req.session.user".
-Then it uses the "carryOutAnAction" function to post a tweet with the message content.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>req</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is an object that contains information about the HTTP request that called this function</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>res</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">*</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">is an object that handles the HTTP response that will be sent to the user.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line197">line 197</a>
+        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line93">line 93</a>
     </li></ul></dd>
     
 
@@ -1989,7 +1435,7 @@ function. If this function succeeds, it stores the user's information in the ses
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line168">line 168</a>
+        <a href="Services_twitterService.js.html">Services/twitterService.js</a>, <a href="Services_twitterService.js.html#line157">line 157</a>
     </li></ul></dd>
     
 
@@ -2035,13 +1481,13 @@ function. If this function succeeds, it stores the user's information in the ses
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-APP.html">APP</a></li><li><a href="module-areasFunctions.html">areasFunctions</a></li><li><a href="module-firebaseFunctions.html">firebaseFunctions</a></li><li><a href="module-GoogleService.html">GoogleService</a></li><li><a href="module-IssStationService.html">IssStationService</a></li><li><a href="module-OpenMeteoService.html">OpenMeteoService</a></li><li><a href="module-SpotifyService.html">SpotifyService</a></li><li><a href="module-Twitch.html">Twitch</a></li><li><a href="module-Twitter.html">Twitter</a></li></ul><h3>Classes</h3><ul><li><a href="module-APP-SpotifyToken.html">SpotifyToken</a></li><li><a href="module-APP-TwitchToken.html">TwitchToken</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-APP.html">APP</a></li><li><a href="module-areasFunctions.html">areasFunctions</a></li><li><a href="module-firebaseFunctions.html">firebaseFunctions</a></li><li><a href="module-GoogleService.html">GoogleService</a></li><li><a href="module-IssStationService.html">IssStationService</a></li><li><a href="module-OpenMeteoService.html">OpenMeteoService</a></li><li><a href="module-SpotifyService.html">SpotifyService</a></li><li><a href="module-Twitch.html">Twitch</a></li><li><a href="module-Twitter.html">Twitter</a></li></ul><h3>Classes</h3><ul><li><a href="module-APP-SpotifyToken.html">SpotifyToken</a></li><li><a href="module-APP-TwitchToken.html">TwitchToken</a></li><li><a href="module-Twitter-TwitterRedirect.html">TwitterRedirect</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Feb 28 2023 08:43:40 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Tue Feb 28 2023 09:19:13 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
