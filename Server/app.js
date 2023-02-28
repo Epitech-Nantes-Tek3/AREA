@@ -587,6 +587,9 @@ app.get('/getPosition/:uid', (req, res) => {
         })
 })
 
+/**
+ * Constant which store the default redirect_uri and scope for strava
+ */
 const configStrava = {
     client_id: 0,
     client_secret: "",
