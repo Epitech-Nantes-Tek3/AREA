@@ -133,13 +133,26 @@ export default function ConnexionScreen() {
         const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
 
         // Sign-in the user with the credential
-        auth().signInWithCredential(facebookCredential);
-        const props: HomeScreenProps = {
-            userMail: userMail,
-            userId: "idTest",
-            ip: ip
-        }
-        NavigatorPush("HomeScreen", "mainStack", options, props)
+        auth().signInWithCredential(facebookCredential).then(async (user) => {
+            var requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({uid: user.user.uid, email: user.user.email})
+            }
+            await fetch(ip + "/register/facebook", requestOptions).then(response => {
+                response.json().then(async data => {
+                    requestOptions.body = JSON.stringify({uid: user.user.uid});
+                    await fetch(ip + "/register/google", requestOptions).then(response => {
+                        const props: HomeScreenProps = {
+                            userMail: user.user.email,
+                            userId: user.user.uid,
+                            ip: ip
+                        }
+                        NavigatorPush("HomeScreen", "mainStack", options, props)
+                    });
+                })
+            });
+        });
 
     }
 
