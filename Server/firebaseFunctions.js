@@ -13,7 +13,14 @@ const firebase = require("firebase");
  * @constant firebaseConfig
  * @requires firebaseConfig
  */
-const firebaseConfig = require('./firebaseConfig')
+const firebaseConfig = require('./firebaseConfig');
+
+/**
+ * @constant googleService
+ * @requires googleService
+ */
+const googleService = require("./Services/googleService");
+
 firebase.initializeApp(firebaseConfig);
 
 var database = firebase.database();
@@ -120,6 +127,7 @@ module.exports = {
                 latitude : 47.218102,
                 longitude : -1.552800 
             })
+            googleService.RegistedRequiredGoogle(userCredential.user.uid)
             console.log('Successfully created new user:', userCredential.user.uid)
             res.json({userUid: userCredential.user.uid});
         }).catch((error) => {
