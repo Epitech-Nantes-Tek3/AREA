@@ -116,7 +116,13 @@ function AuthPage(props) {
                 response.json().then(async data => {
                     console.log(data);
                     if (data.userUid !== 'error') {
-                        await fetch(ip + "/register/google", requestOptions).then(response => {
+                        console.log("HERE")
+                        const requestOptions = {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({uid: data.userUid})
+                        }
+                        await fetch(props.userInformation.ip + "/register/google", requestOptions).then(response => {
                             response.json().then(dataGoogle => {
                                 if (dataGoogle.body != 'Error') {
                                     setIsBadPassword(false);
