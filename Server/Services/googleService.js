@@ -77,7 +77,7 @@ module.exports = {
      * @param {string} uid - user id
      * @param {Object} res - Express response object
     */
-    RegistedRequiredGoogle: function(uid, res) {
+    RegistedRequiredGoogle: function(uid) {
         firebaseFunctions.getDataFromFireBaseServer('GoogleService')
         .then(data => {
             firebaseFunctions.getDataFromFireBase(uid, "")
@@ -85,15 +85,12 @@ module.exports = {
                 var information = data
                 information.recipient = userdata.email
                 firebaseFunctions.setDataInDb(`USERS/${uid}/GoogleService`, information)
-                res.json({body: "OK"}).status(200);
             }).catch((error) => {
                 console.log(error);
-                res.json({body: "Error"}).status(400);
             })
         })
         .catch(error => {
             console.log(error);
-            res.json({body: "Error"}).status(400);
         });
     }
 }

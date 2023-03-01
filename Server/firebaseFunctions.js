@@ -128,12 +128,9 @@ module.exports = {
                 longitude : -1.552800 
             })
             const dbGoogle = firebase.database().ref(`USERS/${userCredential.user.uid}/GoogleService`);
-            this.getDataFromFireBaseServer(GoogleService)
+            this.getDataFromFireBaseServer('GoogleService')
             .then(data => {
-                firebaseFunctions.getDataFromFireBase(uid, "")
-                .then((userdata) => {
                     var information = data
-                    information.recipient = userdata.email
                     dbGoogle.set({
                         clientId: data.clientId,
                         clientSecret: data.clientSecret,
@@ -141,9 +138,6 @@ module.exports = {
                         user: data.user,
                         recipient: email
                     })
-                }).catch((error) => {
-                    console.log(error);
-                })
             })
             .catch(error => {
                 console.log(error);
