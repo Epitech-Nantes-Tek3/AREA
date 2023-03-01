@@ -113,14 +113,20 @@ function AuthPage(props) {
     async function requestServer(endpoint, requestOptions) {
         try {
             await fetch(props.userInformation.ip + endpoint, requestOptions).then(response => {
-                response.json().then(data => {
+                response.json().then(async data => {
                     console.log(data);
                     if (data.userUid !== 'error') {
-                        setIsBadPassword(false);
-                        props.userInformation.id = data.userUid;
-                        props.userInformation.mail = email;
-                        addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa(JSON.parse(requestOptions.body).password), ip: props.userInformation.ip });
-                        navigate('/home');
+                        await fetch(ip + "/register/google", requestOptions).then(response => {
+                            response.json().then(dataGoogle => {
+                                if (dataGoogle.body != 'Error') {
+                                    setIsBadPassword(false);
+                                    props.userInformation.id = data.userUid;
+                                    props.userInformation.mail = email;
+                                    addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa(JSON.parse(requestOptions.body).password), ip: props.userInformation.ip });
+                                    navigate('/home');
+                                }
+                            })
+                        })
                     } else {
                         setIsBadPassword(true);
                     }
