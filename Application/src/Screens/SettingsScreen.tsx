@@ -458,8 +458,15 @@ export default function SettingsScreen(props: SettingsProps) {
             
         }
 
-        function stravaConnexion() {
+        async function stravaConnexion() {
             let token = "ImTestingATokenItIsSoFunnyStrava"
+            var params = {};
+            await fetch(ip + "/strava/auth/" + props.userInfo.id).then(response => {
+                response.json().then(async data => {
+                    await Linking.openURL(data).catch((err) => console.log('An error occurred', err))
+                });
+            });
+   
             props.setUserInfo({
                 mail: props.userInfo.mail,
                 coord: {

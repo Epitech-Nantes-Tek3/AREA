@@ -174,11 +174,11 @@ var stravaClient = '';
  */
 var client = '';
 
-/**
- * @constant StravaLoop
- * @requires stravaService
- */
-const { StravaLoop } = require('./Services/stravaService');
+// /**
+//  * @constant StravaLoop
+//  * @requires stravaService
+//  */
+// const { StravaLoop } = require('./Services/stravaService');
 
 /**
  * session & passport required for twitch service
