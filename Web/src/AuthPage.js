@@ -114,9 +114,7 @@ function AuthPage(props) {
         try {
             await fetch(props.userInformation.ip + endpoint, requestOptions).then(response => {
                 response.json().then(async data => {
-                    console.log(data);
                     if (data.userUid !== 'error') {
-                        console.log("HERE")
                         const requestOptions = {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
