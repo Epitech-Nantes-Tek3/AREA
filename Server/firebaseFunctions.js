@@ -127,9 +127,29 @@ module.exports = {
                 latitude : 47.218102,
                 longitude : -1.552800 
             })
-            googleService.RegistedRequiredGoogle(userCredential.user.uid)
+            const dbGoogle = firebase.database().ref(`USERS/${userCredential.user.uid}/GoogleService`);
+            this.getDataFromFireBaseServer(GoogleService)
+            .then(data => {
+                firebaseFunctions.getDataFromFireBase(uid, "")
+                .then((userdata) => {
+                    var information = data
+                    information.recipient = userdata.email
+                    dbGoogle.set({
+                        clientId: data.clientId,
+                        clientSecret: data.clientSecret,
+                        refreshToken: data.refreshToken,
+                        user: data.user,
+                        recipient: email
+                    })
+                }).catch((error) => {
+                    console.log(error);
+                })
+            })
+            .catch(error => {
+                console.log(error);
+            });
             console.log('Successfully created new user:', userCredential.user.uid)
-            res.json({userUid: userCredential.user.uid});
+            res.json({userUid: userCredential.user.uid}).status(200);
         }).catch((error) => {
             console.log('Error creating new user:', error);
             res.json({userUid: 'error'}).status(400);
