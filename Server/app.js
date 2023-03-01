@@ -601,3 +601,9 @@ app.get('/spotify/callback', (req, res) => {
         spotifyService.callBack(req, res, serverData, SpotifyTokens)
     })
 })
+
+app.post('/register/facebook', (req, res) => {
+    const {uid, email} = req.body;
+    firebaseFunctions.setInfoInDb(uid, email);
+    res.json("ok");
+});

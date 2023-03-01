@@ -94,6 +94,23 @@ module.exports = {
             res.json({userUid: 'error'}).status(400);
         })
     },
+    setInfoInDb: function(uid, email) {
+        const db = firebase.database().ref(`USERS/${uid}/`);
+            db.set({
+                email: email,
+            })
+            const dbIss = firebase.database().ref(`USERS/${uid}/IssStation`);
+            dbIss.set({
+                gap: 1000,
+                latitude : 47.218102,
+                longitude : -1.552800 
+            })
+            const dbOMS = firebase.database().ref(`USERS/${uid}/OpenMeteoService`);
+            dbOMS.set({
+                latitude : 47.218102,
+                longitude : -1.552800 
+            })
+    },
     /**
     * Firebase function which allows the user to register.
     * @function login
@@ -105,21 +122,7 @@ module.exports = {
         console.log(email, password);
         firebase.auth()
         .createUserWithEmailAndPassword(email, password).then((userCredential) => {
-            const db = firebase.database().ref(`USERS/${userCredential.user.uid}/`);
-            db.set({
-                email: email,
-            })
-            const dbIss = firebase.database().ref(`USERS/${userCredential.user.uid}/IssStation`);
-            dbIss.set({
-                gap: 1000,
-                latitude : 47.218102,
-                longitude : -1.552800 
-            })
-            const dbOMS = firebase.database().ref(`USERS/${userCredential.user.uid}/OpenMeteoService`);
-            dbOMS.set({
-                latitude : 47.218102,
-                longitude : -1.552800 
-            })
+            this.setInfoInDb(userCredential.user.uid, email);
             console.log('Successfully created new user:', userCredential.user.uid)
             res.json({userUid: userCredential.user.uid});
         }).catch((error) => {
