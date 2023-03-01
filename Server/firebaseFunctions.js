@@ -87,8 +87,11 @@ module.exports = {
     login: function(req, res) {
         const {email, password} = req.body;
         firebase.auth().signInWithEmailAndPassword(email, password).then((userCredential) => {
-            console.log('User signed in:', userCredential.user.uid);
-            res.json({userUid: userCredential.user.uid});
+            const user = userCredential.user
+            if (user.emailVerified) {
+                console.log('User signed in:', user.uid);
+                res.json({userUid: user.uid});
+            }
         }).catch((error) => {
             console.log('Error at the sign in:', error);
             res.json({userUid: 'error'}).status(400);
