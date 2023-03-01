@@ -368,7 +368,7 @@ export default function AddAreaPage(props) {
 
         return (
             <div style={style.global}>
-                <img src={LogoArea} style={style.image} onClick={() => { navigate("/home") }} />
+                <img src={LogoArea} style={style.image} alt="goHome" onClick={() => { navigate("/home") }} />
                 <h1 style={style.title}>Ici, tu peux créer ton area !</h1>
             </div>
         )
