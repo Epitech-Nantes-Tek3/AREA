@@ -1,0 +1,21 @@
+{
+    "name": "StravaService",
+    "actions": [
+        {
+            "name": "User make 100km in one sport (run, swim, bike)",
+            "description": "If the user make 100km in one sport (run, swim, bike)"
+        },
+        {
+            "name": "Post activity",
+            "description": "If the user post a new activity"
+        },
+        {
+            "name": "Kudo on his last activity",
+            "description": "If someone give kudo on his last activity"
+        },
+        {
+            "name": "Comment on his last activity",
+            "description": "If someone leave a comment on his last activity"
+        }
+    ]
+}

@@ -46,6 +46,12 @@ const ISSService = require('././ISSStationService');
 const spotifyServices = require('././spotifyServices');
 
 /**
+  * @constant stravaService
+  * @requires stravaService
+  */
+const stravaService = require('././stravaService');
+
+/**
  * Contains all area.
  * @type {{name, function}}
  * @property {string} name Name
@@ -58,6 +64,7 @@ let areas = [
     { name: "iss", function:  ISSService.checkISSPosition },
     { name: "twitch", function:  TwitchService.actionTwitch},
     { name: "spotify", function:  spotifyServices.SpotifyLoop},
+    { name: "strava", function:  stravaService.StravaLoop}
 ]
 
 module.exports = {

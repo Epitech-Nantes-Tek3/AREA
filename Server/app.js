@@ -142,6 +142,45 @@ const SESSION_SECRET   = '<YOUR CLIENT SECRET HERE>';
 const CALLBACK_URL     = 'http://localhost:8080/auth/twitch/callback';
 
 /**
+  * @constant stravaApi
+  * @requires strava-v3
+  */
+var stravaApi = require('strava-v3');
+
+/**
+ * @constant ClientAndToken
+ * @requires strava-oauth2
+ */
+const { Client, Token } = require('strava-oauth2');
+
+/**
+  * @constant stravaToken
+  * @requires stravaToken
+  */
+var stravaToken = {
+    uid: "any",
+    access_token: "any"
+};
+
+/**
+ * @constant stravaClient
+ * @requires stravaClient
+ */
+var stravaClient = '';
+
+/**
+ * @constant client
+ * @requires client
+ */
+var client = '';
+
+// /**
+//  * @constant StravaLoop
+//  * @requires stravaService
+//  */
+// const { StravaLoop } = require('./Services/stravaService');
+
+/**
  * session & passport required for twitch service
 */
 app.use(session({secret: SESSION_SECRET, resave: false, saveUninitialized: false}));
@@ -529,6 +568,111 @@ app.get('/getAreas/:uid', (req, res) => {
             res.json(error).status(400);
         })
 })
+
+/**
+  * Constant which store the default redirect_uri and scope for strava
+  */
+const configStrava = {
+    client_id: 0,
+    client_secret: "",
+    redirect_uri: 'http://localhost:8080/strava/callback',
+    scope: 'read,activity:read_all'
+};
+
+/**
+ * Send url for strava authentification
+ * @method get
+ * @function '/strava/auth/:uid' Server strava page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+app.get('/strava/auth/:uid', async (req, res) => {
+    const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
+
+    stravaToken.uid = req.params.uid;
+    configStrava.client_id = stravaClientData.client_id;
+    configStrava.client_secret = stravaClientData.client_secret;
+    client = new Client(configStrava);
+    var url = client.getAuthorizationUri();
+    url += ',activity:read';
+    res.json(url);
+});
+
+/**
+ * Strava page use strava
+ * @method get
+ * @function '/strava' Server strava page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+app.get('/strava', async (req, res) => {
+    const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
+    res.json(stravaClientData);
+});
+
+/**
+ * Strava callback route for strava authentification
+ * @method get
+ * @function '/strava/callback' Server strava authentification callback page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+app.get('/strava/callback', async (req, res) => {
+    const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
+
+    await fetch('https://www.strava.com/oauth/token?client_id=' + stravaClientData.client_id + '&client_secret=' + stravaClientData.client_secret + '&code=' + req.query.code + '&grant_type=authorization_code', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then((response) => {
+        response.json().then(async (data) => {
+            stravaClient = new stravaApi.client(data.access_token);
+            console.log(data.athlete.id);
+            const stats = await stravaClient.athletes.stats({id: data.athlete.id});
+            const activities = await stravaClient.athlete.listActivities({id: data.athlete.id});
+            var lastActivity = {};
+            try {
+                lastActivity =  {
+                    id: activities[0].id,
+                    kudos: activities[0].kudos_count,
+                    comment: activities[0].comment_count
+                }
+            } catch (error) {
+                lastActivity =  {
+                    id: 0,
+                    kudos: 0,
+                    comment: 0
+                }
+            }
+            data = {
+                lastActivity: lastActivity,
+                stats: {
+                    bike: {
+                        stat: stats.all_ride_totals.distance,
+                        triggered: true
+                    },
+                    run: {
+                        stat: stats.all_run_totals.distance,
+                        triggered: true
+                    },
+                    swim: {
+                        stat: stats.all_swim_totals.distance,
+                        triggered: true
+                    }
+                },
+                access_token: data.access_token,
+                athleteId: data.athlete.id
+            };
+            if (stravaToken.uid !== "any")
+                await firebaseFunctions.setDataInDb('USERS/' + stravaToken.uid + '/StravaService', data);
+            res.send('SUCCESS You can now go back to the app');
+        });
+    });
+});
+
 
 /**
  * Send position for 1 uid to the front.
