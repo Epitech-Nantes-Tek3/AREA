@@ -210,23 +210,11 @@ app.use(cors());
 */
 app.use(express.urlencoded())
 
-//temporaire
-/**
- * @constant ejs
- * @requires ejs
-*/
-const ejs = require('ejs');
 /**
  * @constant googleService
  * @requires googleService
 */
 const googleService = require('./Services/googleService');
-
-/**
- * initialisation of ejs for twitch authentification.
-*/
-app.set('view engine', 'ejs');
-
 
 /**
  * parse application/x-www-form-urlencoded
