@@ -309,6 +309,11 @@ export default function SettingsPage(props) {
             </div>
         )
     }
+    /**
+     * Authenticates the user with Strava API.
+     * @async
+     * @function stravaConnection
+    */
     async function stravaConnection() {
          console.log('strava connection');
          await fetch(props.userInformation.ip + '/strava/auth/' + props.userInformation.id, {
