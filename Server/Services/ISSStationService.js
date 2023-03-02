@@ -5,12 +5,6 @@
  */
 
 /**
- * @constant {cp}
- * @requires fs
- */
-const { cp } = require('fs');
-
-/**
  * @constant http
  * @requires http
  */
