@@ -643,12 +643,37 @@ app.get('/strava/callback', async (req, res) => {
         response.json().then(async (data) => {
             stravaClient = new stravaApi.client(data.access_token);
             console.log(data.athlete.id);
+            const stats = await stravaClient.athletes.stats({id: data.athlete.id});
             const activities = await stravaClient.athlete.listActivities({id: data.athlete.id});
-            data = {
-                lastActivity: {
+            var lastActivity = {};
+            try {
+                lastActivity =  {
                     id: activities[0].id,
                     kudos: activities[0].kudos_count,
                     comment: activities[0].comment_count
+                }
+            } catch (error) {
+                lastActivity =  {
+                    id: 0,
+                    kudos: 0,
+                    comment: 0
+                }
+            }
+            data = {
+                lastActivity: lastActivity,
+                stats: {
+                    bike: {
+                        stat: stats.all_ride_totals.distance,
+                        triggered: false
+                    },
+                    run: {
+                        stat: stats.all_run_totals.distance,
+                        triggered: false
+                    },
+                    swim: {
+                        stat: stats.all_swim_totals.distance,
+                        triggered: false
+                    }
                 },
                 access_token: data.access_token,
                 athleteId: data.athlete.id

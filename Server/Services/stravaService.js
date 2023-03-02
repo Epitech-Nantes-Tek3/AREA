@@ -21,22 +21,40 @@ var stravaApi = require('strava-v3');
 async function isBikeStatsOver(uid) {
     return new Promise ((resolve, reject) => {
         console.log(uid);
-        firebaseFunctions.getDataFromFireBase(uid, "StravaService")
-        .then(async data => {
-            console.log(data);
-            var stravaClient = new stravaApi.client(data.access_token);
-            const stats = await stravaClient.athletes.stats({id: data.athleteId});
+        try {
+            firebaseFunctions.getDataFromFireBase(uid, "StravaService")
+            .then(async data => {
+                console.log(data);
+                var stravaClient = new stravaApi.client(data.access_token);
+                const stats = await stravaClient.athletes.stats({id: data.athleteId});
 
-            if (stats.all_ride_totals.distance % 1000 == 0) {
-                resolve(true);
-            } else {
-                resolve(false);
-            }
-        })
-        .catch(error =>{
-            console.error(error)
-            reject(error)
-        })
+                console.log(data.stats.bike.stat);
+                console.log(stats.all_ride_totals.distance);
+                console.log(stats.all_ride_totals.distance - data.stats.bike.stat);
+                console.log((stats.all_ride_totals.distance - data.stats.bike.stat) % 100000);
+                if (stats.all_ride_totals.distance != data.stats.bike.stat && (stats.all_ride_totals.distance - data.stats.bike.stat) >= 100000 && data.stats.bike.triggered == true) {
+                    firebaseFunctions.setDataInDb('USERS/' + uid + '/StravaService/stats/bike',{
+                        stat: data.stats.bike.stat,
+                        triggered: false
+                    })
+                }
+                if ((stats.all_ride_totals.distance - data.stats.bike.stat) % 100000 < 100000 && data.stats.bike.triggered == false) {
+                    firebaseFunctions.setDataInDb('USERS/' + uid + '/StravaService/stats/bike',{
+                        stat: stats.all_ride_totals.distance,
+                        triggered: true
+                    })
+                    resolve(true);
+                } else {
+                    resolve(false);
+                }
+            })
+            .catch(error =>{
+                console.error(error)
+                reject(error)
+            })
+        } catch (error) {
+            console.error(error);
+        }
     })
 
 }
@@ -56,7 +74,17 @@ async function isRunStatsOver(uid) {
             var stravaClient = new stravaApi.client(data.access_token);
             const stats = await stravaClient.athletes.stats({id: data.athleteId});
 
-            if (stats.all_run_totals.distance % 1000 == 0) {
+            if (stats.all_run_totals.distance != data.stats.run.stat && (stats.all_run_totals.distance - data.stats.run.stat) >= 100000 && data.stats.run.triggered == true) {
+                firebaseFunctions.setDataInDb('USERS/' + uid + '/StravaService/stats/run',{
+                    stat: data.stats.run.stat,
+                    triggered: false
+                })
+            }
+            if ((stats.all_run_totals.distance - data.stats.run.stat) % 100000 < 100000 && data.stats.run.triggered == false) {
+                firebaseFunctions.setDataInDb('USERS/' + uid + '/StravaService/stats/run',{
+                    stat: stats.all_run_totals.distance,
+                    triggered: true
+                })
                 resolve(true);
             } else {
                 resolve(false);
@@ -85,7 +113,17 @@ async function isSwimStatsOver(uid) {
             var stravaClient = new stravaApi.client(data.access_token);
             const stats = await stravaClient.athletes.stats({id: data.athleteId});
 
-            if (stats.all_swim_totals.distance % 1000 == 0) {
+            if (stats.all_swim_totals.distance != data.stats.swim.stat && (stats.all_swim_totals.distance - data.stats.swim.stat) >= 100000 && data.stats.swim.triggered == true) {
+                firebaseFunctions.setDataInDb('USERS/' + uid + '/StravaService/stats/swim',{
+                    stat: data.stats.swim.stat,
+                    triggered: false
+                })
+            }
+            if ((stats.all_swim_totals.distance - data.stats.swim.stat) % 100000 < 100000 && data.stats.swim.triggered == false) {
+                firebaseFunctions.setDataInDb('USERS/' + uid + '/StravaService/stats/swim',{
+                    stat: stats.all_swim_totals.distance,
+                    triggered: true
+                })
                 resolve(true);
             } else {
                 resolve(false);
