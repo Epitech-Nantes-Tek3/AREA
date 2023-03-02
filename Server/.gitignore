@@ -5,6 +5,7 @@ yarn.lock
 # Config
 firebaseConfig.js
 twitchConfig.js
+serviceAccountKey.json
 
 # Service
 configGmail.js

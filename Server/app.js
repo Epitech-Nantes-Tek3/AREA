@@ -142,6 +142,35 @@ const SESSION_SECRET   = '<YOUR CLIENT SECRET HERE>';
 const CALLBACK_URL     = 'http://localhost:8080/auth/twitch/callback';
 
 /**
+ * @constant firebase_admin
+ * @requires firebase-admin
+ */
+const firebase_admin = require('firebase-admin');
+
+/**
+ * @constant serviceAccount
+ * @requires serviceAccountKey.json
+ */
+var serviceAccount = require("./serviceAccountKey.json");
+
+/**
+ * @constant firebaseConfig
+ * @requires firebaseConfig
+ */
+const firebaseConfig = require('./firebaseConfig')
+
+/**
+ * Initialisation of firebase-admin
+ */
+firebase_admin.initializeApp({
+    credential: firebase_admin.credential.cert(serviceAccount),
+    databaseURL: firebaseConfig.databaseURL
+});
+  
+
+const {getAuth} = require("firebase-admin/auth");
+
+/**
  * session & passport required for twitch service
 */
 app.use(session({secret: SESSION_SECRET, resave: false, saveUninitialized: false}));
@@ -606,4 +635,15 @@ app.post('/register/facebook', (req, res) => {
     const {uid, email} = req.body;
     firebaseFunctions.setInfoInDb(uid, email);
     res.json("ok");
+});
+
+app.get('/check/auth/:uid', (req, res) => {
+
+    getAuth().getUser(req.params.uid).then((userRecord) => {
+        res.json({uid: userRecord.uid}).status(200);
+    })
+    .catch((error) => {
+        console.log('Error fetching user data:', error);
+        res.json(error).status(400);
+    });
 });
