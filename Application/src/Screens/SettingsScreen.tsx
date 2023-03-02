@@ -457,7 +457,11 @@ export default function SettingsScreen(props: SettingsProps) {
             }
             
         }
-
+        /**
+         * Authenticates the user with Strava OAuth and send an accessToken / athleteId to the back.
+         * @async
+         * @function stravaConnexion
+        */    
         async function stravaConnexion() {
             let token = "ImTestingATokenItIsSoFunnyStrava"
             var params = {};
