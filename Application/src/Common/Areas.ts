@@ -109,13 +109,6 @@ export let ACTIONS: InfoArea[] = [
     {
         serviceName : "strava",
         trigger: true,
-        description: "Si une activité a était ajouté dans un de vos clubs.",
-        text: "",
-        subject : "clubActivity"
-    },
-    {
-        serviceName : "strava",
-        trigger: true,
         description: "Si 1000km on était fait à vélo.",
         text: "",
         subject : "bikeStats"
