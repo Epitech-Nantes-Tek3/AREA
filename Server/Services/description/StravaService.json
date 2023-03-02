@@ -2,12 +2,8 @@
     "name": "StravaService",
     "actions": [
         {
-            "name": "New activity into a club",
-            "description": "If someone post a new activity into a club"
-        },
-        {
-            "name": "User overcome a distance into his global stats",
-            "description": "If the user overcome a specific distance into his global stats (run, swim, bike)"
+            "name": "User make 100km in one sport (run, swim, bike)",
+            "description": "If the user make 100km in one sport (run, swim, bike)"
         },
         {
             "name": "Post activity",
