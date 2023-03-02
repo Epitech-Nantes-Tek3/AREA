@@ -664,15 +664,15 @@ app.get('/strava/callback', async (req, res) => {
                 stats: {
                     bike: {
                         stat: stats.all_ride_totals.distance,
-                        triggered: false
+                        triggered: true
                     },
                     run: {
                         stat: stats.all_run_totals.distance,
-                        triggered: false
+                        triggered: true
                     },
                     swim: {
                         stat: stats.all_swim_totals.distance,
-                        triggered: false
+                        triggered: true
                     }
                 },
                 access_token: data.access_token,

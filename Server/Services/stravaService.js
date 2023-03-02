@@ -24,14 +24,9 @@ async function isBikeStatsOver(uid) {
         try {
             firebaseFunctions.getDataFromFireBase(uid, "StravaService")
             .then(async data => {
-                console.log(data);
                 var stravaClient = new stravaApi.client(data.access_token);
                 const stats = await stravaClient.athletes.stats({id: data.athleteId});
 
-                console.log(data.stats.bike.stat);
-                console.log(stats.all_ride_totals.distance);
-                console.log(stats.all_ride_totals.distance - data.stats.bike.stat);
-                console.log((stats.all_ride_totals.distance - data.stats.bike.stat) % 100000);
                 if (stats.all_ride_totals.distance != data.stats.bike.stat && (stats.all_ride_totals.distance - data.stats.bike.stat) >= 100000 && data.stats.bike.triggered == true) {
                     firebaseFunctions.setDataInDb('USERS/' + uid + '/StravaService/stats/bike',{
                         stat: data.stats.bike.stat,
@@ -40,7 +35,7 @@ async function isBikeStatsOver(uid) {
                 }
                 if ((stats.all_ride_totals.distance - data.stats.bike.stat) % 100000 < 100000 && data.stats.bike.triggered == false) {
                     firebaseFunctions.setDataInDb('USERS/' + uid + '/StravaService/stats/bike',{
-                        stat: stats.all_ride_totals.distance,
+                        stat: stats.all_ride_totals.distance - (stats.all_ride_totals.distance % 100000),
                         triggered: true
                     })
                     resolve(true);
@@ -70,7 +65,6 @@ async function isRunStatsOver(uid) {
         console.log(uid);
         firebaseFunctions.getDataFromFireBase(uid, "StravaService")
         .then(async data => {
-            console.log(data);
             var stravaClient = new stravaApi.client(data.access_token);
             const stats = await stravaClient.athletes.stats({id: data.athleteId});
 
@@ -82,7 +76,7 @@ async function isRunStatsOver(uid) {
             }
             if ((stats.all_run_totals.distance - data.stats.run.stat) % 100000 < 100000 && data.stats.run.triggered == false) {
                 firebaseFunctions.setDataInDb('USERS/' + uid + '/StravaService/stats/run',{
-                    stat: stats.all_run_totals.distance,
+                    stat: stats.all_run_totals.distance - (stats.all_run_totals.distance % 100000),
                     triggered: true
                 })
                 resolve(true);
@@ -109,7 +103,6 @@ async function isSwimStatsOver(uid) {
         console.log(uid);
         firebaseFunctions.getDataFromFireBase(uid, "StravaService")
         .then(async data => {
-            console.log(data);
             var stravaClient = new stravaApi.client(data.access_token);
             const stats = await stravaClient.athletes.stats({id: data.athleteId});
 
@@ -121,7 +114,7 @@ async function isSwimStatsOver(uid) {
             }
             if ((stats.all_swim_totals.distance - data.stats.swim.stat) % 100000 < 100000 && data.stats.swim.triggered == false) {
                 firebaseFunctions.setDataInDb('USERS/' + uid + '/StravaService/stats/swim',{
-                    stat: stats.all_swim_totals.distance,
+                    stat: stats.all_swim_totals.distance - (stats.all_swim_totals.distance % 100000),
                     triggered: true
                 })
                 resolve(true);
