@@ -45,7 +45,6 @@ function AuthPage(props) {
      * If he is, it redirects him to the home page.
      */
     useEffect(() => {
-        console.log('auth');
         updateIP({ target: { value: props.userInformation.ip } })
         try {
             authWithCache(props.setUserInformation, props);
