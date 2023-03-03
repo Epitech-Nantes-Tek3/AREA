@@ -4,7 +4,6 @@ services:
   server:
     build:
       context: ./Server
-    command: npm run dev
     volumes:
       - .:/tmp
     ports:
@@ -25,7 +24,6 @@ services:
     build:
       context: ./Web
       dockerfile: Dockerfile
-    command: npm start
     ports:
       - "8081:3000"
     volumes:

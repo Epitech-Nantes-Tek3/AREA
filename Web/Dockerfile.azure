@@ -13,8 +13,7 @@ COPY ./src/ /app/src/
 # Create common folder
 RUN mkdir /release
 
-# Create symbolic link to the apk app
-RUN ln -s /release/client.apk /app/public/client.apk
+COPY ./release/client.apk /app/public/client.apk
 
 EXPOSE 3000
 
