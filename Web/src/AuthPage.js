@@ -127,8 +127,13 @@ function AuthPage(props) {
                                     setIsBadPassword(false);
                                     props.userInformation.id = data.userUid;
                                     props.userInformation.mail = email;
-                                    addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa(password), ip: props.userInformation.ip });
-                                    navigate('/home');
+                                    if (endpoint === '/register') {
+                                        alert("Vous êtes bien inscrit ! Vérifier votre boite mail pour confirmer votre inscription. Vous pouvez maintenant vous connecter.")
+                                        window.location.reload()
+                                    } else {
+                                        addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa(JSON.parse(requestOptions.body).password), ip: props.userInformation.ip });
+                                        navigate('/home');
+                                    }
                                 }
                             })
                         })
