@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: OpenMeteoService</title>
+    <title>JSDoc: Global</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: OpenMeteoService</h1>
+    <h1 class="page-title">Global</h1>
 
     
 
@@ -28,8 +28,7 @@
 
 <header>
     
-        
-            
+        <h2></h2>
         
     
 </header>
@@ -38,24 +37,8 @@
     <div class="container-overview">
     
         
-            <div class="description">OpenMeteoService module</div>
-        
 
         
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <dl class="details">
@@ -85,11 +68,6 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_openMeteoService.js.html">Services/openMeteoService.js</a>, <a href="Services_openMeteoService.js.html#line1">line 1</a>
-    </li></ul></dd>
-    
 
     
 
@@ -97,24 +75,6 @@
 
     
 </dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         
@@ -138,7 +98,7 @@
 
         
             
-<h4 class="name" id="~firebaseFunctions"><span class="type-signature">(inner, constant) </span>firebaseFunctions<span class="type-signature"></span></h4>
+<h4 class="name" id="firebaseFunctions"><span class="type-signature">(constant) </span>firebaseFunctions<span class="type-signature"></span></h4>
 
 
 
@@ -182,7 +142,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_openMeteoService.js.html">Services/openMeteoService.js</a>, <a href="Services_openMeteoService.js.html#line13">line 13</a>
+        <a href="Services_stravaService.js.html">Services/stravaService.js</a>, <a href="Services_stravaService.js.html#line1">line 1</a>
     </li></ul></dd>
     
 
@@ -200,13 +160,13 @@
 
         
             
-<h4 class="name" id="~http"><span class="type-signature">(inner, constant) </span>http<span class="type-signature"></span></h4>
+<h4 class="name" id="stravaApi"><span class="type-signature">(constant) </span>stravaApi<span class="type-signature"></span></h4>
 
 
 
 
 <div class="description">
-    It allows to use http.
+    It allows to use stravaApi.
 </div>
 
 
@@ -244,7 +204,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_openMeteoService.js.html">Services/openMeteoService.js</a>, <a href="Services_openMeteoService.js.html#line6">line 6</a>
+        <a href="Services_stravaService.js.html">Services/stravaService.js</a>, <a href="Services_stravaService.js.html#line8">line 8</a>
     </li></ul></dd>
     
 
@@ -272,7 +232,7 @@
     
 
     
-    <h4 class="name" id="~ActionWeather"><span class="type-signature">(inner) </span>ActionWeather<span class="signature">(uid)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="isBikeStatsOver"><span class="type-signature">(async) </span>isBikeStatsOver<span class="signature">(uid)</span><span class="type-signature"></span></h4>
     
 
     
@@ -280,7 +240,7 @@
 
 
 <div class="description">
-    ActionWeather is a Promise that is used to determine if the weather is fine or not.
+    Asks the api if the user has more than 1000 km on the bike.
 </div>
 
 
@@ -332,7 +292,7 @@
 
             
 
-            <td class="description last">The unique identifier of a user.</td>
+            <td class="description last">user ID</td>
         </tr>
 
     
@@ -373,7 +333,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_openMeteoService.js.html">Services/openMeteoService.js</a>, <a href="Services_openMeteoService.js.html#line74">line 74</a>
+        <a href="Services_stravaService.js.html">Services/stravaService.js</a>, <a href="Services_stravaService.js.html#line15">line 15</a>
     </li></ul></dd>
     
 
@@ -398,28 +358,6 @@
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    A Promise that resolves with a boolean value indicating if the weather is fine or not.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-    </dd>
-</dl>
-
-    
 
 
 
@@ -431,7 +369,7 @@
     
 
     
-    <h4 class="name" id="~GetLocation"><span class="type-signature">(inner) </span>GetLocation<span class="signature">(uid)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="isNewActivity"><span class="type-signature">(async) </span>isNewActivity<span class="signature">(uid)</span><span class="type-signature"></span></h4>
     
 
     
@@ -439,149 +377,7 @@
 
 
 <div class="description">
-    GetLocation function retrieves the location data from Firebase for the specified user ID.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>uid</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">(string) user ID</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_openMeteoService.js.html">Services/openMeteoService.js</a>, <a href="Services_openMeteoService.js.html#line55">line 55</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    Promise that resolves with location data if successful or rejects with an error if unsuccessful
-</div>
-
-
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="~RegistedRequiredOpenMeteo"><span class="type-signature">(inner) </span>RegistedRequiredOpenMeteo<span class="signature">(uid, data)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Register the user data in the db.
+    Asks the api if the user has a new activity.
 </div>
 
 
@@ -633,30 +429,7 @@
 
             
 
-            <td class="description last">user id</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>data</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">data is an object containing the latitude & longitude</td>
+            <td class="description last">user ID</td>
         </tr>
 
     
@@ -697,7 +470,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_openMeteoService.js.html">Services/openMeteoService.js</a>, <a href="Services_openMeteoService.js.html#line101">line 101</a>
+        <a href="Services_stravaService.js.html">Services/stravaService.js</a>, <a href="Services_stravaService.js.html#line209">line 209</a>
     </li></ul></dd>
     
 
@@ -733,7 +506,7 @@
     
 
     
-    <h4 class="name" id="~WeatherisFineOrNot"><span class="type-signature">(inner) </span>WeatherisFineOrNot<span class="signature">(latitude, longitude)</span><span class="type-signature"> &rarr; {Promise}</span></h4>
+    <h4 class="name" id="isNewComment"><span class="type-signature">(async) </span>isNewComment<span class="signature">(uid)</span><span class="type-signature"></span></h4>
     
 
     
@@ -741,8 +514,7 @@
 
 
 <div class="description">
-    Check if it is weather is fine or not based on the current date and 
-time and the weather code provided by the API.
+    Asks the api if the user has a new comment on their last activity.
 </div>
 
 
@@ -778,10 +550,15 @@ time and the weather code provided by the API.
 
         <tr>
             
-                <td class="name"><code>latitude</code></td>
+                <td class="name"><code>uid</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
             
             </td>
 
@@ -789,25 +566,7 @@ time and the weather code provided by the API.
 
             
 
-            <td class="description last">Latitude of the location to check the weather for.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>longitude</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Longitude of the location to check the weather for.</td>
+            <td class="description last">user ID</td>
         </tr>
 
     
@@ -848,7 +607,601 @@ time and the weather code provided by the API.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Services_openMeteoService.js.html">Services/openMeteoService.js</a>, <a href="Services_openMeteoService.js.html#line20">line 20</a>
+        <a href="Services_stravaService.js.html">Services/stravaService.js</a>, <a href="Services_stravaService.js.html#line133">line 133</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="isNewKudo"><span class="type-signature">(async) </span>isNewKudo<span class="signature">(uid)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Asks the api if the user has a new like on their last activity.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>uid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">user ID</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Services_stravaService.js.html">Services/stravaService.js</a>, <a href="Services_stravaService.js.html#line171">line 171</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="isRunStatsOver"><span class="type-signature">(async) </span>isRunStatsOver<span class="signature">(uid)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Asks the api if the user has run more than 1000 km.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>uid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">user ID</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Services_stravaService.js.html">Services/stravaService.js</a>, <a href="Services_stravaService.js.html#line57">line 57</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="isSwimStatsOver"><span class="type-signature">(async) </span>isSwimStatsOver<span class="signature">(uid)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Asks the api if the user has swum more than 1000 km.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>uid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">user ID</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Services_stravaService.js.html">Services/stravaService.js</a>, <a href="Services_stravaService.js.html#line95">line 95</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="StravaLoop"><span class="type-signature">(async) </span>StravaLoop<span class="signature">(func, uid, param)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    function tree which allows you to choose the right function
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>func</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">function chosen by the user</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>uid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">uid of the user</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>param</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">empty</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Services_stravaService.js.html">Services/stravaService.js</a>, <a href="Services_stravaService.js.html#line249">line 249</a>
     </li></ul></dd>
     
 
@@ -877,23 +1230,10 @@ time and the weather code provided by the API.
 
         
 <div class="param-desc">
-    A promise that resolves to a boolean indicating whether it is 
-weather is fine or not.
+    returns a bool true condition is true otherwise returns false
 </div>
 
 
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-    </dd>
-</dl>
 
     
 

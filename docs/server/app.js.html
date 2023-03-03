@@ -170,6 +170,45 @@ const SESSION_SECRET   = '&lt;YOUR CLIENT SECRET HERE>';
 const CALLBACK_URL     = 'http://localhost:8080/auth/twitch/callback';
 
 /**
+  * @constant stravaApi
+  * @requires strava-v3
+  */
+var stravaApi = require('strava-v3');
+
+/**
+ * @constant ClientAndToken
+ * @requires strava-oauth2
+ */
+const { Client, Token } = require('strava-oauth2');
+
+/**
+  * @constant stravaToken
+  * @requires stravaToken
+  */
+var stravaToken = {
+    uid: "any",
+    access_token: "any"
+};
+
+/**
+ * @constant stravaClient
+ * @requires stravaClient
+ */
+var stravaClient = '';
+
+/**
+ * @constant client
+ * @requires client
+ */
+var client = '';
+
+// /**
+//  * @constant StravaLoop
+//  * @requires stravaService
+//  */
+// const { StravaLoop } = require('./Services/stravaService');
+
+/**
  * session &amp; passport required for twitch service
 */
 app.use(session({secret: SESSION_SECRET, resave: false, saveUninitialized: false}));
@@ -559,6 +598,111 @@ app.get('/getAreas/:uid', (req, res) => {
 })
 
 /**
+  * Constant which store the default redirect_uri and scope for strava
+  */
+const configStrava = {
+    client_id: 0,
+    client_secret: "",
+    redirect_uri: 'http://localhost:8080/strava/callback',
+    scope: 'read,activity:read_all'
+};
+
+/**
+ * Send url for strava authentification
+ * @method get
+ * @function '/strava/auth/:uid' Server strava page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+app.get('/strava/auth/:uid', async (req, res) => {
+    const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
+
+    stravaToken.uid = req.params.uid;
+    configStrava.client_id = stravaClientData.client_id;
+    configStrava.client_secret = stravaClientData.client_secret;
+    client = new Client(configStrava);
+    var url = client.getAuthorizationUri();
+    url += ',activity:read';
+    res.json(url);
+});
+
+/**
+ * Strava page use strava
+ * @method get
+ * @function '/strava' Server strava page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+app.get('/strava', async (req, res) => {
+    const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
+    res.json(stravaClientData);
+});
+
+/**
+ * Strava callback route for strava authentification
+ * @method get
+ * @function '/strava/callback' Server strava authentification callback page
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+app.get('/strava/callback', async (req, res) => {
+    const stravaClientData = await firebaseFunctions.getDataFromFireBaseServer('Strava');
+
+    await fetch('https://www.strava.com/oauth/token?client_id=' + stravaClientData.client_id + '&amp;client_secret=' + stravaClientData.client_secret + '&amp;code=' + req.query.code + '&amp;grant_type=authorization_code', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }
+    })
+    .then((response) => {
+        response.json().then(async (data) => {
+            stravaClient = new stravaApi.client(data.access_token);
+            console.log(data.athlete.id);
+            const stats = await stravaClient.athletes.stats({id: data.athlete.id});
+            const activities = await stravaClient.athlete.listActivities({id: data.athlete.id});
+            var lastActivity = {};
+            try {
+                lastActivity =  {
+                    id: activities[0].id,
+                    kudos: activities[0].kudos_count,
+                    comment: activities[0].comment_count
+                }
+            } catch (error) {
+                lastActivity =  {
+                    id: 0,
+                    kudos: 0,
+                    comment: 0
+                }
+            }
+            data = {
+                lastActivity: lastActivity,
+                stats: {
+                    bike: {
+                        stat: stats.all_ride_totals.distance,
+                        triggered: true
+                    },
+                    run: {
+                        stat: stats.all_run_totals.distance,
+                        triggered: true
+                    },
+                    swim: {
+                        stat: stats.all_swim_totals.distance,
+                        triggered: true
+                    }
+                },
+                access_token: data.access_token,
+                athleteId: data.athlete.id
+            };
+            if (stravaToken.uid !== "any")
+                await firebaseFunctions.setDataInDb('USERS/' + stravaToken.uid + '/StravaService', data);
+            res.send('SUCCESS You can now go back to the app');
+        });
+    });
+});
+
+
+/**
  * Send position for 1 uid to the front.
  * @method get
  * @function '/getPosition/:uid' Server getPosition page
@@ -626,13 +770,13 @@ app.get('/spotify/callback', (req, res) => {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-APP.html">APP</a></li><li><a href="module-areasFunctions.html">areasFunctions</a></li><li><a href="module-firebaseFunctions.html">firebaseFunctions</a></li><li><a href="module-GoogleService.html">GoogleService</a></li><li><a href="module-IssStationService.html">IssStationService</a></li><li><a href="module-OpenMeteoService.html">OpenMeteoService</a></li><li><a href="module-SpotifyService.html">SpotifyService</a></li><li><a href="module-Twitch.html">Twitch</a></li><li><a href="module-Twitter.html">Twitter</a></li></ul><h3>Classes</h3><ul><li><a href="module-APP-SpotifyToken.html">SpotifyToken</a></li><li><a href="module-APP-TwitchToken.html">TwitchToken</a></li><li><a href="module-Twitter-TwitterRedirect.html">TwitterRedirect</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-APP.html">APP</a></li><li><a href="module-areasFunctions.html">areasFunctions</a></li><li><a href="module-firebaseFunctions.html">firebaseFunctions</a></li><li><a href="module-GoogleService.html">GoogleService</a></li><li><a href="module-IssStationService.html">IssStationService</a></li><li><a href="module-OpenMeteoService.html">OpenMeteoService</a></li><li><a href="module-SpotifyService.html">SpotifyService</a></li><li><a href="module-Twitch.html">Twitch</a></li><li><a href="module-Twitter.html">Twitter</a></li></ul><h3>Classes</h3><ul><li><a href="module-APP-SpotifyToken.html">SpotifyToken</a></li><li><a href="module-APP-TwitchToken.html">TwitchToken</a></li><li><a href="module-Twitter-TwitterRedirect.html">TwitterRedirect</a></li></ul><h3>Global</h3><ul><li><a href="global.html#firebaseFunctions">firebaseFunctions</a></li><li><a href="global.html#isBikeStatsOver">isBikeStatsOver</a></li><li><a href="global.html#isNewActivity">isNewActivity</a></li><li><a href="global.html#isNewComment">isNewComment</a></li><li><a href="global.html#isNewKudo">isNewKudo</a></li><li><a href="global.html#isRunStatsOver">isRunStatsOver</a></li><li><a href="global.html#isSwimStatsOver">isSwimStatsOver</a></li><li><a href="global.html#stravaApi">stravaApi</a></li><li><a href="global.html#StravaLoop">StravaLoop</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Thu Mar 02 2023 22:02:00 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Fri Mar 03 2023 13:48:14 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
