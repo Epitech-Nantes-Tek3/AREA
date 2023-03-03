@@ -57,3 +57,11 @@ You must have at least 2 reviewers who approve your pull request.
 Try not to exceed 24 hours before reading your PRs.
 
 It is obviously forbidden to approve a merge until all the reviewers have accepted the PR as well as the success of the workflows.
+
+### Add some actions or reactions
+
+Follow [these guidelines](./CreateAREA.md) to add your own actions or reactions.
+
+### Add a new service
+
+Follow [these guidelines](./CreateService.md) to add your own service.

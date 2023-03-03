@@ -17,6 +17,11 @@ const SpotifyWebApi = require('spotify-web-api-node');
  */
 const firebaseFunctions = require('../firebaseFunctions')
 
+/**
+ * All the scopes needed to run the spotify api
+ * @constant scopes
+ * @requires scopes
+ */
 const scopes = [
     'ugc-image-upload',
     'user-read-playback-state',

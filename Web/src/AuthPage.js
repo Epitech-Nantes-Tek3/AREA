@@ -113,19 +113,29 @@ function AuthPage(props) {
     async function requestServer(endpoint, requestOptions) {
         try {
             await fetch(props.userInformation.ip + endpoint, requestOptions).then(response => {
-                response.json().then(data => {
-                    console.log(data);
+                response.json().then(async data => {
                     if (data.userUid !== 'error') {
-                        setIsBadPassword(false);
-                        props.userInformation.id = data.userUid;
-                        props.userInformation.mail = email;
-                        if (endpoint === '/register') {
-                            alert("Vous êtes bien inscrit ! Vérifier votre boite mail pour confirmer votre inscription. Vous pouvez maintenant vous connecter.")
-                            window.location.reload()
-                        } else {
-                            addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa(JSON.parse(requestOptions.body).password), ip: props.userInformation.ip });
-                            navigate('/home');
+                        const requestOptions = {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({uid: data.userUid})
                         }
+                        await fetch(props.userInformation.ip + "/register/google", requestOptions).then(response => {
+                            response.json().then(dataGoogle => {
+                                if (dataGoogle.body != 'Error') {
+                                    setIsBadPassword(false);
+                                    props.userInformation.id = data.userUid;
+                                    props.userInformation.mail = email;
+                                    if (endpoint === '/register') {
+                                        alert("Vous êtes bien inscrit ! Vérifier votre boite mail pour confirmer votre inscription. Vous pouvez maintenant vous connecter.")
+                                        window.location.reload()
+                                    } else {
+                                        addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa(JSON.parse(requestOptions.body).password), ip: props.userInformation.ip });
+                                        navigate('/home');
+                                    }
+                                }
+                            })
+                        })
                     } else {
                         setIsBadPassword(true);
                     }
