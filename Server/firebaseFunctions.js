@@ -14,8 +14,17 @@ const firebase = require("firebase");
  * @requires firebaseConfig
  */
 const firebaseConfig = require('./firebaseConfig')
+
+/**
+ * @constant firebase.initializeApp
+ * @requires firebaseConfig()
+*/
 firebase.initializeApp(firebaseConfig);
 
+/**
+ * @constant database
+ * @requires firebase.database()
+*/
 var database = firebase.database();
 
 module.exports = {

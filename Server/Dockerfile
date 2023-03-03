@@ -8,7 +8,6 @@ RUN yarn
 
 # Copy project
 COPY ./Services/ /app/Services/
-COPY ./views/ /app/views/
 COPY ./app.js /app/
 COPY ./config.js /app/
 COPY ./firebaseFunctions.js /app/

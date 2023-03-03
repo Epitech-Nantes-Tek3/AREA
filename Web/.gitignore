@@ -29,3 +29,6 @@ yarn.lock
 src/firebaseConfig.js
 src/env.js
 src/Common/config.js
+/test-results/
+/playwright-report/
+/playwright/.cache/

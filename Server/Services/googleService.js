@@ -21,6 +21,10 @@ const  { google } = require('googleapis')
  */
 const firebaseFunctions = require('../firebaseFunctions')
 
+/**
+ * @constant OAuth2
+ * @requires google.auth.OAuth2
+ */
 const OAuth2 = google.auth.OAuth2
 
 module.exports = {
