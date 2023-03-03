@@ -316,6 +316,7 @@ export default function SettingsPage(props) {
     */
     async function stravaConnection() {
          console.log('strava connection');
+         console.log(props);
          await fetch(props.userInformation.ip + '/strava/auth/' + props.userInformation.id, {
              method: 'GET',
              headers: {

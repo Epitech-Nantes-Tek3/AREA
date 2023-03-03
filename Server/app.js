@@ -689,8 +689,10 @@ app.get('/strava/callback', async (req, res) => {
                 access_token: data.access_token,
                 athleteId: data.athlete.id
             };
-            if (stravaToken.uid !== "any")
+            if (stravaToken.uid !== "any") {
                 await firebaseFunctions.setDataInDb('USERS/' + stravaToken.uid + '/StravaService', data);
+                console.log(stravaToken.uid);
+            }
             res.send('SUCCESS You can now go back to the app');
         });
     });

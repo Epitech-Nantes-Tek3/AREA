@@ -33,7 +33,7 @@ export function authWithCache(setUserInformation, props) {
                             longitude: props.userInformation.coord.longitude,
                             city: props.userInformation.coord.city
                         },
-                        id: data.userUid,
+                        id: data.uid,
                         services: {
                             spotifyId: props.userInformation.services.spotifyId,
                             googleId: props.userInformation.services.googleId,
