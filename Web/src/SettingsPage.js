@@ -18,6 +18,7 @@ import ArrowRight from './assets/arrowRight.png';
 import { addDataIntoCache, getDataFromCache } from './Common/CacheManagement'
 import { authWithCache } from './Common/Login';
 import { useLocation } from 'react-router-dom';
+import { auth } from './firebaseConfig';
 
 const querystring = require('querystring-es3');
 
@@ -486,7 +487,7 @@ export default function SettingsPage(props) {
      */
     function Deconnexion() {
         return (
-            <div style={styles.deconnexion} onClick={() => { addDataIntoCache("area", {}); navigate('/auth') }} onMouseOver={updateCursor} onMouseOut={updateCursor}>
+            <div style={styles.deconnexion} onClick={() => { auth.signOut().then(() => {console.log('disconnected')}) ; addDataIntoCache("area", {}); navigate('/auth') }} onMouseOver={updateCursor} onMouseOut={updateCursor}>
                 <img src={DeconnexionImage}></img>
                 <p>Deconnexion</p>
                 <p></p>
