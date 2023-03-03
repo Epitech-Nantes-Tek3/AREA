@@ -96,8 +96,11 @@ module.exports = {
     login: function(req, res) {
         const {email, password} = req.body;
         firebase.auth().signInWithEmailAndPassword(email, password).then((userCredential) => {
-            console.log('User signed in:', userCredential.user.uid);
-            res.json({userUid: userCredential.user.uid});
+            const user = userCredential.user
+            if (user.emailVerified) {
+                console.log('User signed in:', user.uid);
+                res.json({userUid: user.uid});
+            }
         }).catch((error) => {
             console.log('Error at the sign in:', error);
             res.json({userUid: 'error'}).status(400);
@@ -111,9 +114,9 @@ module.exports = {
     */
     register: function(req, res) {
         const { email, password } = req.body;
-        console.log(email, password);
         firebase.auth()
         .createUserWithEmailAndPassword(email, password).then((userCredential) => {
+            userCredential.user.sendEmailVerification();
             const db = firebase.database().ref(`USERS/${userCredential.user.uid}/`);
             db.set({
                 email: email,
@@ -122,12 +125,12 @@ module.exports = {
             dbIss.set({
                 gap: 1000,
                 latitude : 47.218102,
-                longitude : -1.552800 
+                longitude : -1.552800
             })
             const dbOMS = firebase.database().ref(`USERS/${userCredential.user.uid}/OpenMeteoService`);
             dbOMS.set({
                 latitude : 47.218102,
-                longitude : -1.552800 
+                longitude : -1.552800
             })
             console.log('Successfully created new user:', userCredential.user.uid)
             res.json({userUid: userCredential.user.uid});
@@ -139,7 +142,7 @@ module.exports = {
     /**
      * Function to write data to a specific path in Firebase database
      * @function setDataInDb
-     * @param {*} path The path in the Firebase database where the data will be written to. 
+     * @param {*} path The path in the Firebase database where the data will be written to.
      * @param {*} data The data that will be written to the specified path.
      */
     setDataInDb: function(path, data) {
