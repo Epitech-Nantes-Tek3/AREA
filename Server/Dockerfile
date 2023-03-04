@@ -12,5 +12,4 @@ COPY ./app.js /app/
 COPY ./config.js /app/
 COPY ./firebaseFunctions.js /app/
 COPY ./firebaseConfig.js /app/
-COPY ./twitchConfig.js /app/
 CMD npm run dev
