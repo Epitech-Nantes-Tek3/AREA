@@ -112,3 +112,13 @@ resource "local_file" "app_server_ip" {
   )
   filename = "../Application/serverIP.ts"
 }
+
+resource "local_file" "write_ips" {
+  content = templatefile("writeIPs.tpl",
+    {
+      WEB_INSTANCE_IP = azurerm_container_group.area_web.ip_address
+      SERVER_INSTANCE_IP = azurerm_container_group.area_server.ip_address
+    }
+  )
+  filename = "../IPS.json"
+}
