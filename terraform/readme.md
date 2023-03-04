@@ -5,7 +5,7 @@ You should use this terraform configuration to deploy this area project on Azure
 The objective is to have a server and a web app deploy on azure and able to connect over internet.
 
 ## How to use ?
-Terraform is simple to use. There is only two step to deploy the infrastructure.
+Terraform is simple to use. There are only two steps to deploy the infrastructure.
 
 ### Pre-requirement
 Move to the terraform folder using: `cd terraform`
