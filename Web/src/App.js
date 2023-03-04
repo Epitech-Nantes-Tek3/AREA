@@ -7,6 +7,7 @@ import HomePage from './HomePage';
 import SettingsPage from './SettingsPage';
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { useState } from 'react';
+import { ip } from './serverIP'
 
 /**
  * @brief Main Function for AREA App
@@ -28,7 +29,7 @@ function App() {
         twitchId: "",
         stravaId: ""
     },
-    ip: "http://localhost:8080"
+    ip: ip
   });
 
   const [allAreas, setAllAreas] = useState([])

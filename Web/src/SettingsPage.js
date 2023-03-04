@@ -15,8 +15,10 @@ import StravaImage from './assets/strava.png';
 import LocationImage from './assets/locate.png';
 import DeconnexionImage from './assets/deconnexion.png';
 import ArrowRight from './assets/arrowRight.png';
-import { addDataIntoCache } from './Common/CacheManagement'
+import { addDataIntoCache, getDataFromCache } from './Common/CacheManagement'
 import { authWithCache } from './Common/Login';
+import { useLocation } from 'react-router-dom';
+import { auth } from './firebaseConfig';
 
 const querystring = require('querystring-es3');
 
@@ -167,6 +169,7 @@ const styles = {
  */
 export default function SettingsPage(props) {
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         try {
@@ -307,6 +310,26 @@ export default function SettingsPage(props) {
             </div>
         )
     }
+    /**
+     * Authenticates the user with Strava API.
+     * @async
+     * @function stravaConnection
+    */
+    async function stravaConnection() {
+         console.log('strava connection');
+         await fetch(props.userInformation.ip + '/strava/auth/' + props.userInformation.id, {
+             method: 'GET',
+             headers: {
+                 'Accept': 'application/json',
+                 'Content-Type': 'application/json'
+             }
+         })
+         .then((response) => {
+             response.json().then(async (data) => {
+                 window.open(data, 'popup', 'width=600,height=800')
+             });
+         });
+     }
 
     /**
      * Authenticates the user with Twitch API.
@@ -402,7 +425,7 @@ export default function SettingsPage(props) {
                 <Service image={SpotifyImage} service="Spotify" onPress={spotifyConnexion} />
                 <Service image={TwitterImage} service="Twitter" onPress={twitterConnexion}/>
                 <Service image={TwitchImage} service="Twitch" onPress={twitchConnexion} />
-                <Service image={StravaImage} service="Strava" onPress={stravaConnexion}/>
+                <Service image={StravaImage} service="Strava" onPress={stravaConnection}/>
             </div>
         )
     }
@@ -464,7 +487,7 @@ export default function SettingsPage(props) {
      */
     function Deconnexion() {
         return (
-            <div style={styles.deconnexion} onClick={() => { addDataIntoCache("area", {}); navigate('/auth') }} onMouseOver={updateCursor} onMouseOut={updateCursor}>
+            <div style={styles.deconnexion} onClick={() => { auth.signOut().then(() => {console.log('disconnected')}) ; addDataIntoCache("area", {}); navigate('/auth') }} onMouseOver={updateCursor} onMouseOut={updateCursor}>
                 <img src={DeconnexionImage}></img>
                 <p>Deconnexion</p>
                 <p></p>

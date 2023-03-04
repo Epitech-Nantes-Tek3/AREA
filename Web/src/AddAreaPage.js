@@ -158,7 +158,7 @@ export default function AddAreaPage(props) {
                 alignItems: "center",
                 backgroundColor: "lightgrey",
                 width: "300px",
-                height: "150px",
+                height: "200px",
                 borderRadius: "20px",
                 margin: "10px",
                 cursor: "pointer",
@@ -172,8 +172,9 @@ export default function AddAreaPage(props) {
                 },
                 title: {
                     position: "relative",
-                    fontSize: "18px",
-                    margin: "5px"
+                    fontSize: "32px",
+                    margin: "5px",
+                    textTransform: "capitalize",
                 },
                 titleblock: {
                     position: "relative",
@@ -192,6 +193,7 @@ export default function AddAreaPage(props) {
                     width: "100%",
                     height: "100%",
                     borderRadius: "20px",
+                    fontSize: 24,
                 }
             }
         }
@@ -220,7 +222,8 @@ export default function AddAreaPage(props) {
                     <img src={logo[props.area.serviceName]} style={style.block.image} />
                     <div style={style.block.title}>{props.area.serviceName}</div>
                 </div>
-                <div style={style.block.content}>{props.area.description}
+                <div style={style.block.content}>
+                    <p style={{textAlign: "center", padding: "10px"}}>{props.area.description}</p>
                 </div>
             </div>
         )
@@ -314,13 +317,25 @@ export default function AddAreaPage(props) {
                 alignItems: "center",
                 width: "100%"
             },
-            button: {
-                position: "relative",
-                border: "solid 1px",
+            buttonNext: {
+                position: "fixed",
+                bottom: "50%",
+                right: "5%",
                 borderRadius: "10px",
                 cursor: "pointer",
-                padding: "5px",
-                backgroundColor: "lightgrey"
+                padding: "20px",
+                backgroundColor: "lightgrey",
+                boxShadow: "0 0 10px 1px rgba(0, 0, 0, 0.5)",
+            },
+            buttonPrev: {
+                position: "fixed",
+                bottom: "50%",
+                left: "5%",
+                borderRadius: "10px",
+                cursor: "pointer",
+                padding: "20px",
+                backgroundColor: "lightgrey",
+                boxShadow: "0 0 10px 1px rgba(0, 0, 0, 0.5)",
             }
         }
         return (
@@ -329,8 +344,8 @@ export default function AddAreaPage(props) {
                 <SelectionBlock title={pageInfo.title[pageInfo.index]} list={pageInfo.list[pageInfo.index]} selectedBlock={pageInfo.selectedIndex[pageInfo.index]} />
                 <AreaResume />
                 <div style={style.bottomButtons}>
-                    <div style={style.button} onClick={pageInfo.prev[pageInfo.index]}>{"<= précédent"}</div>
-                    <div style={style.button} onClick={pageInfo.next[pageInfo.index]}>{(pageInfo.index === 2) ? "Créer l'Area" : "suivant =>"}</div>
+                    <div style={style.buttonPrev} onClick={pageInfo.prev[pageInfo.index]}>{"<= précédent"}</div>
+                    <div style={style.buttonNext} onClick={pageInfo.next[pageInfo.index]}>{(pageInfo.index === 2) ? "Créer l'Area" : "suivant =>"}</div>
                 </div>
             </div>
         )
@@ -365,13 +380,14 @@ export default function AddAreaPage(props) {
 
         return (
             <div style={style.global}>
-                <img src={LogoArea} style={style.image} onClick={() => { navigate("/home") }} />
+                <img src={LogoArea} style={style.image} alt="goHome" onClick={() => { navigate("/home") }} />
                 <h1 style={style.title}>Ici, tu peux créer ton area !</h1>
             </div>
         )
     }
     const globalStyle = {
         position: "relative",
+        fontFamily: "Avenir Next,Avenir Next W01, Avenir,helvetica,arial,sans-serif",
     }
     return (
         <div style={globalStyle}>
