@@ -38,6 +38,38 @@ resource "null_resource" "push_server_image" {
   depends_on = [azurerm_container_registry.area_container_registry]
 }
 
+resource "null_resource" "push_web_image" {
+  provisioner "local-exec" {
+    command = "az acr build --registry myareacontainerregistry --image area_client_web:latest --file ../Web/Dockerfile.azure ../Web"
+  }
+  depends_on = [azurerm_container_registry.area_container_registry]
+}
+
+resource "azurerm_container_group" "area_web" {
+  name                = "area-web"
+  location            = azurerm_resource_group.area_resource_group.location
+  resource_group_name = azurerm_resource_group.area_resource_group.name
+  ip_address_type     = "Public"
+  os_type             = "Linux"
+
+  container {
+    name   = "area-web"
+    image  = "myareacontainerregistry.azurecr.io/area_client_web:latest"
+    cpu    = "1"
+    memory = "1.5"
+    ports {
+      port     = 8081
+      protocol = "TCP"
+    }
+  }
+  image_registry_credential {
+    server   = azurerm_container_registry.area_container_registry.login_server
+    username = azurerm_container_registry.area_container_registry.admin_username
+    password = azurerm_container_registry.area_container_registry.admin_password
+  }
+  depends_on = [null_resource.push_web_image]
+}
+
 resource "azurerm_container_group" "area_server" {
   name                = "area-server"
   location            = azurerm_resource_group.area_resource_group.location

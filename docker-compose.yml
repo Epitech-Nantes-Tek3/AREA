@@ -20,7 +20,7 @@ services:
       server:
         condition: service_healthy
       client_mobile:
-        condition: service_started
+        condition: service_completed_successfully
     build:
       context: ./Web
       dockerfile: Dockerfile
