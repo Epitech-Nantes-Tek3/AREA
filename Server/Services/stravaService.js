@@ -1,4 +1,9 @@
 /**
+ * stravaServie module
+ * @module stravaServie
+ */
+
+/**
  * It allows to use firebaseFunctions.
  * @constant firebaseFunctions
  * @requires firebaseFunctions
