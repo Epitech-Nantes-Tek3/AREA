@@ -18,8 +18,10 @@
   - [**Table of Contents**](#table-of-contents)
   - [**Subject Description**](#subject-description)
   - [**Build the Project**](#build-the-project)
+  - [**Graph of technical environment**](#graph-of-technical-environment)
   - [**Launch Services**](#launch-services)
   - [**Stop services**](#stop-services)
+  - [**Free space**](#free-space)
   - [**Launch Tests**](#launch-tests)
   - [**Thanks for reading**](#thanks-for-reading)
   - [**Authors**](#authors)
@@ -101,7 +103,7 @@ To free space on your computer after havng runned our project, you can do
 docker system prune
 ```
 
-**BE CAREFUL** This will remove everything related to docker o your machine !
+**BE CAREFUL** This will remove everything related to docker on your machine !
 
 ## **Launch Tests**
 
@@ -113,7 +115,7 @@ Feel free to read the `CONTRIBUTING.md`.
 
 Do not hesitate to contact any member for any questions or remarks. You can click on each following name.
 
-You can also find code documentation [here](https://epitech-nantes-tek3.github.io/AREA/)
+You can also find code documentation [here](https://epitech-nantes-tek3.github.io/AREA/).
 
 ## **Authors**
 
