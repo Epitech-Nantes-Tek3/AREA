@@ -113,6 +113,8 @@ Feel free to read the `CONTRIBUTING.md`.
 
 Do not hesitate to contact any member for any questions or remarks. You can click on each following name.
 
+You can also find code documentation [here](https://epitech-nantes-tek3.github.io/AREA/)
+
 ## **Authors**
 
 <table>
