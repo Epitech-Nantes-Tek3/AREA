@@ -11,7 +11,11 @@ terraform {
 }
 
 provider "azurerm" {
-  features {}
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
 }
 
 resource "azurerm_resource_group" "rg" {
@@ -27,55 +31,52 @@ resource "azurerm_container_registry" "acr" {
   admin_enabled       = true
 }
 
-# resource "azurerm_container_group" "areaserver" {
-#   name = "areaserver"
-#   location = "westeurope"
-#   resource_group_name = azurerm_resource_group.rg.name
+resource "null_resource" "push_server_image" {
+  provisioner "local-exec" {
+    command = "az acr build --registry areacontainerregistry2 --image area_server:latest --file ../Server/Dockerfile ../Server"
+  }
+  depends_on = [azurerm_container_registry.acr]
+}
 
-#   container {
-#     name = "area-server-container"
-#     image = "areacontainerregistry2.azurecr.io/area_server:latest"
-#     cpu = "1"
-#     memory = "1.5"
-#     ports {
-#       port = 8080
-#       protocol = "TCP"
-#     }
-#   }
-#   # define credentials for the container registry
-#   image_registry_credential {
-#     server = azurerm_container_registry.acr.login_server
-#     username = azurerm_container_registry.acr.admin_username
-#     password = azurerm_container_registry.acr.admin_password
-#   }
-#   ip_address_type = "Public"
-#   os_type = "Linux"
-# }
+resource "azurerm_container_group" "area_server" {
+  name                = "area-server"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+  ip_address_type     = "Public"
+  os_type             = "Linux"
 
-# resource "azurerm_container_group" "areaweb" {
-#   name = "areaweb"
-#   location = "westeurope"
-#   resource_group_name = azurerm_resource_group.rg.name
+  container {
+    name   = "area-server"
+    image  = "areacontainerregistry2.azurecr.io/area_server:latest"
+    cpu    = "1"
+    memory = "1.5"
+    ports {
+      port     = 8080
+      protocol = "TCP"
+    }
+  }
+  image_registry_credential {
+    server   = azurerm_container_registry.acr.login_server
+    username = azurerm_container_registry.acr.admin_username
+    password = azurerm_container_registry.acr.admin_password
+  }
+  depends_on = [null_resource.push_server_image]
+}
 
-#   container {
-#     name = "area-web-container"
-#     image = "areacontainerregistry2.azurecr.io/area_web:latest"
-#     cpu = "1"
-#     memory = "1.5"
-#     ports {
-#       port = 3000
-#       protocol = "TCP"
-#     }
-#   }
-#   exposed_port {
-#     port = 3000
-#     protocol = "TCP"
-#   }
-#   image_registry_credential {
-#     server = azurerm_container_registry.acr.login_server
-#     username = azurerm_container_registry.acr.admin_username
-#     password = azurerm_container_registry.acr.admin_password
-#   }
-#   ip_address_type = "Public"
-#   os_type = "Linux"
-# }
+resource "local_file" "web_server_ip" {
+  content = templatefile("serverIP.tpl",
+    {
+      SERVER_INSTANCE_IP = azurerm_container_group.area_server.ip_address
+    }
+  )
+  filename = "../Web/src/serverIP.js"
+}
+
+resource "local_file" "app_server_ip" {
+  content = templatefile("serverIP.tpl",
+    {
+      SERVER_INSTANCE_IP = azurerm_container_group.area_server.ip_address
+    }
+  )
+  filename = "../Application/serverIP.ts"
+}
