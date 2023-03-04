@@ -1,6 +1,6 @@
 /**
- * stravaServie module
- * @module stravaServie
+ * stravaService module
+ * @module stravaService
  */
 
 /**
