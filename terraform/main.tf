@@ -18,14 +18,14 @@ provider "azurerm" {
   }
 }
 
-resource "azurerm_resource_group" "rg" {
-  name     = "myTFResourceGroup"
+resource "azurerm_resource_group" "area_resource_group" {
+  name     = "area_resource_group"
   location = "westeurope"
 }
 
-resource "azurerm_container_registry" "acr" {
-  name                = "areacontainerregistry2"
-  resource_group_name = azurerm_resource_group.rg.name
+resource "azurerm_container_registry" "area_container_registry" {
+  name                = "myareacontainerregistry"
+  resource_group_name = azurerm_resource_group.area_resource_group.name
   location            = "westeurope"
   sku                 = "Standard"
   admin_enabled       = true
@@ -33,21 +33,21 @@ resource "azurerm_container_registry" "acr" {
 
 resource "null_resource" "push_server_image" {
   provisioner "local-exec" {
-    command = "az acr build --registry areacontainerregistry2 --image area_server:latest --file ../Server/Dockerfile ../Server"
+    command = "az acr build --registry myareacontainerregistry --image area_server:latest --file ../Server/Dockerfile ../Server"
   }
-  depends_on = [azurerm_container_registry.acr]
+  depends_on = [azurerm_container_registry.area_container_registry]
 }
 
 resource "azurerm_container_group" "area_server" {
   name                = "area-server"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.area_resource_group.location
+  resource_group_name = azurerm_resource_group.area_resource_group.name
   ip_address_type     = "Public"
   os_type             = "Linux"
 
   container {
     name   = "area-server"
-    image  = "areacontainerregistry2.azurecr.io/area_server:latest"
+    image  = "myareacontainerregistry.azurecr.io/area_server:latest"
     cpu    = "1"
     memory = "1.5"
     ports {
@@ -56,9 +56,9 @@ resource "azurerm_container_group" "area_server" {
     }
   }
   image_registry_credential {
-    server   = azurerm_container_registry.acr.login_server
-    username = azurerm_container_registry.acr.admin_username
-    password = azurerm_container_registry.acr.admin_password
+    server   = azurerm_container_registry.area_container_registry.login_server
+    username = azurerm_container_registry.area_container_registry.admin_username
+    password = azurerm_container_registry.area_container_registry.admin_password
   }
   depends_on = [null_resource.push_server_image]
 }

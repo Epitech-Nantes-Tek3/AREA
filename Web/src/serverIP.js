@@ -1,1 +1,1 @@
-export const ip = "http://20.238.149.248:8080"
+export const ip = "http://20.73.141.221:8080"
