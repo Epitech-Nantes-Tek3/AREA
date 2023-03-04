@@ -13,10 +13,10 @@ COPY ./src/ /app/src/
 # Create common folder
 RUN mkdir /release
 
-COPY ./release/client.apk /app/public/client.apk
+# COPY ./release/client.apk /app/public/client.apk
 
 RUN mkdir build
 
 RUN npm run build
 
-CMD npx serve -s build -l 8081
+CMD npx serve -s build -l 80

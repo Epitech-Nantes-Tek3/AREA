@@ -58,7 +58,7 @@ resource "azurerm_container_group" "area_web" {
     cpu    = "1"
     memory = "1.5"
     ports {
-      port     = 8081
+      port     = 80
       protocol = "TCP"
     }
   }
@@ -93,6 +93,43 @@ resource "azurerm_container_group" "area_server" {
     password = azurerm_container_registry.area_container_registry.admin_password
   }
   depends_on = [null_resource.push_server_image]
+}
+
+resource "azurerm_cdn_profile" "area_cdn_profile" {
+  name                = "area-cdn-profile"
+  location            = azurerm_resource_group.area_resource_group.location
+  resource_group_name = azurerm_resource_group.area_resource_group.name
+  sku                 = "Standard_Microsoft"
+}
+
+resource "azurerm_cdn_endpoint" "area_cdn_endpoint" {
+  name                = "area-web-nantes-x-strasbourg"
+  profile_name        = azurerm_cdn_profile.area_cdn_profile.name
+  location            = azurerm_resource_group.area_resource_group.location
+  resource_group_name = azurerm_resource_group.area_resource_group.name
+  origin_host_header  = azurerm_container_group.area_web.ip_address
+  is_http_allowed     = true
+  is_https_allowed    = false
+
+  origin {
+    name      = "area-web"
+    host_name = azurerm_container_group.area_web.ip_address
+  }
+}
+
+resource "azurerm_cdn_endpoint" "area_cdn_endpoint2" {
+  name                = "area-server-nantes-x-strasbourg"
+  profile_name        = azurerm_cdn_profile.area_cdn_profile.name
+  location            = azurerm_resource_group.area_resource_group.location
+  resource_group_name = azurerm_resource_group.area_resource_group.name
+  origin_host_header  = azurerm_container_group.area_server.ip_address
+  is_http_allowed     = true
+  is_https_allowed    = false
+
+  origin {
+    name      = "area-server"
+    host_name = azurerm_container_group.area_server.ip_address
+  }
 }
 
 resource "local_file" "web_server_ip" {
