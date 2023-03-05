@@ -3,8 +3,6 @@ import { StyleSheet, Text, SafeAreaView, Image, Platform, Dimensions, TextInput,
 import Separator, { Line } from "../Components/Separator";
 import { Globals } from "../Common/Globals";
 import FacebookSocialButton from "../Components/SocialButtons/FacebookButton";
-import GoogleSocialButton from "../Components/SocialButtons/GoogleSocialButton";
-import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
 import { NavigatorPop, NavigatorPush } from "../Navigator";
 import Circles from "../Components/Circles";
 import { ip} from "../../env";
@@ -87,10 +85,6 @@ export default function SignInScreen() {
         NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
-    function connectWithGoogle() {
-        console.log("Subscribe with Google")
-    }
-
     async function connectWithFacebook() {
         const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
 
@@ -141,9 +135,6 @@ export default function SignInScreen() {
         return (
             <View style={styles.socialContainer}>
                 <FacebookSocialButton onPress={connectWithFacebook} buttonViewStyle={[styles.socialButtons, {width: "80%"}]} buttonText="S'inscrire avec Facebook" />
-                <GoogleSocialButton onPress={connectWithGoogle} buttonViewStyle={[styles.socialButtons, {width: "80%"}]} buttonText="S'inscrire avec Google" />
-                {Platform.OS === "ios" &&
-                <AppleSocialButton onPress={connectWithApple} buttonViewStyle={[styles.socialButtons, {width: "80%"}]}  buttonText="S'inscrire avec Apple" />}
             </View>
         )
     }
