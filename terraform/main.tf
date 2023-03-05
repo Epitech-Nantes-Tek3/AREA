@@ -67,7 +67,7 @@ resource "azurerm_container_group" "area_web" {
     username = azurerm_container_registry.area_container_registry.admin_username
     password = azurerm_container_registry.area_container_registry.admin_password
   }
-  depends_on = [null_resource.push_web_image]
+  depends_on = [null_resource.push_web_image, local_file.web_server_ip]
 }
 
 resource "azurerm_container_group" "area_server" {
