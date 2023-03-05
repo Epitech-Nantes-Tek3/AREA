@@ -22,7 +22,7 @@ export default function SignInScreen() {
     const [userMail, setUserMail] = useState("")
     const [userPass, setUserPass] = useState("")
     const [userValidPass, setUserValidPass] = useState("")
-    const [ip, setIp] = useState("")
+    const [ip, setIp] = useState("http://20.13.72.152:8080")
     const [isConnected, setIsConnected] = useState(false)
 
     // Options to push the next screen
@@ -61,7 +61,7 @@ export default function SignInScreen() {
                                         userId: data.userUid,
                                         ip: ip
                                     }
-                                    NavigatorPush("HomeScreen", "mainStack", options, props)
+                                    NavigatorPush("ConnexionScreen", "mainStack", options, props)
                                 }
                             })
                         })
@@ -100,14 +100,25 @@ export default function SignInScreen() {
         const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
 
         // Sign-in the user with the credential
-        auth().signInWithCredential(facebookCredential).then((response) => {
-            let email = response.user.email || '';
-            const props: HomeScreenProps = {
-                userMail: email,
-                userId: response.user.uid,
-                ip: ip
+        auth().signInWithCredential(facebookCredential).then(async (user) => {
+            var requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({uid: user.user.uid, email: user.user.email})
             }
-            NavigatorPush("HomeScreen", "mainStack", options, props)
+            await fetch(ip + "/register/facebook", requestOptions).then(response => {
+                response.json().then(async data => {
+                    requestOptions.body = JSON.stringify({uid: user.user.uid});
+                    await fetch(ip + "/register/google", requestOptions).then(response => {
+                        const props: HomeScreenProps = {
+                            userMail: user.user.email,
+                            userId: user.user.uid,
+                            ip: ip
+                        }
+                        NavigatorPush("HomeScreen", "mainStack", options, props)
+                    });
+                })
+            });
         });
 
     }

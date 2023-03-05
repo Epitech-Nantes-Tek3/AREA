@@ -37,10 +37,14 @@ export default function ConnexionScreen() {
                 messagingSenderId: environment.MESSAGINGSENDERID,
                 appId: environment.APPID
             }
-            firebase.initializeApp(firebaseConfig).then(() => {
-                console.log("Firebase initialized")
-                setIsSetup(true)
-            })
+            try {
+                firebase.initializeApp(firebaseConfig).then(() => {
+                    console.log("Firebase initialized")
+                    setIsSetup(true)
+                })
+            } catch (error) {
+                console.log(error);
+            }
         }
     })
 

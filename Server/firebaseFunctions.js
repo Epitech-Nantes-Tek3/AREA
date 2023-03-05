@@ -133,6 +133,7 @@ module.exports = {
         const { email, password } = req.body;
         firebase.auth()
         .createUserWithEmailAndPassword(email, password).then((userCredential) => {
+            userCredential.user.sendEmailVerification();
             this.setInfoInDb(userCredential.user.uid, email);
             console.log('Successfully created new user:', userCredential.user.uid)
             res.json({userUid: userCredential.user.uid});

@@ -45,7 +45,7 @@ interface ServicesInfo {
 }
 
 export interface UserInfo {
-    mail: string
+    mail: string | null
     coord: Location
     id: string
     services: ServicesInfo
