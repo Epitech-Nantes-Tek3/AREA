@@ -9,5 +9,6 @@ twitchConfig.js
 # Service
 configGmail.js
 configOpenMeteo.js
+serviceAccountKey.json
 
 docs/
