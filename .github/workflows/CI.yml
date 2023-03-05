@@ -46,7 +46,9 @@ jobs:
           fetch-depth: 0
       - name: Write env file for server
         if: matrix.type == 'server'
-        run: echo "${{ secrets.ENV_server }}" >> ./Server/firebaseConfig.js
+        run: |
+          echo "${{ secrets.ENV_server }}" >> ./Server/firebaseConfig.js
+          echo "${{ secrets.TWITCH_CONFIG }} >> ./Server/twitchConfig.js"
       - name: Write env file for application
         if: matrix.type == 'client_mobile'
         run: echo '${{ secrets.ENV_client_mobile }}' > ./Application/env.ts
