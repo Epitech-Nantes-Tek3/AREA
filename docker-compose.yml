@@ -4,7 +4,6 @@ services:
   server:
     build:
       context: ./Server
-    command: npm run dev
     volumes:
       - .:/tmp
     ports:
@@ -21,11 +20,10 @@ services:
       server:
         condition: service_healthy
       client_mobile:
-        condition: service_started
+        condition: service_completed_successfully
     build:
       context: ./Web
       dockerfile: Dockerfile
-    command: npm start
     ports:
       - "8081:3000"
     volumes:

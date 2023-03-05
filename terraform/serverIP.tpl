@@ -1,0 +1,1 @@
+export const ip = "http://${SERVER_INSTANCE_IP}:8080"

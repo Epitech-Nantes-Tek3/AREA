@@ -10,5 +10,6 @@ serviceAccountKey.json
 # Service
 configGmail.js
 configOpenMeteo.js
+serviceAccountKey.json
 
 docs/
