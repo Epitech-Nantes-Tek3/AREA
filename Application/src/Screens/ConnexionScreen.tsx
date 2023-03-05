@@ -3,8 +3,6 @@ import { StyleSheet, Text, SafeAreaView, Image, Platform, Dimensions, TextInput,
 import Separator, { Line } from "../Components/Separator";
 import { Globals } from "../Common/Globals";
 import FacebookSocialButton from "../Components/SocialButtons/FacebookButton";
-import GoogleSocialButton from "../Components/SocialButtons/GoogleSocialButton";
-import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
 import { NavigatorPush } from "../Navigator";
 import { Options } from "react-native-navigation";
 import Circles from "../Components/Circles";
@@ -114,10 +112,6 @@ export default function ConnexionScreen() {
         NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
-    function connectWithGoogle() {
-        console.log("Connect with Google")
-    }
-
     async function connectWithFacebook() {
         const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
 
@@ -181,9 +175,6 @@ export default function ConnexionScreen() {
         return (
             <View style={styles.socialContainer}>
                 <FacebookSocialButton onPress={connectWithFacebook} buttonViewStyle={[styles.socialButtons, {width: "80%"}]} buttonText="Se connecter avec Facebook" />
-                <GoogleSocialButton onPress={connectWithGoogle} buttonViewStyle={[styles.socialButtons, {width: "80%"}]} buttonText="Se connecter avec Google" />
-                {Platform.OS === "ios" &&
-                <AppleSocialButton onPress={connectWithApple} buttonViewStyle={[styles.socialButtons, {width: "80%"}]}  buttonText="Se connecter avec Apple" />}
             </View>
         )
     }
