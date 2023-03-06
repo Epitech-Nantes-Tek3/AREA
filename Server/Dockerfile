@@ -13,4 +13,5 @@ COPY ./config.js /app/
 COPY ./firebaseFunctions.js /app/
 COPY ./firebaseConfig.js /app/
 COPY ./twitchConfig.js /app/
+COPY ./serviceAccountKey.json /app/
 CMD npm run dev

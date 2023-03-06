@@ -19,7 +19,7 @@ export interface InfoArea {
 }
 
 export interface HomeScreenProps {
-    userMail: string
+    userMail: string | null
     userId: string
     ip: string
 }
@@ -45,7 +45,7 @@ interface ServicesInfo {
 }
 
 export interface UserInfo {
-    mail: string
+    mail: string | null
     coord: Location
     id: string
     services: ServicesInfo

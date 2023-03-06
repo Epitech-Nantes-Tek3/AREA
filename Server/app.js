@@ -142,9 +142,38 @@ const SESSION_SECRET   = '<YOUR CLIENT SECRET HERE>';
 const CALLBACK_URL     = 'http://localhost:8080/auth/twitch/callback';
 
 /**
-  * @constant stravaApi
-  * @requires strava-v3
-  */
+ * @constant firebase_admin
+ * @requires firebase-admin
+ */
+const firebase_admin = require('firebase-admin');
+
+/**
+ * @constant serviceAccount
+ * @requires serviceAccountKey.json
+ */
+var serviceAccount = require("./serviceAccountKey.json");
+
+/**
+ * @constant firebaseConfig
+ * @requires firebaseConfig
+ */
+const firebaseConfig = require('./firebaseConfig')
+
+/**
+ * Initialisation of firebase-admin
+ */
+firebase_admin.initializeApp({
+    credential: firebase_admin.credential.cert(serviceAccount),
+    databaseURL: firebaseConfig.databaseURL
+});
+  
+
+const {getAuth} = require("firebase-admin/auth");
+
+/**
+ * @constant stravaApi
+ * @requires strava-v3
+ */
 var stravaApi = require('strava-v3');
 
 /**
@@ -173,12 +202,6 @@ var stravaClient = '';
  * @requires client
  */
 var client = '';
-
-// /**
-//  * @constant StravaLoop
-//  * @requires stravaService
-//  */
-// const { StravaLoop } = require('./Services/stravaService');
 
 /**
  * session & passport required for twitch service
@@ -666,8 +689,10 @@ app.get('/strava/callback', async (req, res) => {
                 access_token: data.access_token,
                 athleteId: data.athlete.id
             };
-            if (stravaToken.uid !== "any")
+            if (stravaToken.uid !== "any") {
                 await firebaseFunctions.setDataInDb('USERS/' + stravaToken.uid + '/StravaService', data);
+                console.log(stravaToken.uid);
+            }
             res.send('SUCCESS You can now go back to the app');
         });
     });
@@ -733,3 +758,20 @@ app.get('/spotify/callback', (req, res) => {
         spotifyService.callBack(req, res, serverData, SpotifyTokens)
     })
 })
+
+app.post('/register/facebook', (req, res) => {
+    const {uid, email} = req.body;
+    firebaseFunctions.setInfoInDb(uid, email);
+    res.json("ok");
+});
+
+app.get('/check/auth/:uid', (req, res) => {
+
+    getAuth().getUser(req.params.uid).then((userRecord) => {
+        res.json({uid: userRecord.uid}).status(200);
+    })
+    .catch((error) => {
+        console.log('Error fetching user data:', error);
+        res.json(error).status(400);
+    });
+});

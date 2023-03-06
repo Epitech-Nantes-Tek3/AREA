@@ -14,16 +14,15 @@ export function authWithCache(setUserInformation, props) {
     var cacheData = getDataFromCache("area");
     if (cacheData !== undefined && cacheData.mail !== undefined && cacheData.id !== undefined && cacheData.password !== undefined) {
         const requestOptions = {
-            method: 'POST',
+            method: 'GET',
             mode: 'cors',
             headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
-            },
-            body: JSON.stringify({ email: cacheData.mail, password: cacheData.password })
+            }
         }
         try {
-            fetch(cacheData.ip + "/login", requestOptions).then(response => {
+            fetch(cacheData.ip + "/check/auth/" + cacheData.id, requestOptions).then(response => {
                 response.json().then(data => {
                     console.log(data);
                     setUserInformation({
@@ -34,7 +33,7 @@ export function authWithCache(setUserInformation, props) {
                             longitude: props.userInformation.coord.longitude,
                             city: props.userInformation.coord.city
                         },
-                        id: data.userUid,
+                        id: data.uid,
                         services: {
                             spotifyId: props.userInformation.services.spotifyId,
                             googleId: props.userInformation.services.googleId,

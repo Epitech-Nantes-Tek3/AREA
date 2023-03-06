@@ -3,6 +3,10 @@ import { StyleSheet, SafeAreaView, View, Image, Text, TouchableOpacity, ImageSou
 import { Globals } from "../Common/Globals";
 import Geolocation from 'react-native-geolocation-service';
 import { SettingsProps } from "../Common/Interfaces";
+import { LoginManager } from 'react-native-fbsdk-next';
+import { HomeScreenProps } from "../Common/Interfaces";
+import { NavigatorPop, NavigatorPush } from "../Navigator";
+import { Navigation, Options } from "react-native-navigation";
 
 interface Location {
     latitude: number
@@ -490,6 +494,7 @@ export default function SettingsScreen(props: SettingsProps) {
             })
         }
 
+
         return (
             <View style={styles.mainConnexion}>
                 <SingleConnexionBlock leftImage={require("../assets/logo/google.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Google"} onPress={googleConnexion} />
@@ -499,6 +504,12 @@ export default function SettingsScreen(props: SettingsProps) {
                 <SingleConnexionBlock leftImage={require("../assets/logo/twitch.png")} rightImage={require("../assets/arrowRight.png")} text={"Connexion à Twitch"} onPress={twitchConnexion} />
             </View>
         )
+    }
+
+    function disconnect() {
+        LoginManager.logOut();
+        console.log("Déconnexion de Facebook");
+        Navigation.popToRoot("mainStack");
     }
 
     return (
@@ -523,6 +534,7 @@ export default function SettingsScreen(props: SettingsProps) {
                     />
                 </View>
                 <ConnexionBlocks/>
+                <SingleBlock leftImage={require("../assets/trash.png")} text={"Déconnexion"} onPress={disconnect} />
             </ScrollView>
         </SafeAreaView>
     )

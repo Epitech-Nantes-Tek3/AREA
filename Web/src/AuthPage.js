@@ -73,13 +73,30 @@ function AuthPage(props) {
 
     /* Checking if the user is already logged in. If he is, it redirects him to
     the home page. */
-    auth.onAuthStateChanged(user => {
+    auth.onAuthStateChanged(async user => {
         console.log('user', user);
         if (user !== null) {
-            props.userInformation.id = user.uid;
-            props.userInformation.mail = user.email;
-            addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa('facebook-auth'), ip: props.userInformation.ip });
-            navigate("/home");
+            var requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({uid: user.uid, email: user.email})
+            }
+            await fetch(props.userInformation.ip + "/register/facebook", requestOptions).then(response => {
+                response.json().then(async data => {
+                    requestOptions.body = JSON.stringify({uid: user.uid});
+                    await fetch(props.userInformation.ip + "/register/google", requestOptions).then(response => {
+                        response.json().then(dataGoogle => {
+                            if (data.body != 'Error') {
+                                setIsBadPassword(false);
+                                props.userInformation.id = user.uid;
+                                props.userInformation.mail = user.email;
+                                addDataIntoCache("area", { mail: props.userInformation.mail, id: props.userInformation.id, password: btoa('facebook-auth'), ip: props.userInformation.ip });
+                                navigate('/home');
+                            }
+                        });
+                    });
+                })
+            });
         }
     })
 

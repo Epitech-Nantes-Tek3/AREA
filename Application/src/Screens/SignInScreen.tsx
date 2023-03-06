@@ -3,8 +3,6 @@ import { StyleSheet, Text, SafeAreaView, Image, Platform, Dimensions, TextInput,
 import Separator, { Line } from "../Components/Separator";
 import { Globals } from "../Common/Globals";
 import FacebookSocialButton from "../Components/SocialButtons/FacebookButton";
-import GoogleSocialButton from "../Components/SocialButtons/GoogleSocialButton";
-import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
 import { NavigatorPop, NavigatorPush } from "../Navigator";
 import Circles from "../Components/Circles";
 import { ip} from "../../env";
@@ -24,7 +22,7 @@ export default function SignInScreen() {
     const [userMail, setUserMail] = useState("")
     const [userPass, setUserPass] = useState("")
     const [userValidPass, setUserValidPass] = useState("")
-    const [ip, setIp] = useState("")
+    const [ip, setIp] = useState("http://20.13.72.152:8080")
     const [isConnected, setIsConnected] = useState(false)
 
     // Options to push the next screen
@@ -63,7 +61,7 @@ export default function SignInScreen() {
                                         userId: data.userUid,
                                         ip: ip
                                     }
-                                    NavigatorPush("HomeScreen", "mainStack", options, props)
+                                    NavigatorPush("ConnexionScreen", "mainStack", options, props)
                                 }
                             })
                         })
@@ -87,10 +85,6 @@ export default function SignInScreen() {
         NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
-    function connectWithGoogle() {
-        console.log("Subscribe with Google")
-    }
-
     async function connectWithFacebook() {
         const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
 
@@ -106,14 +100,25 @@ export default function SignInScreen() {
         const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
 
         // Sign-in the user with the credential
-        auth().signInWithCredential(facebookCredential).then((response) => {
-            let email = response.user.email || '';
-            const props: HomeScreenProps = {
-                userMail: email,
-                userId: response.user.uid,
-                ip: ip
+        auth().signInWithCredential(facebookCredential).then(async (user) => {
+            var requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({uid: user.user.uid, email: user.user.email})
             }
-            NavigatorPush("HomeScreen", "mainStack", options, props)
+            await fetch(ip + "/register/facebook", requestOptions).then(response => {
+                response.json().then(async data => {
+                    requestOptions.body = JSON.stringify({uid: user.user.uid});
+                    await fetch(ip + "/register/google", requestOptions).then(response => {
+                        const props: HomeScreenProps = {
+                            userMail: user.user.email,
+                            userId: user.user.uid,
+                            ip: ip
+                        }
+                        NavigatorPush("HomeScreen", "mainStack", options, props)
+                    });
+                })
+            });
         });
 
     }
@@ -141,9 +146,6 @@ export default function SignInScreen() {
         return (
             <View style={styles.socialContainer}>
                 <FacebookSocialButton onPress={connectWithFacebook} buttonViewStyle={[styles.socialButtons, {width: "80%"}]} buttonText="S'inscrire avec Facebook" />
-                <GoogleSocialButton onPress={connectWithGoogle} buttonViewStyle={[styles.socialButtons, {width: "80%"}]} buttonText="S'inscrire avec Google" />
-                {Platform.OS === "ios" &&
-                <AppleSocialButton onPress={connectWithApple} buttonViewStyle={[styles.socialButtons, {width: "80%"}]}  buttonText="S'inscrire avec Apple" />}
             </View>
         )
     }

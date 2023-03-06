@@ -3,8 +3,6 @@ import { StyleSheet, Text, SafeAreaView, Image, Platform, Dimensions, TextInput,
 import Separator, { Line } from "../Components/Separator";
 import { Globals } from "../Common/Globals";
 import FacebookSocialButton from "../Components/SocialButtons/FacebookButton";
-import GoogleSocialButton from "../Components/SocialButtons/GoogleSocialButton";
-import AppleSocialButton from "../Components/SocialButtons/AppleSocialButton";
 import { NavigatorPush } from "../Navigator";
 import { Options } from "react-native-navigation";
 import Circles from "../Components/Circles";
@@ -39,10 +37,14 @@ export default function ConnexionScreen() {
                 messagingSenderId: environment.MESSAGINGSENDERID,
                 appId: environment.APPID
             }
-            firebase.initializeApp(firebaseConfig).then(() => {
-                console.log("Firebase initialized")
-                setIsSetup(true)
-            })
+            try {
+                firebase.initializeApp(firebaseConfig).then(() => {
+                    console.log("Firebase initialized")
+                    setIsSetup(true)
+                })
+            } catch (error) {
+                console.log(error);
+            }
         }
     })
 
@@ -114,10 +116,6 @@ export default function ConnexionScreen() {
         NavigatorPush("HomeScreen", "mainStack", options, props)
     }
 
-    function connectWithGoogle() {
-        console.log("Connect with Google")
-    }
-
     async function connectWithFacebook() {
         const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
 
@@ -133,13 +131,26 @@ export default function ConnexionScreen() {
         const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
 
         // Sign-in the user with the credential
-        auth().signInWithCredential(facebookCredential);
-        const props: HomeScreenProps = {
-            userMail: userMail,
-            userId: "idTest",
-            ip: ip
-        }
-        NavigatorPush("HomeScreen", "mainStack", options, props)
+        auth().signInWithCredential(facebookCredential).then(async (user) => {
+            var requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({uid: user.user.uid, email: user.user.email})
+            }
+            await fetch(ip + "/register/facebook", requestOptions).then(response => {
+                response.json().then(async data => {
+                    requestOptions.body = JSON.stringify({uid: user.user.uid});
+                    await fetch(ip + "/register/google", requestOptions).then(response => {
+                        const props: HomeScreenProps = {
+                            userMail: user.user.email,
+                            userId: user.user.uid,
+                            ip: ip
+                        }
+                        NavigatorPush("HomeScreen", "mainStack", options, props)
+                    });
+                })
+            });
+        });
 
     }
 
@@ -168,9 +179,6 @@ export default function ConnexionScreen() {
         return (
             <View style={styles.socialContainer}>
                 <FacebookSocialButton onPress={connectWithFacebook} buttonViewStyle={[styles.socialButtons, {width: "80%"}]} buttonText="Se connecter avec Facebook" />
-                <GoogleSocialButton onPress={connectWithGoogle} buttonViewStyle={[styles.socialButtons, {width: "80%"}]} buttonText="Se connecter avec Google" />
-                {Platform.OS === "ios" &&
-                <AppleSocialButton onPress={connectWithApple} buttonViewStyle={[styles.socialButtons, {width: "80%"}]}  buttonText="Se connecter avec Apple" />}
             </View>
         )
     }
